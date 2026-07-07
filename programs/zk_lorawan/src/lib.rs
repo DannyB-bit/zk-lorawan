@@ -52,8 +52,8 @@ pub mod zk_lorawan {
     pub fn verify_single(
         ctx: Context<VerifySingle>,
         proof_hash: [u8; 32],
-        payload_hash: [u8; 32],
-        timestamp: i64,
+        _payload_hash: [u8; 32],
+        _timestamp: i64,
     ) -> Result<()> {
         // Transfer gateway reward
         anchor_lang::solana_program::program::invoke(
