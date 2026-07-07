@@ -18,8 +18,8 @@
 //     Saves: (N-1) × ~5,000 lamports in Solana base fees
 //
 // Gateway earnings are IDENTICAL in both modes:
-//   160,000 lamports per chirp (always)
-//   Treasury: 40,000 lamports per chirp (always)
+//   100,000 lamports per chirp (always)
+//   Treasury: 50,000 lamports per chirp (always)
 
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
@@ -46,8 +46,8 @@ pub mod zk_lorawan {
     // ========================================================================
     // MODE A — Single Chirp Verification
     // ========================================================================
-    // Client sends 1 chirp, pays 200,000 lamports, gets instant on-chain proof.
-    // Gateway: +160,000 lamports | Treasury: +40,000 lamports
+    // Client sends 1 chirp, pays 150,000 lamports, gets instant on-chain proof.
+    // Gateway: +100,000 lamports | Treasury: +50,000 lamports
     // ========================================================================
     pub fn verify_single(
         ctx: Context<VerifySingle>,

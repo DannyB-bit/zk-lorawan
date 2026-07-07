@@ -22,7 +22,7 @@ HELIUM_DC_PRICE_USD = 0.00001  # $0.00001 per Data Credit (fixed by HNT burn)
 ZK_SEMANTIC_PAYLOAD = 57    # bytes available in ZK pipe
 ZK_READINGS_PER_CHIRP_U8 = 18   # U8 sensor values per chirp
 ZK_READINGS_PER_CHIRP_F16 = 14  # F16 sensor values per chirp
-ZK_LAMPORTS_PER_PACKET = 200_000  # total fee (160K gateway + 40K treasury)
+ZK_LAMPORTS_PER_PACKET = 150_000  # total fee (100K gateway + 50K treasury)
 SOL_PRICE_USD = 150.0       # current SOL price
 ZK_COST_PER_PACKET_USD = (ZK_LAMPORTS_PER_PACKET / 1_000_000_000) * SOL_PRICE_USD
 

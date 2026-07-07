@@ -16,8 +16,8 @@ Factual numbers. No theory.
 HELIUM_DC_PRICE = 0.00001        # $ per Data Credit (1 DC per packet)
 HELIUM_DR0_READINGS = 2          # max sensor readings per DR0 packet
 
-ZK_SINGLE_FEE = 200_000         # lamports per single chirp
-ZK_BATCH_FEE = 200_000          # lamports per BATCH (not per chirp)
+ZK_SINGLE_FEE = 150_000         # lamports per single chirp (100K gateway + 50K treasury)
+ZK_BATCH_FEE = 150_000          # lamports per chirp in batch mode (same rate)
 ZK_BATCH_SIZE = 100              # chirps per batch
 ZK_READINGS_PER_CHIRP = 18      # sensor readings per chirp (semantic codec)
 
