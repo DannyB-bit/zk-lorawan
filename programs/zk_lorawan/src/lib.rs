@@ -32,8 +32,8 @@ declare_id!("ZKLoRa1111111111111111111111111111111111111");
 // ============================================================================
 // Protocol Constants
 // ============================================================================
-pub const PROTOCOL_FEE_LAMPORTS: u64 = 40_000;       // treasury per chirp
-pub const GATEWAY_REWARD_LAMPORTS: u64 = 160_000;     // gateway per chirp
+pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000;       // treasury per chirp
+pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000;     // gateway per chirp
 pub const TOTAL_FEE_PER_CHIRP: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MAX_BATCH_SIZE: usize = 100;
 pub const BATCH_SEED: &[u8] = b"zk-lorawan-batch";

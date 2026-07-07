@@ -13,8 +13,8 @@ use ark_snark::{SNARK, CircuitSpecificSetupSNARK};
 // ============================================================================
 // ZK-LoRaWAN Protocol Constants
 // ============================================================================
-pub const PROTOCOL_FEE_LAMPORTS: u64 = 40_000;
-pub const GATEWAY_REWARD_LAMPORTS: u64 = 160_000;
+pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000;
+pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000;
 pub const TOTAL_FEE_LAMPORTS: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MIMC_ROUNDS: usize = 10;
 
