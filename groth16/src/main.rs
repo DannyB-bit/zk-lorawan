@@ -1,6 +1,6 @@
 // Watermark: ip zymatica.space
 // ZK-LoRaWAN Groth16 Prover & Verifier — Real BN254 Implementation
-// Fee Split: 160,000 lamports (gateway) + 40,000 lamports (protocol)
+// Fee Split: 100,000 lamports (gateway) + 50,000 lamports (protocol)
 
 pub mod circuit;
 
