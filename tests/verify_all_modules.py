@@ -37,6 +37,16 @@ MODULES = [
         "component": "Component 19",
         "script": "vk_compression/microbyte_jit.py",
     },
+    {
+        "name": "UFO Semantic Codec",
+        "component": "Component 09",
+        "script": "semantic_codec/semantic_codec.py",
+    },
+    {
+        "name": "LoRa Gateway Engine",
+        "component": "Gateway Software",
+        "script": "gateway/gateway.py",
+    },
 ]
 
 

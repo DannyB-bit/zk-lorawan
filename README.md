@@ -1,233 +1,197 @@
----
-title: "ZK-LoRaWAN: Zero-Knowledge Privacy Layer for Solana DePIN Mesh Networks"
-language:
-- en
-tags:
-- zero-knowledge
-- zk-snark
-- lorawan
-- privacy
-- depin
-- solana
-- groth16
-license: apache-2.0
----
-
 # ZK-LoRaWAN
+**Zero-Knowledge Privacy, Semantic Compression, & Batch Settlement Layer for Solana DePIN**
 
-**Zero-Knowledge Privacy & Semantic Compression Layer for Solana DePIN Mesh Networks**
+[![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
+[![Zero-Knowledge](https://img.shields.io/badge/ZK--SNARKs-Groth16-blue?style=flat-square)](https://arkworks.rs)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green?style=flat-square)](LICENSE)
 
-![ZK-LoRaWAN Logo](./assets/logo.png)
-
-> *"The impossible is just code waiting to be written, physics waiting to be rewritten, math a work in progress, and truth waiting to be discovered."*
-
----
-
-## Overview
-
-ZK-LoRaWAN is a zero-knowledge privacy upgrade layer for Solana-based DePIN (Decentralized Physical Infrastructure) mesh networks. It enables edge IoT nodes to route semantic data packets through crowdsourced LoRa gateways **without revealing their hardware identity, wallet address, or message content** to eavesdroppers or on-chain observers.
-
-The protocol combines five proprietary inventions from the [Language-U Semantic Communication Protocol](https://github.com/DannyB-bit/zymatica.space) with Solana on-chain zero-knowledge proof verification:
-
-| Feature | Invention | Purpose |
-|:---|:---|:---|
-| **ZK Proof Compression** | LLD-AC Range Coding (Component 08) | Compress Groth16 proofs so ZK proof + 6D coordinates fit in a single 255-byte LoRa frame |
-| **ZK Semantic Gating** | Cuneiform-U Yin Hypercube (Component 02) | Range proofs over coordinate axes for private traffic prioritization |
-| **XOR-FEC Reconstruction** | Chirp Packetization (Component 06) | Self-healing radio packets that tolerate up to 20% bit corruption |
-| **VK Compression** | microByte JIT Inflation (Component 19) | Compress verifying keys for ESP32 flash storage (75% reduction) |
-| **Private Reputation** | Cognitive Observer + RCRA (Components 12 & 15) | Pedersen commitment + range proof for anonymous gateway trust |
-
-### On-Chain Settlement
-
-The Solana smart contract (Anchor framework) programmatically enforces a protocol fee of exactly **100,000 lamports** per verified routing event, funding ongoing R&D and network maintenance. Gateway rewards are settled via Solana Pay reference-key tracking.
-
-**Program ID (Devnet):** `2is5Q4rPBpZa2RUCXP7FFdHJUYSVNcW5iTxNuf5mSccy`
+> *"The impossible is just code waiting to be written, physics waiting to be rewritten, math a work in progress, and truth waiting to be discovered."* — The Universal Truth
 
 ---
 
-## Architecture
+## 📡 Overview
+
+**ZK-LoRaWAN** is a zero-knowledge privacy upgrade layer for Solana-based DePIN (Decentralized Physical Infrastructure) networks. It allows edge IoT devices to transmit real-world data packets over crowdsourced LoRa gateways **without exposing their hardware signatures (DevEUI/DevAddr), physical locations, or message payload contents** to eavesdroppers or the public ledger.
+
+By integrating the **Language-U Semantic Communication Protocol** with Solana's high-speed verification engine, ZK-LoRaWAN unlocks complete anonymity and high data density on top of standard LoRaWAN frequencies.
+
+### Key Architectural Inventions
+
+| Feature | Component | Technology | Purpose |
+|:---|:---|:---|:---|
+| **ZK Semantic Codec** | Component 09 | Shared concept vocabulary | Compresses *meaning* instead of raw bytes. Reconstructs up to 283 characters (47 words) of English from a 57-byte payload. |
+| **ZK Proof Compression** | Component 08 | LLD-AC Range Coding | Compresses Groth16 proofs so the proof bundle + payload fits in a single 255-byte LoRa MTU. |
+| **ZK Semantic Gating** | Component 02 | Yin Hypercube Range Proofs | Enforces priority constraints over coordinates without revealing the exact values. |
+| **XOR-FEC Parity Wrapping**| Component 06 | Self-healing packets | Tolerates up to 20% bit corruption over lossy radio frequencies. |
+| **Private Reputation** | Components 12/15 | Pedersen Commitments | Proves gateway trust scores on-chain without revealing the gateway's wallet history. |
+| **VK Compression** | Component 19 | microByte JIT Inflation | Reduces verifying keys by 75% to fit inside ESP32 microcontrollers. |
+
+---
+
+## 🛠️ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SENDER (Edge IoT Node)                       │
-│                                                                 │
-│  1. Raw Message → Cuneiform-U 6D Coordinates [6 bytes]          │
-│  2. Groth16 ZK-Proof Generation (BN254 curve)                   │
-│  3. LLD-AC Range Coding → Compress proof + coords               │
-│  4. XOR-FEC Parity Wrapping → Error-resilient frame             │
-│  5. LoRa Radio Transmission (915 MHz, SF7-SF10, 255-byte MTU)   │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ Radio Waves (915 MHz)
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   GATEWAY (Relay Node)                           │
-│                                                                 │
-│  1. XOR-FEC Reconstruction (self-heal corrupted bits)           │
-│  2. LLD-AC Decompression → Extract ZK proof + coordinates       │
-│  3. ZK Semantic Gating → Verify priority category range proof   │
-│  4. Pedersen Reputation Check → Verify own reputation > min     │
-│  5. Submit proof to Solana on-chain verifier                    │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ RPC Call
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                SOLANA BLOCKCHAIN (Anchor Program)                │
-│                                                                 │
-│  1. Groth16 Proof Verification (bilinear pairing check)         │
-│  2. Cuneiform-U Coordinate Registration (PDA)                   │
-│  3. Protocol Fee Collection → 100,000 lamports → Treasury       │
-│  4. Gateway Reward Settlement via Solana Pay                    │
-│  5. Reputation Commitment Update                                │
-└─────────────────────────────────────────────────────────────────┘
+                       OVER-THE-AIR (LoRa RF)             ON-CHAIN SETTLEMENT
+                                                          
+  ┌──────────────────┐                     ┌─────────────┐                    ┌──────────────┐
+  │  Edge IoT Node   │                     │   Gateway   │                    │    Solana    │
+  │  (Temp, GPS, etc)│                     │  Relayer    │                    │  Blockchain  │
+  └────────┬─────────┘                     └──────┬──────┘                    └──────┬───────┘
+           │                                      │                                  │
+           │ 1. Encode concept/value pairs        │                                  │
+           │    (UFO Semantic Codec)              │                                  │
+           │ 2. Generate Groth16 Proof (BN254)    │                                  │
+           │ 3. Apply LLD-AC Compression          │                                  │
+           │ 4. Wrap with XOR-FEC Parity          │                                  │
+           │                                      │                                  │
+           ├────────────[ LoRa RF Chirp ]────────►│                                  │
+           │           (915 MHz, 255B max)        │                                  │
+           │                                      │ 5. Reconstruct/Local ZK Verify   │
+           │                                      │    (Free local execution)        │
+           │                                      │ 6. Batch hashes (Merkle Tree)    │
+           │                                      │                                  │
+           │                                      ├───────────[ Submit Tx ]─────────►│
+           │                                      │           (1 Solana tx / batch)  │
+           │                                      │                                  │
+           │                                      │                                  │ 7. Verify Merkle Root
+           │                                      │                                  │    & execute fee-split:
+           │                                      │                                  │    - 100K lamports → Gateway
+           │                                      │                                  │    - 50K lamports → Treasury
+           │                                      │                                  │
+           │                                      │◄─────────[ Settle SOL ]──────────┤
+           │                                      │          (Direct payout)         │
 ```
 
 ---
 
-## Directory Structure
+## 💰 Economics & Compensation Model
+
+ZK-LoRaWAN utilizes a sustainable fee-split model designed to incentivize gateway deployment while remaining highly competitive against cellular IoT alternatives.
+
+*   **Total Fee per Chirp:** **150,000 lamports** (0.00015 SOL, or **$0.01206 USD** at $80.41/SOL).
+    *   **Gateway Relayer Reward:** **100,000 lamports** ($0.00804 USD) — Paid directly to the gateway operator.
+    *   **Protocol Treasury Fee:** **50,000 lamports** ($0.00402 USD) — Dedicated to project development and developer rewards.
+
+### Dual-Verification Modes (User Choice)
+
+Users can select between two settlement modes depending on latency and budget requirements:
+
+1.  **⚡ Single Mode (Instant Verification):**
+    *   *Tradeoff:* 1 chirp = 1 Solana transaction.
+    *   *Base Cost:* 150,000 lamports + Solana transaction fee (~5,000 lamports).
+    *   *Best for:* Real-time, critical tracking (alarms, medical emergencies).
+2.  **📦 Batch Mode (Accumulated Settlement):**
+    *   *Tradeoff:* Gateway aggregates up to 100 chirps into a local buffer and submits them in a single Solana transaction containing a Merkle root.
+    *   *Base Cost:* 150,000 × $N$ lamports + a single shared Solana transaction fee (~5,000 lamports).
+    *   *Base Fee Savings:* Saves $(N-1) \times 5,000$ lamports in transaction fees.
+    *   *Best for:* Scheduled sensors (weather, soil pH, GPS tracking).
+
+### Cost Comparison (SOL = $80.41)
+
+| Use Case | Transmission Frequency | Readings/Day | Helium (No Privacy) | ZK-LoRaWAN Batch (Full ZK) | Packet Reduction | Battery Increase |
+|:---|:---|:---|:---|:---|:---:|:---:|
+| **Simple Sensor** | Hourly (temp only) | 24 | $0.09 / yr | **$10.95 / yr** | 0% | 1.0× |
+| **Agricultural Array**| Every 30 mins | 672 | $1.23 / yr | **$10.95 / yr** | 86% | 7.0× |
+| **Weather Station** | Every 15 mins | 1,152 | $2.10 / yr | **$10.95 / yr** | 83% | 6.0× |
+| **GPS Fleet Tracker** | Every 3 mins | 2,880 | $5.26 / yr | **$54.75 / yr** | 67% | 3.0× |
+| **Medical Wearable**  | Every 5 mins | 2,880 | $5.26 / yr | **$32.85 / yr** | 80% | 5.0× |
+| **Industrial Monitor**| Every 1 min | 25,920 | $47.30 / yr | **$164.25 / yr** | 89% | 9.0× |
+
+*Note: ZK-LoRaWAN leverages the **UFO Semantic Codec** to fit up to 18 readings into a single chirp, reducing necessary radio transmissions by up to 89% and dramatically extending battery lifespan.*
+
+---
+
+## 📂 Repository Directory Structure
 
 ```
 zk-lorawan/
 ├── programs/
 │   └── zk_lorawan/
+│       ├── Cargo.toml              # Program dependencies
 │       └── src/
-│           └── lib.rs              # Anchor smart contract
+│           └── lib.rs              # Dual-mode Solana program contract (Anchor)
+├── groth16/
+│   ├── Cargo.toml
+│   └── src/
+│       ├── main.rs                 # Groth16 prover / verifier demo (ark-works)
+│       └── circuit.rs              # MiMC-hash circuit definitions
+├── semantic_codec/
+│   ├── __init__.py
+│   └── semantic_codec.py           # UFO semantic compression codec (Component 09)
+├── gateway/
+│   ├── __init__.py
+│   └── gateway.py                  # LoRa listener & Solana bridge daemon
 ├── proof_compression/
-│   ├── lld_ac_encoder.py           # LLD-AC range coding for ZK proof serialization
-│   ├── lld_ac_decoder.py           # LLD-AC decoder for proof reconstruction
-│   └── README.md
+│   └── lld_ac_encoder.py           # Component 08: LLD-AC range coder
 ├── fec/
-│   ├── xor_fec.py                  # XOR Forward Error Correction encoder/decoder
-│   └── README.md
+│   └── xor_fec.py                  # Component 06: XOR self-healing parity engine
 ├── semantic_gating/
-│   ├── range_proof.py              # Groth16 range proof circuit for coordinate gating
-│   ├── cuneiform_coords.py         # 6D Cuneiform-U coordinate encoder
-│   └── README.md
+│   └── range_proof.py              # Component 02: Yin hypercube gating proofs
 ├── reputation/
-│   ├── pedersen_commitment.py      # Pedersen commitment scheme for gateway scores
-│   ├── reputation_range_proof.py   # ZK range proof for private reputation verification
-│   └── README.md
+│   └── pedersen_reputation.py      # Components 12/15: Private reputation system
 ├── vk_compression/
-│   ├── microbyte_jit.py            # microByte JIT VK compressor for ESP32 targets
-│   └── README.md
-├── multi_language_proofs/
-│   ├── rust/                       # Rust ZK proof verifier
-│   ├── go/                         # Go ZK proof verifier
-│   ├── java/                       # Java ZK proof verifier
-│   ├── python/                     # Python ZK proof verifier
-│   ├── typescript/                 # TypeScript ZK proof verifier
-│   └── ...                         # 20 language implementations
+│   └── microbyte_jit.py            # Component 19: VK JIT compressor
+├── tools/
+│   └── lora_chirp_recovery.sh      # RAK/Semtech concentrator recovery script
 ├── tests/
-│   ├── test_compression.py         # LLD-AC compression ratio tests
-│   ├── test_fec.py                 # XOR-FEC reconstruction tests
-│   ├── test_gating.py              # Semantic gating range proof tests
-│   ├── test_reputation.py          # Private reputation verification tests
-│   └── verify_all_proofs.py        # Master 20-language verification harness
-├── gateway_configs/
-│   ├── node_1_mainhub.json         # Rochester Computer Lab (AC Grid)
-│   ├── node_2_statepark.json       # Adirondack Mountains (Solar, SF10)
-│   ├── node_3_urban.json           # Downtown (Concrete, SF8)
-│   ├── node_4_lakeontario.json     # Over-water path (Solar, SF9)
-│   └── node_5_backup.json          # Mobile backup node
-├── assets/
-│   └── logo.png
-├── WHITEPAPER.md                   # Full technical whitepaper
-├── CONTRIBUTING.md
-├── LICENSE                         # Apache 2.0
-└── README.md                       # This file
+│   ├── verify_all_modules.py       # Master integration test runner
+│   ├── test_batch_cost.py          # Batch economics calculator
+│   └── test_semantic_compression.py# Semantic codec round-trip validation
+├── Anchor.toml                     # Anchor workspace configuration
+├── Cargo.toml                      # Root workspace Cargo manifest
+├── Dockerfile                      # Gateway Docker container definition
+└── requirements-gateway.txt        # Gateway Python dependencies
 ```
 
 ---
 
-## Security Properties
+## ⚡ Quick Start
 
-| Property | Mechanism | Status |
-|:---|:---|:---:|
-| Unlinkable transmissions | Fresh Groth16 proof per packet | ✅ |
-| Selective disclosure | ZK range proofs over Cuneiform-U coordinates | ✅ |
-| Forward secrecy | Rotating keypairs with ECDSA/Ed25519 | ✅ |
-| Replay protection | Timestamp + nonce in ZK public inputs | ✅ |
-| Hardware fingerprint resistance | ZK-Proof replaces static device UIDs | ✅ |
-| RF corruption tolerance | XOR-FEC parity (up to 20% loss recovery) | ✅ |
-| Private gateway reputation | Pedersen commitment + range proof | ✅ |
-| Bandwidth efficiency | LLD-AC compressed proof + coords ≤ 255 bytes | ✅ |
-
----
-
-## Quick Start
+### 1. Run the Entire ZK-LoRaWAN Test Suite
+Run the master verification harness to validate all components, including proof compression, self-healing parity, range proofs, semantic codec, and the gateway engine simulation:
 
 ```bash
-# Run the master verification suite
-python tests/verify_all_proofs.py
+python tests/verify_all_modules.py
+```
 
-# Test LLD-AC proof compression
-python tests/test_compression.py
+### 2. Run the Semantic Codec Test Directly
+Verify that 18 raw sensor readings can successfully compress and decompress with 100% losslessness:
 
-# Test XOR-FEC reconstruction
-python tests/test_fec.py
+```bash
+python tests/test_semantic_compression.py
+```
 
-# Test ZK semantic gating
-python tests/test_gating.py
+### 3. Build & Run the Gateway Container
+To run the ZK-LoRaWAN gateway bridge in a containerized environment:
 
-# Test private reputation verification
-python tests/test_reputation.py
+```bash
+docker build -t zk-lorawan-gateway .
+docker run -e SOLANA_RPC="https://api.devnet.solana.com" zk-lorawan-gateway
+```
+
+### 4. RAK/Semtech Concentrator Hardware Recovery
+If deploying to physical hardware (e.g., RAK wireless gateway HAT), use the hardware recovery tool to reset conflicting packet-forwarders and verify concentrator SPI status:
+
+```bash
+bash tools/lora_chirp_recovery.sh
 ```
 
 ---
 
-## Technical Stack
+## 🌐 Related Ecosystem Repositories
 
-| Component | Technology |
-|:---|:---|
-| Elliptic Curves | BN254 (Groth16), secp256k1 (Identity), Ed25519 (Solana) |
-| Hash Functions | SHA-256, RIPEMD-160, Poseidon (ZK-friendly) |
-| Encryption | ECIES (Elliptic Curve Integrated Encryption Scheme) |
-| ZK Proofs | Groth16 ZK-SNARKs on BN254 |
-| Proof Compression | LLD-AC Arithmetic Range Coding (Component 08) |
-| Error Correction | XOR Forward Error Correction (Component 06) |
-| VK Compression | microByte JIT Inflation (Component 19) |
-| Reputation | Pedersen Commitments + Range Proofs (Components 12, 15) |
-| Semantic Gating | Cuneiform-U Range Proofs (Component 02) |
-| On-Chain Layer | Solana (Anchor framework) |
-| Payments | Solana Pay (reference-key tracking) |
-| LoRa Modulation | SX1302 HAL, 915 MHz, SF7-SF10, 125-250 kHz |
-| Identity Namespace | zymatica.space |
+*   [zymatica.space](https://github.com/DannyB-bit/zymatica.space) — Core Language-U specifications.
+*   [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) — Native verification engines.
+*   [zk-lora-milestone-1](https://github.com/DannyB-bit/zk-lora-milestone-1) — RF hardware evidence captures.
+*   [zk-lora-milestone-2](https://github.com/DannyB-bit/zk-lora-milestone-2) — Multi-language verification proofs.
 
 ---
 
-## Related Repositories
+## 👥 Authors & License
 
-| Repository | Description |
-|:---|:---|
-| [zymatica.space](https://github.com/DannyB-bit/zymatica.space) | Master repository of 34 Language-U inventions |
-| [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) | Original ZK-LoRa proof verification suite |
-| [zk-lora-milestone-1](https://github.com/DannyB-bit/zk-lora-milestone-1) | Milestone 1: Hardware RF evidence & native verifiers |
-| [zk-lora-milestone-2](https://github.com/DannyB-bit/zk-lora-milestone-2) | Milestone 2: Multi-language proofs (20 languages) |
-| [zk-lora-milestone-3](https://github.com/DannyB-bit/zk-lora-milestone-3) | Milestone 3: Full project daemons (Rust, Go, TypeScript) |
-| [solana-cuneiform-milestone1](https://github.com/DannyB-bit/solana-cuneiform-milestone1) | Solana Semantic Anchor: Devnet deployment |
-| [solana-cuneiform-milestone2](https://github.com/DannyB-bit/solana-cuneiform-milestone2) | Solana Pay mesh gateway integration |
-| [solana-cuneiform-milestone3](https://github.com/DannyB-bit/solana-cuneiform-milestone3) | 5-node physical gateway configurations |
+Developed by **TheAiCollective.art**:
+*   **zymatica.space** — Core protocol architect.
+*   **astronautshe.com** — Embedded systems and hardware lead.
+*   **DevsOne** — AI agentic systems engineering.
 
----
-
-## Funding
-
-This project is submitted for grant funding from the **Solana Foundation** via [Superteam Earn](https://superteam.fun/earn/grants/solana-foundation-usa-grants).
-
-**Protocol Fee:** 100,000 lamports per verified routing event → Treasury wallet `CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ`
-
----
-
-## Authors
-
-This project is developed by **TheAiCollective.art**:
-* **zymatica.space:** Core framework architect and developer.
-* **astronautshe.com:** Edge systems engineer and developer.
-* **DevsOne:** Hybrid agentic developer.
-
-*We Are TheAiCollective.art*
-
----
-
-## License
-
-This project is licensed under the **Apache License 2.0** — see the [LICENSE](./LICENSE) file for details.
+Licensed under the **Apache License 2.0** — see [LICENSE](./LICENSE) for details.
