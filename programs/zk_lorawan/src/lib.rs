@@ -8,12 +8,12 @@
 //
 //   MODE A — Single Chirp:
 //     1 chirp = 1 Solana tx
-//     Fee: 200,000 lamports + Solana base fee (~5,000)
+//     Fee: 150,000 lamports + Solana base fee (~5,000)
 //     Best for: low-volume devices, real-time verification
 //
 //   MODE B — Batch (up to 100 chirps):
 //     N chirps = 1 Solana tx
-//     Fee: 200,000 × N lamports + Solana base fee (~5,000)
+//     Fee: 150,000 × N lamports + Solana base fee (~5,000)
 //     Best for: high-volume devices, gateways with many clients
 //     Saves: (N-1) × ~5,000 lamports in Solana base fees
 //
@@ -157,8 +157,8 @@ pub mod zk_lorawan {
     }
 
     // B.3 — Submit (finalize) the batch
-    // NOW fees are charged: 200,000 lamports × chirp_count
-    // Gateway gets 160,000 × N, Treasury gets 40,000 × N
+    // NOW fees are charged: 150,000 lamports × chirp_count
+    // Gateway gets 100,000 × N, Treasury gets 50,000 × N
     // Merkle root computed and stored on-chain
     // ========================================================================
     pub fn submit_batch(ctx: Context<SubmitBatch>) -> Result<()> {
@@ -178,7 +178,7 @@ pub mod zk_lorawan {
         let total_treasury_fee = PROTOCOL_FEE_LAMPORTS * n;
         let total_fee = total_gateway_reward + total_treasury_fee;
 
-        // Transfer gateway reward (160,000 × N)
+        // Transfer gateway reward (100,000 × N)
         anchor_lang::solana_program::program::invoke(
             &system_instruction::transfer(
                 &ctx.accounts.sender.key(),
