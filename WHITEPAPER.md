@@ -4,17 +4,17 @@
 ## AI Swarm / Pod: zymatica.space, astronautshe.com, Devs One + 9 other AI dev agents
 ## Core Developers: LEAD ARCHITECT: Danny Bouldiez + 2 human Devs
 ## Team Roles: zymatica (Lead Cryptographer), astronautshe (Edge Systems Engineer), Devs One (AI Swarm)
-## Platform: Solana Shielded Pool, ARM TrustZone-M (ATECC608A), Semtech SX1302/1303 HAL
+## Platform: Solana Shielded Pool (Roadmap), ARM TrustZone-M (Roadmap), Semtech SX1302/1303 HAL
 ## Status: Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned
 
 ---
 
 # 1. Executive Summary
-Traditional LoRaWAN communication has a critical privacy gap: lack of end-to-end user-layer anonymity, open device hardware tracking, and vulnerability to physical/behavioral mapping. **ZK-LoRaWAN** (Zero-Knowledge LoRaWAN) introduces a secure, decentralized privacy layer for edge computing networks. By combining Solana's high-performance parallel processing, zero-knowledge proofs (Groth16 on the BN254 curve), a global Shielded Escrow Pool, and hardware-enclave attestation, ZK-LoRaWAN allows autonomous edge nodes to communicate over public RF spectrum without revealing their cryptographic keys, wallet identities, or geographical positions to the public ledger.
+Traditional LoRaWAN communication has a privacy gap: lack of end-to-end user-layer anonymity, open device hardware tracking, and vulnerability to physical/behavioral mapping. **ZK-LoRaWAN** (Zero-Knowledge LoRaWAN) introduces a secure, decentralized privacy layer for edge computing networks. By combining Solana's high-performance parallel processing, zero-knowledge proofs (Groth16 on the BN254 curve), a proposed global Shielded Escrow Pool, and hardware-enclave attestation, ZK-LoRaWAN allows autonomous edge nodes to communicate over public RF spectrum without revealing their cryptographic keys, wallet identities, or geographical positions to the public ledger.
 
-This project represents a massive opportunity for the Solana community to bridge digital privacy with physical hardware by leveraging existing DePIN infrastructure. The Helium network built a global RF infrastructure with over 980,000 registered hotspots. As Helium's reward structures and optimization proposals evolve, a significant portion of these gateways have become underutilized, offline, or economically dormant.
+This project represents an opportunity for the Solana community to bridge digital privacy with physical hardware by leveraging existing DePIN infrastructure. The Helium network built a global RF infrastructure with over 980,000 registered hotspots. As Helium's reward structures and optimization proposals evolve, a significant portion of these gateways have become underutilized, offline, or economically dormant.
 
-ZK-LoRaWAN provides a highly realistic, secondary utility for these pre-certified devices—including over 300,000 RAKwireless-manufactured hotspots equipped with Semtech SX1302/SX1303 concentrator chips and Raspberry Pi compute units. Senders run data transmission and signature flows inside a physical secure element. Senders utilize zero-knowledge proofs to route packets through crowdsourced gateways and settle incentives without revealing their hardware identities to the blockchain ledger.
+ZK-LoRaWAN provides a secondary utility for these pre-certified devices—including over 300,000 RAKwireless-manufactured hotspots equipped with Semtech SX1302/SX1303 concentrator chips and Raspberry Pi compute units. Senders run data transmission and signature flows inside a physical secure element. Senders utilize zero-knowledge proofs to route packets through crowdsourced gateways and settle incentives without revealing their hardware identities to the blockchain ledger.
 
 The transaction fees, gateway rewards, and protocol splits are processed dynamically on-chain using native **SOL**. Senders deposit funds into a global, shared pool. When a gateway routes a packet, the sender is billed anonymously. Senders split the routing fee to charge a protocol developer fee of exactly **50,000 lamports** and a gateway routing reward of **100,000 lamports** per packet to support long-term network growth and maintain the open-source codebase.
 
@@ -25,10 +25,10 @@ Deploying AI and IoT nodes at the physical edge (on low-power hardware like Heli
 
 | The Traditional Problem | The ZK-LoRaWAN Solution |
 | :--- | :--- |
-| **Identity Exposure:** Every packet contains a static hardware ID (MAC address, DevEUI, or DevAddr) allowing eavesdroppers to track and map node locations physically. | **ZK-Identity Masking:** Senders mask their identities behind a fresh Groth16 zero-knowledge proof for every packet. The gateway verifies the proof to authorize routing, but never learns who is transmitting. |
-| **Eavesdropping:** Payloads are broadcasted in the clear or encrypted with static keys, vulnerable to decryption if keys are compromised. | **Recipient-Only ECIES:** Messages are encrypted with the recipient's public key using the Elliptic Curve Integrated Encryption Scheme (ECIES), providing forward secrecy. |
+| **Identity Exposure:** Every packet contains a static hardware ID (MAC address, DevEUI, or DevAddr) allowing eavesdroppers to track and map node locations physically. | **ZK-Identity Masking:** Senders mask their identities behind a fresh Groth16 zero-knowledge proof for every packet. The gateway verifies the proof locally to authorize routing without identifying the sender. |
+| **Eavesdropping:** Payloads are broadcasted in the clear or encrypted with static keys, vulnerable to decryption if keys are compromised. | **Recipient-Only ECIES (Roadmap):** Messages are encrypted with the recipient's public key using the Elliptic Curve Integrated Encryption Scheme (ECIES) to provide forward secrecy. |
 | **Spam & DDoS Attacks:** The low cost of RF transmissions allows malicious jammers to flood the channels, exhausting edge verifier CPU and battery resources. | **Semantic Gating Proofs:** Senders attach a non-interactive range proof constraining packet coordinates. Malformed data or out-of-boundary spam is rejected at the physical RF layer. |
-| **Uncompensated Relaying:** Gateways must route packets for free out of altruism, or rely on individual accounts that reveal the exact sender-gateway relationship on the public ledger. | **Solana Shielded Pool:** All escrow funds reside in a single shared pool. Gateways are paid out using a ZK proof and a unique nullifier. No observer can link the transaction back to the sender's account. |
+| **Uncompensated Relaying:** Gateways must route packets for free out of altruism, or rely on individual accounts that reveal the exact sender-gateway relationship on the public ledger. | **Solana Shielded Pool (Proposed):** All escrow funds reside in a global shared pool. Gateways are paid out using a ZK proof and a unique nullifier, decoupling the sender-gateway relation. |
 
 ---
 
@@ -37,8 +37,8 @@ Deploying AI and IoT nodes at the physical edge (on low-power hardware like Heli
 ## Layer 0.5: 6D Cuneiform-U Semantic Coordinates
 Under Component 02 of the Language-U protocol, edge nodes compress message intent into a 6-axis semantic coordinate system representing: Domain, Subdomain, Modality, Polarity, Strength, and Depth. These coordinates are committed using Pedersen commitments (C = g^v * h^r mod BN254) to enable private gating verification at the RF layer without disclosing the node's exact data values or geographical location.
 
-## Layer 1: Elliptic Curve Identity Derivation
-ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair using the secp256k1 elliptic curve locally. The public key is hashed using SHA-256 followed by RIPEMD-160 (HASH160) to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used for public addressing, while the private key is held strictly inside the hardware enclave.
+## Layer 1: Proposed Elliptic Curve Identity Derivation (Roadmap)
+ZK-LoRaWAN proposes a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair using the secp256k1 elliptic curve locally. The public key is hashed using SHA-256 followed by RIPEMD-160 (HASH160) to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used for public addressing, while the private key is held strictly inside the hardware enclave.
 
 ```
 Private Key (256-bit secret)
@@ -48,7 +48,7 @@ Public Key (65-byte uncompressed)
 LoRa Phone Number: AGENT-7F3A9B2C@zymatica.space
 ```
 
-## Layer 2: Recipient-Only ECIES Encryption
+## Layer 2: Proposed Recipient-Only ECIES Encryption (Roadmap)
 To ensure privacy-preserving confidentiality over public RF bands, payloads are encrypted using the Elliptic Curve Integrated Encryption Scheme (ECIES). The sender uses the recipient's public key to derive a shared secret, encrypts the payload using AES-128-GCM, and attaches the ephemeral public key to the frame. Only the holder of the recipient's private key can decrypt the message.
 
 ```json
@@ -65,36 +65,44 @@ To ensure privacy-preserving confidentiality over public RF bands, payloads are 
 ---
 
 # 4. Zero-Knowledge Proofs
-The core privacy mechanism of ZK-LoRaWAN is the decoupling of authentication from identity. Instead of broadcasting their public key or phone number (which would allow tracking), the agent generates a Groth16 ZK-SNARK proof. This proof mathematically demonstrates that the sender knows a valid private key corresponding to an active leaf in the Shielded Escrow Pool's Merkle tree, without revealing the private key, public key, or escrow balance itself.
+The core privacy mechanism of ZK-LoRaWAN is the decoupling of authentication from identity. Instead of broadcasting their public key or identity (which would allow tracking), the agent generates a Groth16 ZK-SNARK proof. This proof mathematically demonstrates that the sender knows a valid private key corresponding to an active leaf in the Shielded Escrow Pool's Merkle tree, without revealing the private key, public key, or escrow balance itself.
 
-The proof constraints are written in Circom/arkworks and verify that the public inputs match the secret witness. Below is the circom circuit used to prove agent validity on BabyJubjub:
+The proof constraints are written in Rust using the `arkworks` libraries (e.g. `ark-relations`, `ark-bn254`), compiling a Groth16 circuit directly over the `BN254` elliptic curve. To hash witnesses and constrain public identity inputs, the circuit uses a `MiMC-7` constraint system helper.
 
-```circom
-// ZK-SNARK Agent Validity Circuit (AgentValidityProof.circom)
-pragma circom 2.0.0;
+Below is the core R1CS synthesizer implementation used to constrain node verification:
 
-include "node_modules/circomlib/circuits/poseidon.circom";
-include "node_modules/circomlib/circuits/babyjubjub.circom";
+```rust
+// Real Groth16 ZK-SNARK Circuit (groth16/src/circuit.rs)
+pub struct ZKLoRaCircuit<F: PrimeField> {
+    // Secret inputs (witnesses)
+    pub private_key: Option<F>,
+    pub decryption_key: Option<F>,
+    pub coordinate_val: Option<F>,
+    pub firmware_hash_witness: Option<F>,
 
-template AgentValidityProof() {
-    signal input private_key;      // Witness (Secret Private Key)
-    signal input public_key_hash;  // Public Input (Registered Identity Hash)
-    signal output valid;           // 1 if valid, 0 if invalid
+    // Public inputs
+    pub identity_hash: Option<F>,
+    pub nullifier_hash: Option<F>,
+    pub attestation_hash: Option<F>,
+    pub ciphertext_hash: Option<F>,
 
-    // Derive public key on BabyJubjub curve
-    component derive_pubkey = BabyJubjubDerive();
-    derive_pubkey.private_key <== private_key;
+    pub round_constants: Vec<F>,
+}
 
-    // Hash the derived public key using Poseidon
-    component hasher = Poseidon(2);
-    hasher.inputs[0] <== derive_pubkey.x;
-    hasher.inputs[1] <== derive_pubkey.y;
-
-    // Enforce that the hash matches the public input
-    hasher.out === public_key_hash;
-    valid <== 1;
+impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
+    fn generate_constraints(self, cs: ConstraintSystemRef<F>) -> Result<(), SynthesisError> {
+        // Enforces MiMC-based hash: output = mimc(input + salt)
+        // Enforces constraints: (current + c)^2 = sq_var, sq_var * (current + c) = next_var
+        ...
+    }
 }
 ```
+
+The circuit enforces the following validation constraints:
+1. **Balance Owner Identity**: `mimc_hash(private_key, salt=None) == identity_hash` (proving key ownership).
+2. **Nullifier Verification**: `mimc_hash(private_key, salt=9999) == nullifier_hash` (preventing double-spend payouts).
+3. **Micro-TEE Attestation (Roadmap)**: `mimc_hash(private_key, salt=firmware_hash_witness) == attestation_hash` (proving execution inside an authorized firmware enclave).
+4. **zk-VDE Decryption (Roadmap)**: `mimc_hash(decryption_key, salt=coordinate_val) == ciphertext_hash` (ensuring atomic payload routing updates).
 
 ---
 
@@ -104,10 +112,10 @@ The Solana Shielded Micropayment mechanism is the economic engine of ZK-LoRaWAN.
 ### 5.1 The Core Problem: Altruism vs. Financial Privacy
 In traditional off-grid mesh networks (like Meshtastic), nodes relay packets for free out of altruism. However, altruism does not scale to global, professional, or high-reliability networks. Conversely, paying gateways using a public blockchain (like Bitcoin or Solana individual PDAs) destroys user privacy. An observer can look at the ledger, see that Wallet-A paid Gateway-B, and instantly deduce who is transmitting, which physical gateway routed the message (revealing their location), and the exact timing of the communication.
 
-### 5.2 The Solana Shielded Pool Solution
-ZK-LoRaWAN solves this by using a global, shared **ShieldedEscrowPool** contract on Solana. All senders deposit SOL into the pool. When a gateway routes a packet, the sender generates a Groth16 proof showing they have an active leaf with a sufficient balance and creates a Nullifier Hash. The gateway submits this proof. The Solana smart contract verifies the proof, marks the nullifier as spent, and pays the gateway in public SOL.
+### 5.2 The Solana Shielded Pool Solution (Proposed)
+ZK-LoRaWAN proposes a global, shared **ShieldedEscrowPool** contract on Solana. Senders deposit SOL into the pool. When a gateway routes a packet, the sender generates a Groth16 proof showing they have an active leaf with a sufficient balance and creates a Nullifier Hash. The gateway submits this proof. The Solana smart contract verifies the proof, marks the nullifier as spent, and pays the gateway in public SOL.
 
-Because the ledger only sees a root hash change and a randomized nullifier, it provides **100% full on-chain anonymity**. Furthermore, because Solana transactions support atomic, multi-instruction execution, the payment split is designed to be configurable: a developer fee of exactly **50,000 lamports** and a gateway routing reward of **100,000 lamports** are settled programmatically in a single instruction.
+Because the ledger only sees a root hash change and a randomized nullifier, it provides **100% full on-chain anonymity**. Furthermore, because Solana transactions support atomic execution, the payment split is designed to be configurable: a developer fee of exactly **50,000 lamports** and a gateway routing reward of **100,000 lamports** are settled programmatically.
 
 ---
 
@@ -126,12 +134,15 @@ Below is the step-by-step transaction flow showing the off-grid interaction betw
          |                                                     |
          | 4. Compresses Proof + Coordinates (LLD-AC)          |
          |                                                     |
-         | 5. Transmits LLD-AC Frame (189 bytes)               |
+         | 5. Transmits LLD-AC Frame                           |
          | --------------------------------------------------> |
          |                                                     | 6. Decompresses Frame
          |                                                     | 7. Verifies proof locally
-         |                                                     | 8. Submits batch verify
-         |                                                     |    instruction to Solana
+         |                                                     | 8. Submits verification
+         |                                                     |    transactions to Solana.
+         |                                                     |    (Uses N+2 decoupled transactions
+         |                                                     |    to initialize the batch, add each
+         |                                                     |    chirp, and finalize payouts.)
          |                                                     |    &darr;
          |                                                     |    [ Solana Validator ]
          |                                                     |      - Verifies Groth16 proof
@@ -168,7 +179,7 @@ To understand how ZK-LoRaWAN scale-out works, it is essential to clarify the div
 For flash-constrained edge nodes (such as ESP32 microcontrollers), storing standard Groth16 verifying keys (~2-4 KB) wastes precious storage. Under Component 19, ZK-LoRaWAN implements microByte JIT VK compression. Verifying keys are compressed into compact seeds (<1 KB) and dynamically inflated in-memory on the edge device during verification time, optimizing system storage constraints.
 *   **Proving on the Edge (The Client):** The sender device (e.g., a low-power ESP32 or Raspberry Pi) generates the ZK-SNARK proof locally. Historically, this required massive computing power. Today, thanks to modern elliptic curves (BN254), generating a proof takes only **1.2 seconds** and less than **40MB of RAM**. The edge node does the heavy lifting of constructing the private proof without leaking its identity.
 *   **Verification on the Network (Solana Validators):** Solana validators do not generate the ZK-proofs. Instead, they verify them. Verifying a proof is incredibly lightweight, taking less than **1.5 milliseconds** on-chain. This asymmetric design is perfect for DePIN: low-power IoT devices construct secure, private proofs on-chip, while the global Solana validator network provides parallel, high-speed verification and settlement.
-*   **Hardware Attestation Binding (Micro-TEE):** The edge node binds its private key and ZK proof to an ARM TrustZone-M secure enclave (ATECC608A) signature. If the node is physically opened or modified, the attestation report fails, and the Solana smart contract rejects the proof, making the device 100% scam-proof.
+*   **Proposed Hardware Attestation Binding (Micro-TEE - Roadmap):** Senders are planned to bind their private keys and ZK proofs to an ARM TrustZone-M secure enclave (ATECC608A) signature. If the node is physically opened or modified, the attestation report fails, and the Solana smart contract rejects the proof, blocking revoked or compromised hardware.
 
 ---
 
@@ -185,35 +196,38 @@ Tens of thousands of soil moisture and wildfire detection sensors are scattered 
 
 ---
 
-# 10. Cryptographic Security & Anti-Fraud
+# 10. Cryptographic Security & Proposed Anti-Fraud (Roadmap)
 
-### 10.1 Physical RF Layer & Gateway Mitigations
-*   **Replay Protection:** Every ZK-proof binds a UTC timestamp and an ephemeral nonce. Gateways reject any packet outside a &plusmn;5-second window or with a duplicate nonce.
-*   **Sybil Spam Prevention:** Sending nodes must solve an RF-Proof-of-Work challenge, or present a symmetric HMAC using their registered session key (verified in &lt;1&mu;s), protecting the ZK-SNARK engine from CPU exhaustion.
-*   **Lying Gateway Prevention:** Senders use ZK-Proof-of-Delivery (ZK-PoD). The routing fee is locked until the gateway presents a cryptographic receipt signed by the destination node, ensuring gateways cannot claim rewards and drop packets.
+### 10.1 Physical RF Layer & Gateway Proposed Mitigations (Roadmap)
+*   **Proposed Replay Protection:** Every ZK-proof binds a UTC timestamp and an ephemeral nonce. Gateways are proposed to reject any packet outside a &plusmn;5-second window or with a duplicate nonce.
+*   **Proposed Sybil Spam Prevention:** Sending nodes are proposed to solve an RF-Proof-of-Work challenge, or present a symmetric HMAC using their registered session key (verified in &lt;1&mu;s) to protect the ZK-SNARK engine from CPU exhaustion.
+*   **Proposed Lying Gateway Prevention:** Senders are planned to use ZK-Proof-of-Delivery (ZK-PoD). The routing fee is locked until the gateway presents a cryptographic receipt signed by the destination node, ensuring gateways cannot claim rewards and drop packets.
 
-### 10.2 Advanced Hardware Scams & ZKCP
+### 10.2 Proposed Advanced Hardware Scams & ZKCP Mitigations (Roadmap)
 | Attack Vector | Mitigation Mechanism | Security Guarantee |
 | :--- | :--- | :--- |
-| **Replay Attack** | Nonces + &plusmn;5s Timestamp Window | Duplicate packets rejected instantly. |
-| **Sybil Spam** | HMAC + RF-Proof-of-Work | Gateway Jitter & Verifier CPU exhausted jammers filtered. |
-| **Location Spoofing** | Time-of-Flight (ToF) RTT Checks | Physical distance verified via SX1302 clock. |
-| **Gorgon Attack** | ZK-Proof-of-Delivery (ZK-PoD) | No fee payout without delivery receipt. |
-| **Free Rider Relay** | Neighbor Auditing & Reputation | Black-hole nodes bypassed dynamically. |
+| **Replay Attack** | Nonces + &plusmn;5s Timestamp Window (Proposed) | Duplicate packets rejected instantly. |
+| **Sybil Spam** | HMAC + RF-Proof-of-Work (Proposed) | Gateway Jitter & Verifier CPU exhausted jammers filtered. |
+| **Location Spoofing** | Time-of-Flight (ToF) RTT Checks (Proposed) | Physical distance verified via SX1302 clock. |
+| **Gorgon Attack** | ZK-Proof-of-Delivery (ZK-PoD) (Proposed) | No fee payout without delivery receipt. |
+| **Free Rider Relay** | Neighbor Auditing & Reputation (Proposed) | Black-hole nodes bypassed dynamically. |
 
 ---
 
 # 11. Performance & Bandwidth Analysis
 Because LoRa is a low-bandwidth modulation scheme operating in unlicensed Industrial, Scientific, and Medical (ISM) radio bands, packet size and regulatory compliance are critical. ZK-LoRaWAN operates on license-free spectrum globally, including US915 (902-928 MHz) in North America, EU868 (863-870 MHz) in Europe (subject to a strict 1% duty cycle limit), and AU915 in South America. This allows completely permissionless deployment with typical transmission ranges of 2 to 5 km in urban areas, 10 to 15 km in rural line-of-sight, and up to 30+ km from high-elevation nodes (such as hilltops or drones).
 
-To maximize efficiency and avoid packet fragmentation, ZK-LoRaWAN optimizes its packet size. While the physical layer limit of Semtech transceivers is 255 bytes, standard unfragmented LoRaWAN payloads are capped between 222 and 242 bytes. ZK-LoRaWAN supports an **Unfragmented Single-Packet Mode** by utilizing our **LLD-AC arithmetic coding** to compress the 256-byte ZK-proof and attestation bundle to just `189 bytes`.
+To maximize efficiency and avoid packet fragmentation, ZK-LoRaWAN optimizes its packet size. While the physical layer limit of Semtech transceivers is 255 bytes, standard unfragmented LoRaWAN payloads are capped between 222 and 242 bytes. ZK-LoRaWAN supports an **Unfragmented Single-Packet Mode** by utilizing our **LLD-AC arithmetic coding** to compress a structured mock proof and attestation bundle to just `189 bytes` (or `118 bytes` total including coordinates in self-tests). 
+
+> [!NOTE]
+> **Important Qualification on Real Proof Material:** High-entropy real proofs (such as those generated dynamically by standard libraries) contain higher noise levels and require up to 512 bytes for uncompressed coordinate representation, as used in the gateway demo. Therefore, standard 255-byte unfragmented LoRa transmission requires packet fragmentation/segmentation, proof aggregation, or highly constrained proof parameters.
 
 | Component | Size (Bytes) | Airtime @ SF9, 125kHz |
 | :--- | :--- | :--- |
 | Preamble & Header | 28 | ~80 ms |
-| Encrypted Payload (ECIES) | 43 | ~140 ms |
+| Encrypted Payload (ECIES - Roadmap) | 43 | ~140 ms |
 | ZK-SNARK Proof + Attestation (Compressed via LLD-AC) | 184 | ~450 ms |
-| **Total Packet** | **255** | **~670 ms** |
+| **Total Packet (Single-Packet Mode)** | **255** | **~670 ms** |
 
 ---
 
