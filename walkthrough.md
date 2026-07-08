@@ -33,11 +33,19 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **Updates**:
   - Fixed the stale BLS12-381/Pasta curve references at line 807 in `compile_pdf.py` to match the BN254 wording in `WHITEPAPER.md`.
 
+### 7. ZK-Circuit Constraint Security Audit & Soundness Fix
+- **The Vulnerability**: 
+  A strict PhD-level cryptographic review of [circuit.rs](file:///k:/Zk-LoRaWan/groth16/src/circuit.rs) identified a critical **under-constrained variable soundness vulnerability**. The `mimc_hash_constraints` helper function allocated new witness variables for the preimage during each hash invocation (Identity verification, Nullifier generation, and Attestation checking) without enforcing equivalence constraints. This allowed a malicious prover to supply different private key witnesses for each verification path—spoofing nullifiers or attestation values while using a valid public identity, bypassing double-spend protection and secure element checks.
+- **The Fix**: 
+  Refactored the circuit constraints to allocate all core private witnesses exactly once (`private_key_var`, `decryption_key_var`, `coordinate_val_var`, `firmware_hash_witness_var`). Rewrote the `mimc_hash_constraints` helper to accept a `LinearCombination` representing the initial `preimage + salt` and explicitly enforce the equivalence constraint `cs.enforce_constraint(current_var.into(), Variable::One.into(), initial_lc)` at the entry point of the MiMC round loop. This guarantees that the nullifier, identity, and attestation variables are mathematically bound to the identical private key witness.
+- **Verification**: 
+  Validated the math and execution. Running `cargo run --bin zk_lorawan_prove` and `cargo test --workspace` confirms the circuit correctly verifies valid proofs and successfully rejects tampered witnesses.
+
 ---
 
 ## 🧪 Verification & Results
 
 - **PDF Generation**: Compiled successfully using `python scratch/compile_pdf.py`.
 - **User Downloads**: Copied the newly compiled `zk_lorawan_whitepaper.pdf` directly to `C:\Users\DannyB\Downloads\zk_lorawan_whitepaper.pdf`.
-- **Git Push**: Clean pushed all changes to origin master at commit [93b7cd2](https://github.com/DannyB-bit/zk-lorawan/commit/93b7cd2).
+- **Git Push**: Clean pushed all changes to origin master, including the documentation realignment and the critical Groth16 circuit security fix.
 - **Harness**: `python tests/verify_all_modules.py` runs with a clean `7/7 passed` result.
