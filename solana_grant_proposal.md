@@ -15,7 +15,7 @@ An on-chain Groth16 zero-knowledge proof verification, ZK-compressed state pool,
 *   **Personal X Profile:** [@zymatica](https://x.com/zymatica)
 
 ## 🏦 Requested Funding (USDC / USDG)
-**$12,000 total** (Phase 2 funding for advanced cryptographic verification, hardware enclave integration, and Mainnet rollout).
+**$45,000 total** (Phase 2 funding for advanced cryptographic verification, hardware enclave integration, and Mainnet rollout).
 
 ---
 
@@ -69,7 +69,7 @@ To break the link between transaction signatures and physical senders, the progr
 The edge microcontroller uses an ARM TrustZone-M secure enclave (e.g., ATECC608A secure element or Cortex-M33 partition) to isolate signing keys. The node signs messages with Ed25519, and the signature is bound to a cryptographic attestation report of the running firmware hash. If the device is physically tampered with or the code is modified, the attestation fails verification on-chain, instantly freezing the key.
 
 ### 3. Atomic Zero-Knowledge Verifiable Data Exchange (zk-VDE)
-To prevent gateways from claiming rewards without routing payloads, or senders from sending garbage, we implement zk-VDE. Senders encrypt payloads with a validator threshold public key and generate a ZK proof of plaintext knowledge. The gateway verifies the proof locally (filtering garbage) and submits the ciphertext to Solana. The smart contract validates the proof and atomically settles the SOL payout while publishing the decrypted data on-chain.
+To prevent gateways from claiming rewards without routing payloads, or senders from sending garbage, we implement zk-VDE. Senders encrypt payloads with a validator threshold public key and generate a ZK proof of plaintext knowledge. The gateway verifies the proof locally (filtering garbage) and submits the ciphertext to the smart contract. Solana validates the proof and atomically settles the SOL payout while publishing the decrypted data on-chain.
 
 ### 4. Private Gateway Reputation via Zero-Knowledge Sigma Range Proofs
 Gateways accumulate reputation scores for packet delivery quality. To prevent external profiling of gateway geography and capabilities, the reputation score is verified using a non-interactive Sigma range proof. Gateways prove their reputation is above a threshold without disclosing the exact score or their complete historical logs. Challenge responses are correctly bounded using modular reduction modulo `p - 1` (the multiplicative group order) to ensure algebraic soundness.
@@ -83,7 +83,7 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 
 ### 📍 Milestone 1: Multi-Language Client SDKs & WASM Verification Ports
 *   **Target Duration:** 4 Weeks
-*   **Requested Budget:** $4,000
+*   **Requested Budget:** $15,000
 *   **Deliverables:**
     *   Convert and compile the Groth16 BN254 bilinear verification client into WASM, packaging it as a reusable JavaScript/TypeScript SDK for edge gateways.
     *   Harden the multi-language proof suite (completing the Go, Rust, Java, Haskell, and Python client runners) to interact directly with Solana devnet escrow queries and fee validations.
@@ -91,7 +91,7 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 
 ### 📍 Milestone 2: Solana Devnet Verification Contract & Registry Integration (Completed/In Progress)
 *   **Target Duration:** 4 Weeks
-*   **Requested Budget:** $4,000
+*   **Requested Budget:** $15,000
 *   **Deliverables:**
     *   Deploy the `zk_lorawan` proof-verification Anchor program on Solana Devnet.
     *   Integrate the contract with the `solana-cuneiform` semantic coordinate registry, allowing nodes to submit Coordinate Records wrapped in a ZK-Proof envelope.
@@ -100,7 +100,7 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 
 ### 📍 Milestone 3: Shielded Pool Integration & Hardware Enclave Rollout
 *   **Target Duration:** 4 Weeks
-*   **Requested Budget:** $4,000
+*   **Requested Budget:** $15,000
 *   **Deliverables:**
     *   Upgrade the Anchor program to use ZK-Compression (Light Protocol) for shielded pool deposits.
     *   Implement ARM TrustZone-M firmware attestation validation on-chain to handle revoked or physically compromised edge nodes.
