@@ -55,6 +55,6 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **PDF Generation**: Compiled successfully using `python scratch/compile_pdf.py`.
 - **User Downloads**: Copied the newly compiled `zk_lorawan_whitepaper.pdf` directly to `C:\Users\DannyB\Downloads\zk_lorawan_whitepaper.pdf`.
 - **Git Push**: Clean pushed all changes to origin master, including the documentation realignment, the critical Groth16 circuit security fix, and the CI/fixture hardening suite.
-- **Harness**: `python tests/verify_all_modules.py` runs with a clean `7/7 passed` result.
+- **Harness**: `python tests/verify_all_modules.py` runs with a clean `8/8 passed` result.
 - **Typecheck**: `npm run typecheck` compiles TypeScript test fixtures with zero compiler warnings.
 - **Rust Verification**: Cargo workspace test suite compiles and executes successfully.
