@@ -137,6 +137,9 @@ def load_idl_or_fallback() -> Idl:
                     {"name": "gateway", "isMut": False, "isSigner": True}
                 ],
                 "args": [
+                    {"name": "proofA", "type": {"array": ["u8", 64]}},
+                    {"name": "proofB", "type": {"array": ["u8", 128]}},
+                    {"name": "proofC", "type": {"array": ["u8", 64]}},
                     {"name": "nullifierHash", "type": {"array": ["u8", 32]}},
                     {"name": "attestationHash", "type": {"array": ["u8", 32]}},
                     {"name": "zkVdeProofHash", "type": {"array": ["u8", 32]}},
@@ -287,12 +290,12 @@ class ZKVerifier:
             
         if raw[0] == 0xAE:
             # LLD-AC Compressed frame
-            if len(raw) < 3:
+            if len(raw) < 4:
                 return None
             flags = raw[1]
-            proof_len = raw[2]
+            proof_len = (raw[2] << 8) | raw[3]
             
-            offset = 3
+            offset = 4
             if len(raw) < offset + proof_len:
                 return None
             compressed_proof = raw[offset:offset + proof_len]
@@ -404,9 +407,6 @@ class ZKVerifier:
         """
         Verify the Groth16 proof locally using real ark-groth16 FFI or subprocess fallback.
         """
-        # Developer mock proof bypass for demo/testing
-        if frame.get("proof_a") and frame["proof_a"][0] == 0xDD:
-            return True
         proof_a_hex = frame["proof_a"].hex().encode('utf-8')
         proof_b_hex = frame["proof_b"].hex().encode('utf-8')
         proof_c_hex = frame["proof_c"].hex().encode('utf-8')
@@ -456,12 +456,21 @@ class ZKVerifier:
                 except Exception as e:
                     logging.getLogger("gateway").warning(f"Subprocess verification failed: {e}")
                     
-        # Check basic non-zero components if neither library nor binary is present
-        logging.getLogger("gateway").warning("No local Groth16 verifier library or binary found, falling back to non-zero check.")
-        if frame["proof_a"] == b'\x00' * 32: return False
-        if frame["proof_b"] == b'\x00' * 64: return False
-        if frame["proof_c"] == b'\x00' * 32: return False
-        return True
+        # Allow mock proofs behind ZK_LORAWAN_ALLOW_MOCK_PROOFS=1 environment variable
+        if os.environ.get("ZK_LORAWAN_ALLOW_MOCK_PROOFS") == "1":
+            logging.getLogger("gateway").warning(
+                "No local Groth16 verifier library or binary found. "
+                "ZK_LORAWAN_ALLOW_MOCK_PROOFS=1 is enabled: falling back to non-zero mock check."
+            )
+            # Check basic non-zero components for development mock bypass
+            if frame["proof_a"] == b'\x00' * 32: return False
+            if frame["proof_b"] == b'\x00' * 64: return False
+            if frame["proof_c"] == b'\x00' * 32: return False
+            return True
+
+        # Fail closed if neither library nor binary is present
+        logging.getLogger("gateway").error("No local Groth16 verifier library or binary found. FAILED CLOSED.")
+        return False
     
     def compute_proof_hash(self, frame: dict) -> bytes:
         """Hash the proof for Merkle tree inclusion."""
@@ -630,7 +639,22 @@ class SolanaSubmitter:
             
             # Add chirps
             for idx, chirp in enumerate(batch.chirps):
+                proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
+                proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
+                proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
+                
+                if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
+                if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
+                if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
+                
+                proof_a_list = proof_a_list[:64]
+                proof_b_list = proof_b_list[:128]
+                proof_c_list = proof_c_list[:64]
+
                 add_tx = await self.program.methods.addChirp(
+                    proof_a_list,
+                    proof_b_list,
+                    proof_c_list,
                     list(chirp.nullifier_hash),
                     list(chirp.attestation_hash),
                     list(chirp.zk_vde_proof_hash),
@@ -718,7 +742,7 @@ class Gateway:
         
         chirp.nullifier_hash = frame.get("nullifier_hash", b"")
         chirp.attestation_hash = frame.get("attestation_hash", b"")
-        chirp.zk_vde_proof_hash = frame.get("identity_hash", b"") # mock vde proof as identity
+        chirp.zk_vde_proof_hash = frame.get("identity_hash", b"") # Maps to circuit identity_hash
         chirp.ciphertext_hash = frame.get("ciphertext_hash", b"")
         
         chirp.proof_a = frame.get("proof_a", b"")
@@ -820,17 +844,16 @@ async def _demo():
     encoder = LLDACEncoder()
     import os
     for i in range(25):
-        # Generate structured/padded fake proof components (BN254 field element simulation)
-        # Using 0xDD as the first byte of proof_a authorizes developer mock proof bypass in verifiers
-        proof_a = b"\xDD" + b"\x00" * 3 + os.urandom(28)
-        proof_b = b"\x00" * 4 + os.urandom(60)
-        proof_c = b"\x00" * 4 + os.urandom(28)
-        identity_hash = b"\x00" * 24 + os.urandom(8)
-        nullifier_hash = b"\x00" * 24 + os.urandom(8)
-        attestation_hash = b"\x00" * 24 + os.urandom(8)
-        ciphertext_hash = b"\x00" * 24 + os.urandom(8)
+        # Generate structured/padded real proof components
+        proof_a = bytes.fromhex("e90669cc542508b5d0a2ae55ac31a6536faa01b6589a6b597763c8e4db162128")
+        proof_b = bytes.fromhex("2bfc233b7b510fc0601cef51aa5db6aa69b9b0dc9bbf15843b770a44311e3820064b376ac7429557ca11fed1ce7249d5a260aa7db28bc57cccc68ef362517616")
+        proof_c = bytes.fromhex("7f5db42ed73f993610b9296d89a5444dc1f40f06b2b03a579dde9ca7487f8e23")
+        identity_hash = bytes.fromhex("7340a9115677e6b1faec90248ae27b7a94f8067fcf7d5a54034df69626da3708")
+        nullifier_hash = bytes.fromhex("07d01f9518cbe729b68dc48eba185c6a08a5d2a6a75646d69cf79d9157efc81b")
+        attestation_hash = bytes.fromhex("74e8623e16cda398f38ae0f520634f4fa27e52b5fe08afbfb7ef552d379c7318")
+        ciphertext_hash = bytes.fromhex("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122")
         
-        # Combine to form uncompressed proof bytes (256 bytes)
+        # Combine to form proof bytes
         raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash
         
         # Compress

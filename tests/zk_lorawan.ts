@@ -107,17 +107,16 @@ describe("zk_lorawan", () => {
   });
 
   it("Performs single shielded chirp verification (MODE A)", async () => {
-    const nullifierHash = crypto.randomBytes(32);
-    const attestationHash = crypto.randomBytes(32);
-    const zkVdeProofHash = crypto.randomBytes(32);
-    const ciphertextHash = crypto.randomBytes(32);
+    const nullifierHash = Buffer.from("07d01f9518cbe729b68dc48eba185c6a08a5d2a6a75646d69cf79d9157efc81b", "hex");
+    const attestationHash = Buffer.from("74e8623e16cda398f38ae0f520634f4fa27e52b5fe08afbfb7ef552d379c7318", "hex");
+    const zkVdeProofHash = Buffer.from("7340a9115677e6b1faec90248ae27b7a94f8067fcf7d5a54034df69626da3708", "hex");
+    const ciphertextHash = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
-    // Developer mock proof to bypass pairing check in test
-    const mockProofA = Buffer.alloc(64);
-    mockProofA[0] = 0xDD;
-    const mockProofB = Buffer.alloc(128);
-    const mockProofC = Buffer.alloc(64);
+    // Real, mathematically verified Groth16 proof coordinates
+    const proofA = Buffer.from("282116dbe4c86377596b9a58b601aa6f53a631ac55aea2d0b5082554cc6906e90d145795ae065f88d499c232cb92f697f76c4765bc35b1449d572bf5458b44c5", "hex");
+    const proofB = Buffer.from("16765162f38ec6cc7cc58bb27daa60a2d54972ced1fe11ca579542c76a374b0620381e31440a773b8415bf9bdcb0b969aab65daa51ef1c60c00f517b3b23fc2b07809e3cf0b0886e40595f146f0a2dfa42b015d9a9d734bd223634aeb02b03f52c4892514ffc887ae1b490d9348f93f7c234e6d06c864b6b5939e7869622007d", "hex");
+    const proofC = Buffer.from("238e7f48a79cde9d573ab0b2060ff4c14d44a5896d29b91036993fd72eb45d7f0a774f8a5983cbf4b5be6cf49c5aac27408f4775cadc80735a3d521004f641c9", "hex");
 
     // Find PDA for nullifier record
     const [nullifierRecordPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -132,9 +131,9 @@ describe("zk_lorawan", () => {
     // Call verify_single
     await program.methods
       .verifySingle(
-        Array.from(mockProofA),
-        Array.from(mockProofB),
-        Array.from(mockProofC),
+        Array.from(proofA),
+        Array.from(proofB),
+        Array.from(proofC),
         Array.from(nullifierHash),
         Array.from(attestationHash),
         Array.from(zkVdeProofHash),
@@ -216,8 +215,17 @@ describe("zk_lorawan", () => {
 
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
+    // Define mock proofs for mock-verifier feature bypass in batch tests
+    const mockProofA = Buffer.alloc(64);
+    mockProofA[0] = 0xDD;
+    const mockProofB = Buffer.alloc(128);
+    const mockProofC = Buffer.alloc(64);
+
     await program.methods
       .addChirp(
+        Array.from(mockProofA),
+        Array.from(mockProofB),
+        Array.from(mockProofC),
         Array.from(chirp1Nullifier),
         Array.from(chirp1Attestation),
         Array.from(chirp1VdeProof),
@@ -233,6 +241,9 @@ describe("zk_lorawan", () => {
 
     await program.methods
       .addChirp(
+        Array.from(mockProofA),
+        Array.from(mockProofB),
+        Array.from(mockProofC),
         Array.from(chirp2Nullifier),
         Array.from(chirp2Attestation),
         Array.from(chirp2VdeProof),
@@ -248,6 +259,9 @@ describe("zk_lorawan", () => {
 
     await program.methods
       .addChirp(
+        Array.from(mockProofA),
+        Array.from(mockProofB),
+        Array.from(mockProofC),
         Array.from(chirp3Nullifier),
         Array.from(chirp3Attestation),
         Array.from(chirp3VdeProof),

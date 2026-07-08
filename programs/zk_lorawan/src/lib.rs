@@ -206,6 +206,9 @@ pub mod zk_lorawan {
     // B.2 — Add chirps to the batch
     pub fn add_chirp(
         ctx: Context<AddChirp>,
+        proof_a: [u8; 64],
+        proof_b: [u8; 128],
+        proof_c: [u8; 64],
         nullifier_hash: [u8; 32],
         attestation_hash: [u8; 32],
         zk_vde_proof_hash: [u8; 32],
@@ -220,9 +223,15 @@ pub mod zk_lorawan {
             batch.gateway == ctx.accounts.gateway.key(),
             ZKLoRaError::UnauthorizedGateway
         );
-        require!(nullifier_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
-        require!(attestation_hash != [0u8; 32], ZKLoRaError::InvalidAttestation);
-        require!(zk_vde_proof_hash != [0u8; 32], ZKLoRaError::InvalidVdeProof);
+
+        // Verify Groth16 proof per chirp inside the batch on-chain
+        let public_inputs = [
+            zk_vde_proof_hash,
+            nullifier_hash,
+            attestation_hash,
+            payload_hash,
+        ];
+        verify_groth16(&proof_a, &proof_b, &proof_c, &public_inputs)?;
 
         batch.proof_hashes.push(nullifier_hash);
         batch.payload_hashes.push(payload_hash);
@@ -508,9 +517,12 @@ pub fn verify_groth16(
     proof_c: &[u8; 64],
     public_inputs: &[[u8; 32]; 4],
 ) -> Result<()> {
-    if proof_a[0] == 0xDD {
-        msg!("ZK-LoRaWAN: Developer mock proof bypass authorized.");
-        return Ok(());
+    #[cfg(feature = "mock-verifier")]
+    {
+        if proof_a[0] == 0xDD {
+            msg!("ZK-LoRaWAN: Developer mock proof bypass authorized via cargo feature.");
+            return Ok(());
+        }
     }
 
     // Deterministic Verifying Key (VK) coordinates from setup (seed = 42)
