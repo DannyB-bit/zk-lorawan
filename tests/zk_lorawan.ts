@@ -2,6 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { assert } from "chai";
 import * as crypto from "crypto";
+import * as fs from "fs";
 import { keccak_256 } from "@noble/hashes/sha3";
 
 function buildMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
@@ -40,6 +41,13 @@ describe("zk_lorawan", () => {
   // Generate keypairs for our actors
   const gateway = anchor.web3.Keypair.generate();
   const sender = anchor.web3.Keypair.generate();
+  const admin = anchor.web3.Keypair.fromSecretKey(
+    Uint8Array.from(
+      JSON.parse(
+        fs.readFileSync("tests/fixtures/integration-admin-keypair.json", "utf8")
+      )
+    )
+  );
 
   // Hardcoded treasury address matching lib.rs
   const treasuryAddress = new anchor.web3.PublicKey("CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ");
@@ -69,6 +77,18 @@ describe("zk_lorawan", () => {
       5 * anchor.web3.LAMPORTS_PER_SOL
     );
     await provider.connection.confirmTransaction(signature2);
+
+    const signature3 = await provider.connection.requestAirdrop(
+      treasuryAddress,
+      anchor.web3.LAMPORTS_PER_SOL
+    );
+    await provider.connection.confirmTransaction(signature3);
+
+    const signature4 = await provider.connection.requestAirdrop(
+      admin.publicKey,
+      2 * anchor.web3.LAMPORTS_PER_SOL
+    );
+    await provider.connection.confirmTransaction(signature4);
   });
 
   it("Initializes the global registry", async () => {
@@ -76,13 +96,14 @@ describe("zk_lorawan", () => {
       .initializeRegistry()
       .accounts({
         registry: registryPda,
-        authority: provider.wallet.publicKey,
+        authority: admin.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
+      .signers([admin])
       .rpc();
 
     const registryAccount = await program.account.protocolRegistry.fetch(registryPda) as any;
-    assert.ok(registryAccount.authority.equals(provider.wallet.publicKey));
+    assert.ok(registryAccount.authority.equals(admin.publicKey));
     assert.equal(registryAccount.nextBatchId.toNumber(), 0);
   });
 
@@ -113,9 +134,9 @@ describe("zk_lorawan", () => {
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
     // Real, mathematically verified Groth16 proof coordinates
-    const proofA = Buffer.from("2897f3a6e160e36a2a61701b38202851d3f3b7e5514891eab36e87631cb54049a57854ae98488963f463678c857d2bd344e2cc2f96579ba3532ec2276e572319", "hex");
-    const proofB = Buffer.from("077689035cff51b9e9c5d2d808116c21a7c7048d243639761caa0a59d63f6eb7233557b6e690b33d3db688cb4920741e2bacedc34182bd47519e9a0ae18f45f717de1f363c9643abbcc14994e7d10a761e49a34c5d34bef51bc0bdbd7fcbd37b173fce1eaa88885e8392e720470e47f6871692816341ed4cc82a34572d96d0bc", "hex");
-    const proofC = Buffer.from("2027b35d549dd4c47983589ea474db961f36210e5ef7f937310619eed2f9a0beaced32aa15bdf02328f84bfcdcd1d5dc4cd977215868b8dad8dd286644123a9f", "hex");
+    const proofA = Buffer.from("2c30ce03531f45efcf0644e4faf5a72aa2f4bd6d5b46d0ef32db3960c89ae73202b55ea2408aa4536db4fa19902a3ef6baf923511f86b2338f3ff5bf9f96e2ab", "hex");
+    const proofB = Buffer.from("030204527afed1183d759d41897faa48e72bfd72cea5c93e7bb4733126220cd4142c90bbab1c638ca064dcfdb550927941b85f9b0f6654bcc20126ab7ca13278095faa0544f10cb0190b7106f88774253f5b0a8381c55646940726e6ec486f7f04190fbfd32a91cf19db0f1425f97aed6b0f62d4cd563d60c92a90da3dd3acc9", "hex");
+    const proofC = Buffer.from("0b3726f4e09f5d496be9229cedc33cddab4a97020016eec5b65843643febfecb2028447c13d606c2b5735f07d3e02feb4e145d77645c65b5114f2d3659e511f2", "hex");
 
     // Find PDA for nullifier record
     const [nullifierRecordPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -126,6 +147,7 @@ describe("zk_lorawan", () => {
     // Get initial balances
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
     const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
+    const nullifierRent = await provider.connection.getMinimumBalanceForRentExemption(8 + 32 + 8);
 
     // Call verify_single
     await program.methods
@@ -154,7 +176,7 @@ describe("zk_lorawan", () => {
     const finalGatewayBal = await provider.connection.getBalance(gateway.publicKey);
     const finalTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
-    assert.equal(finalGatewayBal - initialGatewayBal, 100000);
+    assert.equal(finalGatewayBal - initialGatewayBal, 100000 - nullifierRent);
     assert.equal(finalTreasuryBal - initialTreasuryBal, 50000);
 
     // Verify registry stats
@@ -198,25 +220,25 @@ describe("zk_lorawan", () => {
 
     // Add 3 chirps
     // Define 3 real unique Groth16 proofs and hashes
-    const proofA1 = Buffer.from("133e15d4c64d432f09f2a979689818628c6729de70d1b50515f357084287101c136a4eb08074ca76daf6a4dcfedfbf3098f3ef4607df2432c0da16270fe1f690", "hex");
-    const proofB1 = Buffer.from("260fd7028996abe6beb1443f1635e67b685e23ee911759a404a4f76ebd7281cc0460dad4631417cab497b3c7ccfb2f2ecaf311526a45e27ce275a37d34aae3eca1e8f82358bf84630e53082c2cb9e73efefa8226bb198be098ac98d925177d3312cb2dc99b0f07a3ce88b113435ff2ed32c8d88111a1f1b69f02d7660eaba6d0", "hex");
-    const proofC1 = Buffer.from("12f5ea7753cbe3b1dc7bbdd8602a21efd4b50667ed9f5a1d14b0904b0bf86c0caebf219574b73d416e11118f7d8fa3075379618f2d21c709a6dc6e9966e8388e", "hex");
+    const proofA1 = Buffer.from("1b72721b8a7280f80ba37d195d96cdc05ca83f9b87727c4ea371102a6b0be8380023cd8fa1103882eabb917c72707f410af6b8c5e5bc44b9e9ccb2184a44314d", "hex");
+    const proofB1 = Buffer.from("053926fd84cc33da661968ab06f2b92127c24f3694892b901e111aa857c2693f2bf894d4b28207444f4c91ad07831e86aa86058b0307b4fb700bce0f9809faad1a2547ff930bdb440318c097a6fea17548918770b2cc442ec449e50c4bb1609125c530608e99bb86016a0586182f65789cbc3374f2d049fde640e232d3d06b25", "hex");
+    const proofC1 = Buffer.from("265d1ec46f9f11eb43f955eb94ebd37e36236efee2b0a871fd084c99e444f5200571f5ccb897918e5215b941fc3192c9390230436c4bb37d6181682bf9cdbf43", "hex");
     const chirp1Nullifier = Buffer.from("333d2924f9563337ce7aa25b5c25e315a510c0c510db6219b05fc7c396a7ee2c", "hex");
     const chirp1Attestation = Buffer.from("8b8cda973f4e99fb4729d7914dadd85533dea3d4ac45231ae2e72cc9c5c3ca17", "hex");
     const chirp1VdeProof = Buffer.from("79dc773d5b710f70fb4ce375853e25ad99d021bff5cd58d67c2e8f0032eee01f", "hex");
     const chirp1Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
 
-    const proofA2 = Buffer.from("0f95ebed4cdfc45bb780914c5d7bddc9ed649773eb80d8f01e2e2b6dc82a175c137d7a79df6c32c63fb7043c8fa7f50d816af1dad9bdf37b9653df0d8bb54cf9", "hex");
-    const proofB2 = Buffer.from("105070c4e80547d34a74dabc85fc2854255f012e8bf6f00de23b91c88f45d0ed042a5a2abd159190e3d852470acd63491cc718edc4b9bf3e52b6bbb162be3ae0af3e844fd3798cfb0864fa1c7ee4077f4a5dda35f489e631ed2a9642e5bad94121ee65c2550f12368b620a7d354dd39f9802c278aba1ca73a0a2c17f8d01842c", "hex");
-    const proofC2 = Buffer.from("2774decadedaa1bd6042b5e7bc057a03fab20a3ccddeb3a92b3ab57c72ae32f016e9c1a4a673564c667fc80306da398c2d6db1736a8d001ec5720a456624b8f6", "hex");
+    const proofA2 = Buffer.from("1444d0e900227be00abb528ee58029edd28ffc7890fa279bee4eac70b2ec415321830e1970b759f7760e2d9290e3981c661bb14e5fe1c4841ab0270b9b623595", "hex");
+    const proofB2 = Buffer.from("3047a8523e48de601f73c465103c7cf6bcee10e2e635682ee763756018273cde019115b83249d28d5e246dd25aeb8638aed09ee040ecf90377f33d9a55326f81036962c65a81cb222d9b23e4a5280d320ad962b1956a1b6541b8fd59ea29acd80ab1da6886caa5de9717cb3268a44c2f6b9c1b63d1326c11a1fb76b11d64a89b", "hex");
+    const proofC2 = Buffer.from("1bdc9de5c6fbcc16c66a955d6089a8e962979e22b748eb63f0eefcdddaaf8bb1087b69ce8f76bc817e643915f24095810c987be134a84fe5685e7ca55659dddd", "hex");
     const chirp2Nullifier = Buffer.from("f153d3fe8a4d1ac6196a9bd3d89c60b386f00e6919575f63e0bba958d35e5402", "hex");
     const chirp2Attestation = Buffer.from("482214239c1946ddc2d88e60457c0d46738ab0f43a302aa983f06ed4e1578b04", "hex");
     const chirp2VdeProof = Buffer.from("9c05c75001ab5fad4dadf4daa2a892bf8f4466fd77de76e3ccb626034d506504", "hex");
     const chirp2Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
 
-    const proofA3 = Buffer.from("1b6e34a38006877f1452d4253f3edb08a17b793ca98130ff939dd6619f718796abae33f6c39061fa8fb87d5601dee591435d83873b02259bb4894c0a33cfc5d3", "hex");
-    const proofB3 = Buffer.from("12db7d2863bdd6c8eee194a6db8b539f2c8e5bac8a942726512afa23e8bbdc1d13e9f6e52abd3fcfb77045086061747b037b3d0d30ce2d4715ea935c23139c9b0d06e4cb77d642fa4eedd98c0ceedf3c81bc01949dd2b6366eb239dcac53e4d119c814bfc7a94c5a831332ffa0c230c6a3b28c3d632e7677d558ab155e5e4e07", "hex");
-    const proofC3 = Buffer.from("05098ae44de02a789b4827d11820bbf6c33c5865398264716cd145006e0a77930443aaffd470b7cbcf7afe35d538504e309b2b77b70293843423b978d79f4266", "hex");
+    const proofA3 = Buffer.from("0f7fbfb33ce9448eb89b4188d8cb7529cae2ba82315f2a633315e24996e9830b29445760a774921dd089fe9bc786262717a94969e1a860d6dcb06d2fb76c777e", "hex");
+    const proofB3 = Buffer.from("11a4c8297a38a0ce8c8aafafb0b8a5a19716ef820ef5d720a0fe699cf8e97f591a02ab8d8a0c070caefb25aacab0033e7b7c55baa799875fba77e38c2d6fb6b802a0a856d124d4d25531645bc8db1b091d5b79c178468bdb0a87685dae7ad6000f22d53787dcdd4e64df080a0eb5518211bd824cd12ce6f4c65eaeac1843614f", "hex");
+    const proofC3 = Buffer.from("01dc3cf3c922e87c4c027df70550c4d108a9661e0026333c79788a82d6a180ef0021594dcd7bd1d195220052e77e7a82d67001873b54ab87bb24283a1fb372eb", "hex");
     const chirp3Nullifier = Buffer.from("a1bb0f97d5364577f3f7de2d7981281bec855a94975437fde8d5f6be0a8ef610", "hex");
     const chirp3Attestation = Buffer.from("9c02cf281a8259499690acee3b89e6e4ad53e2a728d491d48d0cd2d4760b7e17", "hex");
     const chirp3VdeProof = Buffer.from("1fac275faeecdbd9202414272ade21efc72098a70e07aef99ef3f9d638f12315", "hex");
@@ -284,6 +306,7 @@ describe("zk_lorawan", () => {
     // Submit batch (Gateway gets 300K lamports, Treasury gets 150K lamports)
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
     const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
+    const nullifierRent = await provider.connection.getMinimumBalanceForRentExemption(8 + 32 + 8);
 
     const nullifiers = [chirp1Nullifier, chirp2Nullifier, chirp3Nullifier];
     const nullifierPdas = nullifiers.map((nullifier) => {
@@ -311,7 +334,7 @@ describe("zk_lorawan", () => {
     const finalGatewayBal = await provider.connection.getBalance(gateway.publicKey);
     const finalTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
-    assert.equal(finalGatewayBal - initialGatewayBal, 300000);
+    assert.equal(finalGatewayBal - initialGatewayBal, 300000 - 3 * nullifierRent);
     assert.equal(finalTreasuryBal - initialTreasuryBal, 150000);
 
     const batchAccountFinal = await program.account.batchAccumulator.fetch(batchPda) as any;
