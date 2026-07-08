@@ -54,6 +54,8 @@ def load_groth16_lib():
     search_paths = [
         os.path.join(base_dir, "target", "release", lib_name),
         os.path.join(base_dir, "target", "debug", lib_name),
+        os.path.join(base_dir, "target", "release", "deps", lib_name),
+        os.path.join(base_dir, "target", "debug", "deps", lib_name),
         os.path.join(base_dir, lib_name),
     ]
 
@@ -73,13 +75,14 @@ def load_groth16_lib():
                 lib.verify_zk_proof_raw.restype = ctypes.c_uint32
 
                 # Register proof coordinate decompression FFI
+                u8_ptr = ctypes.POINTER(ctypes.c_uint8)
                 lib.decompress_proof_to_solana_coords.argtypes = [
-                    ctypes.c_char_p,
-                    ctypes.c_char_p,
-                    ctypes.c_char_p,
-                    ctypes.c_char_p,
-                    ctypes.c_char_p,
-                    ctypes.c_char_p,
+                    u8_ptr,
+                    u8_ptr,
+                    u8_ptr,
+                    u8_ptr,
+                    u8_ptr,
+                    u8_ptr,
                 ]
                 lib.decompress_proof_to_solana_coords.restype = ctypes.c_uint32
                 return lib, path
@@ -504,21 +507,24 @@ class ZKVerifier:
         lib, _ = load_groth16_lib()
         if not lib:
             return None
-        
-        out_a = ctypes.create_string_buffer(64)
-        out_b = ctypes.create_string_buffer(128)
-        out_c = ctypes.create_string_buffer(64)
-        
+
+        in_a = (ctypes.c_uint8 * len(proof_a)).from_buffer_copy(proof_a)
+        in_b = (ctypes.c_uint8 * len(proof_b)).from_buffer_copy(proof_b)
+        in_c = (ctypes.c_uint8 * len(proof_c)).from_buffer_copy(proof_c)
+        out_a = (ctypes.c_uint8 * 64)()
+        out_b = (ctypes.c_uint8 * 128)()
+        out_c = (ctypes.c_uint8 * 64)()
+
         res = lib.decompress_proof_to_solana_coords(
-            proof_a,
-            proof_b,
-            proof_c,
+            in_a,
+            in_b,
+            in_c,
             out_a,
             out_b,
             out_c
         )
         if res == 1:
-            return bytes(out_a.raw), bytes(out_b.raw), bytes(out_c.raw)
+            return bytes(out_a), bytes(out_b), bytes(out_c)
         return None
 
 
