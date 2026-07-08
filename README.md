@@ -3,6 +3,8 @@
 
 **Zero-Knowledge Privacy, Semantic Compression, & Batch Settlement Layer for Solana DePIN**
 
+[📄 View Whitepaper (PDF)](zk_lorawan_whitepaper.pdf) | [📖 Read Whitepaper (Markdown)](WHITEPAPER.md)
+
 [![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
 [![Zero-Knowledge](https://img.shields.io/badge/ZK--SNARKs-Groth16-blue?style=flat-square)](https://arkworks.rs)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green?style=flat-square)](LICENSE)
