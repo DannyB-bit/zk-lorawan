@@ -268,7 +268,7 @@ class ReputationRangeProof:
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("ZK-LoRaWAN | Private Gateway Reputation — Self-Test")
+    print("ZK-LoRaWAN | Private Gateway Reputation - Self-Test")
     print("=" * 70)
     print()
 
@@ -282,21 +282,21 @@ if __name__ == "__main__":
     for _ in range(50):
         gateway.observe(random.random() < 0.90)
     print(f"  [After 50 obs] {gateway}")
-    print(f"  In resonance (>700): {'✅ YES' if gateway.is_in_resonance() else '❌ NO'}")
+    print(f"  In resonance (>700): {'YES' if gateway.is_in_resonance() else 'NO'}")
     print()
 
     # Commit to the reputation score
-    print("  ── Test 1: Pedersen Commitment ──")
+    print("  -- Test 1: Pedersen Commitment --")
     commitment, blinding = ReputationCommitment.commit(gateway.score)
     verified = ReputationCommitment.verify_opening(commitment, gateway.score, blinding)
     tampered = ReputationCommitment.verify_opening(commitment, gateway.score + 1, blinding)
     print(f"  Score committed: {gateway.score}")
-    print(f"  Correct opening: {'✅ PASS' if verified else '❌ FAIL'}")
-    print(f"  Tampered opening: {'✅ PASS (rejected)' if not tampered else '❌ FAIL'}")
+    print(f"  Correct opening: {'PASS' if verified else 'FAIL'}")
+    print(f"  Tampered opening: {'PASS (rejected)' if not tampered else 'FAIL'}")
     print()
 
     # Generate range proof: score >= 700 (trust threshold)
-    print("  ── Test 2: ZK Range Proof (score ≥ 700) ──")
+    print("  -- Test 2: ZK Range Proof (score >= 700) --")
     proof = ReputationRangeProof.prove(
         score=gateway.score,
         blinding=blinding,
@@ -306,11 +306,11 @@ if __name__ == "__main__":
     valid = ReputationRangeProof.verify(proof)
     print(f"  Threshold: {proof['threshold']}")
     print(f"  Protocol:  {proof['protocol']}")
-    print(f"  Verified:  {'✅ PASS — Gateway is trusted' if valid else '❌ FAIL'}")
+    print(f"  Verified:  {'PASS - Gateway is trusted' if valid else 'FAIL'}")
     print()
 
     # Test 3: Low-reputation gateway should fail
-    print("  ── Test 3: Untrusted Gateway (should fail) ──")
+    print("  -- Test 3: Untrusted Gateway (should fail) --")
     bad_gateway = ReputationScore("malicious-node")
     for _ in range(50):
         bad_gateway.observe(random.random() < 0.30)  # 30% delivery rate
@@ -324,10 +324,10 @@ if __name__ == "__main__":
             commitment=bad_commit,
             threshold=700
         )
-        print(f"  ❌ FAIL — Should have rejected")
+        print(f"  FAIL - Should have rejected")
     except ValueError as e:
-        print(f"  ✅ PASS — Correctly rejected: {e}")
+        print(f"  PASS - Correctly rejected: {e}")
     print()
 
-    print("  ✅ Private Gateway Reputation module operational")
+    print("  Private Gateway Reputation module operational")
     print()

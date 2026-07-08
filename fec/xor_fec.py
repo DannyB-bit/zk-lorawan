@@ -168,7 +168,7 @@ def compute_overhead_ratio(data_length: int, block_size=16, group_size=4):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("ZK-LoRaWAN | XOR-FEC Crypto-Reconstruction — Self-Test")
+    print("ZK-LoRaWAN | XOR-FEC Crypto-Reconstruction - Self-Test")
     print("=" * 70)
     print()
 
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     # Test 1: Clean decode (no corruption)
     decoded = fec.decode(padded, parity_blocks, orig_len, checksum)
     clean_pass = decoded == original_data
-    print(f"\n  [Test 1] Clean decode:       {'✅ PASS' if clean_pass else '❌ FAIL'}")
+    print(f"\n  [Test 1] Clean decode:       {'PASS' if clean_pass else 'FAIL'}")
 
     # Test 2: Corrupt one block and reconstruct
     corrupted_padded = bytearray(padded)
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     recovered = fec.decode(corrupted_padded, parity_blocks, orig_len, checksum,
                            corrupted_indices=[2])
     recovery_pass = recovered == original_data
-    print(f"  [Test 2] Single-block recovery: {'✅ PASS' if recovery_pass else '❌ FAIL'}")
+    print(f"  [Test 2] Single-block recovery: {'PASS' if recovery_pass else 'FAIL'}")
 
     # Test 3: Corrupt two blocks in different groups
     corrupted_padded2 = bytearray(padded)
@@ -216,12 +216,12 @@ if __name__ == "__main__":
     recovered2 = fec.decode(corrupted_padded2, parity_blocks, orig_len, checksum,
                             corrupted_indices=[0, 4])
     multi_pass = recovered2 == original_data
-    print(f"  [Test 3] Multi-group recovery:  {'✅ PASS' if multi_pass else '❌ FAIL'}")
+    print(f"  [Test 3] Multi-group recovery:  {'PASS' if multi_pass else 'FAIL'}")
 
     print()
     all_pass = clean_pass and recovery_pass and multi_pass
     if all_pass:
-        print("  ✅ ALL FEC CHECKS PASSED — Proof packets self-heal over corrupted radio links")
+        print("  ALL FEC CHECKS PASSED - Proof packets self-heal over corrupted radio links")
     else:
-        print("  ❌ SOME CHECKS FAILED")
+        print("  SOME CHECKS FAILED")
     print()

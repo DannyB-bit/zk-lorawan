@@ -242,7 +242,7 @@ def generate_test_vk(num_public_inputs: int = 2) -> VerifyingKey:
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("ZK-LoRaWAN | microByte JIT VK Compression — Self-Test")
+    print("ZK-LoRaWAN | microByte JIT VK Compression - Self-Test")
     print("=" * 70)
     print()
 
@@ -263,19 +263,19 @@ if __name__ == "__main__":
         print(f"  VK ({num_inputs} public inputs):")
         print(f"    Original:   {original_size:6d} bytes")
         print(f"    Compressed: {compressed_size:6d} bytes ({ratio:.1f}% reduction)")
-        print(f"    Round-trip:  {'✅ PASS' if match else '❌ FAIL'}")
+        print(f"    Round-trip:  {'PASS' if match else 'FAIL'}")
         print()
 
     # ESP32 flash budget test
-    print("  ── ESP32 Flash Budget Test ──")
+    print("  -- ESP32 Flash Budget Test --")
     vk_typical = generate_test_vk(num_public_inputs=2)
     seed_typical = MicroByteJIT.compress(vk_typical)
     esp32_flash_budget = 4096  # 4 KB partition for VK storage
     fits = len(seed_typical) < esp32_flash_budget
     print(f"  Compressed VK: {len(seed_typical)} bytes")
     print(f"  ESP32 budget:  {esp32_flash_budget} bytes")
-    print(f"  Fits in flash: {'✅ YES' if fits else '❌ NO'}")
+    print(f"  Fits in flash: {'YES' if fits else 'NO'}")
     print()
 
-    print("  ✅ microByte JIT VK Compression module operational")
+    print("  microByte JIT VK Compression module operational")
     print()

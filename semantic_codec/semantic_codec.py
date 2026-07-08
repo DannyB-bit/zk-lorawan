@@ -275,7 +275,7 @@ def _self_test():
     assert decoded[1] == ("humidity", 45)
     assert len(english) > 150
     passed += 1
-    print(f"    [1] Weather (12 readings, {len(encoded)}B) → {len(english)} chars English ✅")
+    print(f"    [1] Weather (12 readings, {len(encoded)}B) -> {len(english)} chars English PASS")
 
     # Test 2: Medical vitals round-trip
     medical = [
@@ -299,7 +299,7 @@ def _self_test():
     assert decoded[4] == ("body_temp", 98.6)
     assert decoded[5] == ("steps", 8432)
     passed += 1
-    print(f"    [2] Medical (12 vitals, {len(encoded)}B) ✅")
+    print(f"    [2] Medical (12 vitals, {len(encoded)}B) PASS")
 
     # Test 3: Emergency with GPS
     emergency = [
@@ -319,28 +319,28 @@ def _self_test():
     assert decoded[0] == ("emergency", True)
     assert abs(decoded[1][1] - 40.7128) < 0.001
     passed += 1
-    print(f"    [3] Emergency (7 fields, {len(encoded)}B) → \"{english[:60]}...\" ✅")
+    print(f"    [3] Emergency (7 fields, {len(encoded)}B) -> \"{english[:60]}...\" PASS")
 
     # Test 4: Max capacity (U8)
     max_u8 = codec.max_readings(VAL_U8)
     assert max_u8 == 18
     passed += 1
-    print(f"    [4] Max U8 readings: {max_u8} ✅")
+    print(f"    [4] Max U8 readings: {max_u8} PASS")
 
     # Test 5: Max capacity (F16)
     max_f16 = codec.max_readings(VAL_F16)
     assert max_f16 == 14
     passed += 1
-    print(f"    [5] Max F16 readings: {max_f16} ✅")
+    print(f"    [5] Max F16 readings: {max_f16} PASS")
 
     # Test 6: Tamper detection (wrong concept ID)
     try:
         codec.encode([("nonexistent_concept", 42, VAL_U8)])
         failed += 1
-        print(f"    [6] Tamper detection ❌ (should have raised)")
+        print(f"    [6] Tamper detection FAIL (should have raised)")
     except ValueError:
         passed += 1
-        print(f"    [6] Tamper detection (unknown concept rejected) ✅")
+        print(f"    [6] Tamper detection (unknown concept rejected) PASS")
 
     print(f"  Result: {passed}/{passed+failed} passed")
     return failed == 0
