@@ -27,62 +27,26 @@ class NumberedCanvas(canvas.Canvas):
         # Page 1: Cover Page
         if self._pageNumber == 1:
             self.saveState()
-            # Draw dark background
-            self.setFillColor(colors.HexColor("#0d0f14"))
-            self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
-            
-            # Draw top stripe (Solana color gradient)
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.rect(0, 826.89, 297.63, 15, fill=True, stroke=False)
-            self.setFillColor(colors.HexColor("#9945FF"))
-            self.rect(297.63, 826.89, 297.64, 15, fill=True, stroke=False)
-            
-            # Draw title text
-            self.setFont("Helvetica-Bold", 14)
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(297.63, 720, "PROJECT: ZK-LORAWAN")
-            
-            # Draw logo image
+            # Draw the logo image to take the whole page
             if os.path.exists("zk_lorawan_logo.png"):
-                self.drawImage("zk_lorawan_logo.png", 137.63, 310, width=320, height=320, mask='auto')
-            
-            # Draw rated ZK box
-            self.setStrokeColor(colors.HexColor("#14F195"))
-            self.setLineWidth(1.5)
-            self.rect(54, 120, 487.27, 80, fill=False, stroke=True)
-            self.setFillColor(colors.HexColor("#1A202C"))
-            self.rect(55, 121, 485.27, 78, fill=True, stroke=False)
-            
-            # Text inside box
-            self.setFont("Helvetica-Bold", 12)
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.drawString(74, 155, "RATED ZK")
-            
-            self.setFont("Helvetica-Bold", 10)
-            self.setFillColor(colors.HexColor("#FFFFFF"))
-            self.drawString(170, 172, "FOR: ZK-LORAWAN PRIVACY LAYER")
-            self.setFont("Helvetica", 9)
-            self.setFillColor(colors.HexColor("#A0AEC0"))
-            self.drawString(170, 155, "ZERO-KNOWLEDGE LORAWAN MESH NETWORKS")
-            self.drawString(170, 140, "UNDER DECENTRALIZED INCENTIVIZATION PROTOCOL")
-            
-            # Legal notice at the bottom
-            self.setFont("Helvetica", 7)
-            self.setFillColor(colors.HexColor("#718096"))
-            self.drawString(54, 85, "LEGAL NOTICE: To safeguard developer intellectual property, the ZK-LoRaWAN codebase and all its multi-language")
-            self.drawString(54, 75, "implementations are currently published under a protected, proprietary license pending grant evaluation. Upon formal")
-            self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source MIT License.")
-            
+                self.drawImage("zk_lorawan_logo.png", 0, 0, width=595.27, height=841.89)
+            else:
+                self.setFillColor(colors.HexColor("#0d0f14"))
+                self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
             self.restoreState()
             return
             
         # Page 19 (End Cover page)
         if self._pageNumber == page_count:
             self.saveState()
-            self.setFillColor(colors.HexColor("#0d0f14"))
+            self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
             
             cx, cy = 297.63, 480
+            
+            # Draw logo image first so lines render on top
+            if os.path.exists("theaicollective_logo.jpg"):
+                self.drawImage("theaicollective_logo.jpg", cx - 40, cy - 25, width=80, height=80)
             
             # Draw network lines representing AI swarm/meditation
             self.setStrokeColor(colors.HexColor("#9945FF"))
@@ -102,7 +66,7 @@ class NumberedCanvas(canvas.Canvas):
             self.circle(cx + 50, cy - 30, 7, fill=True, stroke=False)
             
             # Inner details
-            self.setFillColor(colors.HexColor("#0D0F14"))
+            self.setFillColor(colors.HexColor("#000000"))
             self.circle(cx, cy + 40, 3, fill=True, stroke=False)
             self.circle(cx - 50, cy - 30, 3, fill=True, stroke=False)
             self.circle(cx + 50, cy - 30, 3, fill=True, stroke=False)
@@ -151,7 +115,7 @@ class NumberedCanvas(canvas.Canvas):
         self.line(54, 55, 541, 55)
         self.setFont("Helvetica", 7.5)
         self.setFillColor(colors.HexColor("#718096"))
-        self.drawString(54, 40, "Solana Foundation Grant // Devs One (Danny Bouldiez) // TheAiCollective.art")
+        self.drawString(54, 40, "Solana // TheAiCollective.art")
         
         page_text = f"Page {self._pageNumber} of {page_count}"
         self.drawRightString(541, 40, page_text)
@@ -758,7 +722,7 @@ def create_whitepaper_pdf():
         "reputation scores without leaking node identities.", bullet_style
     ))
     story.append(Paragraph(
-        "• <b>Zcash Pay Micropayment Integration:</b> Enable automated, real-time micropayment rewards for valid mesh routing "
+        "• <b>Solana Micropayment Integration:</b> Enable automated, real-time micropayment rewards for valid mesh routing "
         "proofs, interfacing with ChirpStack and The Things Network (TTN).", bullet_style
     ))
     story.append(PageBreak())

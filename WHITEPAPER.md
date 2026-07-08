@@ -249,7 +249,7 @@ The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructur
 ### Medium-Term (v3.0) -- Solana Mainnet & Mesh Scale-Out
 * **Multi-Hop Routing with ZK Auth:** Implement multi-hop routing where intermediate relay nodes authenticate packets using zero-knowledge proofs.
 * **On-Chain Reputation System:** Store ZK-proven node credentials as shielded Solana transactions to maintain reputation scores without leaking node identities.
-* **Zcash Pay Micropayment Integration:** Enable automated, real-time micropayment rewards for valid mesh routing proofs, interfacing with ChirpStack and The Things Network (TTN).
+* **Solana Micropayment Integration:** Enable automated, real-time micropayment rewards for valid mesh routing proofs, interfacing with ChirpStack and The Things Network (TTN).
 
 ---
 
