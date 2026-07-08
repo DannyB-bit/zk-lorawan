@@ -1,55 +1,43 @@
-# ZK-LoRaWAN Pre-Production Hardening & Verification Walkthrough
+# ZK-LoRaWAN Documentation Wording & Legal Notice Realignment Walkthrough
 
-This document records the latest verification and security updates implemented to transition ZK-LoRaWAN into a hardened, pre-production state.
-
----
-
-## 🔐 Pre-Production Hardening Updates
-
-### 1. Real Proofs for Batch Integration Tests (`tests/zk_lorawan.ts`)
-- **Bypass-Free Batch Tests**:
-  - Removed all `mockProofA[0] = 0xDD` mock bypass proofs in the batch verification test case.
-  - Used the CLI prover to generate **3 unique, mathematically valid Groth16 proofs** with distinct device identities/nullifiers.
-  - Hardcoded these 3 real proofs and their corresponding public input hashes in the batch test suite. Both the single and batch integration tests now prove real ZK verification on-chain, completely bypass-free.
-
-### 2. Gated Solana Transaction Submission Simulation
-- **Fail-Closed RPC**:
-  - Gated the gateway's simulated transaction signature fallback (`sim_single_...` and `sim_batch_...`) behind the environment variable `ZK_LORAWAN_DEMO_MODE=1`.
-  - In production, if submission to Solana RPC fails or connection is lost, the gateway client now **fails closed** and raises the exception.
-
-### 3. Automated Solana CLI Path Prepending
-- **NPM Test Script Integration**:
-  - Pre-configured the npm `test` script in [package.json](package.json) to automatically locate and prepend the local Solana 3.1.5 bin directory (`C:\Users\DannyB\.local\share\solana\releases\3.1.5\solana-release\bin`) to the environment `PATH` prior to calling `anchor test`.
-
-### 4. Standard 255-Byte MTU Limit & Explanation
-- **Standard Enforced Limit**:
-  - Updated `pack_lora_frame` in [proof_compression/lld_ac_encoder.py](proof_compression/lld_ac_encoder.py) to default to `max_size=255` bytes. 
-  - If a packet exceeds 255 bytes, it raises a clean error explaining that standard LoRa single payloads cannot exceed 255 bytes, and radio packet segmentation/fragmentation must be enabled in production.
-  - The parameter can be overridden using `max_size=512` for local end-to-end testing of high-entropy proofs.
-
-### 5. Compressed Proof to On-Chain Coordinate FFI Bridge
-- **Mathematical Conversion**:
-  - Created a new Rust FFI export `decompress_proof_to_solana_coords` inside [groth16/src/lib.rs](groth16/src/lib.rs) that takes compressed proof points (32/64/32 bytes) and decompresses them into big-endian uncompressed coordinates (64/128/64 bytes) using the `arkworks` curve library.
-  - Registered and called this bridge dynamically during submission (`submit_single` and `submit_batch`) in [gateway/gateway.py](gateway/gateway.py) before triggering on-chain Anchor method RPCs.
-  - Added a strict pre-flight check: if coordinate decompression fails for compressed proof bytes, it aborts submission immediately and throws a `ValueError` to prevent fee burning on-chain.
+This document records the updates implemented to bring `WHITEPAPER.md` and the compiled PDF generator (`compile_pdf.py`) into full, identical alignment with the actual repository implementations.
 
 ---
 
-## 🧪 Verification & Test Results
+## 🔐 Implemented Realignment Updates
 
-### 1. Master Verification Harness
-Running the comprehensive verification harness results in all 7 modules passing successfully:
-```powershell
-python tests/verify_all_modules.py
-```
-- **Result**: `7 passed, 0 failed, 7 total`.
+### 1. License & Legal Notice Correction
+- **Updates**:
+  - Updated the repository [LICENSE](LICENSE) file to declare the code under a **Proprietary License pending grant evaluation** by the Solana Foundation, stating that it will be re-licensed under the **Apache License, Version 2.0** upon grant approval.
+  - Modified the package license definition in [programs/zk_lorawan/Cargo.toml](programs/zk_lorawan/Cargo.toml) and [groth16/Cargo.toml](groth16/Cargo.toml) to `"Proprietary"`.
+  - Re-aligned the legal notices in `WHITEPAPER.md` and `compile_pdf.py` to match the Apache-2.0 target license rather than MIT.
 
-### 2. Workspace Cargo Tests
-```powershell
-cargo test --workspace
-```
-- **Result**: Standard rust unit tests pass successfully.
+### 2. Actual Circuit Description Realignment
+- **Updates**:
+  - Replaced descriptions of secp256k1, HASH160, Poseidon, and BabyJubjub/Circom with the actual implementation: **arkworks BN254 utilizing a MiMC-7 hashing circuit** (matching `groth16/src/circuit.rs`).
+  - Added the correct Rust structure and constraint outline directly inside both documentation sources.
 
-### 3. Anchor/Solana Test Toolchain Note
-- Prepending the Solana release bin directory to the `PATH` allows `npm test` to successfully locate the Solana and Anchor CLIs.
-- On standard Windows environments, compiling the BPF/SBF program fails with `Access is denied (os error 5)` during platform-tools installation since LLVM toolchains require administrative write rights. In production, compilation is performed natively on Linux or inside WSL.
+### 3. Roadmapped vs. Implemented Feature Segregation
+- **Updates**:
+  - Categorized ECIES, real TrustZone-M hardware enclaves, HMAC/RF-PoW, Time-of-Flight (ToF) checks, and ZK-Proof-of-Delivery (ZK-PoD) as **proposed future roadmap items** rather than active production implementations.
+
+### 4. Batch Transaction Mode Clarification
+- **Updates**:
+  - Clarified that the current batch routing lifecycle uses a sequence of $N+2$ decoupled transactions (`initializeBatch` -> $N$ individual `addChirp` updates -> `submitBatch` settlement) to stay under Solana transaction limits. Single-transaction batch rollups/proof aggregation are designated as roadmap items.
+
+### 5. Proof Compression Qualifications
+- **Updates**:
+  - Added a note qualifying the 189-byte/255-byte unfragmented LoRa packet claim. Real high-entropy proofs contain higher noise levels and require up to 512 bytes for uncompressed coordinates. Unfragmented 255-byte transmissions are possible only with highly constrained proof parameters, whereas general high-entropy proofs require packet fragmentation/segmentation.
+
+### 6. PDF Curve Reference Cleanup
+- **Updates**:
+  - Fixed the stale BLS12-381/Pasta curve references at line 807 in `compile_pdf.py` to match the BN254 wording in `WHITEPAPER.md`.
+
+---
+
+## 🧪 Verification & Results
+
+- **PDF Generation**: Compiled successfully using `python scratch/compile_pdf.py`.
+- **User Downloads**: Copied the newly compiled `zk_lorawan_whitepaper.pdf` directly to `C:\Users\DannyB\Downloads\zk_lorawan_whitepaper.pdf`.
+- **Git Push**: Clean pushed all changes to origin master at commit [93b7cd2](https://github.com/DannyB-bit/zk-lorawan/commit/93b7cd2).
+- **Harness**: `python tests/verify_all_modules.py` runs with a clean `7/7 passed` result.
