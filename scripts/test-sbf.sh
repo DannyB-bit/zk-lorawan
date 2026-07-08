@@ -41,4 +41,4 @@ cleanup() {
 trap cleanup EXIT
 
 anchor build -- --features integration-test
-anchor test --skip-build
+anchor test --skip-build --provider.wallet "${ANCHOR_WALLET}"
