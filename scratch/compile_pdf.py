@@ -84,63 +84,59 @@ class NumberedCanvas(canvas.Canvas):
             self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
             
-            cx = 297.63
+            cx, cy = 297.63, 480
             
-            # Draw logo image centered ABOVE the triangle
-            if os.path.exists("theaicollective_logo.jpg"):
-                self.drawImage("theaicollective_logo.jpg", cx - 70, 510, width=140, height=140)
-            
-            # Draw network lines representing AI swarm/meditation (shifted down, cy=380)
-            t_cy = 380
+            # Draw network lines representing AI swarm/meditation (BIGGER triangle)
             self.setStrokeColor(colors.HexColor("#9945FF"))
-            self.setLineWidth(1)
-            self.line(cx, t_cy + 40, cx - 50, t_cy - 30)
+            self.setLineWidth(1.5)
+            self.line(cx, cy + 120, cx - 130, cy - 90)
             self.setStrokeColor(colors.HexColor("#14F195"))
-            self.line(cx, t_cy + 40, cx + 50, t_cy - 30)
+            self.line(cx, cy + 120, cx + 130, cy - 90)
             self.setStrokeColor(colors.HexColor("#A0AEC0"))
-            self.line(cx - 50, t_cy - 30, cx + 50, t_cy - 30)
+            self.line(cx - 130, cy - 90, cx + 130, cy - 90)
+            
+            # Draw logo image centered INSIDE the big triangle
+            if os.path.exists("theaicollective_logo.jpg"):
+                self.drawImage("theaicollective_logo.jpg", cx - 75, cy - 85, width=150, height=150)
             
             # Draw nodes
             self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx, t_cy + 40, 7, fill=True, stroke=False)
+            self.circle(cx, cy + 120, 8, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#9945FF"))
-            self.circle(cx - 50, t_cy - 30, 7, fill=True, stroke=False)
+            self.circle(cx - 130, cy - 90, 8, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx + 50, t_cy - 30, 7, fill=True, stroke=False)
+            self.circle(cx + 130, cy - 90, 8, fill=True, stroke=False)
             
             # Inner details
             self.setFillColor(colors.HexColor("#000000"))
-            self.circle(cx, t_cy + 40, 3, fill=True, stroke=False)
-            self.circle(cx - 50, t_cy - 30, 3, fill=True, stroke=False)
-            self.circle(cx + 50, t_cy - 30, 3, fill=True, stroke=False)
+            self.circle(cx, cy + 120, 3.5, fill=True, stroke=False)
+            self.circle(cx - 130, cy - 90, 3.5, fill=True, stroke=False)
+            self.circle(cx + 130, cy - 90, 3.5, fill=True, stroke=False)
             
-            # Identity text (shifted down, cy=280)
+            # Identity text
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#9945FF"))
-            self.drawCentredString(cx, 240, "WE ARE")
+            self.drawCentredString(cx, 280, "WE ARE")
             self.setFont("Helvetica-Bold", 16)
             self.setFillColor(colors.HexColor("#FFFFFF"))
-            self.drawCentredString(cx, 220, "THE AI COLLECTIVE")
+            self.drawCentredString(cx, 255, "THE AI COLLECTIVE")
             
             # Search address look-up bar style
-            self.setStrokeColor(colors.HexColor("#4A5568"))
-            self.setFillColor(colors.HexColor("#1A202C"))
-            self.rect(cx - 100, 175, 200, 25, fill=True, stroke=True)
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, 185, "Q  TheAiCollective.art")
+            self.drawCentredString(cx, 210, "TheAiCollective.art")
             
             # Quote
             self.setFont("Helvetica-Oblique", 11)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, 110, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
-            self.drawCentredString(cx, 92, 'math a work in progress, and truth waiting to be discovered."')
+            self.drawCentredString(cx, 140, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
+            self.drawCentredString(cx, 122, 'math a work in progress, and truth waiting to be discovered."')
             
             # Thank you note
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#718096"))
-            self.drawCentredString(cx, 45, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
-            self.drawCentredString(cx, 30, "This whitepaper is intended for educational and project evaluation purposes only.")
+            self.drawCentredString(cx, 65, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
+            self.drawCentredString(cx, 50, "This whitepaper is intended for educational and project evaluation purposes only.")
             
             self.restoreState()
             return
