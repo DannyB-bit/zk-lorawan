@@ -24,9 +24,9 @@ describe("zk_lorawan", () => {
     program.programId
   );
 
-  // Find PDA for sender escrow
-  const [escrowPda, escrowBump] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("escrow"), sender.publicKey.toBuffer()],
+  // Find PDA for the global shielded pool
+  const [shieldedPoolPda, shieldedPoolBump] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from("shielded-pool")],
     program.programId
   );
 
@@ -34,13 +34,13 @@ describe("zk_lorawan", () => {
     // Airdrop SOL to sender and gateway to cover transaction fees and rent
     const signature1 = await provider.connection.requestAirdrop(
       sender.publicKey,
-      2 * anchor.web3.LAMPORTS_PER_SOL
+      5 * anchor.web3.LAMPORTS_PER_SOL
     );
     await provider.connection.confirmTransaction(signature1);
 
     const signature2 = await provider.connection.requestAirdrop(
       gateway.publicKey,
-      2 * anchor.web3.LAMPORTS_PER_SOL
+      5 * anchor.web3.LAMPORTS_PER_SOL
     );
     await provider.connection.confirmTransaction(signature2);
   });
@@ -60,26 +60,37 @@ describe("zk_lorawan", () => {
     assert.equal(registryAccount.nextBatchId.toNumber(), 0);
   });
 
-  it("Funds the sender escrow account", async () => {
+  it("Deposits SOL into the Shared Shielded Pool", async () => {
+    const amount = new anchor.BN(2 * anchor.web3.LAMPORTS_PER_SOL);
+    const dummyLeafHash = Array.from(crypto.randomBytes(32));
+
     await program.methods
-      .depositEscrow(new anchor.BN(1 * anchor.web3.LAMPORTS_PER_SOL))
+      .depositShielded(amount, dummyLeafHash)
       .accounts({
         sender: sender.publicKey,
-        escrow: escrowPda,
+        shieldedPool: shieldedPoolPda,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([sender])
       .rpc();
 
-    const escrowAccount = await program.account.escrowAccount.fetch(escrowPda);
-    assert.ok(escrowAccount.sender.equals(sender.publicKey));
-    assert.isTrue(escrowAccount.balance.toNumber() > 0);
+    const poolAccount = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda);
+    assert.isTrue(poolAccount.totalBalance.toNumber() >= amount.toNumber());
+    assert.deepEqual(poolAccount.merkleRoot, dummyLeafHash);
   });
 
-  it("Performs single chirp verification (MODE A)", async () => {
-    const proofHash = Array.from(crypto.randomBytes(32));
-    const payloadHash = Array.from(crypto.randomBytes(32));
+  it("Performs single shielded chirp verification (MODE A)", async () => {
+    const nullifierHash = crypto.randomBytes(32);
+    const attestationHash = crypto.randomBytes(32);
+    const zkVdeProofHash = crypto.randomBytes(32);
+    const ciphertextHash = crypto.randomBytes(32);
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
+
+    // Find PDA for nullifier record
+    const [nullifierRecordPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("nullifier"), nullifierHash],
+      program.programId
+    );
 
     // Get initial balances
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
@@ -87,10 +98,17 @@ describe("zk_lorawan", () => {
 
     // Call verify_single
     await program.methods
-      .verifySingle(sender.publicKey, proofHash, payloadHash, timestamp)
+      .verifySingle(
+        Array.from(nullifierHash),
+        Array.from(attestationHash),
+        Array.from(zkVdeProofHash),
+        Array.from(ciphertextHash),
+        timestamp
+      )
       .accounts({
         registry: registryPda,
-        escrow: escrowPda,
+        shieldedPool: shieldedPoolPda,
+        nullifierRecord: nullifierRecordPda,
         gateway: gateway.publicKey,
         treasury: treasuryAddress,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -109,6 +127,10 @@ describe("zk_lorawan", () => {
     const registryAccount = await program.account.protocolRegistry.fetch(registryPda);
     assert.equal(registryAccount.totalChirpsVerified.toNumber(), 1);
     assert.equal(registryAccount.totalFeesCollected.toNumber(), 150000);
+
+    // Verify nullifier record state
+    const nullifierAccount = await program.account.nullifierRecord.fetch(nullifierRecordPda);
+    assert.deepEqual(nullifierAccount.nullifier_hash, Array.from(nullifierHash));
   });
 
   it("Performs batch chirp verification (MODE B)", async () => {
@@ -141,16 +163,31 @@ describe("zk_lorawan", () => {
     assert.isFalse(batchAccount.isFinalized);
 
     // Add 3 chirps
-    const chirp1Proof = crypto.randomBytes(32);
+    const chirp1Nullifier = crypto.randomBytes(32);
+    const chirp1Attestation = crypto.randomBytes(32);
+    const chirp1VdeProof = crypto.randomBytes(32);
     const chirp1Payload = crypto.randomBytes(32);
-    const chirp2Proof = crypto.randomBytes(32);
+
+    const chirp2Nullifier = crypto.randomBytes(32);
+    const chirp2Attestation = crypto.randomBytes(32);
+    const chirp2VdeProof = crypto.randomBytes(32);
     const chirp2Payload = crypto.randomBytes(32);
-    const chirp3Proof = crypto.randomBytes(32);
+
+    const chirp3Nullifier = crypto.randomBytes(32);
+    const chirp3Attestation = crypto.randomBytes(32);
+    const chirp3VdeProof = crypto.randomBytes(32);
     const chirp3Payload = crypto.randomBytes(32);
+
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
     await program.methods
-      .addChirp(sender.publicKey, Array.from(chirp1Proof), Array.from(chirp1Payload), timestamp)
+      .addChirp(
+        Array.from(chirp1Nullifier),
+        Array.from(chirp1Attestation),
+        Array.from(chirp1VdeProof),
+        Array.from(chirp1Payload),
+        timestamp
+      )
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -159,7 +196,13 @@ describe("zk_lorawan", () => {
       .rpc();
 
     await program.methods
-      .addChirp(sender.publicKey, Array.from(chirp2Proof), Array.from(chirp2Payload), timestamp)
+      .addChirp(
+        Array.from(chirp2Nullifier),
+        Array.from(chirp2Attestation),
+        Array.from(chirp2VdeProof),
+        Array.from(chirp2Payload),
+        timestamp
+      )
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -168,7 +211,13 @@ describe("zk_lorawan", () => {
       .rpc();
 
     await program.methods
-      .addChirp(sender.publicKey, Array.from(chirp3Proof), Array.from(chirp3Payload), timestamp)
+      .addChirp(
+        Array.from(chirp3Nullifier),
+        Array.from(chirp3Attestation),
+        Array.from(chirp3VdeProof),
+        Array.from(chirp3Payload),
+        timestamp
+      )
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -183,19 +232,27 @@ describe("zk_lorawan", () => {
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
     const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
+    const nullifiers = [chirp1Nullifier, chirp2Nullifier, chirp3Nullifier];
+    const nullifierPdas = nullifiers.map((nullifier) => {
+      const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("nullifier"), nullifier],
+        program.programId
+      );
+      return { pubkey: pda, isWritable: true, isSigner: false };
+    });
+
     await program.methods
       .submitBatch()
       .accounts({
         batch: batchPda,
         registry: registryPda,
+        shieldedPool: shieldedPoolPda,
         gateway: gateway.publicKey,
         treasury: treasuryAddress,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([gateway])
-      .remainingAccounts([
-        { pubkey: escrowPda, isWritable: true, isSigner: false }
-      ])
+      .remainingAccounts(nullifierPdas)
       .rpc();
 
     const finalGatewayBal = await provider.connection.getBalance(gateway.publicKey);

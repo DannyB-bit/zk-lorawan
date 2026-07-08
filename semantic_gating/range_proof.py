@@ -315,7 +315,7 @@ class SemanticRangeProof:
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("ZK-LoRaWAN | ZK Semantic Gating — Range Proof Self-Test")
+    print("ZK-LoRaWAN | ZK Semantic Gating - Range Proof Self-Test")
     print("=" * 70)
     print()
 
@@ -327,7 +327,7 @@ if __name__ == "__main__":
     print()
 
     # Test 1: Valid range proof (Modality = 220, range [200, 255])
-    print("  ── Test 1: Valid Emergency Packet ──")
+    print("  -- Test 1: Valid Emergency Packet --")
     proof = SemanticRangeProof.prove(
         axis_index=2,      # Modality axis
         value=220,         # Actual value (PRIVATE — never revealed)
@@ -338,11 +338,11 @@ if __name__ == "__main__":
     print(f"  Axis:      {proof['axis_name']}")
     print(f"  Range:     [{proof['min_bound']}, {proof['max_bound']}]")
     print(f"  Protocol:  {proof['protocol']}")
-    print(f"  Verified:  {'✅ PASS — Gateway routes this packet' if valid else '❌ FAIL'}")
+    print(f"  Verified:  {'PASS - Gateway routes this packet' if valid else 'FAIL'}")
     print()
 
     # Test 2: Attempt to prove a value outside range (should raise error)
-    print("  ── Test 2: Non-Emergency Packet (should fail) ──")
+    print("  -- Test 2: Non-Emergency Packet (should fail) --")
     try:
         bad_proof = SemanticRangeProof.prove(
             axis_index=2,
@@ -350,24 +350,24 @@ if __name__ == "__main__":
             min_bound=200,
             max_bound=255
         )
-        print(f"  ❌ FAIL — Should have raised ValueError")
+        print(f"  FAIL - Should have raised ValueError")
     except ValueError as e:
-        print(f"  ✅ PASS — Correctly rejected: {e}")
+        print(f"  PASS - Correctly rejected: {e}")
     print()
 
     # Test 3: Pedersen commitment round-trip
-    print("  ── Test 3: Pedersen Commitment Verification ──")
+    print("  -- Test 3: Pedersen Commitment Verification --")
     test_value = 42
     comm, blind = PedersenCommitment.commit(test_value)
     verified = PedersenCommitment.verify_commitment(comm, test_value, blind)
     tampered = PedersenCommitment.verify_commitment(comm, 43, blind)
     print(f"  Committed value: {test_value}")
-    print(f"  Correct open:    {'✅ PASS' if verified else '❌ FAIL'}")
-    print(f"  Tampered open:   {'✅ PASS (rejected)' if not tampered else '❌ FAIL (accepted tamper)'}")
+    print(f"  Correct open:    {'PASS' if verified else 'FAIL'}")
+    print(f"  Tampered open:   {'PASS (rejected)' if not tampered else 'FAIL (accepted tamper)'}")
     print()
 
     # Test 4: Multi-axis gating (all 6 axes)
-    print("  ── Test 4: Full 6-Axis Range Proof Battery ──")
+    print("  -- Test 4: Full 6-Axis Range Proof Battery --")
     all_pass = True
     gating_rules = [
         (0, 30, 50),    # Domain in [30, 50]
@@ -382,13 +382,13 @@ if __name__ == "__main__":
         try:
             p = SemanticRangeProof.prove(axis_idx, val, min_b, max_b)
             v = SemanticRangeProof.verify(p)
-            status = "✅" if v else "❌"
+            status = "OK" if v else "BAD"
         except ValueError:
-            status = "⛔ OUT OF RANGE"
+            status = "OUT OF RANGE"
             v = False
         name = CuneiformCoordinate.AXIS_NAMES[axis_idx]
-        print(f"    {name:12s} val={val:3d} range=[{min_b:3d},{max_b:3d}] → {status}")
+        print(f"    {name:12s} val={val:3d} range=[{min_b:3d},{max_b:3d}] -> {status}")
 
     print()
-    print("  ✅ ZK Semantic Gating module operational")
+    print("  ZK Semantic Gating module operational")
     print()

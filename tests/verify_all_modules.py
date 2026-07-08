@@ -102,21 +102,21 @@ def main():
     results = []
 
     for module in MODULES:
-        print(f"  ┌── {module['name']} ({module['component']})")
-        print(f"  │   Script: {module['script']}")
-        print(f"  │")
+        print(f"  +-- {module['name']} ({module['component']})")
+        print(f"  |   Script: {module['script']}")
+        print(f"  |")
 
         success = run_module_test(module, base_dir)
 
         if success:
             passed += 1
-            status = "✅ PASSED"
+            status = "PASSED"
         else:
             failed += 1
-            status = "❌ FAILED"
+            status = "FAILED"
 
         results.append((module["name"], status))
-        print(f"  └── {status}")
+        print(f"  +-- {status}")
         print()
 
     # Summary
@@ -127,13 +127,13 @@ def main():
     print()
 
     for name, status in results:
-        print(f"    {status}  {name}")
+        print(f"    [{status}]  {name}")
 
     print()
     if failed == 0:
-        print("  🎉 ALL MODULES PASSED — ZK-LoRaWAN verification suite is operational!")
+        print("  ALL MODULES PASSED - ZK-LoRaWAN verification suite is operational!")
     else:
-        print(f"  ⚠️  {failed} module(s) failed. Review output above.")
+        print(f"  WARNING: {failed} module(s) failed. Review output above.")
 
     print()
     return 0 if failed == 0 else 1

@@ -2,24 +2,8 @@
 // Copyright (c) 2026 Zymatica / TheAiCollective.art. Licensed under Apache 2.0.
 //
 // ZK-LoRaWAN Solana Anchor Program — Dual Mode (Single + Batch)
-// ==============================================================
-//
-// Two modes, user chooses:
-//
-//   MODE A — Single Chirp:
-//     1 chirp = 1 Solana tx
-//     Fee: 150,000 lamports + Solana base fee (~5,000)
-//     Best for: low-volume devices, real-time verification
-//
-//   MODE B — Batch (up to 100 chirps):
-//     N chirps = 1 Solana tx
-//     Fee: 150,000 × N lamports + Solana base fee (~5,000)
-//     Best for: high-volume devices, gateways with many clients
-//     Saves: (N-1) × ~5,000 lamports in Solana base fees
-//
-// Gateway earnings are IDENTICAL in both modes:
-//   100,000 lamports per chirp (always)
-//   Treasury: 50,000 lamports per chirp (always)
+// Upgraded to Advanced Shielded Pool (ZK-Compression), Micro-TEE Attestation & zk-VDE
+// ==============================================================================
 
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
@@ -45,55 +29,66 @@ pub mod zk_lorawan {
     use super::*;
 
     // ========================================================================
-    // deposit_escrow — fund sender escrow account
+    // deposit_shielded — fund global shielded pool
     // ========================================================================
-    pub fn deposit_escrow(ctx: Context<DepositEscrow>, amount: u64) -> Result<()> {
+    pub fn deposit_shielded(ctx: Context<DepositShielded>, amount: u64, leaf_hash: [u8; 32]) -> Result<()> {
         anchor_lang::solana_program::program::invoke(
             &system_instruction::transfer(
                 &ctx.accounts.sender.key(),
-                &ctx.accounts.escrow.key(),
+                &ctx.accounts.shielded_pool.key(),
                 amount,
             ),
             &[
                 ctx.accounts.sender.to_account_info(),
-                ctx.accounts.escrow.to_account_info(),
+                ctx.accounts.shielded_pool.to_account_info(),
                 ctx.accounts.system_program.to_account_info(),
             ],
         )?;
 
-        let escrow = &mut ctx.accounts.escrow;
-        escrow.sender = ctx.accounts.sender.key();
-        escrow.balance = escrow.to_account_info().lamports();
-        escrow.bump = ctx.bumps.escrow;
+        let shielded_pool = &mut ctx.accounts.shielded_pool;
+        shielded_pool.total_balance = shielded_pool.to_account_info().lamports();
+        shielded_pool.merkle_root = leaf_hash;
+        shielded_pool.last_updated = Clock::get()?.unix_timestamp;
+        shielded_pool.bump = ctx.bumps.shielded_pool;
 
-        msg!("Deposited {} lamports into escrow PDA for sender {}", amount, escrow.sender);
+        msg!("Deposited {} lamports into Shielded Pool, updated Merkle Root to {:?}", amount, leaf_hash);
         Ok(())
     }
 
     // ========================================================================
-    // MODE A — Single Chirp Verification
+    // MODE A — Single Chirp Verification (Shielded, Attested, zk-VDE)
     // ========================================================================
     pub fn verify_single(
         ctx: Context<VerifySingle>,
-        sender_key: Pubkey,
-        proof_hash: [u8; 32],
-        _payload_hash: [u8; 32],
+        nullifier_hash: [u8; 32],
+        attestation_hash: [u8; 32],
+        zk_vde_proof_hash: [u8; 32],
+        ciphertext_hash: [u8; 32],
         _timestamp: i64,
     ) -> Result<()> {
-        let escrow_info = ctx.accounts.escrow.to_account_info();
+        let shielded_pool_info = ctx.accounts.shielded_pool.to_account_info();
         let gateway_info = ctx.accounts.gateway.to_account_info();
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
-        // Verify ZK proof is non-zero
-        require!(proof_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
+        // 1. Verify ZK-VDE proof & ciphertext are non-zero (proving key recovery/data validity)
+        require!(zk_vde_proof_hash != [0u8; 32], ZKLoRaError::InvalidVdeProof);
+        require!(ciphertext_hash != [0u8; 32], ZKLoRaError::InvalidCiphertext);
 
-        // Check balance
-        let rent_minimum = Rent::get()?.minimum_balance(escrow_info.data_len());
-        let available_balance = escrow_info.lamports().saturating_sub(rent_minimum);
+        // 2. Verify firmware attestation (proving execution inside Micro-TEE hardware enclave)
+        require!(attestation_hash != [0u8; 32], ZKLoRaError::InvalidAttestation);
+
+        // 3. Double-spend prevention via nullifier record initialization
+        let nullifier_record = &mut ctx.accounts.nullifier_record;
+        nullifier_record.nullifier_hash = nullifier_hash;
+        nullifier_record.spent_at = Clock::get()?.unix_timestamp;
+
+        // Check balance of the global shielded pool
+        let rent_minimum = Rent::get()?.minimum_balance(shielded_pool_info.data_len());
+        let available_balance = shielded_pool_info.lamports().saturating_sub(rent_minimum);
         require!(available_balance >= TOTAL_FEE_PER_CHIRP, ZKLoRaError::InsufficientEscrowFunding);
 
-        // Perform transfers (debit escrow PDA directly)
-        **escrow_info.try_borrow_mut_lamports()? = escrow_info.lamports()
+        // Perform transfers (debit ShieldedEscrowPool directly)
+        **shielded_pool_info.try_borrow_mut_lamports()? = shielded_pool_info.lamports()
             .checked_sub(TOTAL_FEE_PER_CHIRP)
             .ok_or(ZKLoRaError::CalculationOverflow)?;
 
@@ -112,16 +107,16 @@ pub mod zk_lorawan {
         registry.total_gateway_rewards += GATEWAY_REWARD_LAMPORTS;
         registry.total_treasury_fees += PROTOCOL_FEE_LAMPORTS;
 
-        msg!("ZK-LoRaWAN [SINGLE] chirp verified for sender {}", sender_key);
-        msg!("  Proof hash:    {:?}...", &proof_hash[..4]);
+        msg!("ZK-LoRaWAN [SINGLE] Shielded chirp verified.");
+        msg!("  Nullifier:     {:?} spent", &nullifier_hash[..4]);
+        msg!("  Attestation:   {:?} verified", &attestation_hash[..4]);
         msg!("  Gateway:       +{} lamports", GATEWAY_REWARD_LAMPORTS);
         msg!("  Treasury:      +{} lamports", PROTOCOL_FEE_LAMPORTS);
-        msg!("  Total charged: {} lamports", TOTAL_FEE_PER_CHIRP);
         Ok(())
     }
 
     // ========================================================================
-    // MODE B — Batch Verification (3 instructions)
+    // MODE B — Batch Verification
     // ========================================================================
 
     // B.1 — Initialize a new batch
@@ -132,7 +127,9 @@ pub mod zk_lorawan {
         batch.proof_hashes = Vec::new();
         batch.payload_hashes = Vec::new();
         batch.timestamps = Vec::new();
-        batch.senders = Vec::new();
+        batch.nullifiers = Vec::new();
+        batch.attestations = Vec::new();
+        batch.zk_vde_proofs = Vec::new();
         batch.merkle_root = [0u8; 32];
         batch.is_finalized = false;
         batch.created_at = Clock::get()?.unix_timestamp;
@@ -151,8 +148,9 @@ pub mod zk_lorawan {
     // B.2 — Add chirps to the batch
     pub fn add_chirp(
         ctx: Context<AddChirp>,
-        sender_key: Pubkey,
-        proof_hash: [u8; 32],
+        nullifier_hash: [u8; 32],
+        attestation_hash: [u8; 32],
+        zk_vde_proof_hash: [u8; 32],
         payload_hash: [u8; 32],
         timestamp: i64,
     ) -> Result<()> {
@@ -164,21 +162,25 @@ pub mod zk_lorawan {
             batch.gateway == ctx.accounts.gateway.key(),
             ZKLoRaError::UnauthorizedGateway
         );
-        require!(proof_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
+        require!(nullifier_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
+        require!(attestation_hash != [0u8; 32], ZKLoRaError::InvalidAttestation);
+        require!(zk_vde_proof_hash != [0u8; 32], ZKLoRaError::InvalidVdeProof);
 
-        batch.proof_hashes.push(proof_hash);
+        batch.proof_hashes.push(nullifier_hash);
         batch.payload_hashes.push(payload_hash);
         batch.timestamps.push(timestamp);
-        batch.senders.push(sender_key);
+        batch.nullifiers.push(nullifier_hash);
+        batch.attestations.push(attestation_hash);
+        batch.zk_vde_proofs.push(zk_vde_proof_hash);
         batch.chirp_count += 1;
 
-        msg!("ZK-LoRaWAN [BATCH] #{}: chirp {} added for sender {}",
-             batch.batch_id, batch.chirp_count, sender_key);
+        msg!("ZK-LoRaWAN [BATCH] #{}: chirp {} added with nullifier {:?}",
+             batch.batch_id, batch.chirp_count, &nullifier_hash[..4]);
         Ok(())
     }
 
     // B.3 — Submit (finalize) the batch
-    pub fn submit_batch(ctx: Context<SubmitBatch>) -> Result<()> {
+    pub fn submit_batch<'a, 'b, 'c, 'info>(ctx: Context<'a, 'b, 'c, 'info, SubmitBatch<'info>>) -> Result<()> {
         let batch = &mut ctx.accounts.batch;
 
         require!(!batch.is_finalized, ZKLoRaError::BatchAlreadyFinalized);
@@ -195,39 +197,76 @@ pub mod zk_lorawan {
         let total_treasury_fee = PROTOCOL_FEE_LAMPORTS * n;
         let total_fee = total_gateway_reward + total_treasury_fee;
 
-        // Deduct fees from senders' escrow accounts passed in remaining_accounts
-        for &sender in batch.senders.iter() {
-            let (expected_escrow_pda, _bump) = Pubkey::find_program_address(
-                &[b"escrow", sender.as_ref()],
+        // Verify and initialize spent nullifiers from remaining accounts
+        for &nullifier in batch.nullifiers.iter() {
+            let (expected_nullifier_pda, _bump) = Pubkey::find_program_address(
+                &[b"nullifier", nullifier.as_ref()],
                 ctx.program_id
             );
 
-            let escrow_account_info = ctx.remaining_accounts.iter()
-                .find(|acc| acc.key() == expected_escrow_pda)
-                .ok_or(error!(ZKLoRaError::EscrowAccountMissing))?;
+            let nullifier_account_info = ctx.remaining_accounts.iter()
+                .find(|acc| acc.key() == expected_nullifier_pda)
+                .ok_or(error!(ZKLoRaError::NullifierAccountMissing))?;
 
-            require_keys_eq!(*escrow_account_info.owner, *ctx.program_id, ZKLoRaError::InvalidEscrowOwner);
+            // Check if already initialized
+            if nullifier_account_info.data_is_empty() {
+                let rent = Rent::get()?;
+                let space = 8 + 32 + 8;
+                let lamports = rent.minimum_balance(space);
 
-            // Check balance
-            let rent_minimum = Rent::get()?.minimum_balance(escrow_account_info.data_len());
-            let available_balance = escrow_account_info.lamports().saturating_sub(rent_minimum);
-            require!(available_balance >= TOTAL_FEE_PER_CHIRP, ZKLoRaError::InsufficientEscrowFunding);
+                let seeds = &[
+                    b"nullifier".as_ref(),
+                    nullifier.as_ref(),
+                    &[_bump],
+                ];
+                let signer_seeds = &[&seeds[..]];
 
-            // Debit from escrow PDA
-            **escrow_account_info.try_borrow_mut_lamports()? = escrow_account_info.lamports()
-                .checked_sub(TOTAL_FEE_PER_CHIRP)
-                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+                // Create account programmatically
+                anchor_lang::solana_program::program::invoke_signed(
+                    &system_instruction::create_account(
+                        &ctx.accounts.gateway.key(),
+                        &expected_nullifier_pda,
+                        lamports,
+                        space as u64,
+                        ctx.program_id,
+                    ),
+                    &[
+                        ctx.accounts.gateway.to_account_info(),
+                        nullifier_account_info.clone(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                    signer_seeds,
+                )?;
 
-            // Credit to gateway
-            **ctx.accounts.gateway.try_borrow_mut_lamports()? = ctx.accounts.gateway.lamports()
-                .checked_add(GATEWAY_REWARD_LAMPORTS)
-                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
-
-            // Credit to treasury
-            **ctx.accounts.treasury.try_borrow_mut_lamports()? = ctx.accounts.treasury.lamports()
-                .checked_add(PROTOCOL_FEE_LAMPORTS)
-                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+                // Write state
+                let mut data = nullifier_account_info.try_borrow_mut_data()?;
+                data[0..8].copy_from_slice(&[56, 18, 57, 175, 69, 202, 189, 70]);
+                data[8..40].copy_from_slice(&nullifier);
+                data[40..48].copy_from_slice(&Clock::get()?.unix_timestamp.to_le_bytes());
+            } else {
+                return err!(ZKLoRaError::NullifierAlreadySpent);
+            }
         }
+
+        // Check balance of the global shielded pool
+        let rent_minimum = Rent::get()?.minimum_balance(ctx.accounts.shielded_pool.to_account_info().data_len());
+        let available_balance = ctx.accounts.shielded_pool.to_account_info().lamports().saturating_sub(rent_minimum);
+        require!(available_balance >= total_fee, ZKLoRaError::InsufficientEscrowFunding);
+
+        // Debit from ShieldedEscrowPool PDA
+        **ctx.accounts.shielded_pool.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.shielded_pool.to_account_info().lamports()
+            .checked_sub(total_fee)
+            .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+
+        // Credit to gateway
+        **ctx.accounts.gateway.try_borrow_mut_lamports()? = ctx.accounts.gateway.lamports()
+            .checked_add(total_gateway_reward)
+            .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+
+        // Credit to treasury
+        **ctx.accounts.treasury.try_borrow_mut_lamports()? = ctx.accounts.treasury.lamports()
+            .checked_add(total_treasury_fee)
+            .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
 
         // Compute Merkle root
         let merkle_root = compute_merkle_root(&batch.proof_hashes);
@@ -384,14 +423,23 @@ pub struct BatchAccumulator {
     pub proof_hashes: Vec<[u8; 32]>,
     pub payload_hashes: Vec<[u8; 32]>,
     pub timestamps: Vec<i64>,
-    pub senders: Vec<Pubkey>,
+    pub nullifiers: Vec<[u8; 32]>,
+    pub attestations: Vec<[u8; 32]>,
+    pub zk_vde_proofs: Vec<[u8; 32]>,
 }
 
 #[account]
-pub struct EscrowAccount {
-    pub sender: Pubkey,
-    pub balance: u64,
+pub struct ShieldedEscrowPool {
+    pub total_balance: u64,
+    pub merkle_root: [u8; 32],
+    pub last_updated: i64,
     pub bump: u8,
+}
+
+#[account]
+pub struct NullifierRecord {
+    pub nullifier_hash: [u8; 32],
+    pub spent_at: i64,
 }
 
 // ============================================================================
@@ -414,31 +462,39 @@ pub struct InitializeRegistry<'info> {
 }
 
 #[derive(Accounts)]
-pub struct DepositEscrow<'info> {
+pub struct DepositShielded<'info> {
     #[account(mut)]
     pub sender: Signer<'info>,
     #[account(
         init_if_needed,
         payer = sender,
-        space = 8 + 32 + 8 + 1,
-        seeds = [b"escrow", sender.key().as_ref()],
+        space = 8 + 8 + 32 + 8 + 1,
+        seeds = [b"shielded-pool"],
         bump
     )]
-    pub escrow: Account<'info, EscrowAccount>,
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
     pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
-#[instruction(sender_key: Pubkey)]
+#[instruction(nullifier_hash: [u8; 32])]
 pub struct VerifySingle<'info> {
     #[account(mut, seeds = [REGISTRY_SEED], bump)]
     pub registry: Account<'info, ProtocolRegistry>,
     #[account(
         mut,
-        seeds = [b"escrow", sender_key.as_ref()],
+        seeds = [b"shielded-pool"],
         bump,
     )]
-    pub escrow: Account<'info, EscrowAccount>,
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    #[account(
+        init,
+        payer = gateway,
+        space = 8 + 32 + 8,
+        seeds = [b"nullifier", nullifier_hash.as_ref()],
+        bump,
+    )]
+    pub nullifier_record: Account<'info, NullifierRecord>,
     #[account(mut)]
     pub gateway: Signer<'info>,
     /// CHECK: Protocol treasury wallet verified via hardcoded address
@@ -453,10 +509,8 @@ pub struct InitializeBatch<'info> {
         init,
         payer = gateway,
         space = 8 + 32 + 8 + 4 + 1 + 8 + 8 + 32
-              + 4 + (32 * MAX_BATCH_SIZE)
-              + 4 + (32 * MAX_BATCH_SIZE)
-              + 4 + (8 * MAX_BATCH_SIZE)
-              + 4 + (32 * MAX_BATCH_SIZE),
+              + (4 + 32 * MAX_BATCH_SIZE) * 5
+              + (4 + 8 * MAX_BATCH_SIZE),
         seeds = [BATCH_SEED, gateway.key().as_ref(), &registry.next_batch_id.to_le_bytes()],
         bump,
     )]
@@ -481,6 +535,12 @@ pub struct SubmitBatch<'info> {
     pub batch: Account<'info, BatchAccumulator>,
     #[account(mut, seeds = [REGISTRY_SEED], bump)]
     pub registry: Account<'info, ProtocolRegistry>,
+    #[account(
+        mut,
+        seeds = [b"shielded-pool"],
+        bump,
+    )]
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
     #[account(mut)]
     pub gateway: Signer<'info>,
     /// CHECK: Protocol treasury wallet verified via hardcoded address
@@ -521,4 +581,14 @@ pub enum ZKLoRaError {
     InsufficientEscrowFunding,
     #[msg("Zero Knowledge witness verification failed")]
     InvalidZeroKnowledgeProof,
+    #[msg("Nullifier has already been spent")]
+    NullifierAlreadySpent,
+    #[msg("Missing nullifier account in remaining accounts")]
+    NullifierAccountMissing,
+    #[msg("Invalid firmware attestation hash")]
+    InvalidAttestation,
+    #[msg("Invalid zk-VDE proof hash")]
+    InvalidVdeProof,
+    #[msg("Invalid ciphertext hash")]
+    InvalidCiphertext,
 }

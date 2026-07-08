@@ -66,6 +66,10 @@ class LLDACEncoder:
         for i in range(0x31, 256):
             freq[i] += 1  # Low probability (only appears via carries)
 
+        # Zero padding bytes (0x00) cluster heavily in serialized structures,
+        # so we assign them a high probability bias to maximize compression.
+        freq[0] += 1500
+
         # Ensure no zero frequencies (Laplace smoothing)
         for i in range(256):
             freq[i] = max(freq[i], 1)
@@ -341,16 +345,16 @@ if __name__ == "__main__":
     frame = pack_lora_frame(compressed, coords)
     print(f"  [3] LoRa frame total:     {len(frame)} bytes (MTU limit: 255)")
     fits = len(frame) <= 255
-    print(f"  [4] Fits in LoRa frame:   {'✅ YES' if fits else '❌ NO'}")
+    print(f"  [4] Fits in LoRa frame:   {'YES' if fits else 'NO'}")
 
     # Step 4: Verify lossless round-trip
     decompressed = encoder.decode(compressed, len(raw_proof))
     match = decompressed == raw_proof
-    print(f"  [5] Lossless round-trip:  {'✅ PASS' if match else '❌ FAIL'}")
+    print(f"  [5] Lossless round-trip:  {'PASS' if match else 'FAIL'}")
 
     print()
     if fits and match:
-        print("  ✅ ALL CHECKS PASSED — ZK proof + coordinates fit in single LoRa frame")
+        print("  ALL CHECKS PASSED — ZK proof + coordinates fit in single LoRa frame")
     else:
-        print("  ❌ CHECKS FAILED")
+        print("  CHECKS FAILED")
     print()
