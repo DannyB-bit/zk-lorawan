@@ -41,11 +41,20 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **Verification**: 
   Validated the math and execution. Running `cargo run --bin zk_lorawan_prove` and `cargo test --workspace` confirms the circuit correctly verifies valid proofs and successfully rejects tampered witnesses.
 
+### 8. Review Hardening & CI/CD Pipeline Alignment
+- **Soundness Tests**: Added [groth16/tests/circuit_soundness.rs](file:///k:/Zk-LoRaWan/groth16/tests/circuit_soundness.rs) containing 5 strict soundness tests checking variable allocation, constraint consistency, public input bindings, and witness mutations.
+- **On-Chain Verify Key Points**: Updated the stale `vk_ic` points in [programs/zk_lorawan/src/lib.rs](file:///k:/Zk-LoRaWan/programs/zk_lorawan/src/lib.rs) to match the rebuilt key configurations.
+- **Fixture Synchronization**: Refreshed the proof fixtures in [gateway/gateway.py](file:///k:/Zk-LoRaWan/gateway/gateway.py) and [tests/zk_lorawan.ts](file:///k:/Zk-LoRaWan/tests/zk_lorawan.ts) to align with the upgraded circuit constraints, fixing verifier mismatch.
+- **Harness Hardening**: Configured [tests/verify_all_modules.py](file:///k:/Zk-LoRaWan/tests/verify_all_modules.py) and the gateway demo to fail closed if any of the 25 simulated chirps are rejected or fail verification.
+- **Continuous Integration**: Added [.github/workflows/strict-verification.yml](file:///k:/Zk-LoRaWan/.github/workflows/strict-verification.yml) running Node 20.18.0 to enforce cargo tests, formatting, clippy checks, python integration, and typescript typechecks.
+
 ---
 
 ## 🧪 Verification & Results
 
 - **PDF Generation**: Compiled successfully using `python scratch/compile_pdf.py`.
 - **User Downloads**: Copied the newly compiled `zk_lorawan_whitepaper.pdf` directly to `C:\Users\DannyB\Downloads\zk_lorawan_whitepaper.pdf`.
-- **Git Push**: Clean pushed all changes to origin master, including the documentation realignment and the critical Groth16 circuit security fix.
+- **Git Push**: Clean pushed all changes to origin master, including the documentation realignment, the critical Groth16 circuit security fix, and the CI/fixture hardening suite.
 - **Harness**: `python tests/verify_all_modules.py` runs with a clean `7/7 passed` result.
+- **Typecheck**: `npm run typecheck` compiles TypeScript test fixtures with zero compiler warnings.
+- **Rust Verification**: Cargo workspace test suite compiles and executes successfully.
