@@ -1,5 +1,7 @@
 # Solana Foundation Grant Application — ZK-LoRaWAN Privacy Layer
 
+![ZK-LoRaWAN Logo](zk_lorawan_logo.png)
+
 ## 🎯 Project Title
 **ZK-LoRaWAN: Zero-Knowledge Privacy Layer for Solana DePIN Mesh Networks**
 
