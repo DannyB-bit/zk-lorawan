@@ -48,6 +48,13 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **Harness Hardening**: Configured [tests/verify_all_modules.py](file:///k:/Zk-LoRaWan/tests/verify_all_modules.py) and the gateway demo to fail closed if any of the 25 simulated chirps are rejected or fail verification.
 - **Continuous Integration**: Added [.github/workflows/strict-verification.yml](file:///k:/Zk-LoRaWan/.github/workflows/strict-verification.yml) running Node 20.18.0 to enforce cargo tests, formatting, clippy checks, python integration, and typescript typechecks.
 
+### 9. Linux SBF Integration & local-validator Testing
+- **SBF Support**: Integrated fixes to enable the program to build and deploy inside the Solana Binary Format (SBF) VM environment on Linux.
+- **Serialization & Encoding**: Corrected BN254 byte order and coordinate serialization flags to allow on-chain verifiers to match off-chain proofs.
+- **Account Sizing**: Fixed batch account sizing parameters to prevent memory errors or overflow boundaries during on-chain execution.
+- **CI Integration**: Added [.github/workflows/sbf-integration.yml](file:///k:/Zk-LoRaWan/.github/workflows/sbf-integration.yml) to spin up a clean Solana validator environment and execute SBF-targeted test pipelines on every push.
+- **Test Results**: All 4 core transactions (Registry Initialisation, Shielded Deposit, Single Chirp, Batch Chirp) verify and settle successfully on-chain (4/4 tests passed).
+
 ---
 
 ## 🧪 Verification & Results
