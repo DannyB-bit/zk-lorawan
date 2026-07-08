@@ -19,18 +19,18 @@ This document records the latest verification and security updates implemented t
 
 ### 3. Automated Solana CLI Path Prepending
 - **NPM Test Script Integration**:
-  - Pre-configured the npm `test` script in [package.json](file:///k:/Zk-LoRaWan/package.json) to automatically locate and prepend the local Solana 3.1.5 bin directory (`C:\Users\DannyB\.local\share\solana\releases\3.1.5\solana-release\bin`) to the environment `PATH` prior to calling `anchor test`.
+  - Pre-configured the npm `test` script in [package.json](package.json) to automatically locate and prepend the local Solana 3.1.5 bin directory (`C:\Users\DannyB\.local\share\solana\releases\3.1.5\solana-release\bin`) to the environment `PATH` prior to calling `anchor test`.
 
 ### 4. Standard 255-Byte MTU Limit & Explanation
 - **Standard Enforced Limit**:
-  - Updated `pack_lora_frame` in [proof_compression/lld_ac_encoder.py](file:///k:/Zk-LoRaWan/proof_compression/lld_ac_encoder.py) to default to `max_size=255` bytes. 
+  - Updated `pack_lora_frame` in [proof_compression/lld_ac_encoder.py](proof_compression/lld_ac_encoder.py) to default to `max_size=255` bytes. 
   - If a packet exceeds 255 bytes, it raises a clean error explaining that standard LoRa single payloads cannot exceed 255 bytes, and radio packet segmentation/fragmentation must be enabled in production.
   - The parameter can be overridden using `max_size=512` for local end-to-end testing of high-entropy proofs.
 
 ### 5. Compressed Proof to On-Chain Coordinate FFI Bridge
 - **Mathematical Conversion**:
-  - Created a new Rust FFI export `decompress_proof_to_solana_coords` inside [groth16/src/lib.rs](file:///k:/Zk-LoRaWan/groth16/src/lib.rs) that takes compressed proof points (32/64/32 bytes) and decompresses them into big-endian uncompressed coordinates (64/128/64 bytes) using the `arkworks` curve library.
-  - Registered and called this bridge dynamically during submission (`submit_single` and `submit_batch`) in [gateway/gateway.py](file:///k:/Zk-LoRaWan/gateway/gateway.py) before triggering on-chain Anchor method RPCs.
+  - Created a new Rust FFI export `decompress_proof_to_solana_coords` inside [groth16/src/lib.rs](groth16/src/lib.rs) that takes compressed proof points (32/64/32 bytes) and decompresses them into big-endian uncompressed coordinates (64/128/64 bytes) using the `arkworks` curve library.
+  - Registered and called this bridge dynamically during submission (`submit_single` and `submit_batch`) in [gateway/gateway.py](gateway/gateway.py) before triggering on-chain Anchor method RPCs.
   - Added a strict pre-flight check: if coordinate decompression fails for compressed proof bytes, it aborts submission immediately and throws a `ValueError` to prevent fee burning on-chain.
 
 ---

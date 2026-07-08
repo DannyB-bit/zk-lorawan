@@ -667,6 +667,40 @@ class SolanaSubmitter:
             f"total_fee={total_fee} lamports"
         )
         
+        # Pre-flight: Decompress and validate all proofs in the batch before making any on-chain RPC calls
+        decompressed_batch_coords = []
+        for idx, chirp in enumerate(batch.chirps):
+            decompressed_coords = None
+            is_compressed = False
+            if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
+                is_compressed = True
+                verifier = ZKVerifier()
+                decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
+
+            if decompressed_coords:
+                decompressed_batch_coords.append((
+                    list(decompressed_coords[0]),
+                    list(decompressed_coords[1]),
+                    list(decompressed_coords[2])
+                ))
+            elif is_compressed:
+                raise ValueError(f"Failed to decompress compressed proof coordinates for chirp {idx+1}. Refusing submission to prevent fee burning on-chain.")
+            else:
+                proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
+                proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
+                proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
+                
+                # Ensure precise sizes
+                if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
+                if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
+                if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
+                
+                decompressed_batch_coords.append((
+                    proof_a_list[:64],
+                    proof_b_list[:128],
+                    proof_c_list[:64]
+                ))
+
         try:
             registry_pda = await self.get_registry_pda()
             registry_account = await self.program.account["ProtocolRegistry"].fetch(registry_pda)
@@ -689,33 +723,7 @@ class SolanaSubmitter:
             
             # Add chirps
             for idx, chirp in enumerate(batch.chirps):
-                # Decompress proof coordinates if they are 32/64/32 bytes compressed points
-                decompressed_coords = None
-                is_compressed = False
-                if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
-                    is_compressed = True
-                    verifier = ZKVerifier()
-                    decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
-
-                if decompressed_coords:
-                    proof_a_list = list(decompressed_coords[0])
-                    proof_b_list = list(decompressed_coords[1])
-                    proof_c_list = list(decompressed_coords[2])
-                elif is_compressed:
-                    raise ValueError("Failed to decompress compressed proof coordinates. Refusing submission to prevent fee burning on-chain.")
-                else:
-                    proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
-                    proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
-                    proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
-                    
-                    # Ensure precise sizes
-                    if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
-                    if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
-                    if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
-                    
-                    proof_a_list = proof_a_list[:64]
-                    proof_b_list = proof_b_list[:128]
-                    proof_c_list = proof_c_list[:64]
+                proof_a_list, proof_b_list, proof_c_list = decompressed_batch_coords[idx]
 
                 add_tx = await self.program.methods.addChirp(
                     proof_a_list,
