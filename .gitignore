@@ -7,7 +7,6 @@ build/
 .env
 node_modules/
 target/
-Cargo.lock
 *.exe
 *.obj
 *.o
