@@ -211,20 +211,27 @@ class MicroByteJIT:
 
 
 def generate_test_vk(num_public_inputs: int = 2) -> VerifyingKey:
-    """Generate a realistic test verifying key with deterministic BN254-like elements."""
-    def make_g1():
-        return hashlib.sha256(secrets.token_bytes(32)).digest() + \
-               hashlib.sha256(secrets.token_bytes(32)).digest()
+    """Generate a realistic test verifying key with structured BN254-like elements."""
+    def make_g1(index):
+        # Create structured 64-byte G1 point (X, Y) simulating curve coordinates
+        # with padded zeros and pattern runs
+        x = bytearray([0] * 12 + [index & 0xFF] * 10 + [0xAB] * 10)
+        y = bytearray([0] * 12 + [(index + 1) & 0xFF] * 10 + [0xCD] * 10)
+        return bytes(x + y)
 
-    def make_g2():
-        return make_g1() + make_g1()
+    def make_g2(index):
+        # Create structured 128-byte G2 point (X_real, X_imag, Y_real, Y_imag)
+        x_real = bytearray([0] * 12 + [index & 0xFF] * 10 + [0x11] * 10)
+        x_imag = bytearray([0] * 12 + [(index + 1) & 0xFF] * 10 + [0x22] * 10)
+        y_real = bytearray([0] * 12 + [(index + 2) & 0xFF] * 10 + [0x33] * 10)
+        y_imag = bytearray([0] * 12 + [(index + 3) & 0xFF] * 10 + [0x44] * 10)
+        return bytes(x_real + x_imag + y_real + y_imag)
 
-    import secrets
-    alpha = make_g1()
-    beta = make_g2()
-    gamma = make_g2()
-    delta = make_g2()
-    ic = [make_g1() for _ in range(num_public_inputs + 1)]
+    alpha = make_g1(1)
+    beta = make_g2(2)
+    gamma = make_g2(3)
+    delta = make_g2(4)
+    ic = [make_g1(5 + i) for i in range(num_public_inputs + 1)]
 
     return VerifyingKey(alpha, beta, gamma, delta, ic)
 

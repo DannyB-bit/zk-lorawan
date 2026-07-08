@@ -5,13 +5,13 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-zk_lorawan = "ZKLoRa1111111111111111111111111111111111111"
+zk_lorawan = "4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC"
 
 [programs.devnet]
-zk_lorawan = "ZKLoRa1111111111111111111111111111111111111"
+zk_lorawan = "4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC"
 
 [programs.mainnet]
-zk_lorawan = "ZKLoRa1111111111111111111111111111111111111"
+zk_lorawan = "4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC"
 
 [registry]
 url = "https://api.apr.dev"

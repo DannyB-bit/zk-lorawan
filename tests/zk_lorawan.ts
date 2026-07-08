@@ -13,12 +13,20 @@ describe("zk_lorawan", () => {
 
   // Generate keypairs for our actors
   const gateway = anchor.web3.Keypair.generate();
-  const treasury = anchor.web3.Keypair.generate();
   const sender = anchor.web3.Keypair.generate();
+
+  // Hardcoded treasury address matching lib.rs
+  const treasuryAddress = new anchor.web3.PublicKey("CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ");
 
   // Find PDA for registry
   const [registryPda, registryBump] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("zk-lorawan-registry")],
+    program.programId
+  );
+
+  // Find PDA for sender escrow
+  const [escrowPda, escrowBump] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from("escrow"), sender.publicKey.toBuffer()],
     program.programId
   );
 
@@ -52,6 +60,22 @@ describe("zk_lorawan", () => {
     assert.equal(registryAccount.nextBatchId.toNumber(), 0);
   });
 
+  it("Funds the sender escrow account", async () => {
+    await program.methods
+      .depositEscrow(new anchor.BN(1 * anchor.web3.LAMPORTS_PER_SOL))
+      .accounts({
+        sender: sender.publicKey,
+        escrow: escrowPda,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([sender])
+      .rpc();
+
+    const escrowAccount = await program.account.escrowAccount.fetch(escrowPda);
+    assert.ok(escrowAccount.sender.equals(sender.publicKey));
+    assert.isTrue(escrowAccount.balance.toNumber() > 0);
+  });
+
   it("Performs single chirp verification (MODE A)", async () => {
     const proofHash = Array.from(crypto.randomBytes(32));
     const payloadHash = Array.from(crypto.randomBytes(32));
@@ -59,24 +83,24 @@ describe("zk_lorawan", () => {
 
     // Get initial balances
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
-    const initialTreasuryBal = await provider.connection.getBalance(treasury.publicKey);
+    const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
     // Call verify_single
     await program.methods
-      .verifySingle(proofHash, payloadHash, timestamp)
+      .verifySingle(sender.publicKey, proofHash, payloadHash, timestamp)
       .accounts({
         registry: registryPda,
-        sender: sender.publicKey,
+        escrow: escrowPda,
         gateway: gateway.publicKey,
-        treasury: treasury.publicKey,
+        treasury: treasuryAddress,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([sender])
+      .signers([gateway])
       .rpc();
 
     // Verify balances (Gateway gets 100K lamports, Treasury gets 50K lamports)
     const finalGatewayBal = await provider.connection.getBalance(gateway.publicKey);
-    const finalTreasuryBal = await provider.connection.getBalance(treasury.publicKey);
+    const finalTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
     assert.equal(finalGatewayBal - initialGatewayBal, 100000);
     assert.equal(finalTreasuryBal - initialTreasuryBal, 50000);
@@ -126,7 +150,7 @@ describe("zk_lorawan", () => {
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
     await program.methods
-      .addChirp(Array.from(chirp1Proof), Array.from(chirp1Payload), timestamp)
+      .addChirp(sender.publicKey, Array.from(chirp1Proof), Array.from(chirp1Payload), timestamp)
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -135,7 +159,7 @@ describe("zk_lorawan", () => {
       .rpc();
 
     await program.methods
-      .addChirp(Array.from(chirp2Proof), Array.from(chirp2Payload), timestamp)
+      .addChirp(sender.publicKey, Array.from(chirp2Proof), Array.from(chirp2Payload), timestamp)
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -144,7 +168,7 @@ describe("zk_lorawan", () => {
       .rpc();
 
     await program.methods
-      .addChirp(Array.from(chirp3Proof), Array.from(chirp3Payload), timestamp)
+      .addChirp(sender.publicKey, Array.from(chirp3Proof), Array.from(chirp3Payload), timestamp)
       .accounts({
         batch: batchPda,
         gateway: gateway.publicKey,
@@ -157,23 +181,25 @@ describe("zk_lorawan", () => {
 
     // Submit batch (Gateway gets 300K lamports, Treasury gets 150K lamports)
     const initialGatewayBal = await provider.connection.getBalance(gateway.publicKey);
-    const initialTreasuryBal = await provider.connection.getBalance(treasury.publicKey);
+    const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
     await program.methods
       .submitBatch()
       .accounts({
         batch: batchPda,
         registry: registryPda,
-        sender: sender.publicKey,
         gateway: gateway.publicKey,
-        treasury: treasury.publicKey,
+        treasury: treasuryAddress,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([sender])
+      .signers([gateway])
+      .remainingAccounts([
+        { pubkey: escrowPda, isWritable: true, isSigner: false }
+      ])
       .rpc();
 
     const finalGatewayBal = await provider.connection.getBalance(gateway.publicKey);
-    const finalTreasuryBal = await provider.connection.getBalance(treasury.publicKey);
+    const finalTreasuryBal = await provider.connection.getBalance(treasuryAddress);
 
     assert.equal(finalGatewayBal - initialGatewayBal, 300000);
     assert.equal(finalTreasuryBal - initialTreasuryBal, 150000);

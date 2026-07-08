@@ -181,14 +181,17 @@ class SemanticRangeProof:
         k_val = secrets.randbelow(cls.FIELD_PRIME)
         k_low = secrets.randbelow(cls.FIELD_PRIME)
         k_high = secrets.randbelow(cls.FIELD_PRIME)
+        k_blind = secrets.randbelow(cls.FIELD_PRIME)
+        k_blind_low = secrets.randbelow(cls.FIELD_PRIME)
+        k_blind_high = secrets.randbelow(cls.FIELD_PRIME)
 
         # Step 4: Compute announcement commitments
         announce_val = (pow(PedersenCommitment.G, k_val, cls.FIELD_PRIME) *
-                        pow(PedersenCommitment.H, k_val, cls.FIELD_PRIME)) % cls.FIELD_PRIME
+                        pow(PedersenCommitment.H, k_blind, cls.FIELD_PRIME)) % cls.FIELD_PRIME
         announce_low = (pow(PedersenCommitment.G, k_low, cls.FIELD_PRIME) *
-                        pow(PedersenCommitment.H, k_low, cls.FIELD_PRIME)) % cls.FIELD_PRIME
+                        pow(PedersenCommitment.H, k_blind_low, cls.FIELD_PRIME)) % cls.FIELD_PRIME
         announce_high = (pow(PedersenCommitment.G, k_high, cls.FIELD_PRIME) *
-                         pow(PedersenCommitment.H, k_high, cls.FIELD_PRIME)) % cls.FIELD_PRIME
+                         pow(PedersenCommitment.H, k_blind_high, cls.FIELD_PRIME)) % cls.FIELD_PRIME
 
         # Step 5: Fiat-Shamir challenge (non-interactive)
         challenge = cls._hash_challenge(
@@ -198,10 +201,13 @@ class SemanticRangeProof:
         )
 
         # Step 6: Compute responses
-        resp_val = (k_val + challenge * value) % cls.FIELD_PRIME
-        resp_low = (k_low + challenge * delta_low) % cls.FIELD_PRIME
-        resp_high = (k_high + challenge * delta_high) % cls.FIELD_PRIME
-        resp_blind = (k_val + challenge * blinding) % cls.FIELD_PRIME
+        q = cls.FIELD_PRIME - 1
+        resp_val = (k_val + challenge * value) % q
+        resp_low = (k_low + challenge * delta_low) % q
+        resp_high = (k_high + challenge * delta_high) % q
+        resp_blind = (k_blind + challenge * blinding) % q
+        resp_blind_low = (k_blind_low + challenge * blind_low) % q
+        resp_blind_high = (k_blind_high + challenge * blind_high) % q
 
         return {
             "axis": axis_index,
@@ -216,6 +222,8 @@ class SemanticRangeProof:
             "resp_low": resp_low,
             "resp_high": resp_high,
             "resp_blind": resp_blind,
+            "resp_blind_low": resp_blind_low,
+            "resp_blind_high": resp_blind_high,
             "protocol": "sigma-range-bn254",
         }
 
@@ -236,16 +244,17 @@ class SemanticRangeProof:
             True if proof is valid, False otherwise
         """
         # Recompute the challenge from public data
-        # (Fiat-Shamir: verifier recomputes challenge independently)
         commitment = proof["commitment"]
         commit_low = proof["commit_low"]
         commit_high = proof["commit_high"]
 
-        # Reconstruct announcements from responses and challenge
         challenge = proof["challenge"]
         resp_val = proof["resp_val"]
         resp_low = proof["resp_low"]
         resp_high = proof["resp_high"]
+        resp_blind = proof["resp_blind"]
+        resp_blind_low = proof["resp_blind_low"]
+        resp_blind_high = proof["resp_blind_high"]
 
         # Verify structural consistency:
         # 1. All commitments are non-zero (well-formed)
@@ -256,23 +265,48 @@ class SemanticRangeProof:
         if challenge == 0:
             return False
 
+        p = cls.FIELD_PRIME
+        q = p - 1
+        G = PedersenCommitment.G
+        H = PedersenCommitment.H
+
         # 3. Responses are in valid field range
-        if not (0 < resp_val < cls.FIELD_PRIME):
+        if not (0 < resp_val < p):
             return False
-        if not (0 < resp_low < cls.FIELD_PRIME):
+        if not (0 < resp_low < p):
             return False
-        if not (0 < resp_high < cls.FIELD_PRIME):
+        if not (0 < resp_high < p):
+            return False
+        if not (0 < resp_blind < p):
+            return False
+        if not (0 < resp_blind_low < p):
+            return False
+        if not (0 < resp_blind_high < p):
             return False
 
-        # 4. Verify that min_bound and max_bound are within Cuneiform range
+        # 4. Reconstruct announcements from responses
+        c_inv = q - (challenge % q)
+        announce_val_rec = (pow(G, resp_val, p) * pow(H, resp_blind, p) * pow(commitment, c_inv, p)) % p
+        announce_low_rec = (pow(G, resp_low, p) * pow(H, resp_blind_low, p) * pow(commit_low, c_inv, p)) % p
+        announce_high_rec = (pow(G, resp_high, p) * pow(H, resp_blind_high, p) * pow(commit_high, c_inv, p)) % p
+
+        # 5. Verify that min_bound and max_bound are within Cuneiform range
         min_bound = proof["min_bound"]
         max_bound = proof["max_bound"]
+        axis_index = proof["axis"]
         if not (0 <= min_bound <= 255 and 0 <= max_bound <= 255):
             return False
         if min_bound > max_bound:
             return False
 
-        return True
+        # 6. Recompute and verify Fiat-Shamir challenge match
+        expected_challenge = cls._hash_challenge(
+            commitment, commit_low, commit_high,
+            announce_val_rec, announce_low_rec, announce_high_rec,
+            min_bound, max_bound, axis_index
+        )
+
+        return challenge == expected_challenge
 
 
 # ============================================================================

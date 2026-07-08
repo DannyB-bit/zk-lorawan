@@ -175,27 +175,36 @@ class ReputationRangeProof:
         delta_commitment = (pow(G_REP, delta, BN254_R) *
                            pow(H_REP, delta_blinding, BN254_R)) % BN254_R
 
-        # Sigma protocol: announcement
-        k = secrets.randbelow(BN254_R)
-        announcement = pow(G_REP, k, BN254_R) % BN254_R
+        # Sigma protocol nonces
+        k_delta = secrets.randbelow(BN254_R)
+        k_delta_blind = secrets.randbelow(BN254_R)
+        k_diff = secrets.randbelow(BN254_R)
+
+        # Announcements
+        announce_delta = (pow(G_REP, k_delta, BN254_R) * pow(H_REP, k_delta_blind, BN254_R)) % BN254_R
+        announce_diff = pow(H_REP, k_diff, BN254_R) % BN254_R
 
         # Fiat-Shamir challenge
         challenge = cls._fiat_shamir(
-            commitment, delta_commitment, announcement, threshold
+            commitment, delta_commitment, announce_delta, announce_diff, threshold
         )
 
-        # Response
-        response = (k + challenge * delta) % BN254_R
-        response_blind = (delta_blinding + challenge * blinding) % BN254_R
+        # Responses
+        q = BN254_R - 1
+        resp_delta = (k_delta + challenge * delta) % q
+        resp_delta_blind = (k_delta_blind + challenge * delta_blinding) % q
+        
+        diff_blind = (blinding - delta_blinding) % q
+        resp_diff_blind = (k_diff + challenge * diff_blind) % q
 
         return {
             "commitment": commitment,
             "delta_commitment": delta_commitment,
             "threshold": threshold,
             "challenge": challenge,
-            "response": response,
-            "response_blind": response_blind,
-            "announcement": announcement,
+            "resp_delta": resp_delta,
+            "resp_delta_blind": resp_delta_blind,
+            "resp_diff_blind": resp_diff_blind,
             "protocol": "sigma-reputation-bn254",
             "max_score": ReputationScore.MAX_SCORE,
         }
@@ -207,7 +216,7 @@ class ReputationRangeProof:
         
         The verifier confirms:
           ✅ The committed score is ≥ threshold
-          ❌ Without learning the actual score
+          ❌ Without learning the exact score
           
         Args:
             proof: Proof dictionary from prove()
@@ -219,8 +228,9 @@ class ReputationRangeProof:
         delta_commitment = proof["delta_commitment"]
         threshold = proof["threshold"]
         challenge = proof["challenge"]
-        response = proof["response"]
-        announcement = proof["announcement"]
+        resp_delta = proof["resp_delta"]
+        resp_delta_blind = proof["resp_delta_blind"]
+        resp_diff_blind = proof["resp_diff_blind"]
 
         # Basic structural checks
         if commitment == 0 or delta_commitment == 0:
@@ -229,12 +239,22 @@ class ReputationRangeProof:
             return False
         if not (0 <= threshold <= proof["max_score"]):
             return False
-        if not (0 < response < BN254_R):
-            return False
+
+        # Compute C_diff = commitment * G_REP^(-threshold) * delta_commitment^(-1)
+        p = BN254_R
+        q = p - 1
+        g_inv_thresh = pow(G_REP, p - 1 - threshold, p)
+        delta_commit_inv = pow(delta_commitment, p - 2, p)
+        c_diff = (commitment * g_inv_thresh * delta_commit_inv) % p
+
+        # Reconstruct announcements
+        c_inv = q - (challenge % q)
+        announce_delta_rec = (pow(G_REP, resp_delta, p) * pow(H_REP, resp_delta_blind, p) * pow(delta_commitment, c_inv, p)) % p
+        announce_diff_rec = (pow(H_REP, resp_diff_blind, p) * pow(c_diff, c_inv, p)) % p
 
         # Verify Fiat-Shamir challenge consistency
         expected_challenge = cls._fiat_shamir(
-            commitment, delta_commitment, announcement, threshold
+            commitment, delta_commitment, announce_delta_rec, announce_diff_rec, threshold
         )
         if challenge != expected_challenge:
             return False
