@@ -71,6 +71,17 @@ def load_groth16_lib():
                     ctypes.c_char_p, ctypes.c_size_t,
                 ]
                 lib.verify_zk_proof_raw.restype = ctypes.c_uint32
+
+                # Register proof coordinate decompression FFI
+                lib.decompress_proof_to_solana_coords.argtypes = [
+                    ctypes.c_char_p,
+                    ctypes.c_char_p,
+                    ctypes.c_char_p,
+                    ctypes.c_char_p,
+                    ctypes.c_char_p,
+                    ctypes.c_char_p,
+                ]
+                lib.decompress_proof_to_solana_coords.restype = ctypes.c_uint32
                 return lib, path
             except Exception as e:
                 logging.getLogger("gateway").warning(f"Failed to load library at {path}: {e}")
@@ -488,6 +499,28 @@ class ZKVerifier:
         """Hash the payload for audit trail."""
         return hashlib.sha256(frame["payload"]).digest()
 
+    def decompress_to_solana_coords(self, proof_a: bytes, proof_b: bytes, proof_c: bytes) -> Optional[tuple]:
+        """Convert compressed proof components into uncompressed Solana big-endian coordinates."""
+        lib, _ = load_groth16_lib()
+        if not lib:
+            return None
+        
+        out_a = ctypes.create_string_buffer(64)
+        out_b = ctypes.create_string_buffer(128)
+        out_c = ctypes.create_string_buffer(64)
+        
+        res = lib.decompress_proof_to_solana_coords(
+            proof_a,
+            proof_b,
+            proof_c,
+            out_a,
+            out_b,
+            out_c
+        )
+        if res == 1:
+            return bytes(out_a.raw), bytes(out_b.raw), bytes(out_c.raw)
+        return None
+
 
 # ============================================================================
 # Merkle Tree
@@ -568,18 +601,29 @@ class SolanaSubmitter:
             nullifier_pda = await self.get_nullifier_pda(chirp.nullifier_hash)
             treasury_pubkey = Pubkey.from_string(self.config.treasury_pubkey)
 
-            proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
-            proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
-            proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
-            
-            # Ensure precise sizes
-            if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
-            if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
-            if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
-            
-            proof_a_list = proof_a_list[:64]
-            proof_b_list = proof_b_list[:128]
-            proof_c_list = proof_c_list[:64]
+            # Decompress proof coordinates if they are 32/64/32 bytes compressed points
+            decompressed_coords = None
+            if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
+                verifier = ZKVerifier()
+                decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
+
+            if decompressed_coords:
+                proof_a_list = list(decompressed_coords[0])
+                proof_b_list = list(decompressed_coords[1])
+                proof_c_list = list(decompressed_coords[2])
+            else:
+                proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
+                proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
+                proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
+                
+                # Ensure precise sizes
+                if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
+                if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
+                if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
+                
+                proof_a_list = proof_a_list[:64]
+                proof_b_list = proof_b_list[:128]
+                proof_c_list = proof_c_list[:64]
 
             tx = await self.program.methods.verifySingle(
                 proof_a_list,
@@ -641,17 +685,29 @@ class SolanaSubmitter:
             
             # Add chirps
             for idx, chirp in enumerate(batch.chirps):
-                proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
-                proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
-                proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
-                
-                if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
-                if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
-                if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
-                
-                proof_a_list = proof_a_list[:64]
-                proof_b_list = proof_b_list[:128]
-                proof_c_list = proof_c_list[:64]
+                # Decompress proof coordinates if they are 32/64/32 bytes compressed points
+                decompressed_coords = None
+                if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
+                    verifier = ZKVerifier()
+                    decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
+
+                if decompressed_coords:
+                    proof_a_list = list(decompressed_coords[0])
+                    proof_b_list = list(decompressed_coords[1])
+                    proof_c_list = list(decompressed_coords[2])
+                else:
+                    proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
+                    proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
+                    proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
+                    
+                    # Ensure precise sizes
+                    if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
+                    if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
+                    if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
+                    
+                    proof_a_list = proof_a_list[:64]
+                    proof_b_list = proof_b_list[:128]
+                    proof_c_list = proof_c_list[:64]
 
                 add_tx = await self.program.methods.addChirp(
                     proof_a_list,

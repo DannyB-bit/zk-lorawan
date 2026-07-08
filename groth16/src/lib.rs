@@ -152,3 +152,69 @@ pub extern "C" fn verify_zk_proof_raw(
         _ => 0,
     }
 }
+
+fn to_solana_g1(p: &ark_bn254::G1Affine) -> [u8; 64] {
+    use ark_serialize::CanonicalSerialize;
+    let mut bytes = vec![];
+    p.serialize_uncompressed(&mut bytes).unwrap();
+    let mut solana_bytes = [0u8; 64];
+    for i in 0..32 {
+        solana_bytes[i] = bytes[31 - i];       // reverse x to big-endian
+        solana_bytes[32 + i] = bytes[63 - i];  // reverse y to big-endian
+    }
+    solana_bytes
+}
+
+fn to_solana_g2(p: &ark_bn254::G2Affine) -> [u8; 128] {
+    use ark_serialize::CanonicalSerialize;
+    let mut bytes = vec![];
+    p.serialize_uncompressed(&mut bytes).unwrap();
+    let mut solana_bytes = [0u8; 128];
+    for i in 0..32 {
+        solana_bytes[i] = bytes[63 - i];       // X_1 (x.c1) big-endian
+        solana_bytes[32 + i] = bytes[31 - i];  // X_0 (x.c0) big-endian
+        solana_bytes[64 + i] = bytes[127 - i]; // Y_1 (y.c1) big-endian
+        solana_bytes[96 + i] = bytes[95 - i];  // Y_0 (y.c0) big-endian
+    }
+    solana_bytes
+}
+
+/// Decodes compressed G1/G2 points and outputs uncompressed big-endian Solana coordinates.
+#[no_mangle]
+pub extern "C" fn decompress_proof_to_solana_coords(
+    proof_a_comp_ptr: *const u8,
+    proof_b_comp_ptr: *const u8,
+    proof_c_comp_ptr: *const u8,
+    proof_a_uncomp_out_ptr: *mut u8,
+    proof_b_uncomp_out_ptr: *mut u8,
+    proof_c_uncomp_out_ptr: *mut u8,
+) -> u32 {
+    let proof_a_comp = unsafe { std::slice::from_raw_parts(proof_a_comp_ptr, 32) };
+    let proof_b_comp = unsafe { std::slice::from_raw_parts(proof_b_comp_ptr, 64) };
+    let proof_c_comp = unsafe { std::slice::from_raw_parts(proof_c_comp_ptr, 32) };
+
+    let p_a = match ark_bn254::G1Affine::deserialize_compressed(proof_a_comp) {
+        Ok(p) => p,
+        Err(_) => return 0,
+    };
+    let p_b = match ark_bn254::G2Affine::deserialize_compressed(proof_b_comp) {
+        Ok(p) => p,
+        Err(_) => return 0,
+    };
+    let p_c = match ark_bn254::G1Affine::deserialize_compressed(proof_c_comp) {
+        Ok(p) => p,
+        Err(_) => return 0,
+    };
+
+    let solana_a = to_solana_g1(&p_a);
+    let solana_b = to_solana_g2(&p_b);
+    let solana_c = to_solana_g1(&p_c);
+
+    unsafe {
+        std::ptr::copy_nonoverlapping(solana_a.as_ptr(), proof_a_uncomp_out_ptr, 64);
+        std::ptr::copy_nonoverlapping(solana_b.as_ptr(), proof_b_uncomp_out_ptr, 128);
+        std::ptr::copy_nonoverlapping(solana_c.as_ptr(), proof_c_uncomp_out_ptr, 64);
+    }
+
+    1
+}
