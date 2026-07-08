@@ -9,6 +9,8 @@ use ark_ff::PrimeField;
 use ark_groth16::{Groth16, PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalSerialize, CanonicalDeserialize};
 use ark_snark::{SNARK, CircuitSpecificSetupSNARK};
+use rand::SeedableRng;
+use rand::rngs::StdRng;
 
 // ============================================================================
 // ZK-LoRaWAN Protocol Constants
@@ -45,7 +47,7 @@ pub struct ZKLoRaWANProver {
 impl ZKLoRaWANProver {
     /// Initialize the prover with a trusted setup
     pub fn new() -> Self {
-        let mut rng = rand::thread_rng();
+        let mut rng = StdRng::from_seed([42u8; 32]);
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
         let (pk, vk) = circuit::setup_keys(&mut rng, constants.clone())
             .expect("Trusted setup failed");
@@ -190,10 +192,83 @@ impl ZKLoRaWANProver {
     }
 }
 
+fn to_solana_g1(p: &ark_bn254::G1Affine) -> [u8; 64] {
+    let mut bytes = vec![];
+    p.serialize_uncompressed(&mut bytes).unwrap();
+    let mut solana_bytes = [0u8; 64];
+    for i in 0..32 {
+        solana_bytes[i] = bytes[31 - i];       // reverse x to big-endian
+        solana_bytes[32 + i] = bytes[63 - i];  // reverse y to big-endian
+    }
+    solana_bytes
+}
+
+fn to_solana_g2(p: &ark_bn254::G2Affine) -> [u8; 128] {
+    let mut bytes = vec![];
+    p.serialize_uncompressed(&mut bytes).unwrap();
+    let mut solana_bytes = [0u8; 128];
+    for i in 0..32 {
+        solana_bytes[i] = bytes[63 - i];       // X_1 (x.c1) big-endian
+        solana_bytes[32 + i] = bytes[31 - i];  // X_0 (x.c0) big-endian
+        solana_bytes[64 + i] = bytes[127 - i]; // Y_1 (y.c1) big-endian
+        solana_bytes[96 + i] = bytes[95 - i];  // Y_0 (y.c0) big-endian
+    }
+    solana_bytes
+}
+
 // ============================================================================
 // CLI Entry Point — Proof Generation & Verification Demo
 // ============================================================================
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 && args[1] == "print-vk" {
+        let prover = ZKLoRaWANProver::new();
+        let vk = &prover.verifying_key;
+        println!("vk_alpha: {}", hex::encode(to_solana_g1(&vk.alpha_g1)));
+        println!("vk_beta: {}", hex::encode(to_solana_g2(&vk.beta_g2)));
+        println!("vk_gamma: {}", hex::encode(to_solana_g2(&vk.gamma_g2)));
+        println!("vk_delta: {}", hex::encode(to_solana_g2(&vk.delta_g2)));
+        for (i, ic) in vk.gamma_abc_g1.iter().enumerate() {
+            println!("vk_ic[{}]: {}", i, hex::encode(to_solana_g1(ic)));
+        }
+        std::process::exit(0);
+    }
+
+    if args.len() > 1 && args[1] == "verify" {
+        if args.len() < 9 {
+            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash>");
+            std::process::exit(2);
+        }
+        let proof_a_bytes = hex::decode(&args[2]).expect("Invalid proof_a hex");
+        let proof_b_bytes = hex::decode(&args[3]).expect("Invalid proof_b hex");
+        let proof_c_bytes = hex::decode(&args[4]).expect("Invalid proof_c hex");
+        let identity_bytes = hex::decode(&args[5]).expect("Invalid identity_hash hex");
+        let nullifier_bytes = hex::decode(&args[6]).expect("Invalid nullifier_hash hex");
+        let attestation_bytes = hex::decode(&args[7]).expect("Invalid attestation_hash hex");
+        let ciphertext_bytes = hex::decode(&args[8]).expect("Invalid ciphertext_hash hex");
+
+        let bundle = ZKLoRaWANProofBundle {
+            proof_a_compressed: proof_a_bytes,
+            proof_b_compressed: proof_b_bytes,
+            proof_c_compressed: proof_c_bytes,
+            identity_hash: identity_bytes,
+            nullifier_hash: nullifier_bytes,
+            attestation_hash: attestation_bytes,
+            ciphertext_hash: ciphertext_bytes,
+            total_bytes: 0,
+        };
+
+        let prover = ZKLoRaWANProver::new();
+        let is_valid = prover.verify_bundle(&bundle);
+        if is_valid {
+            println!("VALID");
+            std::process::exit(0);
+        } else {
+            println!("INVALID");
+            std::process::exit(1);
+        }
+    }
+
     println!("======================================================================");
     println!("  ZK-LoRaWAN | Groth16 BN254 Proof Engine (Real ark-works)");
     println!("  Proving Balance Identity + Nullifiers + Micro-TEE + zk-VDE");

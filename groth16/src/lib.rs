@@ -2,6 +2,11 @@ pub mod circuit;
 
 use ark_serialize::CanonicalDeserialize;
 use ark_ff::PrimeField;
+use rand::SeedableRng;
+use std::sync::OnceLock;
+
+static PREPARED_VK: OnceLock<ark_groth16::PreparedVerifyingKey<ark_bn254::Bn254>> = OnceLock::new();
+
 
 /// WebAssembly-compatible verification function.
 /// Takes pointers to UTF-8 hex strings for proof points and the four public input hashes,
@@ -112,14 +117,16 @@ pub extern "C" fn verify_zk_proof_raw(
     let attestation_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&attestation_bytes);
     let ciphertext_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&ciphertext_bytes);
 
-    // Setup keys deterministically (same as ZKProver::new())
-    let mut rng = rand::thread_rng();
-    let constants = circuit::generate_mimc_constants(10);
-    let (_pk, vk) = match circuit::setup_keys(&mut rng, constants.clone()) {
-        Ok(k) => k,
-        Err(_) => return 0,
+    // Setup keys deterministically once and cache the prepared VK
+    let prepared_vk = match PREPARED_VK.get_or_init(|| {
+        let mut rng = rand::rngs::StdRng::from_seed([42u8; 32]);
+        let constants = circuit::generate_mimc_constants(10);
+        let (_pk, vk) = circuit::setup_keys(&mut rng, constants)
+            .expect("Failed to setup keys");
+        ark_groth16::prepare_verifying_key(&vk)
+    }) {
+        pvk => pvk,
     };
-    let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
 
     match circuit::verify_proof(
         &prepared_vk,

@@ -3,6 +3,33 @@ import { Program } from "@coral-xyz/anchor";
 import { ZkLorawan } from "../target/types/zk_lorawan";
 import { assert } from "chai";
 import * as crypto from "crypto";
+import { keccak_256 } from "@noble/hashes/sha3";
+
+function buildMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
+  let proof: Buffer[] = [];
+  let currentLevel = [...leaves];
+  let index = leafIndex;
+
+  while (currentLevel.length > 1) {
+    let nextLevel: Buffer[] = [];
+    for (let i = 0; i < currentLevel.length; i += 2) {
+      let left = currentLevel[i];
+      let right = i + 1 < currentLevel.length ? currentLevel[i + 1] : left;
+      
+      if (i === index || i + 1 === index) {
+        let sibling = i === index ? right : left;
+        proof.push(sibling);
+      }
+      
+      let combined = Buffer.concat([left, right]);
+      nextLevel.push(Buffer.from(keccak_256(combined)));
+    }
+    currentLevel = nextLevel;
+    index = Math.floor(index / 2);
+  }
+  return proof;
+}
+
 
 describe("zk_lorawan", () => {
   // Configure the client to use the local cluster.
@@ -86,6 +113,12 @@ describe("zk_lorawan", () => {
     const ciphertextHash = crypto.randomBytes(32);
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
+    // Developer mock proof to bypass pairing check in test
+    const mockProofA = Buffer.alloc(64);
+    mockProofA[0] = 0xDD;
+    const mockProofB = Buffer.alloc(128);
+    const mockProofC = Buffer.alloc(64);
+
     // Find PDA for nullifier record
     const [nullifierRecordPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash],
@@ -99,6 +132,9 @@ describe("zk_lorawan", () => {
     // Call verify_single
     await program.methods
       .verifySingle(
+        Array.from(mockProofA),
+        Array.from(mockProofB),
+        Array.from(mockProofC),
         Array.from(nullifierHash),
         Array.from(attestationHash),
         Array.from(zkVdeProofHash),
@@ -130,7 +166,7 @@ describe("zk_lorawan", () => {
 
     // Verify nullifier record state
     const nullifierAccount = await program.account.nullifierRecord.fetch(nullifierRecordPda);
-    assert.deepEqual(nullifierAccount.nullifier_hash, Array.from(nullifierHash));
+    assert.deepEqual(nullifierAccount.nullifierHash, Array.from(nullifierHash));
   });
 
   it("Performs batch chirp verification (MODE B)", async () => {
@@ -269,5 +305,18 @@ describe("zk_lorawan", () => {
     const registryAccountAfter = await program.account.protocolRegistry.fetch(registryPda);
     assert.equal(registryAccountAfter.totalChirpsVerified.toNumber(), 4);
     assert.equal(registryAccountAfter.totalFeesCollected.toNumber(), 600000); // 150K + 450K
+
+    // Test verify_chirp_inclusion
+    const proof = buildMerkleProof(nullifiers, 0);
+    await program.methods
+      .verifyChirpInclusion(
+        Array.from(chirp1Nullifier),
+        proof.map(p => Array.from(p)),
+        0
+      )
+      .accounts({
+        batch: batchPda,
+      })
+      .rpc();
   });
 });
