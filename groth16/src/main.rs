@@ -217,26 +217,22 @@ impl Default for ZKLoRaWANProver {
 }
 
 fn to_solana_g1(p: &ark_bn254::G1Affine) -> [u8; 64] {
-    let mut bytes = vec![];
-    p.serialize_uncompressed(&mut bytes).unwrap();
+    use ark_ff::{BigInteger, PrimeField};
+
     let mut solana_bytes = [0u8; 64];
-    for i in 0..32 {
-        solana_bytes[i] = bytes[31 - i]; // reverse x to big-endian
-        solana_bytes[32 + i] = bytes[63 - i]; // reverse y to big-endian
-    }
+    solana_bytes[..32].copy_from_slice(&p.x.into_bigint().to_bytes_be());
+    solana_bytes[32..].copy_from_slice(&p.y.into_bigint().to_bytes_be());
     solana_bytes
 }
 
 fn to_solana_g2(p: &ark_bn254::G2Affine) -> [u8; 128] {
-    let mut bytes = vec![];
-    p.serialize_uncompressed(&mut bytes).unwrap();
+    use ark_ff::{BigInteger, PrimeField};
+
     let mut solana_bytes = [0u8; 128];
-    for i in 0..32 {
-        solana_bytes[i] = bytes[63 - i]; // X_1 (x.c1) big-endian
-        solana_bytes[32 + i] = bytes[31 - i]; // X_0 (x.c0) big-endian
-        solana_bytes[64 + i] = bytes[127 - i]; // Y_1 (y.c1) big-endian
-        solana_bytes[96 + i] = bytes[95 - i]; // Y_0 (y.c0) big-endian
-    }
+    solana_bytes[..32].copy_from_slice(&p.x.c1.into_bigint().to_bytes_be());
+    solana_bytes[32..64].copy_from_slice(&p.x.c0.into_bigint().to_bytes_be());
+    solana_bytes[64..96].copy_from_slice(&p.y.c1.into_bigint().to_bytes_be());
+    solana_bytes[96..].copy_from_slice(&p.y.c0.into_bigint().to_bytes_be());
     solana_bytes
 }
 
@@ -255,7 +251,7 @@ fn main() {
         use ark_ff::PrimeField;
         use ark_serialize::CanonicalSerialize;
 
-        for i in 1..=3 {
+        for i in 1..=4 {
             let private_key_str = format!("zk-lorawan-test-private-key-2026_{}", i);
             let private_key = private_key_str.as_bytes();
 
