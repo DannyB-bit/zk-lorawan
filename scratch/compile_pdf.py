@@ -73,7 +73,7 @@ class NumberedCanvas(canvas.Canvas):
             self.setFillColor(colors.HexColor("#718096"))
             self.drawString(54, 85, "LEGAL NOTICE: To safeguard developer intellectual property, the ZK-LoRaWAN codebase and all its multi-language")
             self.drawString(54, 75, "implementations are currently published under a protected, proprietary license pending grant evaluation. Upon formal")
-            self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source MIT License.")
+            self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source Apache License, Version 2.0.")
             
             self.restoreState()
             return
@@ -303,7 +303,7 @@ def create_whitepaper_pdf():
         [Paragraph("<b>AI Swarm / Pod:</b>", normal_style), Paragraph("zymatica.space, astronautshe.com, Devs One + 9 other AI dev agents", normal_style)],
         [Paragraph("<b>Core Developers:</b>", normal_style), Paragraph("LEAD ARCHITECT: Danny Bouldiez + 2 human Devs", normal_style)],
         [Paragraph("<b>Team Roles:</b>", normal_style), Paragraph("zymatica (Lead Cryptographer), astronautshe (Edge Systems Engineer), Devs One (AI Swarm)", normal_style)],
-        [Paragraph("<b>Platform:</b>", normal_style), Paragraph("Solana Shielded Pool, ARM TrustZone-M (ATECC608A), Semtech SX1302/1303 HAL", normal_style)],
+        [Paragraph("<b>Platform:</b>", normal_style), Paragraph("Solana Shielded Pool (Roadmap), ARM TrustZone-M (Roadmap), Semtech SX1302/1303 HAL", normal_style)],
         [Paragraph("<b>Project Status:</b>", normal_style), Paragraph("Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned", normal_style)]
     ]
     
@@ -328,22 +328,22 @@ def create_whitepaper_pdf():
     # ================= PAGE 3: EXECUTIVE SUMMARY =================
     story.append(Paragraph("1. Executive Summary", h1_style))
     story.append(Paragraph(
-        "Traditional LoRaWAN communication has a critical privacy gap: lack of end-to-end user-layer anonymity, "
+        "Traditional LoRaWAN communication has a privacy gap: lack of end-to-end user-layer anonymity, "
         "open device hardware tracking, and vulnerability to physical/behavioral mapping. <strong>ZK-LoRaWAN</strong> "
         "(Zero-Knowledge LoRaWAN) introduces a secure, decentralized privacy layer for edge computing networks. By "
         "combining Solana's high-performance parallel processing, zero-knowledge proofs (Groth16 on the BN254 curve), "
-        "a global Shielded Escrow Pool, and hardware-enclave attestation, ZK-LoRaWAN allows autonomous edge nodes to "
+        "a proposed global Shielded Escrow Pool, and hardware-enclave attestation, ZK-LoRaWAN allows autonomous edge nodes to "
         "communicate over public RF spectrum without revealing their cryptographic keys, wallet identities, or geographical "
         "positions to the public ledger.", normal_style
     ))
     story.append(Paragraph(
-        "This project represents a massive opportunity for the Solana community to bridge digital privacy with physical "
+        "This project represents an opportunity for the Solana community to bridge digital privacy with physical "
         "hardware by leveraging existing DePIN infrastructure. The Helium network built a global RF infrastructure with "
         "over 980,000 registered hotspots. As Helium's reward structures and optimization proposals evolve, a significant "
         "portion of these gateways have become underutilized, offline, or economically dormant.", normal_style
     ))
     story.append(Paragraph(
-        "ZK-LoRaWAN provides a highly realistic, secondary utility for these pre-certified devices—including over 300,000 "
+        "ZK-LoRaWAN provides a secondary utility for these pre-certified devices—including over 300,000 "
         "RAKwireless-manufactured hotspots equipped with Semtech SX1302/SX1303 concentrator chips and Raspberry Pi compute units. "
         "Senders run data transmission and signature flows inside a physical secure element. Senders utilize zero-knowledge proofs "
         "to route packets through crowdsourced gateways and settle incentives without revealing their hardware identities to the "
@@ -373,11 +373,11 @@ def create_whitepaper_pdf():
         [Paragraph("<b>The Traditional Problem</b>", normal_style), Paragraph("<b>The ZK-LoRaWAN Solution</b>", normal_style)],
         [
             Paragraph("<b>Identity Exposure:</b> Every packet contains a static hardware ID (MAC address, DevEUI, or DevAddr) allowing eavesdroppers to track and map node locations physically.", normal_style),
-            Paragraph("<b>ZK-Identity Masking:</b> Senders mask their identities behind a fresh Groth16 zero-knowledge proof for every packet. The gateway verifies the proof to authorize routing, but never learns who is transmitting.", normal_style)
+            Paragraph("<b>ZK-Identity Masking:</b> Senders mask their identities behind a fresh Groth16 zero-knowledge proof for every packet. The gateway verifies the proof locally to authorize routing without identifying the sender.", normal_style)
         ],
         [
             Paragraph("<b>Eavesdropping:</b> Payloads are broadcasted in the clear or encrypted with static keys, vulnerable to decryption if keys are compromised.", normal_style),
-            Paragraph("<b>Recipient-Only ECIES:</b> Messages are encrypted with the recipient's public key using the Elliptic Curve Integrated Encryption Scheme (ECIES), providing forward secrecy.", normal_style)
+            Paragraph("<b>Recipient-Only ECIES (Roadmap):</b> Messages are encrypted with the recipient's public key using the Elliptic Curve Integrated Encryption Scheme (ECIES) to provide forward secrecy.", normal_style)
         ],
         [
             Paragraph("<b>Spam & DDoS Attacks:</b> The low cost of RF transmissions allows malicious jammers to flood the channels, exhausting edge verifier CPU and battery resources.", normal_style),
@@ -385,7 +385,7 @@ def create_whitepaper_pdf():
         ],
         [
             Paragraph("<b>Uncompensated Relaying:</b> Gateways must route packets for free out of altruism, or rely on individual accounts that reveal the exact sender-gateway relationship on the public ledger.", normal_style),
-            Paragraph("<b>Solana Shielded Pool:</b> All escrow funds reside in a single shared pool. Gateways are paid out using a ZK proof and a unique nullifier. No observer can link the transaction back to the sender's account.", normal_style)
+            Paragraph("<b>Solana Shielded Pool (Proposed):</b> All escrow funds reside in a global shared pool. Gateways are paid out using a ZK proof and a unique nullifier, decoupling the sender-gateway relation.", normal_style)
         ]
     ]
     
@@ -415,9 +415,9 @@ def create_whitepaper_pdf():
         "disclosing the node's exact data values or geographical location.", normal_style
     ))
     story.append(Spacer(1, 5))
-    story.append(Paragraph("Layer 1: Elliptic Curve Identity Derivation", h2_style))
+    story.append(Paragraph("Layer 1: Proposed Elliptic Curve Identity Derivation (Roadmap)", h2_style))
     story.append(Paragraph(
-        "ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair "
+        "ZK-LoRaWAN proposes a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair "
         "using the secp256k1 elliptic curve locally. The public key is hashed using SHA-256 followed by RIPEMD-160 (HASH160) "
         "to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used "
         "for public addressing, while the private key is held strictly inside the hardware enclave.", normal_style
@@ -433,7 +433,7 @@ def create_whitepaper_pdf():
     story.append(Preformatted(step_1, code_style))
     story.append(Spacer(1, 10))
     
-    story.append(Paragraph("Layer 2: Recipient-Only ECIES Encryption", h2_style))
+    story.append(Paragraph("Layer 2: Proposed Recipient-Only ECIES Encryption (Roadmap)", h2_style))
     story.append(Paragraph(
         "To ensure privacy-preserving confidentiality over public RF bands, payloads are encrypted using the Elliptic "
         "Curve Integrated Encryption Scheme (ECIES). The sender uses the recipient's public key to derive a shared secret, "
@@ -458,37 +458,48 @@ def create_whitepaper_pdf():
     story.append(Paragraph("4. Zero-Knowledge Proofs", h1_style))
     story.append(Paragraph(
         "The core privacy mechanism of ZK-LoRaWAN is the decoupling of authentication from identity. Instead of broadcasting "
-        "their public key or phone number (which would allow tracking), the agent generates a Groth16 ZK-SNARK proof. This "
+        "their public key or identity (which would allow tracking), the agent generates a Groth16 ZK-SNARK proof. This "
         "proof mathematically demonstrates that the sender knows a valid private key corresponding to an active leaf in "
         "the Shielded Escrow Pool's Merkle tree, without revealing the private key, public key, or escrow balance itself.", normal_style
     ))
     story.append(Paragraph(
-        "The proof constraints are written in Circom/arkworks and verify that the public inputs match the secret witness. "
-        "Below is the circom circuit used to prove agent validity on BabyJubjub:", normal_style
+        "The proof constraints are written in Rust using the `arkworks` libraries (e.g. `ark-relations`, `ark-bn254`), "
+        "compiling a Groth16 circuit directly over the `BN254` elliptic curve. To hash witnesses and constrain public identity inputs, "
+        "the circuit uses a `MiMC-7` constraint system helper. Below is the core structure of the actual R1CS synthesizer implementation:", normal_style
     ))
     
-    circom_code = (
-        "// ZK-SNARK Agent Validity Circuit (AgentValidityProof.circom)\n"
-        "pragma circom 2.0.0;\n\n"
-        "include \"node_modules/circomlib/circuits/poseidon.circom\";\n"
-        "include \"node_modules/circomlib/circuits/babyjubjub.circom\";\n\n"
-        "template AgentValidityProof() {\n"
-        "    signal input private_key;      // Witness (Secret Private Key)\n"
-        "    signal input public_key_hash;  // Public Input (Registered Identity Hash)\n"
-        "    signal output valid;           // 1 if valid, 0 if invalid\n\n"
-        "    // Derive public key on BabyJubjub curve\n"
-        "    component derive_pubkey = BabyJubjubDerive();\n"
-        "    derive_pubkey.private_key <== private_key;\n\n"
-        "    // Hash the derived public key using Poseidon\n"
-        "    component hasher = Poseidon(2);\n"
-        "    hasher.inputs[0] <== derive_pubkey.x;\n"
-        "    hasher.inputs[1] <== derive_pubkey.y;\n\n"
-        "    // Enforce that the hash matches the public input\n"
-        "    hasher.out === public_key_hash;\n"
-        "    valid <== 1;\n"
+    rust_code = (
+        "// Real Groth16 ZK-SNARK Circuit (groth16/src/circuit.rs)\n"
+        "pub struct ZKLoRaCircuit<F: PrimeField> {\n"
+        "    // Secret inputs (witnesses)\n"
+        "    pub private_key: Option<F>,\n"
+        "    pub decryption_key: Option<F>,\n"
+        "    pub coordinate_val: Option<F>,\n"
+        "    pub firmware_hash_witness: Option<F>,\n\n"
+        "    // Public inputs\n"
+        "    pub identity_hash: Option<F>,\n"
+        "    pub nullifier_hash: Option<F>,\n"
+        "    pub attestation_hash: Option<F>,\n"
+        "    pub ciphertext_hash: Option<F>,\n\n"
+        "    pub round_constants: Vec<F>,\n"
+        "}\n\n"
+        "impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {\n"
+        "    fn generate_constraints(self, cs: ConstraintSystemRef<F>) -> Result<(), SynthesisError> {\n"
+        "        // Enforces MiMC-based hash: output = mimc(input + salt)\n"
+        "        // Enforces constraints: (current + c)^2 = sq_var, sq_var * (current + c) = next_var\n"
+        "        ...\n"
+        "    }\n"
         "}"
     )
-    story.append(Preformatted(circom_code, code_style))
+    story.append(Preformatted(rust_code, code_style))
+    story.append(Spacer(1, 5))
+    story.append(Paragraph(
+        "The circuit enforces the following validation constraints:<br/>"
+        "1. <b>Balance Owner Identity:</b> mimc_hash(private_key, salt=None) == identity_hash (proving key ownership).<br/>"
+        "2. <b>Nullifier Verification:</b> mimc_hash(private_key, salt=9999) == nullifier_hash (preventing double-spend payouts).<br/>"
+        "3. <b>Micro-TEE Attestation (Roadmap):</b> mimc_hash(private_key, salt=firmware_hash_witness) == attestation_hash (proving execution inside an authorized firmware enclave).<br/>"
+        "4. <b>zk-VDE Decryption (Roadmap):</b> mimc_hash(decryption_key, salt=coordinate_val) == ciphertext_hash (ensuring atomic payload routing updates).", normal_style
+    ))
     story.append(PageBreak())
 
     # ================= PAGE 7: MICROPAYMENT INCENTIVES =================
@@ -506,18 +517,18 @@ def create_whitepaper_pdf():
         "see that Wallet-A paid Gateway-B, and instantly deduce who is transmitting, which physical gateway routed the message "
         "(revealing their location), and the exact timing of the communication.", normal_style
     ))
-    story.append(Paragraph("5.2 The Solana Shielded Pool Solution", h2_style))
+    story.append(Paragraph("5.2 The Solana Shielded Pool Solution (Proposed)", h2_style))
     story.append(Paragraph(
-        "ZK-LoRaWAN solves this by using a global, shared <strong>ShieldedEscrowPool</strong> contract on Solana. All senders "
-        "deposit SOL into the pool. When a gateway routes a packet, the sender generates a Groth16 proof showing they have "
-        "an active leaf with a sufficient balance and creates a Nullifier Hash. The gateway submits this proof. The Solana "
-        "smart contract verifies the proof, marks the nullifier as spent, and pays the gateway in public SOL.", normal_style
+        "ZK-LoRaWAN proposes a global, shared <strong>ShieldedEscrowPool</strong> contract on Solana. Senders deposit SOL into the pool. "
+        "When a gateway routes a packet, the sender generates a Groth16 proof showing they have an active leaf with a sufficient "
+        "balance and creates a Nullifier Hash. The gateway submits this proof. The Solana smart contract verifies the proof, "
+        "marks the nullifier as spent, and pays the gateway in public SOL.", normal_style
     ))
     story.append(Paragraph(
         "Because the ledger only sees a root hash change and a randomized nullifier, it provides <strong>100% full on-chain "
-        "anonymity</strong>. Furthermore, because Solana transactions support atomic, multi-instruction execution, the payment "
+        "anonymity</strong>. Furthermore, because Solana transactions support atomic execution, the payment "
         "split is designed to be configurable: a developer fee of exactly <strong>50,000 lamports</strong> and a gateway routing "
-        "reward of <strong>100,000 lamports</strong> are settled programmatically in a single instruction.", normal_style
+        "reward of <strong>100,000 lamports</strong> are settled programmatically.", normal_style
     ))
     story.append(PageBreak())
 
@@ -543,12 +554,15 @@ def create_whitepaper_pdf():
         "         |                                                     |\n"
         "         | 4. Compresses Proof + Coordinates (LLD-AC)          |\n"
         "         |                                                     |\n"
-        "         | 5. Transmits LLD-AC Frame (189 bytes)               |\n"
+        "         | 5. Transmits LLD-AC Frame                           |\n"
         "         | --------------------------------------------------> |\n"
         "         |                                                     | 6. Decompresses Frame\n"
         "         |                                                     | 7. Verifies proof locally\n"
-        "         |                                                     | 8. Submits batch verify\n"
-        "         |                                                     |    instruction to Solana\n"
+        "         |                                                     | 8. Submits verification\n"
+        "         |                                                     |    transactions to Solana.\n"
+        "         |                                                     |    (Uses N+2 decoupled transactions\n"
+        "         |                                                     |    to initialize the batch, add each\n"
+        "         |                                                     |    chirp, and finalize payouts.)\n"
         "         |                                                     |    \u2193\n"
         "         |                                                     |    [ Solana Validator ]\n"
         "         |                                                     |      - Verifies Groth16 proof\n"
@@ -617,9 +631,9 @@ def create_whitepaper_pdf():
         "validator network provides parallel, high-speed verification and settlement.", bullet_style
     ))
     story.append(Paragraph(
-        "• <b>Hardware Attestation Binding (Micro-TEE):</b> The edge node binds its private key and ZK proof to an ARM TrustZone-M "
-        "secure enclave (ATECC608A) signature. If the node is physically opened or modified, the attestation report fails, "
-        "and the Solana smart contract rejects the proof, making the device 100% scam-proof.", bullet_style
+        "• <b>Proposed Hardware Attestation Binding (Micro-TEE - Roadmap):</b> Senders are planned to bind their private keys and ZK proofs "
+        "to an ARM TrustZone-M secure enclave (ATECC608A) signature. If the node is physically opened or modified, the attestation report "
+        "fails, and the Solana smart contract rejects the proof, blocking revoked or compromised hardware.", bullet_style
     ))
     story.append(Paragraph(
         "<b>The DePIN Advantage:</b> This asymmetric design is perfect for DePIN. Low-power IoT devices can easily construct secure, "
@@ -655,30 +669,30 @@ def create_whitepaper_pdf():
     story.append(PageBreak())
 
     # ================= PAGE 12: CRYPTOGRAPHIC SECURITY & ANTI-FRAUD =================
-    story.append(Paragraph("10. Cryptographic Security & Anti-Fraud", h1_style))
-    story.append(Paragraph("10.1 Physical RF Layer & Gateway Mitigations", h2_style))
+    story.append(Paragraph("10. Cryptographic Security & Proposed Anti-Fraud (Roadmap)", h1_style))
+    story.append(Paragraph("10.1 Physical RF Layer & Gateway Proposed Mitigations (Roadmap)", h2_style))
     story.append(Paragraph(
-        "<b>Replay Protection:</b> Every ZK-proof binds a UTC timestamp and an ephemeral nonce. Gateways reject any packet "
-        "outside a &plusmn;5-second window or with a duplicate nonce.", normal_style
+        "<b>Proposed Replay Protection:</b> Every ZK-proof binds a UTC timestamp and an ephemeral nonce. Gateways are proposed "
+        "to reject any packet outside a &plusmn;5-second window or with a duplicate nonce.", normal_style
     ))
     story.append(Paragraph(
-        "<b>Sybil Spam Prevention:</b> Sending nodes must solve an RF-Proof-of-Work challenge, or present a symmetric HMAC "
-        "using their registered session key (verified in &lt;1&mu;s), protecting the ZK-SNARK engine from CPU exhaustion.", normal_style
+        "<b>Proposed Sybil Spam Prevention:</b> Sending nodes are proposed to solve an RF-Proof-of-Work challenge, or present "
+        "a symmetric HMAC using their registered session key (verified in &lt;1&mu;s), protecting the ZK-SNARK engine from CPU exhaustion.", normal_style
     ))
     story.append(Paragraph(
-        "<b>Lying Gateway Prevention:</b> Senders use ZK-Proof-of-Delivery (ZK-PoD). The routing fee is locked until the "
-        "gateway presents a cryptographic receipt signed by the destination node, ensuring gateways cannot claim rewards "
+        "<b>Proposed Lying Gateway Prevention:</b> Senders are planned to use ZK-Proof-of-Delivery (ZK-PoD). The routing fee is locked "
+        "until the gateway presents a cryptographic receipt signed by the destination node, ensuring gateways cannot claim rewards "
         "and drop packets.", normal_style
     ))
     story.append(Spacer(1, 10))
     
     sec_data = [
         [Paragraph("<b>Attack Vector</b>", normal_style), Paragraph("<b>Mitigation Mechanism</b>", normal_style), Paragraph("<b>Security Guarantee</b>", normal_style)],
-        [Paragraph("Replay Attack", normal_style), Paragraph("Nonces + &plusmn;5s Timestamp Window", normal_style), Paragraph("Duplicate packets rejected instantly.", normal_style)],
-        [Paragraph("Sybil Spam", normal_style), Paragraph("HMAC + RF-Proof-of-Work", normal_style), Paragraph("Verifier CPU exhausted jammers filtered.", normal_style)],
-        [Paragraph("Location Spoofing", normal_style), Paragraph("Time-of-Flight (ToF) RTT Checks", normal_style), Paragraph("Physical distance verified via SX1302 clock.", normal_style)],
-        [Paragraph("Gorgon Attack", normal_style), Paragraph("ZK-Proof-of-Delivery (ZK-PoD)", normal_style), Paragraph("No fee payout without delivery receipt.", normal_style)],
-        [Paragraph("Free Rider Relay", normal_style), Paragraph("Neighbor Auditing & Reputation", normal_style), Paragraph("Black-hole nodes bypassed dynamically.", normal_style)]
+        [Paragraph("Replay Attack", normal_style), Paragraph("Nonces + &plusmn;5s Timestamp Window (Proposed)", normal_style), Paragraph("Duplicate packets rejected instantly.", normal_style)],
+        [Paragraph("Sybil Spam", normal_style), Paragraph("HMAC + RF-Proof-of-Work (Proposed)", normal_style), Paragraph("Verifier CPU exhausted jammers filtered.", normal_style)],
+        [Paragraph("Location Spoofing", normal_style), Paragraph("Time-of-Flight (ToF) RTT Checks (Proposed)", normal_style), Paragraph("Physical distance verified via SX1302 clock.", normal_style)],
+        [Paragraph("Gorgon Attack", normal_style), Paragraph("ZK-Proof-of-Delivery (ZK-PoD) (Proposed)", normal_style), Paragraph("No fee payout without delivery receipt.", normal_style)],
+        [Paragraph("Free Rider Relay", normal_style), Paragraph("Neighbor Auditing & Reputation (Proposed)", normal_style), Paragraph("Black-hole nodes bypassed dynamically.", normal_style)]
     ]
     sec_table = Table(sec_data, colWidths=[120, 200, 167])
     sec_table.setStyle(TableStyle([
@@ -690,7 +704,7 @@ def create_whitepaper_pdf():
     ]))
     story.append(sec_table)
     story.append(PageBreak())
-
+ 
     # ================= PAGE 13: PERFORMANCE & BANDWIDTH ANALYSIS =================
     story.append(Paragraph("11. Performance & Bandwidth Analysis", h1_style))
     story.append(Paragraph(
@@ -705,15 +719,20 @@ def create_whitepaper_pdf():
         "To maximize efficiency and avoid packet fragmentation, ZK-LoRaWAN optimizes its packet size. While the physical "
         "layer limit of Semtech transceivers is 255 bytes, standard unfragmented LoRaWAN payloads are capped between "
         "222 and 242 bytes. ZK-LoRaWAN supports an **Unfragmented Single-Packet Mode** by utilizing our **LLD-AC arithmetic "
-        "coding** to compress the 256-byte ZK-proof and attestation bundle to just `189 bytes`.", normal_style
+        "coding** to compress a structured mock proof and attestation bundle to just `189 bytes` (or `118 bytes` total including "
+        "coordinates in self-tests).<br/><br/>"
+        "<strong>Important Qualification on Real Proof Material:</strong> High-entropy real proofs (such as those generated dynamically "
+        "by standard libraries) contain higher noise levels and require up to 512 bytes for uncompressed coordinate representation, "
+        "as used in the gateway demo. Therefore, standard 255-byte unfragmented LoRa transmission requires packet fragmentation/segmentation, "
+        "proof aggregation, or highly constrained proof parameters.", normal_style
     ))
     
     perf_data = [
         [Paragraph("<b>Component</b>", normal_style), Paragraph("<b>Size (Bytes)</b>", normal_style), Paragraph("<b>Airtime @ SF9, 125kHz</b>", normal_style)],
         [Paragraph("Preamble & Header", normal_style), Paragraph("28", normal_style), Paragraph("~80 ms", normal_style)],
-        [Paragraph("Encrypted Payload (ECIES)", normal_style), Paragraph("43", normal_style), Paragraph("~140 ms", normal_style)],
+        [Paragraph("Encrypted Payload (ECIES - Roadmap)", normal_style), Paragraph("43", normal_style), Paragraph("~140 ms", normal_style)],
         [Paragraph("ZK-SNARK Proof + Attestation (Compressed via LLD-AC)", normal_style), Paragraph("184", normal_style), Paragraph("~450 ms", normal_style)],
-        [Paragraph("<b>Total Packet</b>", normal_style), Paragraph("<b>255</b>", normal_style), Paragraph("<b>~670 ms</b>", normal_style)]
+        [Paragraph("<b>Total Packet (Single-Packet Mode)</b>", normal_style), Paragraph("<b>255</b>", normal_style), Paragraph("<b>~670 ms</b>", normal_style)]
     ]
     perf_table = Table(perf_data, colWidths=[220, 100, 167])
     perf_table.setStyle(TableStyle([
@@ -787,8 +806,8 @@ def create_whitepaper_pdf():
     ))
     story.append(Paragraph(
         "2. <b>Curve Security (BN254):</b> NFS advances reduce BN254's security to ~100 bits. Mitigation: The program "
-        "natively processes 192-byte BLS12-381 compressed proofs or Pasta curve evaluations on-chain for Orchard-level "
-        "security.", bullet_style
+        "natively processes 128-byte BN254 compressed proofs on-chain for production-grade security, verifying pairing "
+        "check algebra directly over the BN254 prime field.", bullet_style
     ))
     story.append(Paragraph(
         "3. <b>Proof Malleability:</b> Groth16 proofs are malleable; an adversary can mutate proof bytes and replay them. "
