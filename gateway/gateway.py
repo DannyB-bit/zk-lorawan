@@ -602,8 +602,10 @@ class SolanaSubmitter:
             return str(tx)
         except Exception as e:
             self.logger.error(f"Solana single transaction submission failed: {e}")
-            # Mock signature fallback for demo if node is not running
-            return f"sim_single_{int(chirp.timestamp)}"
+            if os.environ.get("ZK_LORAWAN_DEMO_MODE") == "1":
+                self.logger.warning("Running in demo mode: returning simulated transaction signature.")
+                return f"sim_single_{int(chirp.timestamp)}"
+            raise e
     
     async def submit_batch(self, batch: Batch) -> str:
         """
@@ -688,7 +690,10 @@ class SolanaSubmitter:
             return str(finalize_tx)
         except Exception as e:
             self.logger.error(f"Solana batch submission failed: {e}")
-            return f"sim_batch_{n}_{int(batch.created_at)}"
+            if os.environ.get("ZK_LORAWAN_DEMO_MODE") == "1":
+                self.logger.warning("Running in demo mode: returning simulated transaction signature.")
+                return f"sim_batch_{n}_{int(batch.created_at)}"
+            raise e
 
 
 # ============================================================================
@@ -827,6 +832,7 @@ class Gateway:
 
 async def _demo():
     """Run a gateway demo with simulated chirps."""
+    os.environ["ZK_LORAWAN_DEMO_MODE"] = "1"
     logging.basicConfig(
         level=logging.INFO,
         format="  %(name)-8s | %(message)s"
@@ -842,7 +848,6 @@ async def _demo():
     
     # Simulate 25 chirps arriving using LLD-AC compressed frames
     encoder = LLDACEncoder()
-    import os
     for i in range(25):
         # Generate structured/padded real proof components
         proof_a = bytes.fromhex("e90669cc542508b5d0a2ae55ac31a6536faa01b6589a6b597763c8e4db162128")
@@ -859,9 +864,9 @@ async def _demo():
         # Compress
         compressed_proof = encoder.encode(raw_proof)
         
-        # Pack
+        # Pack (pass max_size=512 for the demo high-entropy proof)
         coords = [42, 7, 3, 128, 200, 15]
-        frame = pack_lora_frame(compressed_proof, coords)
+        frame = pack_lora_frame(compressed_proof, coords, max_size=512)
         
         await gw.handle_chirp(frame, rssi=-75 - (i % 20), snr=8.0 - (i % 5))
         

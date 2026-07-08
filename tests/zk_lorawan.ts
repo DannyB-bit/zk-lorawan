@@ -198,34 +198,38 @@ describe("zk_lorawan", () => {
     assert.isFalse(batchAccount.isFinalized);
 
     // Add 3 chirps
-    const chirp1Nullifier = crypto.randomBytes(32);
-    const chirp1Attestation = crypto.randomBytes(32);
-    const chirp1VdeProof = crypto.randomBytes(32);
-    const chirp1Payload = crypto.randomBytes(32);
+    // Define 3 real unique Groth16 proofs and hashes
+    const proofA1 = Buffer.from("26323ca8a4751c32c0b85a4f5c91799c5d7b1a1b863278a633d5d944b5c326f20b16c1906650d52f70618d7d64b6db3bad285c62969e5cffa3f2ce694c24b4a6", "hex");
+    const proofB1 = Buffer.from("1b315483ab9f78a91f7e1eaa8bea1074339f1e6251657276665bd7f271ac6a920cca1d4ab9594af728d31d3428abb58bbbf24d73b85864d38225208e5e0f69f0a517289f398a937eebb534772afc22fa89a50bea9d2795336064c0189c4b66900a0398e178d63fe75367da7bdce8f5276ddb905080b42d0c051f5afcbb091aed", "hex");
+    const proofC1 = Buffer.from("1c847e7b6803c870123860c7fee13233eb7e736989d49935730fe556577621a30a6a6e72bed2c418f3079f59d3a1087ae2b8bfac6e1442dd0061a5a7c488856c", "hex");
+    const chirp1Nullifier = Buffer.from("333d2924f9563337ce7aa25b5c25e315a510c0c510db6219b05fc7c396a7ee2c", "hex");
+    const chirp1Attestation = Buffer.from("8b8cda973f4e99fb4729d7914dadd85533dea3d4ac45231ae2e72cc9c5c3ca17", "hex");
+    const chirp1VdeProof = Buffer.from("79dc773d5b710f70fb4ce375853e25ad99d021bff5cd58d67c2e8f0032eee01f", "hex");
+    const chirp1Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
 
-    const chirp2Nullifier = crypto.randomBytes(32);
-    const chirp2Attestation = crypto.randomBytes(32);
-    const chirp2VdeProof = crypto.randomBytes(32);
-    const chirp2Payload = crypto.randomBytes(32);
+    const proofA2 = Buffer.from("2373ba50d483e8bbab9f65920b42e490d2043863e190396bc9002780d41e687e097c518327f494a43f2f1b283d1b89deebe954991a96ede1407fc820af6d6ecc", "hex");
+    const proofB2 = Buffer.from("216a835c4114012d5c776e6b2276748b1e171e658287e03851375793840a08582578ffc1b7e0e8e4d718fe3a1f266166c8e511867173de2722371d0211884f970dea77423fbe2c52e14ad45de328653e732a98a39dafb960d4bd5488846a7c7223950e3d2996650df9015b0521a7aebd362a4965e3f7de063d33acbe98fe1aa5", "hex");
+    const proofC2 = Buffer.from("0ee998adc65fc3b2392695753e7d189a01d18853a3f704811c572ed94e69d4b2abdfaac3a28d1d535925af68cbee09734d59937c2d8cd2dceceb24a29e604e8d", "hex");
+    const chirp2Nullifier = Buffer.from("f153d3fe8a4d1ac6196a9bd3d89c60b386f00e6919575f63e0bba958d35e5402", "hex");
+    const chirp2Attestation = Buffer.from("482214239c1946ddc2d88e60457c0d46738ab0f43a302aa983f06ed4e1578b04", "hex");
+    const chirp2VdeProof = Buffer.from("9c05c75001ab5fad4dadf4daa2a892bf8f4466fd77de76e3ccb626034d506504", "hex");
+    const chirp2Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
 
-    const chirp3Nullifier = crypto.randomBytes(32);
-    const chirp3Attestation = crypto.randomBytes(32);
-    const chirp3VdeProof = crypto.randomBytes(32);
-    const chirp3Payload = crypto.randomBytes(32);
+    const proofA3 = Buffer.from("27df7eb42d0ac1b6bb10f296be22a504d8cc3054f1a9933c04b6d6fff09074faabf7aeb0deac634b605ce252613113cd0a54ecbc81af4fcbcb1ffbe5ce1c3ae7", "hex");
+    const proofB3 = Buffer.from("1cf1cac0fcb4ad43a1d6311844700bbfe9e581efe9ad1ec99b04964f35781a5c18c080d6c50f2a3a7faece6744f89905b466fde28987abc4a62661b96e268acb9b8bd1ca384a8c0c353bbff15ccfdd965658d2e90ecdf67bfee8697bc3fe218e09c385fa0e55c7bd8a4f15b23c3c6f57bea2e323575a90f0fa9b7d6dbdf70fdd", "hex");
+    const proofC3 = Buffer.from("25e4c58a01164a0a9cea92de7172d9be150e485f479a9a70779735d2f4607c739ee55ad26c98b03e4b508cf42f2940c30f84fe834e488e1191504148ddaaef6e", "hex");
+    const chirp3Nullifier = Buffer.from("a1bb0f97d5364577f3f7de2d7981281bec855a94975437fde8d5f6be0a8ef610", "hex");
+    const chirp3Attestation = Buffer.from("9c02cf281a8259499690acee3b89e6e4ad53e2a728d491d48d0cd2d4760b7e17", "hex");
+    const chirp3VdeProof = Buffer.from("1fac275faeecdbd9202414272ade21efc72098a70e07aef99ef3f9d638f12315", "hex");
+    const chirp3Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
 
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
-    // Define mock proofs for mock-verifier feature bypass in batch tests
-    const mockProofA = Buffer.alloc(64);
-    mockProofA[0] = 0xDD;
-    const mockProofB = Buffer.alloc(128);
-    const mockProofC = Buffer.alloc(64);
-
     await program.methods
       .addChirp(
-        Array.from(mockProofA),
-        Array.from(mockProofB),
-        Array.from(mockProofC),
+        Array.from(proofA1),
+        Array.from(proofB1),
+        Array.from(proofC1),
         Array.from(chirp1Nullifier),
         Array.from(chirp1Attestation),
         Array.from(chirp1VdeProof),
@@ -241,9 +245,9 @@ describe("zk_lorawan", () => {
 
     await program.methods
       .addChirp(
-        Array.from(mockProofA),
-        Array.from(mockProofB),
-        Array.from(mockProofC),
+        Array.from(proofA2),
+        Array.from(proofB2),
+        Array.from(proofC2),
         Array.from(chirp2Nullifier),
         Array.from(chirp2Attestation),
         Array.from(chirp2VdeProof),
@@ -259,9 +263,9 @@ describe("zk_lorawan", () => {
 
     await program.methods
       .addChirp(
-        Array.from(mockProofA),
-        Array.from(mockProofB),
-        Array.from(mockProofC),
+        Array.from(proofA3),
+        Array.from(proofB3),
+        Array.from(proofC3),
         Array.from(chirp3Nullifier),
         Array.from(chirp3Attestation),
         Array.from(chirp3VdeProof),

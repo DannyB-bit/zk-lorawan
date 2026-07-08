@@ -258,21 +258,22 @@ def serialize_groth16_proof(proof_a_hex, proof_b_hex, proof_c_hex, public_inputs
     return bytes(data)
 
 
-def pack_lora_frame(compressed_proof, cuneiform_coords, fec_parity=None):
+def pack_lora_frame(compressed_proof, cuneiform_coords, fec_parity=None, max_size=255):
     """
     Pack a compressed ZK proof + 6D Cuneiform-U coordinates into a
-    LoRa-compliant frame (≤ 255 bytes).
+    LoRa-compliant frame (≤ 255 bytes by default).
     
     Frame layout:
-    [1B magic] [1B flags] [1B proof_len] [NB compressed_proof] [6B coords] [MB FEC parity]
+    [1B magic] [1B flags] [2B proof_len] [NB compressed_proof] [6B coords] [MB FEC parity]
     
     Args:
         compressed_proof: LLD-AC compressed proof bytes
         cuneiform_coords: 6-element list of coordinate values [0-255]
         fec_parity: Optional XOR-FEC parity bytes
+        max_size: Maximum allowable frame size (standard LoRaWAN MTU is 255)
         
     Returns:
-        Complete LoRa frame bytes (≤ 255)
+        Complete LoRa frame bytes
     """
     frame = bytearray()
 
@@ -301,14 +302,18 @@ def pack_lora_frame(compressed_proof, cuneiform_coords, fec_parity=None):
         frame.extend(fec_parity)
 
     total_size = len(frame)
-    # Note: A real high-entropy BN254 Groth16 proof with 4 public inputs is ~256 bytes.
-    # In production, payload size can be reduced by deriving public inputs on the gateway
-    # or utilizing advanced FEC/segmentation. We permit up to 512 bytes here for the end-to-end demo.
-    if total_size > 512:
-        raise ValueError(
-            f"Frame exceeds maximum budget: {total_size} bytes > 512 bytes. "
-            f"Proof too large ({proof_len} bytes compressed)."
-        )
+    if total_size > max_size:
+        if max_size == 255:
+            raise ValueError(
+                f"Frame size ({total_size} bytes) exceeds standard single LoRaWAN MTU (255 bytes). "
+                "For high-entropy proofs with 4 public inputs, packet fragmentation (segmentation) "
+                "must be enabled in production. For end-to-end demo testing, call with max_size=512."
+            )
+        else:
+            raise ValueError(
+                f"Frame size ({total_size} bytes) exceeds custom maximum limit ({max_size} bytes). "
+                f"Proof too large ({proof_len} bytes compressed)."
+            )
 
     return bytes(frame)
 
