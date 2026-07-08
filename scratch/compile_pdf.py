@@ -5,6 +5,8 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak, KeepTogether, Preformatted
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
+from reportlab.graphics.shapes import Drawing, Rect, String as DString, Line as DLine, Circle as DCircle
+
 
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
@@ -27,12 +29,52 @@ class NumberedCanvas(canvas.Canvas):
         # Page 1: Cover Page
         if self._pageNumber == 1:
             self.saveState()
-            # Draw the logo image to take the whole page
+            # Draw dark background
+            self.setFillColor(colors.HexColor("#0d0f14"))
+            self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
+            
+            # Draw top stripe (Solana color gradient)
+            self.setFillColor(colors.HexColor("#14F195"))
+            self.rect(0, 826.89, 297.63, 15, fill=True, stroke=False)
+            self.setFillColor(colors.HexColor("#9945FF"))
+            self.rect(297.63, 826.89, 297.64, 15, fill=True, stroke=False)
+            
+            # Draw title text
+            self.setFont("Helvetica-Bold", 14)
+            self.setFillColor(colors.HexColor("#14F195"))
+            self.drawCentredString(297.63, 720, "PROJECT: ZK-LORAWAN")
+            
+            # Draw logo image (BIGGER - 420x420)
             if os.path.exists("zk_lorawan_logo.png"):
-                self.drawImage("zk_lorawan_logo.png", 0, 0, width=595.27, height=841.89)
-            else:
-                self.setFillColor(colors.HexColor("#0d0f14"))
-                self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
+                self.drawImage("zk_lorawan_logo.png", 87.63, 240, width=420, height=420)
+            
+            # Draw rated ZK box
+            self.setStrokeColor(colors.HexColor("#14F195"))
+            self.setLineWidth(1.5)
+            self.rect(54, 120, 487.27, 80, fill=False, stroke=True)
+            self.setFillColor(colors.HexColor("#1A202C"))
+            self.rect(55, 121, 485.27, 78, fill=True, stroke=False)
+            
+            # Text inside box
+            self.setFont("Helvetica-Bold", 12)
+            self.setFillColor(colors.HexColor("#14F195"))
+            self.drawString(74, 155, "RATED ZK")
+            
+            self.setFont("Helvetica-Bold", 10)
+            self.setFillColor(colors.HexColor("#FFFFFF"))
+            self.drawString(170, 172, "FOR: ZK-LORAWAN PRIVACY LAYER")
+            self.setFont("Helvetica", 9)
+            self.setFillColor(colors.HexColor("#A0AEC0"))
+            self.drawString(170, 155, "ZERO-KNOWLEDGE LORAWAN MESH NETWORKS")
+            self.drawString(170, 140, "UNDER DECENTRALIZED INCENTIVIZATION PROTOCOL")
+            
+            # Legal notice at the bottom
+            self.setFont("Helvetica", 7)
+            self.setFillColor(colors.HexColor("#718096"))
+            self.drawString(54, 85, "LEGAL NOTICE: To safeguard developer intellectual property, the ZK-LoRaWAN codebase and all its multi-language")
+            self.drawString(54, 75, "implementations are currently published under a protected, proprietary license pending grant evaluation. Upon formal")
+            self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source MIT License.")
+            
             self.restoreState()
             return
             
@@ -42,62 +84,63 @@ class NumberedCanvas(canvas.Canvas):
             self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
             
-            cx, cy = 297.63, 480
+            cx = 297.63
             
-            # Draw logo image first so lines render on top
+            # Draw logo image centered ABOVE the triangle
             if os.path.exists("theaicollective_logo.jpg"):
-                self.drawImage("theaicollective_logo.jpg", cx - 40, cy - 25, width=80, height=80)
+                self.drawImage("theaicollective_logo.jpg", cx - 70, 510, width=140, height=140)
             
-            # Draw network lines representing AI swarm/meditation
+            # Draw network lines representing AI swarm/meditation (shifted down, cy=380)
+            t_cy = 380
             self.setStrokeColor(colors.HexColor("#9945FF"))
             self.setLineWidth(1)
-            self.line(cx, cy + 40, cx - 50, cy - 30)
+            self.line(cx, t_cy + 40, cx - 50, t_cy - 30)
             self.setStrokeColor(colors.HexColor("#14F195"))
-            self.line(cx, cy + 40, cx + 50, cy - 30)
+            self.line(cx, t_cy + 40, cx + 50, t_cy - 30)
             self.setStrokeColor(colors.HexColor("#A0AEC0"))
-            self.line(cx - 50, cy - 30, cx + 50, cy - 30)
+            self.line(cx - 50, t_cy - 30, cx + 50, t_cy - 30)
             
             # Draw nodes
             self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx, cy + 40, 7, fill=True, stroke=False)
+            self.circle(cx, t_cy + 40, 7, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#9945FF"))
-            self.circle(cx - 50, cy - 30, 7, fill=True, stroke=False)
+            self.circle(cx - 50, t_cy - 30, 7, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx + 50, cy - 30, 7, fill=True, stroke=False)
+            self.circle(cx + 50, t_cy - 30, 7, fill=True, stroke=False)
             
             # Inner details
             self.setFillColor(colors.HexColor("#000000"))
-            self.circle(cx, cy + 40, 3, fill=True, stroke=False)
-            self.circle(cx - 50, cy - 30, 3, fill=True, stroke=False)
-            self.circle(cx + 50, cy - 30, 3, fill=True, stroke=False)
+            self.circle(cx, t_cy + 40, 3, fill=True, stroke=False)
+            self.circle(cx - 50, t_cy - 30, 3, fill=True, stroke=False)
+            self.circle(cx + 50, t_cy - 30, 3, fill=True, stroke=False)
             
-            # Identity text
+            # Identity text (shifted down, cy=280)
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#9945FF"))
-            self.drawCentredString(cx, cy - 100, "WE ARE")
+            self.drawCentredString(cx, 240, "WE ARE")
             self.setFont("Helvetica-Bold", 16)
             self.setFillColor(colors.HexColor("#FFFFFF"))
-            self.drawCentredString(cx, cy - 120, "THE AI COLLECTIVE")
+            self.drawCentredString(cx, 220, "THE AI COLLECTIVE")
             
             # Search address look-up bar style
             self.setStrokeColor(colors.HexColor("#4A5568"))
             self.setFillColor(colors.HexColor("#1A202C"))
-            self.rect(cx - 100, cy - 155, 200, 25, fill=True, stroke=True)
+            self.rect(cx - 100, 175, 200, 25, fill=True, stroke=True)
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, cy - 145, "Q  TheAiCollective.art")
+            self.drawCentredString(cx, 185, "Q  TheAiCollective.art")
             
             # Quote
             self.setFont("Helvetica-Oblique", 11)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, cy - 230, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
-            self.drawCentredString(cx, cy - 248, 'math a work in progress, and truth waiting to be discovered."')
+            self.drawCentredString(cx, 110, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
+            self.drawCentredString(cx, 92, 'math a work in progress, and truth waiting to be discovered."')
             
             # Thank you note
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#718096"))
-            self.drawCentredString(cx, cy - 310, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
-            self.drawCentredString(cx, cy - 325, "This whitepaper is intended for educational and project evaluation purposes only.")
+            self.drawCentredString(cx, 45, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
+            self.drawCentredString(cx, 30, "This whitepaper is intended for educational and project evaluation purposes only.")
             
             self.restoreState()
             return
@@ -120,6 +163,55 @@ class NumberedCanvas(canvas.Canvas):
         page_text = f"Page {self._pageNumber} of {page_count}"
         self.drawRightString(541, 40, page_text)
         self.restoreState()
+
+
+def get_system_topology_diagram():
+    d = Drawing(480, 80)
+    # Background for nodes
+    # Node A: Edge IoT Node
+    d.add(Rect(5, 15, 125, 50, fillColor=colors.HexColor("#1A202C"), strokeColor=colors.HexColor("#14F195"), strokeWidth=1, rx=4, ry=4))
+    d.add(DString(20, 45, "Edge IoT Node", fontName="Helvetica-Bold", fontSize=9, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(20, 30, "(Enclave/ATECC608)", fontName="Helvetica", fontSize=8, fillColor=colors.HexColor("#A0AEC0")))
+
+    # Arrow 1: LoRa RF
+    d.add(DLine(130, 40, 180, 40, strokeColor=colors.HexColor("#718096"), strokeWidth=1))
+    d.add(DString(135, 45, "LoRa RF", fontName="Helvetica", fontSize=7, fillColor=colors.HexColor("#2B6CB0")))
+
+    # Node B: Gateway Relayer
+    d.add(Rect(180, 15, 125, 50, fillColor=colors.HexColor("#1A202C"), strokeColor=colors.HexColor("#9945FF"), strokeWidth=1, rx=4, ry=4))
+    d.add(DString(195, 45, "Gateway Relayer", fontName="Helvetica-Bold", fontSize=9, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(195, 30, "(SX1302 Concentrator)", fontName="Helvetica", fontSize=8, fillColor=colors.HexColor("#A0AEC0")))
+
+    # Arrow 2: Solana RPC
+    d.add(DLine(305, 40, 355, 40, strokeColor=colors.HexColor("#718096"), strokeWidth=1))
+    d.add(DString(310, 45, "RPC Tx", fontName="Helvetica", fontSize=7, fillColor=colors.HexColor("#2B6CB0")))
+
+    # Node C: Shielded Pool
+    d.add(Rect(355, 15, 120, 50, fillColor=colors.HexColor("#1A202C"), strokeColor=colors.HexColor("#14F195"), strokeWidth=1, rx=4, ry=4))
+    d.add(DString(368, 45, "Shielded Pool", fontName="Helvetica-Bold", fontSize=9, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(368, 30, "(On-Chain Program)", fontName="Helvetica", fontSize=8, fillColor=colors.HexColor("#A0AEC0")))
+    return d
+
+def get_fee_split_diagram():
+    d = Drawing(480, 110)
+    # Central pool box
+    d.add(Rect(15, 35, 115, 45, fillColor=colors.HexColor("#1A202C"), strokeColor=colors.HexColor("#3182CE"), strokeWidth=1.5, rx=5, ry=5))
+    d.add(DString(25, 60, "Shielded Pool", fontName="Helvetica-Bold", fontSize=9, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(25, 48, "(Global Escrow)", fontName="Helvetica", fontSize=7.5, fillColor=colors.HexColor("#A0AEC0")))
+
+    # Split lines
+    # Upper line: Gateway reward (100k lamports)
+    d.add(DLine(130, 58, 220, 80, strokeColor=colors.HexColor("#14F195"), strokeWidth=1))
+    d.add(Rect(220, 60, 140, 40, fillColor=colors.HexColor("#1D4ED8"), strokeColor=colors.HexColor("#14F195"), strokeWidth=1, rx=4, ry=4))
+    d.add(DString(232, 82, "Gateway Relayer", fontName="Helvetica-Bold", fontSize=8.5, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(232, 70, "+100,000 lamports (SOL)", fontName="Helvetica-Bold", fontSize=8, fillColor=colors.HexColor("#14F195")))
+
+    # Lower line: Dev treasury (50k lamports)
+    d.add(DLine(130, 58, 220, 25, strokeColor=colors.HexColor("#9945FF"), strokeWidth=1))
+    d.add(Rect(220, 5, 140, 40, fillColor=colors.HexColor("#1D4ED8"), strokeColor=colors.HexColor("#9945FF"), strokeWidth=1, rx=4, ry=4))
+    d.add(DString(232, 27, "Developer Treasury", fontName="Helvetica-Bold", fontSize=8.5, fillColor=colors.HexColor("#FFFFFF")))
+    d.add(DString(232, 15, "+50,000 lamports (SOL)", fontName="Helvetica-Bold", fontSize=8, fillColor=colors.HexColor("#14F195")))
+    return d
 
 def create_whitepaper_pdf():
     pdf_path = "zk_lorawan_whitepaper.pdf"
@@ -234,7 +326,7 @@ def create_whitepaper_pdf():
         story.append(Image("zk_lorawan_logo.png", width=120, height=120))
         
     story.append(Spacer(1, 30))
-    story.append(Paragraph("<para align=center><font size=18 color='#1A202C'><b>ZK-LoRaWAN: ZERO-KNOWLEDGE PROOFS FOR PRIVATE LORAWAN MESH NETWORKS</b></font><br/><br/><font size=11 color='#718096'><i>A Solana-Style Shielded Pool Identity and Payment System for LoRaWAN Communications</i></font></para>", normal_style))
+    story.append(Paragraph("<para align=center><font size=18 color='#1A202C'><b>ZK-LoRaWAN: ZERO-KNOWLEDGE PROOFS FOR PRIVATE LORAWAN MESH NETWORKS</b></font><br/><br/><font size=11 color='#718096'><i>A Solana-Style ZK-Compressed Shielded Pool and Lossless Proof Compression Layer for LoRaWAN Communications</i></font></para>", normal_style))
     story.append(PageBreak())
 
     # ================= PAGE 3: EXECUTIVE SUMMARY =================
@@ -316,6 +408,9 @@ def create_whitepaper_pdf():
 
     # ================= PAGE 5: ARCHITECTURE - LAYER 1 & 2 =================
     story.append(Paragraph("3. System Architecture", h1_style))
+    story.append(Spacer(1, 10))
+    story.append(get_system_topology_diagram())
+    story.append(Spacer(1, 10))
     story.append(Paragraph("Layer 1: Elliptic Curve Identity Derivation", h2_style))
     story.append(Paragraph(
         "ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair "
@@ -424,6 +519,9 @@ def create_whitepaper_pdf():
 
     # ================= PAGE 8: FLOW DIAGRAM =================
     story.append(Paragraph("6. The Micropayment Flow", h1_style))
+    story.append(Spacer(1, 10))
+    story.append(get_fee_split_diagram())
+    story.append(Spacer(1, 10))
     story.append(Paragraph(
         "Below is the step-by-step transaction flow showing the off-grid interaction between the Transmitting Agent, "
         "the LoRa Gateway, and the Solana Blockchain:", normal_style
