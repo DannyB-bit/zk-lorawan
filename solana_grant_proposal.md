@@ -84,6 +84,10 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 ### 📍 Milestone 1: Multi-Language Client SDKs & WASM Verification Ports
 *   **Target Duration:** 4 Weeks
 *   **Requested Budget:** $15,000
+*   **Budget Breakdown:**
+    *   **$5,500 -- WASM Compilation & Optimization:** Engineering hours for compiling Groth16 BN254 bilinear verification into optimized WebAssembly, packaging it as a high-speed JS/TS SDK for edge gateways.
+    *   **$6,000 -- Client SDK Hardening & FFI:** Developing secure FFI bindings, memory-safe wrappers, and proof runner test suites for the multi-language client SDKs (Go, Rust, Python, Java, Haskell).
+    *   **$3,500 -- CI/CD & Automated Test Harness:** Implementing automated test harness configurations, mock RPC networks, and complete developer API documentation.
 *   **Deliverables:**
     *   Convert and compile the Groth16 BN254 bilinear verification client into WASM, packaging it as a reusable JavaScript/TypeScript SDK for edge gateways.
     *   Harden the multi-language proof suite (completing the Go, Rust, Java, Haskell, and Python client runners) to interact directly with Solana devnet escrow queries and fee validations.
@@ -92,6 +96,10 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 ### 📍 Milestone 2: Solana Devnet Verification Contract & Registry Integration (Completed/In Progress)
 *   **Target Duration:** 4 Weeks
 *   **Requested Budget:** $15,000
+*   **Budget Breakdown:**
+    *   **$6,500 -- Anchor Program Deployment & Gas Tuning:** Writing, deploying, and optimizing the devnet smart contract to minimize CU usage during pair checking.
+    *   **$5,500 -- Coordinate Registry Integration (solana-cuneiform):** Binding Pedersen commitments of 6D coordinates on-chain, mapping spatial queries, and routing fees.
+    *   **$3,000 -- Vulnerability Verification & Static Auditing:** Running circuits and smart contracts through static analysis tools (Circomspect, Veridise) to mitigate under-constraint bugs.
 *   **Deliverables:**
     *   Deploy the `zk_lorawan` proof-verification Anchor program on Solana Devnet.
     *   Integrate the contract with the `solana-cuneiform` semantic coordinate registry, allowing nodes to submit Coordinate Records wrapped in a ZK-Proof envelope.
@@ -101,6 +109,10 @@ We utilize a 9-level cascading dictionary/entropy tokenization codec to fit payl
 ### 📍 Milestone 3: Shielded Pool Integration & Hardware Enclave Rollout
 *   **Target Duration:** 4 Weeks
 *   **Requested Budget:** $15,000
+*   **Budget Breakdown:**
+    *   **$6,000 -- ZK-Compression (Light Protocol) Integration:** Refactoring Anchor program to support state trees, nullifiers, and compressed pool state for fully shielded SOL balances.
+    *   **$5,000 -- Firmware Enclave Security (Micro-TEE):** Key isolation and firmware signature verification logic (ARM TrustZone-M / ATECC608A) bound to transaction pre-flights.
+    *   **$4,000 -- Physical Pilot Deployment & Hardware Acquisition:** Purchasing gateways, concentrators (SX1302/1303), and edge microcontrollers to run the 5-node physical pilot mesh test.
 *   **Deliverables:**
     *   Upgrade the Anchor program to use ZK-Compression (Light Protocol) for shielded pool deposits.
     *   Implement ARM TrustZone-M firmware attestation validation on-chain to handle revoked or physically compromised edge nodes.
