@@ -46,10 +46,17 @@ MODULES = [
         "name": "LoRa Gateway Engine",
         "component": "Gateway Software",
         "script": "gateway/gateway.py",
+        "pre_command": ["cargo", "build", "-p", "zk-lorawan-groth16"],
+        "pre_timeout": 120,
         "required_output": [
             "Chirps verified:  25",
             "Chirps rejected:  0",
         ],
+    },
+    {
+        "name": "On-Chain Verifier Key Consistency",
+        "component": "Groth16/Solana Bridge",
+        "script": "tests/verify_onchain_vk.py",
     },
 ]
 
@@ -63,6 +70,19 @@ def run_module_test(module: dict, base_dir: str) -> bool:
         return False
 
     try:
+        pre_command = module.get("pre_command")
+        if pre_command:
+            print(f"    Preflight: {' '.join(pre_command)}")
+            preflight = subprocess.run(
+                pre_command,
+                capture_output=True, text=True,
+                timeout=module.get("pre_timeout", 30),
+                cwd=base_dir
+            )
+            if preflight.returncode != 0:
+                print(f"    preflight stderr: {preflight.stderr[:500]}")
+                return False
+
         result = subprocess.run(
             [sys.executable, script_path],
             capture_output=True, text=True, timeout=30,

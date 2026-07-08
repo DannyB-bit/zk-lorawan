@@ -48,6 +48,9 @@ jobs:
       - name: Build Groth16 FFI library
         run: cargo build -p zk-lorawan-groth16
 
+      - name: Verify on-chain verifier key constants
+        run: python tests/verify_onchain_vk.py
+
       - name: Run Python verification harness
         run: python tests/verify_all_modules.py
 
