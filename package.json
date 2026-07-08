@@ -4,14 +4,17 @@
   "description": "Integration tests for ZK-LoRaWAN Anchor program",
   "main": "index.js",
   "scripts": {
-    "test": "powershell -Command \"$env:PATH = 'C:\\Users\\DannyB\\.local\\share\\solana\\releases\\3.1.5\\solana-release\\bin;' + $env:PATH; anchor test\""
+    "test": "powershell -Command \"$env:PATH = 'C:\\Users\\DannyB\\.local\\share\\solana\\releases\\3.1.5\\solana-release\\bin;' + $env:PATH; anchor test\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.19",
+    "chai": "^6.2.2",
     "mocha": "^10.3.0",
     "ts-mocha": "^10.0.0",
     "typescript": "^5.3.3"

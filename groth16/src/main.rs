@@ -6,11 +6,10 @@ pub mod circuit;
 
 use ark_bn254::{Bn254, Fr};
 use ark_ff::PrimeField;
-use ark_groth16::{Groth16, PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
-use ark_serialize::{CanonicalSerialize, CanonicalDeserialize};
-use ark_snark::{SNARK, CircuitSpecificSetupSNARK};
-use rand::SeedableRng;
+use ark_groth16::{PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use rand::rngs::StdRng;
+use rand::SeedableRng;
 
 // ============================================================================
 // ZK-LoRaWAN Protocol Constants
@@ -24,13 +23,13 @@ pub const MIMC_ROUNDS: usize = 10;
 // ZK-LoRaWAN Proof Bundle (serialized for LoRa transmission)
 // ============================================================================
 pub struct ZKLoRaWANProofBundle {
-    pub proof_a_compressed: Vec<u8>,  // G1 point (32 bytes compressed)
-    pub proof_b_compressed: Vec<u8>,  // G2 point (64 bytes compressed)
-    pub proof_c_compressed: Vec<u8>,  // G1 point (32 bytes compressed)
-    pub identity_hash: Vec<u8>,       // Fr element (32 bytes)
-    pub nullifier_hash: Vec<u8>,      // Fr element (32 bytes)
-    pub attestation_hash: Vec<u8>,    // Fr element (32 bytes)
-    pub ciphertext_hash: Vec<u8>,     // Fr element (32 bytes)
+    pub proof_a_compressed: Vec<u8>, // G1 point (32 bytes compressed)
+    pub proof_b_compressed: Vec<u8>, // G2 point (64 bytes compressed)
+    pub proof_c_compressed: Vec<u8>, // G1 point (32 bytes compressed)
+    pub identity_hash: Vec<u8>,      // Fr element (32 bytes)
+    pub nullifier_hash: Vec<u8>,     // Fr element (32 bytes)
+    pub attestation_hash: Vec<u8>,   // Fr element (32 bytes)
+    pub ciphertext_hash: Vec<u8>,    // Fr element (32 bytes)
     pub total_bytes: usize,
 }
 
@@ -49,8 +48,8 @@ impl ZKLoRaWANProver {
     pub fn new() -> Self {
         let mut rng = StdRng::from_seed([42u8; 32]);
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
-        let (pk, vk) = circuit::setup_keys(&mut rng, constants.clone())
-            .expect("Trusted setup failed");
+        let (pk, vk) =
+            circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed");
         let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
 
         ZKLoRaWANProver {
@@ -80,9 +79,12 @@ impl ZKLoRaWANProver {
 
         // Compute the public hashes
         let identity_hash = circuit::mimc_hash(private_key_fr, None, &self.constants);
-        let nullifier_hash = circuit::mimc_hash(private_key_fr, Some(Fr::from(9999u64)), &self.constants);
-        let attestation_hash = circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &self.constants);
-        let ciphertext_hash = circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &self.constants);
+        let nullifier_hash =
+            circuit::mimc_hash(private_key_fr, Some(Fr::from(9999u64)), &self.constants);
+        let attestation_hash =
+            circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &self.constants);
+        let ciphertext_hash =
+            circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &self.constants);
 
         // Generate the real Groth16 proof
         let proof = circuit::generate_proof(
@@ -97,7 +99,8 @@ impl ZKLoRaWANProver {
             ciphertext_hash,
             self.constants.clone(),
             &mut rng,
-        ).expect("Proof generation failed");
+        )
+        .expect("Proof generation failed");
 
         // Serialize proof points to compressed form
         let mut proof_a_buf = Vec::new();
@@ -110,16 +113,24 @@ impl ZKLoRaWANProver {
         proof.c.serialize_compressed(&mut proof_c_buf).unwrap();
 
         let mut identity_hash_buf = Vec::new();
-        identity_hash.serialize_compressed(&mut identity_hash_buf).unwrap();
+        identity_hash
+            .serialize_compressed(&mut identity_hash_buf)
+            .unwrap();
 
         let mut nullifier_hash_buf = Vec::new();
-        nullifier_hash.serialize_compressed(&mut nullifier_hash_buf).unwrap();
+        nullifier_hash
+            .serialize_compressed(&mut nullifier_hash_buf)
+            .unwrap();
 
         let mut attestation_hash_buf = Vec::new();
-        attestation_hash.serialize_compressed(&mut attestation_hash_buf).unwrap();
+        attestation_hash
+            .serialize_compressed(&mut attestation_hash_buf)
+            .unwrap();
 
         let mut ciphertext_hash_buf = Vec::new();
-        ciphertext_hash.serialize_compressed(&mut ciphertext_hash_buf).unwrap();
+        ciphertext_hash
+            .serialize_compressed(&mut ciphertext_hash_buf)
+            .unwrap();
 
         let total = proof_a_buf.len()
             + proof_b_buf.len()
@@ -144,20 +155,27 @@ impl ZKLoRaWANProver {
     /// Verify a proof bundle (used by gateway)
     pub fn verify_bundle(&self, bundle: &ZKLoRaWANProofBundle) -> bool {
         // Deserialize proof points
-        let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed) {
+        let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed)
+        {
             Ok(p) => p,
             Err(_) => return false,
         };
-        let proof_b = match ark_bn254::G2Affine::deserialize_compressed(&*bundle.proof_b_compressed) {
+        let proof_b = match ark_bn254::G2Affine::deserialize_compressed(&*bundle.proof_b_compressed)
+        {
             Ok(p) => p,
             Err(_) => return false,
         };
-        let proof_c = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed) {
+        let proof_c = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed)
+        {
             Ok(p) => p,
             Err(_) => return false,
         };
 
-        let ark_proof = Proof { a: proof_a, b: proof_b, c: proof_c };
+        let ark_proof = Proof {
+            a: proof_a,
+            b: proof_b,
+            c: proof_c,
+        };
 
         // Deserialize public hashes
         let identity_hash = match Fr::deserialize_compressed(&*bundle.identity_hash) {
@@ -178,17 +196,23 @@ impl ZKLoRaWANProver {
         };
 
         // Run real Groth16 verification (bilinear pairing check)
-        match circuit::verify_proof(
-            &self.prepared_vk,
-            &ark_proof,
-            identity_hash,
-            nullifier_hash,
-            attestation_hash,
-            ciphertext_hash,
-        ) {
-            Ok(true) => true,
-            _ => false,
-        }
+        matches!(
+            circuit::verify_proof(
+                &self.prepared_vk,
+                &ark_proof,
+                identity_hash,
+                nullifier_hash,
+                attestation_hash,
+                ciphertext_hash,
+            ),
+            Ok(true)
+        )
+    }
+}
+
+impl Default for ZKLoRaWANProver {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -197,8 +221,8 @@ fn to_solana_g1(p: &ark_bn254::G1Affine) -> [u8; 64] {
     p.serialize_uncompressed(&mut bytes).unwrap();
     let mut solana_bytes = [0u8; 64];
     for i in 0..32 {
-        solana_bytes[i] = bytes[31 - i];       // reverse x to big-endian
-        solana_bytes[32 + i] = bytes[63 - i];  // reverse y to big-endian
+        solana_bytes[i] = bytes[31 - i]; // reverse x to big-endian
+        solana_bytes[32 + i] = bytes[63 - i]; // reverse y to big-endian
     }
     solana_bytes
 }
@@ -208,10 +232,10 @@ fn to_solana_g2(p: &ark_bn254::G2Affine) -> [u8; 128] {
     p.serialize_uncompressed(&mut bytes).unwrap();
     let mut solana_bytes = [0u8; 128];
     for i in 0..32 {
-        solana_bytes[i] = bytes[63 - i];       // X_1 (x.c1) big-endian
-        solana_bytes[32 + i] = bytes[31 - i];  // X_0 (x.c0) big-endian
+        solana_bytes[i] = bytes[63 - i]; // X_1 (x.c1) big-endian
+        solana_bytes[32 + i] = bytes[31 - i]; // X_0 (x.c0) big-endian
         solana_bytes[64 + i] = bytes[127 - i]; // Y_1 (y.c1) big-endian
-        solana_bytes[96 + i] = bytes[95 - i];  // Y_0 (y.c0) big-endian
+        solana_bytes[96 + i] = bytes[95 - i]; // Y_0 (y.c0) big-endian
     }
     solana_bytes
 }
@@ -241,9 +265,12 @@ fn main() {
             let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash);
 
             let identity_hash = circuit::mimc_hash(private_key_fr, None, &prover.constants);
-            let nullifier_hash = circuit::mimc_hash(private_key_fr, Some(Fr::from(9999u64)), &prover.constants);
-            let attestation_hash = circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &prover.constants);
-            let ciphertext_hash = circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &prover.constants);
+            let nullifier_hash =
+                circuit::mimc_hash(private_key_fr, Some(Fr::from(9999u64)), &prover.constants);
+            let attestation_hash =
+                circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &prover.constants);
+            let ciphertext_hash =
+                circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &prover.constants);
 
             let mut rng = rand::thread_rng();
             let proof = circuit::generate_proof(
@@ -258,34 +285,76 @@ fn main() {
                 ciphertext_hash,
                 prover.constants.clone(),
                 &mut rng,
-            ).expect("Proof generation failed");
+            )
+            .expect("Proof generation failed");
 
             let mut id_hash_bytes = Vec::new();
-            identity_hash.serialize_compressed(&mut id_hash_bytes).unwrap();
+            identity_hash
+                .serialize_compressed(&mut id_hash_bytes)
+                .unwrap();
             let mut null_hash_bytes = Vec::new();
-            nullifier_hash.serialize_compressed(&mut null_hash_bytes).unwrap();
+            nullifier_hash
+                .serialize_compressed(&mut null_hash_bytes)
+                .unwrap();
             let mut att_hash_bytes = Vec::new();
-            attestation_hash.serialize_compressed(&mut att_hash_bytes).unwrap();
+            attestation_hash
+                .serialize_compressed(&mut att_hash_bytes)
+                .unwrap();
             let mut cipher_hash_bytes = Vec::new();
-            ciphertext_hash.serialize_compressed(&mut cipher_hash_bytes).unwrap();
+            ciphertext_hash
+                .serialize_compressed(&mut cipher_hash_bytes)
+                .unwrap();
 
             let mut proof_a_compressed = Vec::new();
-            proof.a.serialize_compressed(&mut proof_a_compressed).unwrap();
+            proof
+                .a
+                .serialize_compressed(&mut proof_a_compressed)
+                .unwrap();
             let mut proof_b_compressed = Vec::new();
-            proof.b.serialize_compressed(&mut proof_b_compressed).unwrap();
+            proof
+                .b
+                .serialize_compressed(&mut proof_b_compressed)
+                .unwrap();
             let mut proof_c_compressed = Vec::new();
-            proof.c.serialize_compressed(&mut proof_c_compressed).unwrap();
+            proof
+                .c
+                .serialize_compressed(&mut proof_c_compressed)
+                .unwrap();
 
             println!("identity_hash_{}: {}", i, hex::encode(id_hash_bytes));
             println!("nullifier_hash_{}: {}", i, hex::encode(null_hash_bytes));
             println!("attestation_hash_{}: {}", i, hex::encode(att_hash_bytes));
             println!("ciphertext_hash_{}: {}", i, hex::encode(cipher_hash_bytes));
-            println!("solana_proof_a_{}: {}", i, hex::encode(to_solana_g1(&proof.a)));
-            println!("solana_proof_b_{}: {}", i, hex::encode(to_solana_g2(&proof.b)));
-            println!("solana_proof_c_{}: {}", i, hex::encode(to_solana_g1(&proof.c)));
-            println!("compressed_proof_a_{}: {}", i, hex::encode(proof_a_compressed));
-            println!("compressed_proof_b_{}: {}", i, hex::encode(proof_b_compressed));
-            println!("compressed_proof_c_{}: {}", i, hex::encode(proof_c_compressed));
+            println!(
+                "solana_proof_a_{}: {}",
+                i,
+                hex::encode(to_solana_g1(&proof.a))
+            );
+            println!(
+                "solana_proof_b_{}: {}",
+                i,
+                hex::encode(to_solana_g2(&proof.b))
+            );
+            println!(
+                "solana_proof_c_{}: {}",
+                i,
+                hex::encode(to_solana_g1(&proof.c))
+            );
+            println!(
+                "compressed_proof_a_{}: {}",
+                i,
+                hex::encode(proof_a_compressed)
+            );
+            println!(
+                "compressed_proof_b_{}: {}",
+                i,
+                hex::encode(proof_b_compressed)
+            );
+            println!(
+                "compressed_proof_c_{}: {}",
+                i,
+                hex::encode(proof_c_compressed)
+            );
         }
 
         std::process::exit(0);
@@ -361,20 +430,38 @@ fn main() {
     println!("  [2] Generating Groth16 proof...");
     let bundle = prover.generate_proof(private_key, decryption_key, coordinate_val, firmware_hash);
     println!("      ✅ Proof generated");
-    println!("      proof_a (G1): {} bytes compressed", bundle.proof_a_compressed.len());
-    println!("      proof_b (G2): {} bytes compressed", bundle.proof_b_compressed.len());
-    println!("      proof_c (G1): {} bytes compressed", bundle.proof_c_compressed.len());
+    println!(
+        "      proof_a (G1): {} bytes compressed",
+        bundle.proof_a_compressed.len()
+    );
+    println!(
+        "      proof_b (G2): {} bytes compressed",
+        bundle.proof_b_compressed.len()
+    );
+    println!(
+        "      proof_c (G1): {} bytes compressed",
+        bundle.proof_c_compressed.len()
+    );
     println!("      identity_hash:{} bytes", bundle.identity_hash.len());
     println!("      nullifier_hash:{} bytes", bundle.nullifier_hash.len());
-    println!("      attestation_hash:{} bytes", bundle.attestation_hash.len());
-    println!("      ciphertext_hash:{} bytes", bundle.ciphertext_hash.len());
+    println!(
+        "      attestation_hash:{} bytes",
+        bundle.attestation_hash.len()
+    );
+    println!(
+        "      ciphertext_hash:{} bytes",
+        bundle.ciphertext_hash.len()
+    );
     println!("      TOTAL:        {} bytes", bundle.total_bytes);
     println!();
 
     // Verify the proof
     println!("  [3] Verifying proof (bilinear pairing check)...");
     let is_valid = prover.verify_bundle(&bundle);
-    println!("      Verification result: {}", if is_valid { "✅ VALID" } else { "❌ INVALID" });
+    println!(
+        "      Verification result: {}",
+        if is_valid { "✅ VALID" } else { "❌ INVALID" }
+    );
     println!();
 
     // Check LoRa MTU fit
@@ -384,24 +471,47 @@ fn main() {
     let fits = bundle.total_bytes <= available;
     println!("  [4] LoRa MTU check:");
     println!("      LoRa MTU:       {} bytes", lora_mtu);
-    println!("      Frame overhead: {} bytes (header + coords + tag)", overhead);
+    println!(
+        "      Frame overhead: {} bytes (header + coords + tag)",
+        overhead
+    );
     println!("      Available:      {} bytes", available);
     println!("      Proof size:     {} bytes", bundle.total_bytes);
-    println!("      Fits in frame:  {}", if fits { "✅ YES" } else { "⚠️  Needs LLD-AC compression" });
+    println!(
+        "      Fits in frame:  {}",
+        if fits {
+            "✅ YES"
+        } else {
+            "⚠️  Needs LLD-AC compression"
+        }
+    );
     println!();
 
     // Fee split display
     println!("  [5] ZK-LoRaWAN Fee Split:");
-    println!("      Gateway reward:  {} lamports (${:.4})", GATEWAY_REWARD_LAMPORTS, GATEWAY_REWARD_LAMPORTS as f64 / 1_000_000_000.0 * 150.0);
-    println!("      Protocol fee:    {} lamports (${:.4})", PROTOCOL_FEE_LAMPORTS, PROTOCOL_FEE_LAMPORTS as f64 / 1_000_000_000.0 * 150.0);
-    println!("      Total per packet:{} lamports (${:.4})", TOTAL_FEE_LAMPORTS, TOTAL_FEE_LAMPORTS as f64 / 1_000_000_000.0 * 150.0);
+    println!(
+        "      Gateway reward:  {} lamports (${:.4})",
+        GATEWAY_REWARD_LAMPORTS,
+        GATEWAY_REWARD_LAMPORTS as f64 / 1_000_000_000.0 * 150.0
+    );
+    println!(
+        "      Protocol fee:    {} lamports (${:.4})",
+        PROTOCOL_FEE_LAMPORTS,
+        PROTOCOL_FEE_LAMPORTS as f64 / 1_000_000_000.0 * 150.0
+    );
+    println!(
+        "      Total per packet:{} lamports (${:.4})",
+        TOTAL_FEE_LAMPORTS,
+        TOTAL_FEE_LAMPORTS as f64 / 1_000_000_000.0 * 150.0
+    );
     println!();
 
     // Test with wrong key / tampered inputs
     println!("  [6] Tamper test (wrong inputs)...");
     let wrong_key = b"this-is-the-wrong-key-should-fail";
-    let wrong_bundle = prover.generate_proof(wrong_key, decryption_key, coordinate_val, firmware_hash);
-    
+    let wrong_bundle =
+        prover.generate_proof(wrong_key, decryption_key, coordinate_val, firmware_hash);
+
     // Tamper with proof_a to simulate corruption
     let mut tampered = ZKLoRaWANProofBundle {
         proof_a_compressed: wrong_bundle.proof_a_compressed,
@@ -418,7 +528,14 @@ fn main() {
         tampered.proof_a_compressed[0] ^= 0xFF;
     }
     let tamper_valid = prover.verify_bundle(&tampered);
-    println!("      Tampered proof result: {}", if !tamper_valid { "✅ CORRECTLY REJECTED" } else { "❌ SHOULD HAVE FAILED" });
+    println!(
+        "      Tampered proof result: {}",
+        if !tamper_valid {
+            "✅ CORRECTLY REJECTED"
+        } else {
+            "❌ SHOULD HAVE FAILED"
+        }
+    );
     println!();
 
     if is_valid && !tamper_valid {
