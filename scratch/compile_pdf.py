@@ -42,11 +42,11 @@ class NumberedCanvas(canvas.Canvas):
             # Draw title text
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(297.63, 720, "PROJECT: ZK-LORAWAN")
+            self.drawCentredString(297.63, 755, "PROJECT: ZK-LORAWAN")
             
-            # Draw logo image (BIGGER - 420x420)
+            # Draw logo image (HUGE - 480x480)
             if os.path.exists("zk_lorawan_logo.png"):
-                self.drawImage("zk_lorawan_logo.png", 87.63, 240, width=420, height=420)
+                self.drawImage("zk_lorawan_logo.png", 57.63, 240, width=480, height=480)
             
             # Draw rated ZK box
             self.setStrokeColor(colors.HexColor("#14F195"))
@@ -84,53 +84,22 @@ class NumberedCanvas(canvas.Canvas):
             self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
             
-            cx, cy = 297.63, 480
+            cx, cy = 297.63, 500
             
-            # Draw logo image centered INSIDE the big triangle first
-            if os.path.exists("theaicollective_logo.jpg"):
-                self.drawImage("theaicollective_logo.jpg", cx - 75, cy - 85, width=150, height=150)
-            
-            # Draw network lines representing AI swarm/meditation (BIGGER triangle) on top
-            self.setStrokeColor(colors.HexColor("#9945FF"))
-            self.setLineWidth(1.5)
-            self.line(cx, cy + 120, cx - 130, cy - 90)
-            self.setStrokeColor(colors.HexColor("#14F195"))
-            self.line(cx, cy + 120, cx + 130, cy - 90)
-            self.setStrokeColor(colors.HexColor("#A0AEC0"))
-            self.line(cx - 130, cy - 90, cx + 130, cy - 90)
-            
-            # Draw nodes
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx, cy + 120, 8, fill=True, stroke=False)
-            self.setFillColor(colors.HexColor("#9945FF"))
-            self.circle(cx - 130, cy - 90, 8, fill=True, stroke=False)
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.circle(cx + 130, cy - 90, 8, fill=True, stroke=False)
-            
-            # Inner details
-            self.setFillColor(colors.HexColor("#000000"))
-            self.circle(cx, cy + 120, 3.5, fill=True, stroke=False)
-            self.circle(cx - 130, cy - 90, 3.5, fill=True, stroke=False)
-            self.circle(cx + 130, cy - 90, 3.5, fill=True, stroke=False)
-            
-            # Identity text
+            # Draw "WE ARE" above the logo
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#9945FF"))
-            self.drawCentredString(cx, 280, "WE ARE")
-            self.setFont("Helvetica-Bold", 16)
-            self.setFillColor(colors.HexColor("#FFFFFF"))
-            self.drawCentredString(cx, 255, "THE AI COLLECTIVE")
+            self.drawCentredString(cx, 715, "WE ARE")
             
-            # Search address look-up bar style
-            self.setFont("Helvetica", 9)
-            self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, 210, "TheAiCollective.art")
+            # Draw logo image centered and HUGE (340x340)
+            if os.path.exists("theaicollective_logo.jpg"):
+                self.drawImage("theaicollective_logo.jpg", cx - 170, cy - 170, width=340, height=340)
             
-            # Quote
+            # Quote (Moved Up)
             self.setFont("Helvetica-Oblique", 11)
             self.setFillColor(colors.HexColor("#14F195"))
-            self.drawCentredString(cx, 140, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
-            self.drawCentredString(cx, 122, 'math a work in progress, and truth waiting to be discovered."')
+            self.drawCentredString(cx, 260, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
+            self.drawCentredString(cx, 242, 'math a work in progress, and truth waiting to be discovered."')
             
             # Thank you note
             self.setFont("Helvetica", 9)
