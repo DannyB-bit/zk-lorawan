@@ -86,7 +86,11 @@ class NumberedCanvas(canvas.Canvas):
             
             cx, cy = 297.63, 480
             
-            # Draw network lines representing AI swarm/meditation (BIGGER triangle)
+            # Draw logo image centered INSIDE the big triangle first
+            if os.path.exists("theaicollective_logo.jpg"):
+                self.drawImage("theaicollective_logo.jpg", cx - 75, cy - 85, width=150, height=150)
+            
+            # Draw network lines representing AI swarm/meditation (BIGGER triangle) on top
             self.setStrokeColor(colors.HexColor("#9945FF"))
             self.setLineWidth(1.5)
             self.line(cx, cy + 120, cx - 130, cy - 90)
@@ -94,10 +98,6 @@ class NumberedCanvas(canvas.Canvas):
             self.line(cx, cy + 120, cx + 130, cy - 90)
             self.setStrokeColor(colors.HexColor("#A0AEC0"))
             self.line(cx - 130, cy - 90, cx + 130, cy - 90)
-            
-            # Draw logo image centered INSIDE the big triangle
-            if os.path.exists("theaicollective_logo.jpg"):
-                self.drawImage("theaicollective_logo.jpg", cx - 75, cy - 85, width=150, height=150)
             
             # Draw nodes
             self.setFillColor(colors.HexColor("#14F195"))
