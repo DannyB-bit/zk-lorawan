@@ -922,12 +922,12 @@ async def _demo():
     encoder = LLDACEncoder()
     for i in range(25):
         # Generate structured/padded real proof components
-        proof_a = bytes.fromhex("e90669cc542508b5d0a2ae55ac31a6536faa01b6589a6b597763c8e4db162128")
-        proof_b = bytes.fromhex("2bfc233b7b510fc0601cef51aa5db6aa69b9b0dc9bbf15843b770a44311e3820064b376ac7429557ca11fed1ce7249d5a260aa7db28bc57cccc68ef362517616")
-        proof_c = bytes.fromhex("7f5db42ed73f993610b9296d89a5444dc1f40f06b2b03a579dde9ca7487f8e23")
-        identity_hash = bytes.fromhex("7340a9115677e6b1faec90248ae27b7a94f8067fcf7d5a54034df69626da3708")
-        nullifier_hash = bytes.fromhex("07d01f9518cbe729b68dc48eba185c6a08a5d2a6a75646d69cf79d9157efc81b")
-        attestation_hash = bytes.fromhex("74e8623e16cda398f38ae0f520634f4fa27e52b5fe08afbfb7ef552d379c7318")
+        proof_a = bytes.fromhex("60a428a2d7709ef24fc7ec0d988ff5ccc539e1d8f6fe907ed862cdc02cc9e1ab")
+        proof_b = bytes.fromhex("fdec3e75b276d34d32a5658e48a09137425ae7d0ce2f0d6c4182f00b344d37191b64fcbe1c153dc38c418c04280b65482cf76764251113cff6077158877d5001")
+        proof_c = bytes.fromhex("83615137666a9b5f2bca7b5c0e6f5a35848147fc01164b2f02abdd546a85d7a7")
+        identity_hash = bytes.fromhex("79dc773d5b710f70fb4ce375853e25ad99d021bff5cd58d67c2e8f0032eee01f")
+        nullifier_hash = bytes.fromhex("333d2924f9563337ce7aa25b5c25e315a510c0c510db6219b05fc7c396a7ee2c")
+        attestation_hash = bytes.fromhex("8b8cda973f4e99fb4729d7914dadd85533dea3d4ac45231ae2e72cc9c5c3ca17")
         ciphertext_hash = bytes.fromhex("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122")
         
         # Combine to form proof bytes

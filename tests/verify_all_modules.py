@@ -46,6 +46,10 @@ MODULES = [
         "name": "LoRa Gateway Engine",
         "component": "Gateway Software",
         "script": "gateway/gateway.py",
+        "required_output": [
+            "Chirps verified:  25",
+            "Chirps rejected:  0",
+        ],
     },
 ]
 
@@ -64,9 +68,7 @@ def run_module_test(module: dict, base_dir: str) -> bool:
             capture_output=True, text=True, timeout=30,
             cwd=base_dir
         )
-        # Check for pass indicators in output
         output = result.stdout + result.stderr
-        passed = result.returncode == 0 and "FAIL" not in output.upper().split("PASS")[-1] if "PASS" in output.upper() else result.returncode == 0
 
         if result.returncode != 0:
             print(f"    stderr: {result.stderr[:200]}")
@@ -75,6 +77,14 @@ def run_module_test(module: dict, base_dir: str) -> bool:
         # Print the module's output (indented)
         for line in result.stdout.strip().split('\n'):
             print(f"    {line}")
+
+        missing_markers = [
+            marker for marker in module.get("required_output", [])
+            if marker not in output
+        ]
+        if missing_markers:
+            print(f"    Missing required output marker(s): {', '.join(missing_markers)}")
+            return False
 
         return True
 

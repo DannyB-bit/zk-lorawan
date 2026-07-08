@@ -1,9 +1,9 @@
 use ark_bn254::{Bn254, Fr};
-use ark_ff::{PrimeField, Field};
+use ark_ff::{Field, PrimeField};
 use ark_groth16::{Groth16, PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError, Variable};
-use ark_snark::{SNARK, CircuitSpecificSetupSNARK};
-use ark_std::rand::{Rng, CryptoRng};
+use ark_snark::{CircuitSpecificSetupSNARK, SNARK};
+use ark_std::rand::{CryptoRng, Rng};
 
 /// ZKLoRaCircuit defines the ZK-SNARK circuit for the upgraded ZK-LoRaWAN protocol.
 /// It proves:
@@ -30,9 +30,8 @@ pub struct ZKLoRaCircuit<F: PrimeField> {
 impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
     fn generate_constraints(self, cs: ConstraintSystemRef<F>) -> Result<(), SynthesisError> {
         // Allocate core private witnesses once to ensure mathematical soundness and prevent identity/nullifier spoofing.
-        let private_key_var = cs.new_witness_variable(|| {
-            self.private_key.ok_or(SynthesisError::AssignmentMissing)
-        })?;
+        let private_key_var =
+            cs.new_witness_variable(|| self.private_key.ok_or(SynthesisError::AssignmentMissing))?;
 
         let decryption_key_var = cs.new_witness_variable(|| {
             self.decryption_key.ok_or(SynthesisError::AssignmentMissing)
@@ -43,15 +42,18 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
         })?;
 
         let firmware_hash_witness_var = cs.new_witness_variable(|| {
-            self.firmware_hash_witness.ok_or(SynthesisError::AssignmentMissing)
+            self.firmware_hash_witness
+                .ok_or(SynthesisError::AssignmentMissing)
         })?;
 
         // Helper to enforce MiMC-based hash constraints: outputs = mimc(preimage + salt)
-        let mimc_hash_constraints = |cs: &ConstraintSystemRef<F>, initial_lc: ark_relations::r1cs::LinearCombination<F>, initial_val: Option<F>| -> Result<Variable, SynthesisError> {
+        let mimc_hash_constraints = |cs: &ConstraintSystemRef<F>,
+                                     initial_lc: ark_relations::r1cs::LinearCombination<F>,
+                                     initial_val: Option<F>|
+         -> Result<Variable, SynthesisError> {
             let mut current_val = initial_val;
-            let mut current_var = cs.new_witness_variable(|| {
-                current_val.ok_or(SynthesisError::AssignmentMissing)
-            })?;
+            let mut current_var =
+                cs.new_witness_variable(|| current_val.ok_or(SynthesisError::AssignmentMissing))?;
 
             // Constrain current_var to match the initial preimage + salt combination
             cs.enforce_constraint(current_var.into(), Variable::One.into(), initial_lc)?;
@@ -62,7 +64,7 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
                     tmp += &c;
                     tmp.square()
                 });
-                
+
                 let next_val = current_val.map(|x| {
                     let mut tmp = x;
                     tmp += &c;
@@ -72,17 +74,15 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
                     cube
                 });
 
-                let sq_var = cs.new_witness_variable(|| {
-                    sq_val.ok_or(SynthesisError::AssignmentMissing)
-                })?;
+                let sq_var =
+                    cs.new_witness_variable(|| sq_val.ok_or(SynthesisError::AssignmentMissing))?;
 
-                let next_var = cs.new_witness_variable(|| {
-                    next_val.ok_or(SynthesisError::AssignmentMissing)
-                })?;
+                let next_var =
+                    cs.new_witness_variable(|| next_val.ok_or(SynthesisError::AssignmentMissing))?;
 
                 let mut lc1 = ark_relations::r1cs::LinearCombination::from(current_var);
                 lc1 += (c, Variable::One);
-                
+
                 cs.enforce_constraint(lc1.clone(), lc1.clone(), sq_var.into())?;
                 cs.enforce_constraint(sq_var.into(), lc1, next_var.into())?;
 
@@ -96,20 +96,26 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
         // 1. Balance Owner Identity Verification
         let initial_lc_1 = ark_relations::r1cs::LinearCombination::from(private_key_var);
         let calculated_identity_var = mimc_hash_constraints(&cs, initial_lc_1, self.private_key)?;
-        let identity_hash_var = cs.new_input_variable(|| {
-            self.identity_hash.ok_or(SynthesisError::AssignmentMissing)
-        })?;
-        cs.enforce_constraint(calculated_identity_var.into(), Variable::One.into(), identity_hash_var.into())?;
+        let identity_hash_var =
+            cs.new_input_variable(|| self.identity_hash.ok_or(SynthesisError::AssignmentMissing))?;
+        cs.enforce_constraint(
+            calculated_identity_var.into(),
+            Variable::One.into(),
+            identity_hash_var.into(),
+        )?;
 
         // 2. Nullifier Verification
         let mut initial_lc_2 = ark_relations::r1cs::LinearCombination::from(private_key_var);
         initial_lc_2 += (F::from(9999u64), Variable::One);
         let val_2 = self.private_key.map(|x| x + F::from(9999u64));
         let calculated_nullifier_var = mimc_hash_constraints(&cs, initial_lc_2, val_2)?;
-        let nullifier_hash_var = cs.new_input_variable(|| {
-            self.nullifier_hash.ok_or(SynthesisError::AssignmentMissing)
-        })?;
-        cs.enforce_constraint(calculated_nullifier_var.into(), Variable::One.into(), nullifier_hash_var.into())?;
+        let nullifier_hash_var =
+            cs.new_input_variable(|| self.nullifier_hash.ok_or(SynthesisError::AssignmentMissing))?;
+        cs.enforce_constraint(
+            calculated_nullifier_var.into(),
+            Variable::One.into(),
+            nullifier_hash_var.into(),
+        )?;
 
         // 3. Micro-TEE Attestation Verification
         let mut initial_lc_3 = ark_relations::r1cs::LinearCombination::from(private_key_var);
@@ -120,9 +126,14 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
         };
         let calculated_attestation_var = mimc_hash_constraints(&cs, initial_lc_3, val_3)?;
         let attestation_hash_var = cs.new_input_variable(|| {
-            self.attestation_hash.ok_or(SynthesisError::AssignmentMissing)
+            self.attestation_hash
+                .ok_or(SynthesisError::AssignmentMissing)
         })?;
-        cs.enforce_constraint(calculated_attestation_var.into(), Variable::One.into(), attestation_hash_var.into())?;
+        cs.enforce_constraint(
+            calculated_attestation_var.into(),
+            Variable::One.into(),
+            attestation_hash_var.into(),
+        )?;
 
         // 4. zk-VDE Decryption & Valid Coordinates Verification
         let mut initial_lc_4 = ark_relations::r1cs::LinearCombination::from(decryption_key_var);
@@ -133,9 +144,14 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
         };
         let calculated_ciphertext_var = mimc_hash_constraints(&cs, initial_lc_4, val_4)?;
         let ciphertext_hash_var = cs.new_input_variable(|| {
-            self.ciphertext_hash.ok_or(SynthesisError::AssignmentMissing)
+            self.ciphertext_hash
+                .ok_or(SynthesisError::AssignmentMissing)
         })?;
-        cs.enforce_constraint(calculated_ciphertext_var.into(), Variable::One.into(), ciphertext_hash_var.into())?;
+        cs.enforce_constraint(
+            calculated_ciphertext_var.into(),
+            Variable::One.into(),
+            ciphertext_hash_var.into(),
+        )?;
 
         Ok(())
     }
@@ -184,11 +200,12 @@ pub fn setup_keys<R: Rng + CryptoRng>(
         ciphertext_hash: None,
         round_constants: constants,
     };
-    
+
     Groth16::<Bn254>::setup(empty_circuit, rng)
 }
 
 /// Generates a Groth16 proof for the ZK-LoRa circuit.
+#[allow(clippy::too_many_arguments)]
 pub fn generate_proof<R: Rng + CryptoRng>(
     pk: &ProvingKey<Bn254>,
     private_key: Fr,
@@ -213,7 +230,7 @@ pub fn generate_proof<R: Rng + CryptoRng>(
         ciphertext_hash: Some(ciphertext_hash),
         round_constants: constants,
     };
-    
+
     Groth16::<Bn254>::prove(pk, circuit, rng)
 }
 
@@ -226,6 +243,11 @@ pub fn verify_proof(
     attestation_hash: Fr,
     ciphertext_hash: Fr,
 ) -> Result<bool, SynthesisError> {
-    let public_inputs = vec![identity_hash, nullifier_hash, attestation_hash, ciphertext_hash];
+    let public_inputs = vec![
+        identity_hash,
+        nullifier_hash,
+        attestation_hash,
+        ciphertext_hash,
+    ];
     Groth16::<Bn254>::verify_with_processed_vk(pvk, &public_inputs, proof)
 }
