@@ -29,17 +29,32 @@ pub struct ZKLoRaCircuit<F: PrimeField> {
 
 impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
     fn generate_constraints(self, cs: ConstraintSystemRef<F>) -> Result<(), SynthesisError> {
-        // Helper to enforce MiMC-based hash: output = mimc(input + state)
-        let mimc_hash_constraints = |cs: &ConstraintSystemRef<F>, input_val: Option<F>, salt_val: Option<F>| -> Result<Variable, SynthesisError> {
-            let mut current_val = match (input_val, salt_val) {
-                (Some(in_v), Some(s_v)) => Some(in_v + s_v),
-                (Some(in_v), None) => Some(in_v),
-                _ => None,
-            };
+        // Allocate core private witnesses once to ensure mathematical soundness and prevent identity/nullifier spoofing.
+        let private_key_var = cs.new_witness_variable(|| {
+            self.private_key.ok_or(SynthesisError::AssignmentMissing)
+        })?;
 
+        let decryption_key_var = cs.new_witness_variable(|| {
+            self.decryption_key.ok_or(SynthesisError::AssignmentMissing)
+        })?;
+
+        let coordinate_val_var = cs.new_witness_variable(|| {
+            self.coordinate_val.ok_or(SynthesisError::AssignmentMissing)
+        })?;
+
+        let firmware_hash_witness_var = cs.new_witness_variable(|| {
+            self.firmware_hash_witness.ok_or(SynthesisError::AssignmentMissing)
+        })?;
+
+        // Helper to enforce MiMC-based hash constraints: outputs = mimc(preimage + salt)
+        let mimc_hash_constraints = |cs: &ConstraintSystemRef<F>, initial_lc: ark_relations::r1cs::LinearCombination<F>, initial_val: Option<F>| -> Result<Variable, SynthesisError> {
+            let mut current_val = initial_val;
             let mut current_var = cs.new_witness_variable(|| {
                 current_val.ok_or(SynthesisError::AssignmentMissing)
             })?;
+
+            // Constrain current_var to match the initial preimage + salt combination
+            cs.enforce_constraint(current_var.into(), Variable::One.into(), initial_lc)?;
 
             for &c in &self.round_constants {
                 let sq_val = current_val.map(|x| {
@@ -79,28 +94,44 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
         };
 
         // 1. Balance Owner Identity Verification
-        let calculated_identity_var = mimc_hash_constraints(&cs, self.private_key, None)?;
+        let initial_lc_1 = ark_relations::r1cs::LinearCombination::from(private_key_var);
+        let calculated_identity_var = mimc_hash_constraints(&cs, initial_lc_1, self.private_key)?;
         let identity_hash_var = cs.new_input_variable(|| {
             self.identity_hash.ok_or(SynthesisError::AssignmentMissing)
         })?;
         cs.enforce_constraint(calculated_identity_var.into(), Variable::One.into(), identity_hash_var.into())?;
 
         // 2. Nullifier Verification
-        let calculated_nullifier_var = mimc_hash_constraints(&cs, self.private_key, Some(F::from(9999u64)))?;
+        let mut initial_lc_2 = ark_relations::r1cs::LinearCombination::from(private_key_var);
+        initial_lc_2 += (F::from(9999u64), Variable::One);
+        let val_2 = self.private_key.map(|x| x + F::from(9999u64));
+        let calculated_nullifier_var = mimc_hash_constraints(&cs, initial_lc_2, val_2)?;
         let nullifier_hash_var = cs.new_input_variable(|| {
             self.nullifier_hash.ok_or(SynthesisError::AssignmentMissing)
         })?;
         cs.enforce_constraint(calculated_nullifier_var.into(), Variable::One.into(), nullifier_hash_var.into())?;
 
         // 3. Micro-TEE Attestation Verification
-        let calculated_attestation_var = mimc_hash_constraints(&cs, self.private_key, self.firmware_hash_witness)?;
+        let mut initial_lc_3 = ark_relations::r1cs::LinearCombination::from(private_key_var);
+        initial_lc_3 += (F::one(), firmware_hash_witness_var);
+        let val_3 = match (self.private_key, self.firmware_hash_witness) {
+            (Some(pk), Some(fh)) => Some(pk + fh),
+            _ => None,
+        };
+        let calculated_attestation_var = mimc_hash_constraints(&cs, initial_lc_3, val_3)?;
         let attestation_hash_var = cs.new_input_variable(|| {
             self.attestation_hash.ok_or(SynthesisError::AssignmentMissing)
         })?;
         cs.enforce_constraint(calculated_attestation_var.into(), Variable::One.into(), attestation_hash_var.into())?;
 
         // 4. zk-VDE Decryption & Valid Coordinates Verification
-        let calculated_ciphertext_var = mimc_hash_constraints(&cs, self.decryption_key, self.coordinate_val)?;
+        let mut initial_lc_4 = ark_relations::r1cs::LinearCombination::from(decryption_key_var);
+        initial_lc_4 += (F::one(), coordinate_val_var);
+        let val_4 = match (self.decryption_key, self.coordinate_val) {
+            (Some(dk), Some(cv)) => Some(dk + cv),
+            _ => None,
+        };
+        let calculated_ciphertext_var = mimc_hash_constraints(&cs, initial_lc_4, val_4)?;
         let ciphertext_hash_var = cs.new_input_variable(|| {
             self.ciphertext_hash.ok_or(SynthesisError::AssignmentMissing)
         })?;
