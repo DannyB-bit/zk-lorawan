@@ -25,9 +25,10 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
     keccak,
     system_instruction,
+    pubkey,
 };
 
-declare_id!("ZKLoRa1111111111111111111111111111111111111");
+declare_id!("4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC");
 
 // ============================================================================
 // Protocol Constants
@@ -44,44 +45,65 @@ pub mod zk_lorawan {
     use super::*;
 
     // ========================================================================
-    // MODE A — Single Chirp Verification
+    // deposit_escrow — fund sender escrow account
     // ========================================================================
-    // Client sends 1 chirp, pays 150,000 lamports, gets instant on-chain proof.
-    // Gateway: +100,000 lamports | Treasury: +50,000 lamports
-    // ========================================================================
-    pub fn verify_single(
-        ctx: Context<VerifySingle>,
-        proof_hash: [u8; 32],
-        _payload_hash: [u8; 32],
-        _timestamp: i64,
-    ) -> Result<()> {
-        // Transfer gateway reward
+    pub fn deposit_escrow(ctx: Context<DepositEscrow>, amount: u64) -> Result<()> {
         anchor_lang::solana_program::program::invoke(
             &system_instruction::transfer(
                 &ctx.accounts.sender.key(),
-                &ctx.accounts.gateway.key(),
-                GATEWAY_REWARD_LAMPORTS,
+                &ctx.accounts.escrow.key(),
+                amount,
             ),
             &[
                 ctx.accounts.sender.to_account_info(),
-                ctx.accounts.gateway.to_account_info(),
+                ctx.accounts.escrow.to_account_info(),
                 ctx.accounts.system_program.to_account_info(),
             ],
         )?;
 
-        // Transfer treasury fee
-        anchor_lang::solana_program::program::invoke(
-            &system_instruction::transfer(
-                &ctx.accounts.sender.key(),
-                &ctx.accounts.treasury.key(),
-                PROTOCOL_FEE_LAMPORTS,
-            ),
-            &[
-                ctx.accounts.sender.to_account_info(),
-                ctx.accounts.treasury.to_account_info(),
-                ctx.accounts.system_program.to_account_info(),
-            ],
-        )?;
+        let escrow = &mut ctx.accounts.escrow;
+        escrow.sender = ctx.accounts.sender.key();
+        escrow.balance = escrow.to_account_info().lamports();
+        escrow.bump = ctx.bumps.escrow;
+
+        msg!("Deposited {} lamports into escrow PDA for sender {}", amount, escrow.sender);
+        Ok(())
+    }
+
+    // ========================================================================
+    // MODE A — Single Chirp Verification
+    // ========================================================================
+    pub fn verify_single(
+        ctx: Context<VerifySingle>,
+        sender_key: Pubkey,
+        proof_hash: [u8; 32],
+        _payload_hash: [u8; 32],
+        _timestamp: i64,
+    ) -> Result<()> {
+        let escrow_info = ctx.accounts.escrow.to_account_info();
+        let gateway_info = ctx.accounts.gateway.to_account_info();
+        let treasury_info = ctx.accounts.treasury.to_account_info();
+
+        // Verify ZK proof is non-zero
+        require!(proof_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
+
+        // Check balance
+        let rent_minimum = Rent::get()?.minimum_balance(escrow_info.data_len());
+        let available_balance = escrow_info.lamports().saturating_sub(rent_minimum);
+        require!(available_balance >= TOTAL_FEE_PER_CHIRP, ZKLoRaError::InsufficientEscrowFunding);
+
+        // Perform transfers (debit escrow PDA directly)
+        **escrow_info.try_borrow_mut_lamports()? = escrow_info.lamports()
+            .checked_sub(TOTAL_FEE_PER_CHIRP)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+
+        **gateway_info.try_borrow_mut_lamports()? = gateway_info.lamports()
+            .checked_add(GATEWAY_REWARD_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+
+        **treasury_info.try_borrow_mut_lamports()? = treasury_info.lamports()
+            .checked_add(PROTOCOL_FEE_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
 
         // Update registry
         let registry = &mut ctx.accounts.registry;
@@ -90,7 +112,7 @@ pub mod zk_lorawan {
         registry.total_gateway_rewards += GATEWAY_REWARD_LAMPORTS;
         registry.total_treasury_fees += PROTOCOL_FEE_LAMPORTS;
 
-        msg!("ZK-LoRaWAN [SINGLE] chirp verified");
+        msg!("ZK-LoRaWAN [SINGLE] chirp verified for sender {}", sender_key);
         msg!("  Proof hash:    {:?}...", &proof_hash[..4]);
         msg!("  Gateway:       +{} lamports", GATEWAY_REWARD_LAMPORTS);
         msg!("  Treasury:      +{} lamports", PROTOCOL_FEE_LAMPORTS);
@@ -103,8 +125,6 @@ pub mod zk_lorawan {
     // ========================================================================
 
     // B.1 — Initialize a new batch
-    // Gateway opens a batch PDA. No fees charged yet.
-    // ========================================================================
     pub fn initialize_batch(ctx: Context<InitializeBatch>) -> Result<()> {
         let batch = &mut ctx.accounts.batch;
         batch.gateway = ctx.accounts.gateway.key();
@@ -112,6 +132,7 @@ pub mod zk_lorawan {
         batch.proof_hashes = Vec::new();
         batch.payload_hashes = Vec::new();
         batch.timestamps = Vec::new();
+        batch.senders = Vec::new();
         batch.merkle_root = [0u8; 32];
         batch.is_finalized = false;
         batch.created_at = Clock::get()?.unix_timestamp;
@@ -128,11 +149,9 @@ pub mod zk_lorawan {
     }
 
     // B.2 — Add chirps to the batch
-    // Gateway adds proof hashes. No fees charged yet.
-    // This can be called up to MAX_BATCH_SIZE times.
-    // ========================================================================
     pub fn add_chirp(
         ctx: Context<AddChirp>,
+        sender_key: Pubkey,
         proof_hash: [u8; 32],
         payload_hash: [u8; 32],
         timestamp: i64,
@@ -145,22 +164,20 @@ pub mod zk_lorawan {
             batch.gateway == ctx.accounts.gateway.key(),
             ZKLoRaError::UnauthorizedGateway
         );
+        require!(proof_hash != [0u8; 32], ZKLoRaError::InvalidZeroKnowledgeProof);
 
         batch.proof_hashes.push(proof_hash);
         batch.payload_hashes.push(payload_hash);
         batch.timestamps.push(timestamp);
+        batch.senders.push(sender_key);
         batch.chirp_count += 1;
 
-        msg!("ZK-LoRaWAN [BATCH] #{}: chirp {} added",
-             batch.batch_id, batch.chirp_count);
+        msg!("ZK-LoRaWAN [BATCH] #{}: chirp {} added for sender {}",
+             batch.batch_id, batch.chirp_count, sender_key);
         Ok(())
     }
 
     // B.3 — Submit (finalize) the batch
-    // NOW fees are charged: 150,000 lamports × chirp_count
-    // Gateway gets 100,000 × N, Treasury gets 50,000 × N
-    // Merkle root computed and stored on-chain
-    // ========================================================================
     pub fn submit_batch(ctx: Context<SubmitBatch>) -> Result<()> {
         let batch = &mut ctx.accounts.batch;
 
@@ -173,38 +190,44 @@ pub mod zk_lorawan {
 
         let n = batch.chirp_count as u64;
 
-        // Total fees: per-chirp fee × number of chirps
+        // Total fees
         let total_gateway_reward = GATEWAY_REWARD_LAMPORTS * n;
         let total_treasury_fee = PROTOCOL_FEE_LAMPORTS * n;
         let total_fee = total_gateway_reward + total_treasury_fee;
 
-        // Transfer gateway reward (100,000 × N)
-        anchor_lang::solana_program::program::invoke(
-            &system_instruction::transfer(
-                &ctx.accounts.sender.key(),
-                &ctx.accounts.gateway.key(),
-                total_gateway_reward,
-            ),
-            &[
-                ctx.accounts.sender.to_account_info(),
-                ctx.accounts.gateway.to_account_info(),
-                ctx.accounts.system_program.to_account_info(),
-            ],
-        )?;
+        // Deduct fees from senders' escrow accounts passed in remaining_accounts
+        for &sender in batch.senders.iter() {
+            let (expected_escrow_pda, _bump) = Pubkey::find_program_address(
+                &[b"escrow", sender.as_ref()],
+                ctx.program_id
+            );
 
-        // Transfer treasury fee (40,000 × N)
-        anchor_lang::solana_program::program::invoke(
-            &system_instruction::transfer(
-                &ctx.accounts.sender.key(),
-                &ctx.accounts.treasury.key(),
-                total_treasury_fee,
-            ),
-            &[
-                ctx.accounts.sender.to_account_info(),
-                ctx.accounts.treasury.to_account_info(),
-                ctx.accounts.system_program.to_account_info(),
-            ],
-        )?;
+            let escrow_account_info = ctx.remaining_accounts.iter()
+                .find(|acc| acc.key() == expected_escrow_pda)
+                .ok_or(error!(ZKLoRaError::EscrowAccountMissing))?;
+
+            require_keys_eq!(*escrow_account_info.owner, *ctx.program_id, ZKLoRaError::InvalidEscrowOwner);
+
+            // Check balance
+            let rent_minimum = Rent::get()?.minimum_balance(escrow_account_info.data_len());
+            let available_balance = escrow_account_info.lamports().saturating_sub(rent_minimum);
+            require!(available_balance >= TOTAL_FEE_PER_CHIRP, ZKLoRaError::InsufficientEscrowFunding);
+
+            // Debit from escrow PDA
+            **escrow_account_info.try_borrow_mut_lamports()? = escrow_account_info.lamports()
+                .checked_sub(TOTAL_FEE_PER_CHIRP)
+                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+
+            // Credit to gateway
+            **ctx.accounts.gateway.try_borrow_mut_lamports()? = ctx.accounts.gateway.lamports()
+                .checked_add(GATEWAY_REWARD_LAMPORTS)
+                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+
+            // Credit to treasury
+            **ctx.accounts.treasury.try_borrow_mut_lamports()? = ctx.accounts.treasury.lamports()
+                .checked_add(PROTOCOL_FEE_LAMPORTS)
+                .ok_or(error!(ZKLoRaError::CalculationOverflow))?;
+        }
 
         // Compute Merkle root
         let merkle_root = compute_merkle_root(&batch.proof_hashes);
@@ -225,8 +248,6 @@ pub mod zk_lorawan {
         msg!("  Gateway reward:  {} lamports ({} × {})", total_gateway_reward, GATEWAY_REWARD_LAMPORTS, n);
         msg!("  Treasury fee:    {} lamports ({} × {})", total_treasury_fee, PROTOCOL_FEE_LAMPORTS, n);
         msg!("  Total charged:   {} lamports", total_fee);
-        msg!("  Solana base fee: ~5,000 lamports (paid ONCE, not {} times)", n);
-        msg!("  Savings:         ~{} lamports in base fees", 5_000 * (n - 1));
         Ok(())
     }
 
@@ -363,6 +384,14 @@ pub struct BatchAccumulator {
     pub proof_hashes: Vec<[u8; 32]>,
     pub payload_hashes: Vec<[u8; 32]>,
     pub timestamps: Vec<i64>,
+    pub senders: Vec<Pubkey>,
+}
+
+#[account]
+pub struct EscrowAccount {
+    pub sender: Pubkey,
+    pub balance: u64,
+    pub bump: u8,
 }
 
 // ============================================================================
@@ -379,22 +408,41 @@ pub struct InitializeRegistry<'info> {
         bump,
     )]
     pub registry: Account<'info, ProtocolRegistry>,
-    #[account(mut)]
+    #[account(mut, address = pubkey!("BrqnKE7S8wY8etChZgUx8GGnYuvqdFoZhUAD7PTL5PV3"))]
     pub authority: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
+pub struct DepositEscrow<'info> {
+    #[account(mut)]
+    pub sender: Signer<'info>,
+    #[account(
+        init_if_needed,
+        payer = sender,
+        space = 8 + 32 + 8 + 1,
+        seeds = [b"escrow", sender.key().as_ref()],
+        bump
+    )]
+    pub escrow: Account<'info, EscrowAccount>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(sender_key: Pubkey)]
 pub struct VerifySingle<'info> {
     #[account(mut, seeds = [REGISTRY_SEED], bump)]
     pub registry: Account<'info, ProtocolRegistry>,
+    #[account(
+        mut,
+        seeds = [b"escrow", sender_key.as_ref()],
+        bump,
+    )]
+    pub escrow: Account<'info, EscrowAccount>,
     #[account(mut)]
-    pub sender: Signer<'info>,
-    /// CHECK: Gateway wallet receives reward
-    #[account(mut)]
-    pub gateway: AccountInfo<'info>,
-    /// CHECK: Protocol treasury wallet
-    #[account(mut)]
+    pub gateway: Signer<'info>,
+    /// CHECK: Protocol treasury wallet verified via hardcoded address
+    #[account(mut, address = pubkey!("CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ"))]
     pub treasury: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
 }
@@ -407,7 +455,8 @@ pub struct InitializeBatch<'info> {
         space = 8 + 32 + 8 + 4 + 1 + 8 + 8 + 32
               + 4 + (32 * MAX_BATCH_SIZE)
               + 4 + (32 * MAX_BATCH_SIZE)
-              + 4 + (8 * MAX_BATCH_SIZE),
+              + 4 + (8 * MAX_BATCH_SIZE)
+              + 4 + (32 * MAX_BATCH_SIZE),
         seeds = [BATCH_SEED, gateway.key().as_ref(), &registry.next_batch_id.to_le_bytes()],
         bump,
     )]
@@ -433,12 +482,9 @@ pub struct SubmitBatch<'info> {
     #[account(mut, seeds = [REGISTRY_SEED], bump)]
     pub registry: Account<'info, ProtocolRegistry>,
     #[account(mut)]
-    pub sender: Signer<'info>,
-    /// CHECK: Gateway wallet receives reward
-    #[account(mut)]
-    pub gateway: AccountInfo<'info>,
-    /// CHECK: Protocol treasury wallet
-    #[account(mut)]
+    pub gateway: Signer<'info>,
+    /// CHECK: Protocol treasury wallet verified via hardcoded address
+    #[account(mut, address = pubkey!("CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ"))]
     pub treasury: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
 }
@@ -465,4 +511,14 @@ pub enum ZKLoRaError {
     BatchNotFinalized,
     #[msg("Merkle proof does not match batch root")]
     InvalidMerkleProof,
+    #[msg("Escrow account is not provided in remaining accounts")]
+    EscrowAccountMissing,
+    #[msg("Escrow account is not owned by the program")]
+    InvalidEscrowOwner,
+    #[msg("Numerical calculation overflow")]
+    CalculationOverflow,
+    #[msg("Escrow account lacks sufficient SOL balance")]
+    InsufficientEscrowFunding,
+    #[msg("Zero Knowledge witness verification failed")]
+    InvalidZeroKnowledgeProof,
 }

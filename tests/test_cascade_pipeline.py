@@ -25,8 +25,9 @@ PIPE = 57  # ZK-LoRaWAN payload capacity
 # ============================================================================
 class Level1_Tokenizer:
     def compress(self, data: bytes) -> bytes:
+        import re
         text = data.decode("utf-8")
-        words = text.split()
+        words = [w for w in re.split(r"(\s+)", text) if w]
         # Build vocabulary from the text itself
         vocab = {}
         for w in words:
@@ -63,7 +64,7 @@ class Level1_Tokenizer:
             offset += 1
             tokens.append(vocab[tid])
         
-        return " ".join(tokens).encode("utf-8")
+        return "".join(tokens).encode("utf-8")
 
 
 # ============================================================================
