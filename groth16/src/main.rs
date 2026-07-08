@@ -221,6 +221,71 @@ fn to_solana_g2(p: &ark_bn254::G2Affine) -> [u8; 128] {
 // ============================================================================
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 && args[1] == "print-proof" {
+        let prover = ZKLoRaWANProver::new();
+        let private_key = b"zk-lorawan-test-private-key-2026";
+        let decryption_key = b"zk-lorawan-decryption-key-secret";
+        let coordinate_val = 123456789u64;
+        let firmware_hash = b"enclave-firmware-version-v1.0.2";
+
+        use ark_bn254::Fr;
+        use ark_ff::PrimeField;
+        let private_key_fr = Fr::from_le_bytes_mod_order(private_key);
+        let decryption_key_fr = Fr::from_le_bytes_mod_order(decryption_key);
+        let coordinate_fr = Fr::from(coordinate_val);
+        let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash);
+
+        let identity_hash = circuit::mimc_hash(private_key_fr, None, &prover.constants);
+        let nullifier_hash = circuit::mimc_hash(private_key_fr, Some(Fr::from(9999u64)), &prover.constants);
+        let attestation_hash = circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &prover.constants);
+        let ciphertext_hash = circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &prover.constants);
+
+        let mut rng = rand::thread_rng();
+        let proof = circuit::generate_proof(
+            &prover.proving_key,
+            private_key_fr,
+            decryption_key_fr,
+            coordinate_fr,
+            firmware_hash_fr,
+            identity_hash,
+            nullifier_hash,
+            attestation_hash,
+            ciphertext_hash,
+            prover.constants.clone(),
+            &mut rng,
+        ).expect("Proof generation failed");
+
+        use ark_serialize::CanonicalSerialize;
+        let mut id_hash_bytes = Vec::new();
+        identity_hash.serialize_compressed(&mut id_hash_bytes).unwrap();
+        let mut null_hash_bytes = Vec::new();
+        nullifier_hash.serialize_compressed(&mut null_hash_bytes).unwrap();
+        let mut att_hash_bytes = Vec::new();
+        attestation_hash.serialize_compressed(&mut att_hash_bytes).unwrap();
+        let mut cipher_hash_bytes = Vec::new();
+        ciphertext_hash.serialize_compressed(&mut cipher_hash_bytes).unwrap();
+
+        let mut proof_a_compressed = Vec::new();
+        proof.a.serialize_compressed(&mut proof_a_compressed).unwrap();
+        let mut proof_b_compressed = Vec::new();
+        proof.b.serialize_compressed(&mut proof_b_compressed).unwrap();
+        let mut proof_c_compressed = Vec::new();
+        proof.c.serialize_compressed(&mut proof_c_compressed).unwrap();
+
+        println!("identity_hash: {}", hex::encode(id_hash_bytes));
+        println!("nullifier_hash: {}", hex::encode(null_hash_bytes));
+        println!("attestation_hash: {}", hex::encode(att_hash_bytes));
+        println!("ciphertext_hash: {}", hex::encode(cipher_hash_bytes));
+        println!("solana_proof_a: {}", hex::encode(to_solana_g1(&proof.a)));
+        println!("solana_proof_b: {}", hex::encode(to_solana_g2(&proof.b)));
+        println!("solana_proof_c: {}", hex::encode(to_solana_g1(&proof.c)));
+        println!("compressed_proof_a: {}", hex::encode(proof_a_compressed));
+        println!("compressed_proof_b: {}", hex::encode(proof_b_compressed));
+        println!("compressed_proof_c: {}", hex::encode(proof_c_compressed));
+
+        std::process::exit(0);
+    }
+
     if args.len() > 1 && args[1] == "print-vk" {
         let prover = ZKLoRaWANProver::new();
         let vk = &prover.verifying_key;

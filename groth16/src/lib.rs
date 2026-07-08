@@ -112,10 +112,22 @@ pub extern "C" fn verify_zk_proof_raw(
         c: proof_c,
     };
 
-    let identity_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&identity_bytes);
-    let nullifier_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&nullifier_bytes);
-    let attestation_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&attestation_bytes);
-    let ciphertext_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&ciphertext_bytes);
+    let identity_hash_fr = match ark_bn254::Fr::deserialize_compressed(&*identity_bytes) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+    let nullifier_hash_fr = match ark_bn254::Fr::deserialize_compressed(&*nullifier_bytes) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+    let attestation_hash_fr = match ark_bn254::Fr::deserialize_compressed(&*attestation_bytes) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+    let ciphertext_hash_fr = match ark_bn254::Fr::deserialize_compressed(&*ciphertext_bytes) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
 
     // Setup keys deterministically once and cache the prepared VK
     let prepared_vk = match PREPARED_VK.get_or_init(|| {
