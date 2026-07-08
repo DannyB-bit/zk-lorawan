@@ -603,7 +603,9 @@ class SolanaSubmitter:
 
             # Decompress proof coordinates if they are 32/64/32 bytes compressed points
             decompressed_coords = None
+            is_compressed = False
             if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
+                is_compressed = True
                 verifier = ZKVerifier()
                 decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
 
@@ -611,6 +613,8 @@ class SolanaSubmitter:
                 proof_a_list = list(decompressed_coords[0])
                 proof_b_list = list(decompressed_coords[1])
                 proof_c_list = list(decompressed_coords[2])
+            elif is_compressed:
+                raise ValueError("Failed to decompress compressed proof coordinates. Refusing submission to prevent fee burning on-chain.")
             else:
                 proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
                 proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
@@ -687,7 +691,9 @@ class SolanaSubmitter:
             for idx, chirp in enumerate(batch.chirps):
                 # Decompress proof coordinates if they are 32/64/32 bytes compressed points
                 decompressed_coords = None
+                is_compressed = False
                 if chirp.proof_a and len(chirp.proof_a) == 32 and len(chirp.proof_b) == 64 and len(chirp.proof_c) == 32:
+                    is_compressed = True
                     verifier = ZKVerifier()
                     decompressed_coords = verifier.decompress_to_solana_coords(chirp.proof_a, chirp.proof_b, chirp.proof_c)
 
@@ -695,6 +701,8 @@ class SolanaSubmitter:
                     proof_a_list = list(decompressed_coords[0])
                     proof_b_list = list(decompressed_coords[1])
                     proof_c_list = list(decompressed_coords[2])
+                elif is_compressed:
+                    raise ValueError("Failed to decompress compressed proof coordinates. Refusing submission to prevent fee burning on-chain.")
                 else:
                     proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
                     proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
