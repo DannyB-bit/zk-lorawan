@@ -322,7 +322,7 @@ def create_whitepaper_pdf():
         story.append(Image("zk_lorawan_logo.png", width=120, height=120))
         
     story.append(Spacer(1, 30))
-    story.append(Paragraph("<para align=center><font size=18 color='#1A202C'><b>ZK-LoRaWAN: ZERO-KNOWLEDGE PROOFS FOR PRIVATE LORAWAN MESH NETWORKS</b></font><br/><br/><font size=11 color='#718096'><i>A Solana-Style ZK-Compressed Shielded Pool and Lossless Proof Compression Layer for LoRaWAN Communications</i></font></para>", normal_style))
+    story.append(Paragraph("<para align=center><font size=18 color='#1A202C'><b>ZK-LoRaWAN: ZERO-KNOWLEDGE PROOFS FOR PRIVATE LORAWAN MESH NETWORKS</b></font><br/><br/><font size=11 color='#718096'><i>A Solana-Style ZK-Compressed Shielded Pool and Lossless Proof Compression Layer (Language-U Protocol)</i></font></para>", normal_style))
     story.append(PageBreak())
 
     # ================= PAGE 3: EXECUTIVE SUMMARY =================
@@ -407,6 +407,14 @@ def create_whitepaper_pdf():
     story.append(Spacer(1, 10))
     story.append(get_system_topology_diagram())
     story.append(Spacer(1, 10))
+    story.append(Paragraph("3.1 6D Cuneiform-U Semantic Coordinates", h2_style))
+    story.append(Paragraph(
+        "Under Component 02 of the Language-U protocol, edge nodes compress message intent into a 6-axis semantic coordinate "
+        "system representing: Domain, Subdomain, Modality, Polarity, Strength, and Depth. These coordinates are committed "
+        "using Pedersen commitments (C = g^v * h^r mod BN254) to enable private gating verification at the RF layer without "
+        "disclosing the node's exact data values or geographical location.", normal_style
+    ))
+    story.append(Spacer(1, 5))
     story.append(Paragraph("Layer 1: Elliptic Curve Identity Derivation", h2_style))
     story.append(Paragraph(
         "ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair "
@@ -588,6 +596,14 @@ def create_whitepaper_pdf():
         "To understand how ZK-LoRaWAN scale-out works, it is essential to clarify the division of labor between the Prover "
         "(the edge node/device) and the Verifier (the Solana validator network):", normal_style
     ))
+    story.append(Paragraph("8.1 microByte JIT Verifying Key Compression", h2_style))
+    story.append(Paragraph(
+        "For flash-constrained edge nodes (such as ESP32 microcontrollers), storing standard Groth16 verifying keys (~2-4 KB) "
+        "wastes precious storage. Under Component 19, ZK-LoRaWAN implements microByte JIT VK compression. Verifying keys are "
+        "compressed into compact seeds (<1 KB) and dynamically inflated in-memory on the edge device during verification time, "
+        "optimizing system storage constraints.", normal_style
+    ))
+    story.append(Spacer(1, 5))
     story.append(Paragraph(
         "• <b>Proving on the Edge (The Client):</b> The sender device (e.g., a low-power ESP32 or Raspberry Pi) generates the ZK-SNARK "
         "proof locally. Historically, this required massive computing power. Today, thanks to modern elliptic curves (BN254), "
@@ -761,7 +777,7 @@ def create_whitepaper_pdf():
     # ================= PAGE 16: CRYPTOGRAPHIC AUDIT =================
     story.append(Paragraph("14. Cryptographic Audit & Vuln Mitigation", h1_style))
     story.append(Paragraph(
-        "To achieve high-assurance, Zcash-grade security, we audit the underlying mathematics, curves, and hardware "
+        "To achieve high-assurance, production-grade security, we audit the underlying mathematics, curves, and hardware "
         "implementations of our zero-knowledge systems:", normal_style
     ))
     story.append(Paragraph(
@@ -814,6 +830,10 @@ def create_whitepaper_pdf():
     story.append(Paragraph(
         "• <b>On-Chain Reputation System:</b> Store ZK-proven node credentials as shielded Solana transactions to maintain "
         "reputation scores without leaking node identities.", bullet_style
+    ))
+    story.append(Paragraph(
+        "• <b>Gateway Peer Reputation:</b> Integrate peer reputation score updates using RCRA Resonance Alignment (exponential "
+        "moving average updates) committed via Pedersen range proofs on-chain.", bullet_style
     ))
     story.append(Paragraph(
         "• <b>Solana Micropayment Integration:</b> Enable automated, real-time micropayment rewards for valid mesh routing "

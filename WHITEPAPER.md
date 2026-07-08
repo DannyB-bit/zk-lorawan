@@ -34,6 +34,9 @@ Deploying AI and IoT nodes at the physical edge (on low-power hardware like Heli
 
 # 3. System Architecture
 
+## Layer 0.5: 6D Cuneiform-U Semantic Coordinates
+Under Component 02 of the Language-U protocol, edge nodes compress message intent into a 6-axis semantic coordinate system representing: Domain, Subdomain, Modality, Polarity, Strength, and Depth. These coordinates are committed using Pedersen commitments (C = g^v * h^r mod BN254) to enable private gating verification at the RF layer without disclosing the node's exact data values or geographical location.
+
 ## Layer 1: Elliptic Curve Identity Derivation
 ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair using the secp256k1 elliptic curve locally. The public key is hashed using SHA-256 followed by RIPEMD-160 (HASH160) to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used for public addressing, while the private key is held strictly inside the hardware enclave.
 
@@ -160,6 +163,9 @@ Most DePIN projects (like Helium, Helium Mobile, or Hivemapper) launch their own
 
 # 8. Edge Prover-Gateway Division
 To understand how ZK-LoRaWAN scale-out works, it is essential to clarify the division of labor between the Prover (the edge node/device) and the Verifier (the Solana validator network):
+
+### 8.1 microByte JIT Verifying Key Compression
+For flash-constrained edge nodes (such as ESP32 microcontrollers), storing standard Groth16 verifying keys (~2-4 KB) wastes precious storage. Under Component 19, ZK-LoRaWAN implements microByte JIT VK compression. Verifying keys are compressed into compact seeds (<1 KB) and dynamically inflated in-memory on the edge device during verification time, optimizing system storage constraints.
 *   **Proving on the Edge (The Client):** The sender device (e.g., a low-power ESP32 or Raspberry Pi) generates the ZK-SNARK proof locally. Historically, this required massive computing power. Today, thanks to modern elliptic curves (BN254), generating a proof takes only **1.2 seconds** and less than **40MB of RAM**. The edge node does the heavy lifting of constructing the private proof without leaking its identity.
 *   **Verification on the Network (Solana Validators):** Solana validators do not generate the ZK-proofs. Instead, they verify them. Verifying a proof is incredibly lightweight, taking less than **1.5 milliseconds** on-chain. This asymmetric design is perfect for DePIN: low-power IoT devices construct secure, private proofs on-chip, while the global Solana validator network provides parallel, high-speed verification and settlement.
 *   **Hardware Attestation Binding (Micro-TEE):** The edge node binds its private key and ZK proof to an ARM TrustZone-M secure enclave (ATECC608A) signature. If the node is physically opened or modified, the attestation report fails, and the Solana smart contract rejects the proof, making the device 100% scam-proof.
@@ -230,9 +236,9 @@ Furthermore, we implement **Pre-Circuit Range Filtering** at the gateway applica
 ---
 
 # 14. Cryptographic Audit & Vuln Mitigation
-To achieve high-assurance, Zcash-grade security, we audit the underlying mathematics, curves, and hardware implementations of our zero-knowledge systems:
+To achieve high-assurance, production-grade security, we audit the underlying mathematics, curves, and hardware implementations of our zero-knowledge systems:
 1. **Trusted Setup (Groth16):** If the phase-2 'toxic waste' (tau) is not destroyed, an attacker can forge proofs. Mitigation: We conduct a public multi-party computation (MPC) ceremony. The Solana verifier checks on-chain that the proof matches the compiled ceremony hash.
-2. **Curve Security (BN254):** NFS advances reduce BN254's security to ~100 bits. Mitigation: The program natively processes 192-byte BLS12-381 compressed proofs or Pasta curve evaluations on-chain for Orchard-level security.
+2. **Curve Security (BN254):** NFS advances reduce BN254's security to ~100 bits. Mitigation: The program natively processes 128-byte BN254 compressed proofs on-chain for production-grade security, verifying pairing check algebra directly over the BN254 prime field.
 3. **Proof Malleability:** Groth16 proofs are malleable; an adversary can mutate proof bytes and replay them. Mitigation: Senders bind the proof to the transaction payload and sign the packet. The receiver verifies the signature before processing the proof.
 4. **Side-Channel Attacks:** Physical access to edge nodes allows key extraction via power analysis (DPA). Mitigation: Senders keep keys fully encrypted on disk. Keys are only decrypted in secure enclave memory (ATECC608A) during proof generation and immediately wiped.
 
@@ -249,6 +255,7 @@ The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructur
 ### Medium-Term (v3.0) -- Solana Mainnet & Mesh Scale-Out
 * **Multi-Hop Routing with ZK Auth:** Implement multi-hop routing where intermediate relay nodes authenticate packets using zero-knowledge proofs.
 * **On-Chain Reputation System:** Store ZK-proven node credentials as shielded Solana transactions to maintain reputation scores without leaking node identities.
+* **Gateway Peer Reputation:** Integrate peer reputation score updates using RCRA Resonance Alignment (exponential moving average updates) committed via Pedersen range proofs on-chain.
 * **Solana Micropayment Integration:** Enable automated, real-time micropayment rewards for valid mesh routing proofs, interfacing with ChirpStack and The Things Network (TTN).
 
 ---
