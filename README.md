@@ -1,4 +1,6 @@
 # ZK-LoRaWAN
+![ZK-LoRaWAN Logo](zk_lorawan_logo.png)
+
 **Zero-Knowledge Privacy, Semantic Compression, & Batch Settlement Layer for Solana DePIN**
 
 [![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
