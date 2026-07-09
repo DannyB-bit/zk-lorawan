@@ -20,6 +20,7 @@ pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000; // treasury per chirp
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000; // gateway per chirp
 pub const TOTAL_FEE_PER_CHIRP: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MAX_BATCH_SIZE: usize = 100;
+pub const MERKLE_DEPTH: usize = 10; // 2^10 = 1,024 leaves; fits in Solana 1232-byte tx
 pub const BATCH_SEED: &[u8] = b"zk-lorawan-batch";
 pub const REGISTRY_SEED: &[u8] = b"zk-lorawan-registry";
 #[cfg(feature = "integration-test")]
@@ -60,8 +61,8 @@ pub mod zk_lorawan {
         let shielded_pool = &mut ctx.accounts.shielded_pool;
 
         let next_index = shielded_pool.next_index;
-        // Enforce max depth index limit (2^16 = 65,536 leaves)
-        require!(next_index < 65536, ZKLoRaError::CalculationOverflow);
+        // Enforce max depth index limit (2^MERKLE_DEPTH = 1,024 leaves)
+        require!(next_index < (1u64 << MERKLE_DEPTH as u64), ZKLoRaError::CalculationOverflow);
 
         let new_root =
             insert_leaf_on_chain(&mut shielded_pool.filled_subtrees, next_index, leaf_hash);
@@ -111,7 +112,7 @@ pub mod zk_lorawan {
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
         require!(
             (leaf_index as u64) < ctx.accounts.shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -210,7 +211,7 @@ pub mod zk_lorawan {
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
         require!(
             (leaf_index as u64) < shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -347,7 +348,7 @@ pub mod zk_lorawan {
         );
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
         require!(
             (leaf_index as u64) < ctx.accounts.shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -651,7 +652,7 @@ pub mod zk_lorawan {
         }
 
         // Upgrade Pool space to 900 if smaller
-        let pool_target_size = 900;
+        let pool_target_size = 708;
         if pool_info.data_len() < pool_target_size {
             // Read old pool data: skip Anchor discriminator (first 8 bytes)
             let mut old_data_slice = &pool_info.data.borrow()[8..];
@@ -676,7 +677,7 @@ pub mod zk_lorawan {
             pool_info.realloc(pool_target_size, false)?;
 
             // Initialize subtrees & roots history
-            let mut filled_subtrees = [[0u8; 32]; 16];
+            let mut filled_subtrees = [[0u8; 32]; MERKLE_DEPTH];
             filled_subtrees[0] = old_pool.merkle_root;
 
             let mut roots_history = [[0u8; 32]; 8];
@@ -698,7 +699,7 @@ pub mod zk_lorawan {
             data_borrow[..8].copy_from_slice(&ShieldedEscrowPool::DISCRIMINATOR);
             let mut writer = &mut data_borrow[8..];
             new_pool.serialize(&mut writer)?;
-            msg!("Shielded pool migrated to 900 bytes");
+            msg!("Shielded pool migrated to 708 bytes");
         }
 
         Ok(())
@@ -805,14 +806,14 @@ fn get_zero_hash(level: usize) -> [u8; 32] {
 }
 
 fn insert_leaf_on_chain(
-    filled_subtrees: &mut [[u8; 32]; 16],
+    filled_subtrees: &mut [[u8; 32]; MERKLE_DEPTH],
     next_index: u64,
     leaf: [u8; 32],
 ) -> [u8; 32] {
     let mut current_level_hash = leaf;
     let mut index = next_index;
 
-    for level in 0..16 {
+    for level in 0..MERKLE_DEPTH {
         if index % 2 == 0 {
             filled_subtrees[level] = current_level_hash;
             let zero_hash = get_zero_hash(level);
@@ -1127,7 +1128,7 @@ pub struct ShieldedEscrowPool {
     pub merkle_root: [u8; 32],
     pub last_updated: i64,
     pub next_index: u64,
-    pub filled_subtrees: [[u8; 32]; 16],
+    pub filled_subtrees: [[u8; 32]; MERKLE_DEPTH],
     pub roots_history: [[u8; 32]; 8],
     pub history_index: u64,
     pub bump: u8,
@@ -1165,7 +1166,7 @@ pub struct DepositShielded<'info> {
     #[account(
         init_if_needed,
         payer = sender,
-        space = 900, // 8 + 8 + 32 + 8 + 8 + 16 * 32 + 8 * 32 + 8 + 1
+        space = 708, // 8 + 8 + 32 + 8 + 8 + 10 * 32 + 8 * 32 + 8 + 1
         seeds = [b"shielded-pool"],
         bump
     )]

@@ -19,7 +19,7 @@ function buildOnChainMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] 
   let index = leafIndex;
   let currentLevel = [...leaves];
 
-  for (let level = 0; level < 16; level++) {
+  for (let level = 0; level < 10; level++) {
     let nextLevel: Buffer[] = [];
     const zeroHash = getZeroHash(level);
 
@@ -195,7 +195,7 @@ describe("zk_lorawan", () => {
 
     // Compute the expected root after index 0 insertion
     let current = singleZkVdeProofHash;
-    for (let level = 0; level < 16; level++) {
+    for (let level = 0; level < 10; level++) {
       current = Buffer.from(keccak_256(Buffer.concat([current, getZeroHash(level)])));
     }
     assert.deepEqual(poolAccount.merkleRoot, Array.from(current));
@@ -227,7 +227,7 @@ describe("zk_lorawan", () => {
     const nullifierRent = await provider.connection.getMinimumBalanceForRentExemption(8 + 32 + 8);
 
     // Compute Merkle proof for index 0 (all siblings are zero hashes)
-    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
 
     // Call verify_single
     await program.methods
@@ -352,7 +352,7 @@ describe("zk_lorawan", () => {
         .rpc();
     }
 
-    // Compute Merkle proof for each leaf in the 16-depth pool tree
+    // Compute Merkle proof for each leaf in the 10-depth pool tree
     const proof1 = buildOnChainMerkleProof(allLeaves, 1);
     const proof2 = buildOnChainMerkleProof(allLeaves, 2);
     const proof3 = buildOnChainMerkleProof(allLeaves, 3);
