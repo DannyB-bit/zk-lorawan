@@ -1464,7 +1464,7 @@ pub struct DepositShielded<'info> {
     #[account(
         init_if_needed,
         payer = sender,
-        space = 708, // 8 + 8 + 32 + 8 + 8 + 10 * 32 + 8 * 32 + 8 + 1
+        space = 900, // 8 + 8 + 32 + 8 + 8 + 16 * 32 + 8 * 32 + 8 + 1
         seeds = [b"shielded-pool"],
         bump
     )]
@@ -1599,7 +1599,7 @@ pub struct InitializeProofContext<'info> {
     #[account(
         init,
         payer = gateway,
-        space = 887, // 8 + 32 + 64 + 128 + 64 + 256 + 320 + 4 + 1 + 1 + 8 + 1
+        space = 1150, // 8 + 32 + 64 + 128 + 64 + 256 + 512 + 4 + 1 + 1 + 8 + 1
         seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
         bump,
     )]
