@@ -133,8 +133,8 @@ describe("zk_lorawan", () => {
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
 
-    const generateProof = (privKey: string, decKey: string, coord: number, fwHash: string, gwHex: string) => {
-      const cmd = `"${proverPath}" generate ${privKey} ${decKey} ${coord} ${fwHash} ${gwHex}`;
+    const generateProof = (privKey: string, decKey: string, coord: number, fwHash: string, gwHex: string, depositValue: number = 150000) => {
+      const cmd = `"${proverPath}" generate ${privKey} ${decKey} ${coord} ${fwHash} ${gwHex} ${depositValue}`;
       const stdout = execSync(cmd).toString();
       return JSON.parse(stdout);
     };
