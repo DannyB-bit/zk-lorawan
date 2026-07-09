@@ -7,7 +7,7 @@
 
 [![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
 [![Zero-Knowledge](https://img.shields.io/badge/ZK--SNARKs-Groth16-blue?style=flat-square)](https://arkworks.rs)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green?style=flat-square)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
 
 > *"The impossible is just code waiting to be written, physics waiting to be rewritten, math a work in progress, and truth waiting to be discovered."* — The Universal Truth
 
@@ -198,4 +198,4 @@ Developed by **TheAiCollective.art**:
 *   **astronautshe.com** — Embedded systems and hardware lead.
 *   **DevsOne** — AI agentic systems engineering.
 
-Licensed under the **Apache License 2.0** — see [LICENSE](./LICENSE) for details.
+Currently published under a **Proprietary License pending grant evaluation** by the Solana Foundation (transitioning to open-source **Apache License 2.0** upon grant approval) — see [LICENSE](./LICENSE) for details.

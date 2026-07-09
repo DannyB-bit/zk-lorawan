@@ -26,28 +26,20 @@ Frame Serialization Structure:
 Total Frame Size: 255 bytes (Maximum LoRa MTU)
 """
 
+import sys
+import os
+
+# Ensure the root folder is in the path for importing components
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import struct
 import hashlib
 from typing import List, Tuple
 
-# Import ZK-LoRaWAN components from parent path
-try:
-    from semantic_codec.semantic_codec import SemanticCodec
-    from proof_compression.lld_ac_encoder import LLDACEncoder
-    from fec.xor_fec import XorFEC
-    from semantic_gating.cuneiform_coords import CuneiformCoordinate
-except ImportError:
-    # Fallback to local mocks if packages are not in path
-    class SemanticCodec:
-        def encode(self, readings): return b'\x00' * 57
-    class LLDACEncoder:
-        def encode(self, proof): return proof
-    class XorFEC:
-        @staticmethod
-        def encode(data, parities): return data + b'\x00' * parities
-    class CuneiformCoordinate:
-        def __init__(self, *args): pass
-        def serialize(self): return b'\x00' * 6
+from semantic_codec.semantic_codec import SemanticCodec
+from proof_compression.lld_ac_encoder import LLDACEncoder
+from fec.xor_fec import XorFEC
+from semantic_gating.range_proof import CuneiformCoordinate
 
 
 class ZKLoRaWANDeviceSDK:
@@ -58,7 +50,7 @@ class ZKLoRaWANDeviceSDK:
     
     def __init__(self):
         self.codec = SemanticCodec()
-        self.fec = XorFEC()
+        self.fec = XorFEC(block_size=16, group_size=15)
         self.proof_compressor = LLDACEncoder()
 
     def build_frame(
@@ -116,10 +108,12 @@ class ZKLoRaWANDeviceSDK:
         core_data = header + coords_bytes + receiver_tag + compressed_proof + semantic_payload
         assert len(core_data) == 234, f"Core data size mismatch: {len(core_data)}"
 
-        # 6. Apply XOR-FEC Parity protection (21 bytes)
-        # Protects the entire frame, allowing recovery of corrupted radio fragments
-        fec_frame = self.fec.encode(core_data, parities=21)
-        assert len(fec_frame) == 255, f"Final frame size mismatch: {len(fec_frame)}"
+        # 6. Apply XOR-FEC Parity protection (Real implementation)
+        # We configure self.fec with block_size=16, group_size=15 so it encodes 234 bytes into 15 blocks
+        # producing exactly one 16-byte parity block and a 4-byte checksum (260 bytes total).
+        padded, parity_blocks, _, checksum = self.fec.encode(core_data)
+        fec_frame = padded + b"".join(parity_blocks) + checksum
+        assert len(fec_frame) == 260, f"Final frame size mismatch: {len(fec_frame)}"
 
         return fec_frame
 
@@ -155,15 +149,15 @@ if __name__ == "__main__":
     # Build the binary packet
     try:
         frame = sdk.build_frame(readings, coords, receiver_tag, fake_proof)
-        print("  ✅ LoRa frame successfully built")
+        print("  [OK] LoRa frame successfully built")
         print(f"     Frame size: {len(frame)} bytes")
         print(f"     Header hex: {frame[:3].hex()}")
         print(f"     Coords hex: {frame[3:9].hex()}")
         print(f"     Tag hex:    {frame[9:17].hex().upper()}")
         print(f"     FEC bytes:  {len(frame[234:])} bytes")
         print()
-        print("  🎉 Device SDK component verified successfully!")
+        print("  [SUCCESS] Device SDK component verified successfully!")
     except Exception as e:
-        print(f"  ❌ SDK build failed: {e}")
+        print(f"  [ERROR] SDK build failed: {e}")
         import sys
         sys.exit(1)

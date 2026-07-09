@@ -144,9 +144,7 @@ class XorFEC:
         check_data = b''.join(blocks) + b''.join(parity_blocks)
         expected_checksum = hashlib.sha256(check_data).digest()[:4]
         if checksum != expected_checksum:
-            # Checksum may not match if reconstruction was needed,
-            # recompute on the reconstructed data
-            pass
+            raise ValueError("XOR-FEC checksum verification failed: integrity check mismatch after reconstruction")
 
         return reconstructed
 
