@@ -809,7 +809,7 @@ describe("zk_lorawan", () => {
     if (!options.skipChunk2) {
       let merkleProofBuf = Buffer.concat(merkleProof.map(p => Buffer.from(p)));
       if (options.corruptChunk2) {
-        merkleProofBuf = Buffer.alloc(320, 0xDE); // bad siblings
+        merkleProofBuf = Buffer.alloc(512, 0xDE); // bad siblings
       }
       const leafIndexBuf = Buffer.alloc(4);
       leafIndexBuf.writeUInt32LE(leafIndex, 0);
@@ -867,7 +867,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
 
     const nonce = new anchor.BN(Date.now() + 1);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -959,7 +959,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -1043,7 +1043,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -1111,7 +1111,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -1182,7 +1182,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -1251,7 +1251,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
