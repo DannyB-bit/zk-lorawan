@@ -4,6 +4,7 @@ import { assert } from "chai";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import { keccak_256 } from "@noble/hashes/sha3";
+import { execSync } from "child_process";
 
 function buildMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
   let proof: Buffer[] = [];
@@ -64,6 +65,9 @@ describe("zk_lorawan", () => {
     program.programId
   );
 
+  let singleChirpProof: any;
+  let batchChirpProofs: any[] = [];
+
   before(async () => {
     // Airdrop SOL to sender and gateway to cover transaction fees and rent
     const signature1 = await provider.connection.requestAirdrop(
@@ -89,6 +93,35 @@ describe("zk_lorawan", () => {
       2 * anchor.web3.LAMPORTS_PER_SOL
     );
     await provider.connection.confirmTransaction(signature4);
+
+    // Generate single chirp proof dynamically for gateway key
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    
+    const generateProof = (privKey: string, decKey: string, coord: number, fwHash: string, gwHex: string) => {
+      const cmd = `"${proverPath}" generate ${privKey} ${decKey} ${coord} ${fwHash} ${gwHex}`;
+      const stdout = execSync(cmd).toString();
+      return JSON.parse(stdout);
+    };
+
+    singleChirpProof = generateProof(
+      "0000000000000000000000000000000000000000000000000000000000000001",
+      "0000000000000000000000000000000000000000000000000000000000000002",
+      123456789,
+      "0000000000000000000000000000000000000000000000000000000000000003",
+      gatewayHex
+    );
+
+    // Generate 3 unique proofs for batch
+    for (let i = 1; i <= 3; i++) {
+      batchChirpProofs.push(generateProof(
+        `000000000000000000000000000000000000000000000000000000000000000${i}`,
+        "0000000000000000000000000000000000000000000000000000000000000002",
+        123456789,
+        "0000000000000000000000000000000000000000000000000000000000000003",
+        gatewayHex
+      ));
+    }
   });
 
   it("Initializes the global registry", async () => {
@@ -109,7 +142,8 @@ describe("zk_lorawan", () => {
 
   it("Deposits SOL into the Shared Shielded Pool", async () => {
     const amount = new anchor.BN(2 * anchor.web3.LAMPORTS_PER_SOL);
-    const dummyLeafHash = Array.from(crypto.randomBytes(32));
+    const singleZkVdeProofHash = Buffer.from(singleChirpProof.identity_hash, "hex");
+    const dummyLeafHash = Array.from(singleZkVdeProofHash);
 
     await program.methods
       .depositShielded(amount, dummyLeafHash)
@@ -127,16 +161,16 @@ describe("zk_lorawan", () => {
   });
 
   it("Performs single shielded chirp verification (MODE A)", async () => {
-    const nullifierHash = Buffer.from("0e87a087cacb48b6a71b7294a792f1bc2b7d5a1c26068b6bdbfae7040135ac10", "hex");
-    const attestationHash = Buffer.from("058bdd11761b4da4840596809626fac60c63b93e350833d98e54b20dbc59cc00", "hex");
-    const zkVdeProofHash = Buffer.from("7dccb7b8d04f679b68efe81023118733aafa4d79b06b2784e69dd23206f6bd2a", "hex");
-    const ciphertextHash = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
+    const nullifierHash = Buffer.from(singleChirpProof.nullifier_hash, "hex");
+    const attestationHash = Buffer.from(singleChirpProof.attestation_hash, "hex");
+    const zkVdeProofHash = Buffer.from(singleChirpProof.identity_hash, "hex");
+    const ciphertextHash = Buffer.from(singleChirpProof.ciphertext_hash, "hex");
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
     // Real, mathematically verified Groth16 proof coordinates
-    const proofA = Buffer.from("2c30ce03531f45efcf0644e4faf5a72aa2f4bd6d5b46d0ef32db3960c89ae73202b55ea2408aa4536db4fa19902a3ef6baf923511f86b2338f3ff5bf9f96e2ab", "hex");
-    const proofB = Buffer.from("030204527afed1183d759d41897faa48e72bfd72cea5c93e7bb4733126220cd4142c90bbab1c638ca064dcfdb550927941b85f9b0f6654bcc20126ab7ca13278095faa0544f10cb0190b7106f88774253f5b0a8381c55646940726e6ec486f7f04190fbfd32a91cf19db0f1425f97aed6b0f62d4cd563d60c92a90da3dd3acc9", "hex");
-    const proofC = Buffer.from("0b3726f4e09f5d496be9229cedc33cddab4a97020016eec5b65843643febfecb2028447c13d606c2b5735f07d3e02feb4e145d77645c65b5114f2d3659e511f2", "hex");
+    const proofA = Buffer.from(singleChirpProof.proof_a, "hex");
+    const proofB = Buffer.from(singleChirpProof.proof_b, "hex");
+    const proofC = Buffer.from(singleChirpProof.proof_c, "hex");
 
     // Find PDA for nullifier record
     const [nullifierRecordPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -159,7 +193,9 @@ describe("zk_lorawan", () => {
         Array.from(attestationHash),
         Array.from(zkVdeProofHash),
         Array.from(ciphertextHash),
-        timestamp
+        timestamp,
+        [],
+        0
       )
       .accounts({
         registry: registryPda,
@@ -220,31 +256,53 @@ describe("zk_lorawan", () => {
 
     // Add 3 chirps
     // Define 3 real unique Groth16 proofs and hashes
-    const proofA1 = Buffer.from("1b72721b8a7280f80ba37d195d96cdc05ca83f9b87727c4ea371102a6b0be8380023cd8fa1103882eabb917c72707f410af6b8c5e5bc44b9e9ccb2184a44314d", "hex");
-    const proofB1 = Buffer.from("053926fd84cc33da661968ab06f2b92127c24f3694892b901e111aa857c2693f2bf894d4b28207444f4c91ad07831e86aa86058b0307b4fb700bce0f9809faad1a2547ff930bdb440318c097a6fea17548918770b2cc442ec449e50c4bb1609125c530608e99bb86016a0586182f65789cbc3374f2d049fde640e232d3d06b25", "hex");
-    const proofC1 = Buffer.from("265d1ec46f9f11eb43f955eb94ebd37e36236efee2b0a871fd084c99e444f5200571f5ccb897918e5215b941fc3192c9390230436c4bb37d6181682bf9cdbf43", "hex");
-    const chirp1Nullifier = Buffer.from("333d2924f9563337ce7aa25b5c25e315a510c0c510db6219b05fc7c396a7ee2c", "hex");
-    const chirp1Attestation = Buffer.from("8b8cda973f4e99fb4729d7914dadd85533dea3d4ac45231ae2e72cc9c5c3ca17", "hex");
-    const chirp1VdeProof = Buffer.from("79dc773d5b710f70fb4ce375853e25ad99d021bff5cd58d67c2e8f0032eee01f", "hex");
-    const chirp1Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
+    const proofA1 = Buffer.from(batchChirpProofs[0].proof_a, "hex");
+    const proofB1 = Buffer.from(batchChirpProofs[0].proof_b, "hex");
+    const proofC1 = Buffer.from(batchChirpProofs[0].proof_c, "hex");
+    const chirp1Nullifier = Buffer.from(batchChirpProofs[0].nullifier_hash, "hex");
+    const chirp1Attestation = Buffer.from(batchChirpProofs[0].attestation_hash, "hex");
+    const chirp1VdeProof = Buffer.from(batchChirpProofs[0].identity_hash, "hex");
+    const chirp1Payload = Buffer.from(batchChirpProofs[0].ciphertext_hash, "hex");
 
-    const proofA2 = Buffer.from("1444d0e900227be00abb528ee58029edd28ffc7890fa279bee4eac70b2ec415321830e1970b759f7760e2d9290e3981c661bb14e5fe1c4841ab0270b9b623595", "hex");
-    const proofB2 = Buffer.from("3047a8523e48de601f73c465103c7cf6bcee10e2e635682ee763756018273cde019115b83249d28d5e246dd25aeb8638aed09ee040ecf90377f33d9a55326f81036962c65a81cb222d9b23e4a5280d320ad962b1956a1b6541b8fd59ea29acd80ab1da6886caa5de9717cb3268a44c2f6b9c1b63d1326c11a1fb76b11d64a89b", "hex");
-    const proofC2 = Buffer.from("1bdc9de5c6fbcc16c66a955d6089a8e962979e22b748eb63f0eefcdddaaf8bb1087b69ce8f76bc817e643915f24095810c987be134a84fe5685e7ca55659dddd", "hex");
-    const chirp2Nullifier = Buffer.from("f153d3fe8a4d1ac6196a9bd3d89c60b386f00e6919575f63e0bba958d35e5402", "hex");
-    const chirp2Attestation = Buffer.from("482214239c1946ddc2d88e60457c0d46738ab0f43a302aa983f06ed4e1578b04", "hex");
-    const chirp2VdeProof = Buffer.from("9c05c75001ab5fad4dadf4daa2a892bf8f4466fd77de76e3ccb626034d506504", "hex");
-    const chirp2Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
+    const proofA2 = Buffer.from(batchChirpProofs[1].proof_a, "hex");
+    const proofB2 = Buffer.from(batchChirpProofs[1].proof_b, "hex");
+    const proofC2 = Buffer.from(batchChirpProofs[1].proof_c, "hex");
+    const chirp2Nullifier = Buffer.from(batchChirpProofs[1].nullifier_hash, "hex");
+    const chirp2Attestation = Buffer.from(batchChirpProofs[1].attestation_hash, "hex");
+    const chirp2VdeProof = Buffer.from(batchChirpProofs[1].identity_hash, "hex");
+    const chirp2Payload = Buffer.from(batchChirpProofs[1].ciphertext_hash, "hex");
 
-    const proofA3 = Buffer.from("0f7fbfb33ce9448eb89b4188d8cb7529cae2ba82315f2a633315e24996e9830b29445760a774921dd089fe9bc786262717a94969e1a860d6dcb06d2fb76c777e", "hex");
-    const proofB3 = Buffer.from("11a4c8297a38a0ce8c8aafafb0b8a5a19716ef820ef5d720a0fe699cf8e97f591a02ab8d8a0c070caefb25aacab0033e7b7c55baa799875fba77e38c2d6fb6b802a0a856d124d4d25531645bc8db1b091d5b79c178468bdb0a87685dae7ad6000f22d53787dcdd4e64df080a0eb5518211bd824cd12ce6f4c65eaeac1843614f", "hex");
-    const proofC3 = Buffer.from("01dc3cf3c922e87c4c027df70550c4d108a9661e0026333c79788a82d6a180ef0021594dcd7bd1d195220052e77e7a82d67001873b54ab87bb24283a1fb372eb", "hex");
-    const chirp3Nullifier = Buffer.from("a1bb0f97d5364577f3f7de2d7981281bec855a94975437fde8d5f6be0a8ef610", "hex");
-    const chirp3Attestation = Buffer.from("9c02cf281a8259499690acee3b89e6e4ad53e2a728d491d48d0cd2d4760b7e17", "hex");
-    const chirp3VdeProof = Buffer.from("1fac275faeecdbd9202414272ade21efc72098a70e07aef99ef3f9d638f12315", "hex");
-    const chirp3Payload = Buffer.from("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122", "hex");
+    const proofA3 = Buffer.from(batchChirpProofs[2].proof_a, "hex");
+    const proofB3 = Buffer.from(batchChirpProofs[2].proof_b, "hex");
+    const proofC3 = Buffer.from(batchChirpProofs[2].proof_c, "hex");
+    const chirp3Nullifier = Buffer.from(batchChirpProofs[2].nullifier_hash, "hex");
+    const chirp3Attestation = Buffer.from(batchChirpProofs[2].attestation_hash, "hex");
+    const chirp3VdeProof = Buffer.from(batchChirpProofs[2].identity_hash, "hex");
+    const chirp3Payload = Buffer.from(batchChirpProofs[2].ciphertext_hash, "hex");
 
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
+
+    // Compute the Merkle root of the 3 leaves
+    const leaves = [chirp1VdeProof, chirp2VdeProof, chirp3VdeProof];
+    const level1_0 = Buffer.from(keccak_256(Buffer.concat([chirp1VdeProof, chirp2VdeProof])));
+    const level1_1 = Buffer.from(keccak_256(Buffer.concat([chirp3VdeProof, chirp3VdeProof])));
+    const batchMerkleRoot = Buffer.from(keccak_256(Buffer.concat([level1_0, level1_1])));
+
+    // Deposit SOL to set shieldedPool.merkleRoot to the batch Merkle root
+    const batchAmount = new anchor.BN(4 * anchor.web3.LAMPORTS_PER_SOL);
+    await program.methods
+      .depositShielded(batchAmount, Array.from(batchMerkleRoot))
+      .accounts({
+        sender: sender.publicKey,
+        shieldedPool: shieldedPoolPda,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([sender])
+      .rpc();
+
+    const proof1 = buildMerkleProof(leaves, 0);
+    const proof2 = buildMerkleProof(leaves, 1);
+    const proof3 = buildMerkleProof(leaves, 2);
 
     await program.methods
       .addChirp(
@@ -255,10 +313,13 @@ describe("zk_lorawan", () => {
         Array.from(chirp1Attestation),
         Array.from(chirp1VdeProof),
         Array.from(chirp1Payload),
-        timestamp
+        timestamp,
+        proof1.map(p => Array.from(p)),
+        0
       )
       .accounts({
         batch: batchPda,
+        shieldedPool: shieldedPoolPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])
@@ -273,10 +334,13 @@ describe("zk_lorawan", () => {
         Array.from(chirp2Attestation),
         Array.from(chirp2VdeProof),
         Array.from(chirp2Payload),
-        timestamp
+        timestamp,
+        proof2.map(p => Array.from(p)),
+        1
       )
       .accounts({
         batch: batchPda,
+        shieldedPool: shieldedPoolPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])
@@ -291,10 +355,13 @@ describe("zk_lorawan", () => {
         Array.from(chirp3Attestation),
         Array.from(chirp3VdeProof),
         Array.from(chirp3Payload),
-        timestamp
+        timestamp,
+        proof3.map(p => Array.from(p)),
+        2
       )
       .accounts({
         batch: batchPda,
+        shieldedPool: shieldedPoolPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])

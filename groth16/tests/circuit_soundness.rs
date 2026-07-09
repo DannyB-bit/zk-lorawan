@@ -6,8 +6,8 @@ use zk_lorawan_groth16::circuit::{
     generate_mimc_constants, generate_proof, mimc_hash, setup_keys, verify_proof, ZKLoRaCircuit,
 };
 
-const MIMC_ROUNDS: usize = 10;
-const EXPECTED_PUBLIC_INPUTS_WITH_ONE: usize = 5;
+const MIMC_ROUNDS: usize = 220;
+const EXPECTED_PUBLIC_INPUTS_WITH_ONE: usize = 7;
 const EXPECTED_CONSTRAINTS: usize = 4 * ((MIMC_ROUNDS * 2) + 2);
 
 #[derive(Clone)]
@@ -20,6 +20,8 @@ struct CircuitFixture {
     nullifier_hash: Fr,
     attestation_hash: Fr,
     ciphertext_hash: Fr,
+    gateway_part1: Fr,
+    gateway_part2: Fr,
     constants: Vec<Fr>,
 }
 
@@ -29,6 +31,8 @@ fn fixture() -> CircuitFixture {
     let decryption_key = Fr::from(7_331u64);
     let coordinate_val = Fr::from(42u64);
     let firmware_hash = Fr::from(2_026u64);
+    let gateway_part1 = Fr::from(1_111u64);
+    let gateway_part2 = Fr::from(2_222u64);
 
     CircuitFixture {
         identity_hash: mimc_hash(private_key, None, &constants),
@@ -39,6 +43,8 @@ fn fixture() -> CircuitFixture {
         decryption_key,
         coordinate_val,
         firmware_hash,
+        gateway_part1,
+        gateway_part2,
         constants,
     }
 }
@@ -53,6 +59,8 @@ fn circuit_from(f: &CircuitFixture) -> ZKLoRaCircuit<Fr> {
         nullifier_hash: Some(f.nullifier_hash),
         attestation_hash: Some(f.attestation_hash),
         ciphertext_hash: Some(f.ciphertext_hash),
+        gateway_part1: Some(f.gateway_part1),
+        gateway_part2: Some(f.gateway_part2),
         round_constants: f.constants.clone(),
     }
 }
@@ -81,7 +89,7 @@ fn valid_assignment_has_expected_public_inputs_and_constraints() {
     assert_eq!(
         cs.num_instance_variables(),
         EXPECTED_PUBLIC_INPUTS_WITH_ONE,
-        "R1CS should expose exactly four public inputs plus the implicit one variable"
+        "R1CS should expose exactly six public inputs plus the implicit one variable"
     );
     assert_eq!(
         cs.num_constraints(),
@@ -127,6 +135,8 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.nullifier_hash,
         f.attestation_hash,
         f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2,
         f.constants.clone(),
         &mut rng,
     )
@@ -138,7 +148,9 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.identity_hash,
         f.nullifier_hash,
         f.attestation_hash,
-        f.ciphertext_hash
+        f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2,
     )
     .unwrap());
 
@@ -148,7 +160,9 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.identity_hash + Fr::from(1u64),
         f.nullifier_hash,
         f.attestation_hash,
-        f.ciphertext_hash
+        f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2,
     )
     .unwrap());
     assert!(!verify_proof(
@@ -157,7 +171,9 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.identity_hash,
         f.nullifier_hash + Fr::from(1u64),
         f.attestation_hash,
-        f.ciphertext_hash
+        f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2,
     )
     .unwrap());
     assert!(!verify_proof(
@@ -166,7 +182,9 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.identity_hash,
         f.nullifier_hash,
         f.attestation_hash + Fr::from(1u64),
-        f.ciphertext_hash
+        f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2,
     )
     .unwrap());
     assert!(!verify_proof(
@@ -175,7 +193,31 @@ fn groth16_verifier_rejects_mutated_public_inputs() {
         f.identity_hash,
         f.nullifier_hash,
         f.attestation_hash,
-        f.ciphertext_hash + Fr::from(1u64)
+        f.ciphertext_hash + Fr::from(1u64),
+        f.gateway_part1,
+        f.gateway_part2,
+    )
+    .unwrap());
+    assert!(!verify_proof(
+        &pvk,
+        &proof,
+        f.identity_hash,
+        f.nullifier_hash,
+        f.attestation_hash,
+        f.ciphertext_hash,
+        f.gateway_part1 + Fr::from(1u64),
+        f.gateway_part2,
+    )
+    .unwrap());
+    assert!(!verify_proof(
+        &pvk,
+        &proof,
+        f.identity_hash,
+        f.nullifier_hash,
+        f.attestation_hash,
+        f.ciphertext_hash,
+        f.gateway_part1,
+        f.gateway_part2 + Fr::from(1u64),
     )
     .unwrap());
 }
@@ -199,6 +241,8 @@ fn unsatisfied_assignment_cannot_verify_against_its_bad_public_inputs() {
             f.nullifier_hash,
             f.attestation_hash,
             f.ciphertext_hash,
+            f.gateway_part1,
+            f.gateway_part2,
             f.constants.clone(),
             &mut rng,
         )
@@ -214,7 +258,9 @@ fn unsatisfied_assignment_cannot_verify_against_its_bad_public_inputs() {
                     f.identity_hash,
                     f.nullifier_hash,
                     f.attestation_hash,
-                    f.ciphertext_hash
+                    f.ciphertext_hash,
+                    f.gateway_part1,
+                    f.gateway_part2,
                 )
                 .unwrap(),
                 "proof generated from an unsatisfied assignment must not verify"

@@ -21,7 +21,6 @@ use ark_serialize::CanonicalDeserialize;
 use rand::SeedableRng;
 use std::sync::OnceLock;
 
-
 static PREPARED_VK: OnceLock<ark_groth16::PreparedVerifyingKey<ark_bn254::Bn254>> = OnceLock::new();
 
 /// WebAssembly-compatible verification function.
@@ -48,6 +47,8 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
     attestation_hash_hex_len: usize,
     ciphertext_hash_hex_ptr: *const u8,
     ciphertext_hash_hex_len: usize,
+    gateway_address_hex_ptr: *const u8,
+    gateway_address_hex_len: usize,
 ) -> u32 {
     let proof_a_bytes_slice =
         unsafe { std::slice::from_raw_parts(proof_a_hex_ptr, proof_a_hex_len) };
@@ -63,6 +64,8 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         unsafe { std::slice::from_raw_parts(attestation_hash_hex_ptr, attestation_hash_hex_len) };
     let ciphertext_hash_bytes_slice =
         unsafe { std::slice::from_raw_parts(ciphertext_hash_hex_ptr, ciphertext_hash_hex_len) };
+    let gateway_address_bytes_slice =
+        unsafe { std::slice::from_raw_parts(gateway_address_hex_ptr, gateway_address_hex_len) };
 
     let proof_a_str = match std::str::from_utf8(proof_a_bytes_slice) {
         Ok(s) => s,
@@ -85,6 +88,10 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         Err(_) => return 0,
     };
     let attestation_hash_str = match std::str::from_utf8(attestation_hash_bytes_slice) {
+        Ok(s) => s,
+        Err(_) => return 0,
+    };
+    let gateway_address_str = match std::str::from_utf8(gateway_address_bytes_slice) {
         Ok(s) => s,
         Err(_) => return 0,
     };
@@ -126,6 +133,13 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         Ok(b) => b,
         Err(_) => return 0,
     };
+    let gateway_address_bytes = match hex::decode(gateway_address_str) {
+        Ok(b) => b,
+        Err(_) => return 0,
+    };
+    if gateway_address_bytes.len() != 32 {
+        return 0;
+    }
 
     let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*proof_a_bytes) {
         Ok(p) => p,
@@ -163,10 +177,24 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         Err(_) => return 0,
     };
 
+    let mut part1_bytes = [0u8; 32];
+    part1_bytes[0..16].copy_from_slice(&gateway_address_bytes[0..16]);
+    let gateway_part1_fr = match ark_bn254::Fr::deserialize_compressed(&part1_bytes[..]) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+
+    let mut part2_bytes = [0u8; 32];
+    part2_bytes[0..16].copy_from_slice(&gateway_address_bytes[16..32]);
+    let gateway_part2_fr = match ark_bn254::Fr::deserialize_compressed(&part2_bytes[..]) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+
     // Setup keys deterministically once and cache the prepared VK
     let prepared_vk = PREPARED_VK.get_or_init(|| {
         let mut rng = rand::rngs::StdRng::from_seed([42u8; 32]);
-        let constants = circuit::generate_mimc_constants(10);
+        let constants = circuit::generate_mimc_constants(220);
         let (_pk, vk) = circuit::setup_keys(&mut rng, constants).expect("Failed to setup keys");
         ark_groth16::prepare_verifying_key(&vk)
     });
@@ -178,6 +206,8 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         nullifier_hash_fr,
         attestation_hash_fr,
         ciphertext_hash_fr,
+        gateway_part1_fr,
+        gateway_part2_fr,
     ) {
         Ok(true) => 1,
         _ => 0,
