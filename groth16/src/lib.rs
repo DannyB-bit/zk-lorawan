@@ -1,8 +1,26 @@
+// ============================================================================
+// ⚠️ WARNING: PROTOTYPE SECURITY & CRYPTOGRAPHIC BOUNDARIES NOTICE
+// ============================================================================
+// This FFI library is an evaluation prototype built for Solana Foundation Grant
+// review and milestone validation. It contains the following design assumptions
+// that MUST be resolved prior to any production or mainnet deployment:
+//
+// 1. DETERMINISTIC SETUP SEED: In `verify_zk_proof_raw`, the verifying key is
+//    initialized deterministically using standard RNG seed `[42u8; 32]`.
+//    Anyone can recreate the setup secrets. Production requires a Multi-Party
+//    Computation (MPC) ceremony to generate unique verifying key parameters.
+//
+// 2. NO REPLAY PROTECTION: Gateway verification validates proof mathematical
+//    structure only. Replay attacks are possible because packet properties
+//    (gateway signer, timestamp, RF metadata) are not bound as public inputs.
+// ============================================================================
+
 pub mod circuit;
 
 use ark_serialize::CanonicalDeserialize;
 use rand::SeedableRng;
 use std::sync::OnceLock;
+
 
 static PREPARED_VK: OnceLock<ark_groth16::PreparedVerifyingKey<ark_bn254::Bn254>> = OnceLock::new();
 

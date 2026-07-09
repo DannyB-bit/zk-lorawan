@@ -1,9 +1,36 @@
+// ============================================================================
+// ⚠️ WARNING: PROTOTYPE SECURITY & CRYPTOGRAPHIC BOUNDARIES NOTICE
+// ============================================================================
+// This circuit is an evaluation prototype built for Solana Foundation Grant
+// review and milestone validation. It contains the following design assumptions
+// that MUST be resolved prior to any production or mainnet deployment:
+//
+// 1. DETERMINISTIC TRUSTED SETUP: Proving and verifying keys are compiled with a
+//    publicly visible seed [42u8; 32]. Production requires a Multi-Party Computation
+//    (MPC) trusted setup ceremony to eliminate the Groth16 "toxic waste".
+//
+// 2. PROVED STATEMENTS vs. pool membership: The circuit proves only pre-image hash
+//    relationships. It does NOT currently enforce pool Merkle tree membership,
+//    funded balances, deposit ownership, or spend transition rules on-chain.
+//
+// 3. FRONT-RUNNING VULNERABILITY: The gateway/payee address and packet metadata
+//    are not bound to the proof inputs. Observers can replicate and replay proofs.
+//    Production must incorporate the gateway address and transaction fields
+//    directly into the public input vector.
+//
+// 4. ATTESTATION & MiMC ROUNDS: Attestations and VDE decryption are simulated via
+//    simplified hash pre-image constructs. 10 rounds of MiMC are utilized for
+//    compilation speed in evaluation; production requires a parameterized round
+//    number (e.g. 220 rounds for MiMC-7 BN254) and full attestation-chain checks.
+// ============================================================================
+
 use ark_bn254::{Bn254, Fr};
 use ark_ff::{Field, PrimeField};
 use ark_groth16::{Groth16, PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError, Variable};
 use ark_snark::{CircuitSpecificSetupSNARK, SNARK};
 use ark_std::rand::{CryptoRng, Rng};
+
 
 /// ZKLoRaCircuit defines the ZK-SNARK circuit for the upgraded ZK-LoRaWAN protocol.
 /// It proves:
