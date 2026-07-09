@@ -2,6 +2,7 @@
 // ZK-LoRaWAN Groth16 Prover & Verifier — Real BN254 Implementation
 // Fee Split: 100,000 lamports (gateway) + 50,000 lamports (protocol)
 
+pub mod ceremony;
 pub mod circuit;
 
 use ark_bn254::{Bn254, Fr};
@@ -609,6 +610,90 @@ fn main() {
         }
     }
 
+    if args.len() > 1 && args[1] == "ceremony" {
+        if args.len() < 3 {
+            eprintln!(
+                "Usage: zk_lorawan_prove ceremony <init|contribute|verify|finalize> [options]"
+            );
+            eprintln!();
+            eprintln!("Subcommands:");
+            eprintln!("  init        --output <file>       Initialize a new ceremony");
+            eprintln!(
+                "  contribute  --input <file> --output <file> --name <name>   Add a contribution"
+            );
+            eprintln!("  verify      --input <file>        Verify the ceremony chain");
+            eprintln!("  finalize    --input <file>        Finalize and extract keys");
+            std::process::exit(2);
+        }
+
+        let subcmd = &args[2];
+        match subcmd.as_str() {
+            "init" => {
+                let output = args
+                    .iter()
+                    .position(|a| a == "--output")
+                    .map(|i| args[i + 1].as_str())
+                    .unwrap_or("ceremony_0000.params");
+                if let Err(e) = ceremony::initialize(output) {
+                    eprintln!("ERROR: {}", e);
+                    std::process::exit(1);
+                }
+                std::process::exit(0);
+            }
+            "contribute" => {
+                let input = args
+                    .iter()
+                    .position(|a| a == "--input")
+                    .and_then(|i| args.get(i + 1))
+                    .expect("--input <file> required");
+                let output = args
+                    .iter()
+                    .position(|a| a == "--output")
+                    .and_then(|i| args.get(i + 1))
+                    .expect("--output <file> required");
+                let name = args
+                    .iter()
+                    .position(|a| a == "--name")
+                    .and_then(|i| args.get(i + 1))
+                    .map(|s| s.as_str())
+                    .unwrap_or("anonymous");
+                if let Err(e) = ceremony::contribute(input, output, name) {
+                    eprintln!("ERROR: {}", e);
+                    std::process::exit(1);
+                }
+                std::process::exit(0);
+            }
+            "verify" => {
+                let input = args
+                    .iter()
+                    .position(|a| a == "--input")
+                    .and_then(|i| args.get(i + 1))
+                    .expect("--input <file> required");
+                if let Err(e) = ceremony::verify(input) {
+                    eprintln!("ERROR: {}", e);
+                    std::process::exit(1);
+                }
+                std::process::exit(0);
+            }
+            "finalize" => {
+                let input = args
+                    .iter()
+                    .position(|a| a == "--input")
+                    .and_then(|i| args.get(i + 1))
+                    .expect("--input <file> required");
+                if let Err(e) = ceremony::finalize(input) {
+                    eprintln!("ERROR: {}", e);
+                    std::process::exit(1);
+                }
+                std::process::exit(0);
+            }
+            _ => {
+                eprintln!("Unknown ceremony subcommand: {}", subcmd);
+                std::process::exit(2);
+            }
+        }
+    }
+
     println!("======================================================================");
     println!("  ZK-LoRaWAN | Groth16 BN254 Proof Engine (Real ark-works)");
     println!("  Proving Balance Identity + Nullifiers + Micro-TEE + zk-VDE");
@@ -620,6 +705,7 @@ fn main() {
     println!("  [1] Running Groth16 trusted setup on BN254...");
     let prover = ZKLoRaWANProver::new();
     println!("      ✅ Secure random single-party setup complete (OsRng, file-persisted keys for demo/devnet)");
+    println!("      For mainnet, run: zk_lorawan_prove ceremony init/contribute/verify/finalize");
     println!("      MiMC rounds: {}", MIMC_ROUNDS);
     println!("      Public inputs: 8 (identity, nullifier, attestation, ciphertext, gateway×2, deposit, firmware)");
     println!();
