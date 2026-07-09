@@ -102,6 +102,7 @@ describe("zk_lorawan", () => {
 
   let singleChirpProof: any;
   let batchChirpProofs: any[] = [];
+  const accumulatedLeaves: Buffer[] = [];
 
   before(async () => {
     // Airdrop SOL to sender and gateway to cover transaction fees and rent
@@ -201,6 +202,8 @@ describe("zk_lorawan", () => {
       })
       .signers([sender])
       .rpc();
+
+    accumulatedLeaves.push(singleZkVdeProofHash);
 
     const poolAccount = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     assert.isTrue(poolAccount.totalBalance.toNumber() >= amount.toNumber());
@@ -362,12 +365,13 @@ describe("zk_lorawan", () => {
         })
         .signers([sender])
         .rpc();
+      accumulatedLeaves.push(allLeaves[i]);
     }
 
     // Compute Merkle proof for each leaf in the 10-depth pool tree
-    const proof1 = buildOnChainMerkleProof(allLeaves, 1);
-    const proof2 = buildOnChainMerkleProof(allLeaves, 2);
-    const proof3 = buildOnChainMerkleProof(allLeaves, 3);
+    const proof1 = buildOnChainMerkleProof(accumulatedLeaves, 1);
+    const proof2 = buildOnChainMerkleProof(accumulatedLeaves, 2);
+    const proof3 = buildOnChainMerkleProof(accumulatedLeaves, 3);
 
     const depositCommitment1 = Buffer.from(batchChirpProofs[0].deposit_commitment, "hex");
     const firmwareHash1 = Buffer.from(batchChirpProofs[0].firmware_hash, "hex");
@@ -532,20 +536,13 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(chunkedLeafHash);
+
     // Get pool state for leaf index
     const poolBefore = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolBefore.nextIndex.toNumber() - 1; // Just deposited
 
-    // Build all leaves including the new one and compute proof
-    // All previous leaves: index 0 = single proof identity, 1-3 = batch leaves
-    const allLeaves = [
-      Buffer.from(singleChirpProof.identity_hash, "hex"),
-      Buffer.from(batchChirpProofs[0].identity_hash, "hex"),
-      Buffer.from(batchChirpProofs[1].identity_hash, "hex"),
-      Buffer.from(batchChirpProofs[2].identity_hash, "hex"),
-      chunkedLeafHash,
-    ];
-    const merkleProof = buildOnChainMerkleProof(allLeaves, leafIndex);
+    const merkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
 
     // Build proof data
     const proofA = Buffer.from(chunkedProof.proof_a, "hex");
@@ -854,6 +851,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -879,7 +878,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
 
     const nonce = new anchor.BN(Date.now() + 1);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -888,7 +887,7 @@ describe("zk_lorawan", () => {
 
     // Write chunks but tamper with chunk0 (proof_a / proof_b)
     const proofCtxPda = await setupProofContextChunks(
-      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway,
       { corruptChunk0: true }
     );
 
@@ -946,6 +945,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -971,7 +972,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -979,7 +980,7 @@ describe("zk_lorawan", () => {
     // First, verify successfully on the chunked path
     const nonce1 = new anchor.BN(Date.now() + 10);
     const proofCtxPda1 = await setupProofContextChunks(
-      nonce1, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+      nonce1, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway
     );
     await program.methods
       .verifyProofContext(nonce1)
@@ -995,7 +996,7 @@ describe("zk_lorawan", () => {
     // Now attempt nullifier replay via a second chunked verify context
     const nonce2 = new anchor.BN(Date.now() + 20);
     const proofCtxPda2 = await setupProofContextChunks(
-      nonce2, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+      nonce2, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway
     );
 
     try {
@@ -1030,6 +1031,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -1055,14 +1058,14 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
     const nonce = new anchor.BN(Date.now() + 30);
     const proofCtxPda = await setupProofContextChunks(
-      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway
     );
 
     try {
@@ -1098,6 +1101,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -1123,7 +1128,7 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
@@ -1134,7 +1139,7 @@ describe("zk_lorawan", () => {
 
     const nonce = new anchor.BN(Date.now() + 40);
     const proofCtxPda = await setupProofContextChunks(
-      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, fakeGateway
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, fakeGateway
     );
 
     try {
@@ -1169,6 +1174,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -1194,14 +1201,14 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
     const nonce = new anchor.BN(Date.now() + 50);
     const proofCtxPda = await setupProofContextChunks(
-      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway,
       { corruptChunk2: true }
     );
 
@@ -1238,6 +1245,8 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
+    accumulatedLeaves.push(leafHash);
+
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
@@ -1263,14 +1272,14 @@ describe("zk_lorawan", () => {
       gwPart1, gwPart2, depositCommitment, firmwareHash,
     ];
 
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
     const nonce = new anchor.BN(Date.now() + 60);
     const proofCtxPda = await setupProofContextChunks(
-      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway,
       { skipChunk2: true }
     );
 
@@ -1286,7 +1295,7 @@ describe("zk_lorawan", () => {
         .rpc();
       assert.fail("Should have rejected incomplete proof context");
     } catch (e: any) {
-      assert.include(e.message, "IncompleteProofContext");
+      assert.include(e.message, "ProofContextIncomplete");
       console.log("  ✅ Incomplete proof context correctly rejected");
     }
 
