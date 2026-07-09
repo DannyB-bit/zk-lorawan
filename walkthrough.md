@@ -55,13 +55,20 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **CI Integration**: Added [.github/workflows/sbf-integration.yml](file:///k:/Zk-LoRaWan/.github/workflows/sbf-integration.yml) to spin up a clean Solana validator environment and execute SBF-targeted test pipelines on every push.
 - **Test Results**: All 4 core transactions (Registry Initialisation, Shielded Deposit, Single Chirp, Batch Chirp) verify and settle successfully on-chain (4/4 tests passed).
 
+### 10. Resolving Release-Blocking Audit Findings
+- **Eliminated Silent Mocks**: Corrected the import block in [sdk/device_sdk.py](file:///k:/Zk-LoRaWan/sdk/device_sdk.py) to load `CuneiformCoordinate` from the proper module (`semantic_gating.range_proof`). Configured the SDK to run on real components (SemanticCodec, LLDACEncoder, XorFEC) and removed mock fallbacks completely to fail closed.
+- **Strict FEC Integrity**: Updated the decoder in [fec/xor_fec.py](file:///k:/Zk-LoRaWan/fec/xor_fec.py) to raise a `ValueError` if the computed checksum doesn't match the expected checksum, protecting against silent corruption.
+- **Dependency & License Alignment**: Added `pycryptodome` to [requirements-gateway.txt](file:///k:/Zk-LoRaWan/requirements-gateway.txt) to resolve execution crashes, and resolved the license badge/text contradiction in [README.md](file:///k:/Zk-LoRaWan/README.md) to match the proprietary-pending status.
+- **Cryptographic Boundaries**: Documented the known parameters (deterministic setup seed, pool validation scope, gateway binding constraints, custom MiMC rounds) via warning blocks in [circuit.rs](file:///k:/Zk-LoRaWan/groth16/src/circuit.rs) and [lib.rs](file:///k:/Zk-LoRaWan/groth16/src/lib.rs).
+
 ---
 
 ## 🧪 Verification & Results
 
 - **PDF Generation**: Compiled successfully using `python scratch/compile_pdf.py`.
 - **User Downloads**: Copied the newly compiled `zk_lorawan_whitepaper.pdf` directly to `C:\Users\DannyB\Downloads\zk_lorawan_whitepaper.pdf`.
-- **Git Push**: Clean pushed all changes to origin master, including the documentation realignment, the critical Groth16 circuit security fix, and the CI/fixture hardening suite.
+- **Git Push**: Clean pushed all changes to origin master, including the documentation realignment, the critical Groth16 circuit security fix, the CI/fixture hardening suite, and the release-blocking audit fixes.
 - **Harness**: `python tests/verify_all_modules.py` runs with a clean `8/8 passed` result.
+- **Device SDK Test**: `python sdk/device_sdk.py` executes successfully using real encoders and FEC (no mocks).
 - **Typecheck**: `npm run typecheck` compiles TypeScript test fixtures with zero compiler warnings.
 - **Rust Verification**: Cargo workspace test suite compiles and executes successfully.
