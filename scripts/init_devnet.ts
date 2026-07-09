@@ -25,7 +25,7 @@ const SHIELDED_POOL_SEED = Buffer.from("shielded-pool");
 // Match the program ID from lib.rs (non-integration-test)
 const PROGRAM_ID = new PublicKey("4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC");
 // Admin authority from lib.rs
-const ADMIN_AUTHORITY = new PublicKey("BrqnKE7S8wY8etChZgUx8GGnirF1sLYm4huXZeFTLwsqJ3ueNZJdPWUMkRc");
+const ADMIN_AUTHORITY = new PublicKey("BrqnKE7S8wY8etChZgUx8GGnYuvqdFoZhUAD7PTL5PV3");
 
 async function main() {
   console.log("╔══════════════════════════════════════════════════╗");
@@ -131,13 +131,13 @@ async function main() {
   // Step 3: Verify state
   console.log("\n  [3/3] Verifying on-chain state...");
   try {
-    const registry = await program.account.protocolRegistry.fetch(registryPda);
+    const registry: any = await program.account.protocolRegistry.fetch(registryPda);
     console.log(`      Authority:        ${registry.authority.toBase58()}`);
     console.log(`      Next Batch ID:    ${registry.nextBatchId.toString()}`);
     console.log(`      Total Chirps:     ${registry.totalChirpsVerified.toString()}`);
     console.log(`      Total Fees:       ${registry.totalFeesCollected.toString()} lamports`);
 
-    const pool = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda);
+    const pool: any = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda);
     console.log(`      Pool Balance:     ${pool.totalBalance.toString()} lamports`);
     console.log(`      Merkle Root:      ${Buffer.from(pool.merkleRoot).toString("hex").slice(0, 16)}...`);
     console.log(`      Last Updated:     ${new Date(pool.lastUpdated.toNumber() * 1000).toISOString()}`);
