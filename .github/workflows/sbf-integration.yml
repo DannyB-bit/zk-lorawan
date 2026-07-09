@@ -23,10 +23,10 @@ jobs:
       - name: Install native dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev libudev-dev
 
-      - name: Install Rust 1.75
+      - name: Install Rust 1.80
         run: |
-          rustup toolchain install 1.75.0 --profile minimal
-          rustup default 1.75.0
+          rustup toolchain install 1.80.0 --profile minimal
+          rustup default 1.80.0
 
       - name: Cache Solana 1.17
         id: cache-solana
@@ -56,7 +56,7 @@ jobs:
             ~/.cargo/bin/anchor
             ~/.cargo/git
             ~/.cargo/registry
-          key: anchor-0.29.0-rust-1.75-linux-x64
+          key: anchor-0.29.0-rust-1.80-linux-x64
 
       - name: Install Anchor 0.29
         if: steps.cache-anchor.outputs.cache-hit != 'true'

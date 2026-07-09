@@ -4,9 +4,13 @@ This document details the concrete resolutions implemented for the release-block
 
 ## CI & Integration Fixes
 
-### 1. SBF Integration Fix (Native Prover Pre-Compilation)
-- **Problem**: The GitHub Actions SBF Integration workflow fails with `./target/release/zk_lorawan_prove: not found` because the runner executes program/validator tests without building the native prover binary first.
-- **Solution**: Updated [test-sbf.sh](file:///k:/Zk-LoRaWan/scripts/test-sbf.sh#L43) to explicitly execute `cargo build -p zk-lorawan-groth16 --release` before running the Anchor SBF program tests. This ensures the native prover is built and available at the expected path.
+### 1. SBF Integration Fix (Native Prover Pre-Compilation & Rust Toolchain Upgrade)
+- **Problem**: The GitHub Actions SBF Integration workflow failed because:
+  * The runner executed program/validator tests without building the native prover binary first, causing `./target/release/zk_lorawan_prove: not found`.
+  * The native prover relies on dependencies (such as `rayon-core`) that require Rust 1.80+, whereas the workflow originally pinned Rust 1.75.0.
+- **Solution**:
+  * Updated [test-sbf.sh](file:///k:/Zk-LoRaWan/scripts/test-sbf.sh#L43) to explicitly execute `cargo build -p zk-lorawan-groth16 --release` before running the Anchor SBF program tests.
+  * Upgraded the Rust toolchain version to `1.80.0` in [.github/workflows/sbf-integration.yml](file:///k:/Zk-LoRaWan/.github/workflows/sbf-integration.yml#L28) and bumped the Anchor compilation cache keys.
 
 ### 2. Strict Verification Timeout Fix (Gateway Harness Optimization)
 - **Problem**: Generating 25 real ZK proofs during the gateway test exceeded the 120-second timeout on slower GitHub runner CPU environments, causing the Strict Verification pipeline to turn red.
