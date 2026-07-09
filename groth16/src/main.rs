@@ -9,6 +9,8 @@ use ark_ff::PrimeField;
 use ark_groth16::{PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 
+use rand::SeedableRng;
+
 // ============================================================================
 // ZK-LoRaWAN Protocol Constants
 // ============================================================================
@@ -17,7 +19,7 @@ pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000;
 pub const TOTAL_FEE_LAMPORTS: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MIMC_ROUNDS: usize = 220;
 
-/// Path for persisted proving/verifying keys (generated once with OsRng, reused thereafter)
+/// Path for persisted proving/verifying keys (generated once, reused thereafter)
 const KEYS_DIR: &str = "keys";
 const PK_FILE: &str = "keys/proving_key.bin";
 const VK_FILE: &str = "keys/verifying_key.bin";
@@ -37,7 +39,7 @@ pub struct ZKLoRaWANProofBundle {
 }
 
 // ============================================================================
-// ZK-LoRaWAN Prover — Uses OsRng with file-based key persistence
+// ZK-LoRaWAN Prover — Uses Seeded StdRng for developer reproducibility
 // ============================================================================
 pub struct ZKLoRaWANProver {
     pub proving_key: ProvingKey<Bn254>,
@@ -47,15 +49,13 @@ pub struct ZKLoRaWANProver {
 }
 
 impl ZKLoRaWANProver {
-    /// Initialize the prover with file-persisted keys (generated via OsRng on first run).
-    /// This eliminates the deterministic seed [42;32] toxic waste vulnerability.
+    /// Initialize the prover. Generates keys deterministically on first run
+    /// so that fresh checkouts always match the deployed verifier's VK.
     pub fn new() -> Self {
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
 
         // Try to load existing keys from disk
-        if let (Ok(pk_data), Ok(vk_data)) =
-            (std::fs::read(PK_FILE), std::fs::read(VK_FILE))
-        {
+        if let (Ok(pk_data), Ok(vk_data)) = (std::fs::read(PK_FILE), std::fs::read(VK_FILE)) {
             if let (Ok(pk), Ok(vk)) = (
                 ProvingKey::<Bn254>::deserialize_compressed(&pk_data[..]),
                 VerifyingKey::<Bn254>::deserialize_compressed(&vk_data[..]),
@@ -68,14 +68,21 @@ impl ZKLoRaWANProver {
                     constants,
                 };
             }
-            eprintln!("Warning: Key files exist but are corrupt; regenerating with OsRng");
+            eprintln!("Warning: Key files exist but are corrupt; regenerating");
         }
 
-        // Generate new keys with OsRng (cryptographically secure, non-deterministic)
-        eprintln!("Generating new trusted setup keys with OsRng (first run)...");
-        let mut rng = rand::rngs::OsRng;
-        let (pk, vk) =
-            circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed");
+        // Determine RNG source based on environment variable for developer vs production safety
+        let use_reproducible = std::env::var("ZK_LORAWAN_REPRODUCIBLE_SETUP").unwrap_or_default() == "1";
+        let (pk, vk) = if use_reproducible {
+            eprintln!("Generating new trusted setup keys deterministically (seed = 42) for testing/CI...");
+            let mut rng = rand::rngs::StdRng::from_seed([42u8; 32]);
+            circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed")
+        } else {
+            eprintln!("WARNING: Generating single-party trusted setup keys with cryptographically secure OsRng.");
+            eprintln!("WARNING: For production deployments, a Multi-Party Computation (MPC) ceremony must be performed.");
+            let mut rng = rand::rngs::OsRng;
+            circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed")
+        };
 
         // Persist keys to disk
         std::fs::create_dir_all(KEYS_DIR).ok();
@@ -497,7 +504,26 @@ fn main() {
         let proof_c =
             ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed).unwrap();
 
+        let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+        let identity_fr = Fr::deserialize_compressed(&bundle.identity_hash[..]).unwrap();
+        let deposit_commitment_fr = circuit::mimc_hash(identity_fr, Some(Fr::from(deposit_value)), &constants);
+        let mut deposit_commitment_buf = Vec::new();
+        use ark_serialize::CanonicalSerialize;
+        deposit_commitment_fr.serialize_compressed(&mut deposit_commitment_buf).unwrap();
+
         println!("{{");
+        println!(
+            "  \"proof_a_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_a_compressed)
+        );
+        println!(
+            "  \"proof_b_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_b_compressed)
+        );
+        println!(
+            "  \"proof_c_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_c_compressed)
+        );
         println!(
             "  \"proof_a\": \"{}\",",
             hex::encode(to_solana_g1(&proof_a))
@@ -523,8 +549,16 @@ fn main() {
             hex::encode(&bundle.attestation_hash)
         );
         println!(
-            "  \"ciphertext_hash\": \"{}\"",
+            "  \"ciphertext_hash\": \"{}\",",
             hex::encode(&bundle.ciphertext_hash)
+        );
+        println!(
+            "  \"deposit_commitment\": \"{}\",",
+            hex::encode(deposit_commitment_buf)
+        );
+        println!(
+            "  \"firmware_hash\": \"{}\"",
+            hex::encode(&firmware_hash)
         );
         println!("}}");
         std::process::exit(0);
@@ -628,8 +662,7 @@ fn main() {
 
     // Verify the proof
     println!("  [3] Verifying proof (bilinear pairing check)...");
-    let is_valid =
-        prover.verify_bundle(&bundle, &dummy_gateway, deposit_value, firmware_hash);
+    let is_valid = prover.verify_bundle(&bundle, &dummy_gateway, deposit_value, firmware_hash);
     println!(
         "      Verification result: {}",
         if is_valid { "✅ VALID" } else { "❌ INVALID" }

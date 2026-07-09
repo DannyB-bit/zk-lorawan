@@ -68,9 +68,8 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
                 .ok_or(SynthesisError::AssignmentMissing)
         })?;
 
-        let deposit_value_var = cs.new_witness_variable(|| {
-            self.deposit_value.ok_or(SynthesisError::AssignmentMissing)
-        })?;
+        let deposit_value_var = cs
+            .new_witness_variable(|| self.deposit_value.ok_or(SynthesisError::AssignmentMissing))?;
 
         // Helper to enforce MiMC-based hash constraints: outputs = mimc(preimage + salt)
         let mimc_hash_constraints = |cs: &ConstraintSystemRef<F>,

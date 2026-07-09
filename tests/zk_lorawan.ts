@@ -6,6 +6,41 @@ import * as fs from "fs";
 import { keccak_256 } from "@noble/hashes/sha3";
 import { execSync } from "child_process";
 
+function getZeroHash(level: number): Buffer {
+  let current = Buffer.alloc(32, 0);
+  for (let i = 0; i < level; i++) {
+    current = Buffer.from(keccak_256(Buffer.concat([current, current])));
+  }
+  return current;
+}
+
+function buildOnChainMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
+  let proof: Buffer[] = [];
+  let index = leafIndex;
+  let currentLevel = [...leaves];
+
+  for (let level = 0; level < 16; level++) {
+    let nextLevel: Buffer[] = [];
+    const zeroHash = getZeroHash(level);
+
+    for (let i = 0; i < currentLevel.length; i += 2) {
+      let left = currentLevel[i];
+      let right = i + 1 < currentLevel.length ? currentLevel[i + 1] : zeroHash;
+
+      if (i === index || i + 1 === index) {
+        let sibling = i === index ? right : left;
+        proof.push(sibling);
+      }
+
+      let combined = Buffer.concat([left, right]);
+      nextLevel.push(Buffer.from(keccak_256(combined)));
+    }
+    index = Math.floor(index / 2);
+    currentLevel = nextLevel;
+  }
+  return proof;
+}
+
 function buildMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
   let proof: Buffer[] = [];
   let currentLevel = [...leaves];
@@ -141,7 +176,7 @@ describe("zk_lorawan", () => {
   });
 
   it("Deposits SOL into the Shared Shielded Pool", async () => {
-    const amount = new anchor.BN(2 * anchor.web3.LAMPORTS_PER_SOL);
+    const amount = new anchor.BN(150000); // must be exactly TOTAL_FEE_PER_CHIRP
     const singleZkVdeProofHash = Buffer.from(singleChirpProof.identity_hash, "hex");
     const dummyLeafHash = Array.from(singleZkVdeProofHash);
 
@@ -157,7 +192,13 @@ describe("zk_lorawan", () => {
 
     const poolAccount = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     assert.isTrue(poolAccount.totalBalance.toNumber() >= amount.toNumber());
-    assert.deepEqual(poolAccount.merkleRoot, dummyLeafHash);
+    
+    // Compute the expected root after index 0 insertion
+    let current = singleZkVdeProofHash;
+    for (let level = 0; level < 16; level++) {
+      current = Buffer.from(keccak_256(Buffer.concat([current, getZeroHash(level)])));
+    }
+    assert.deepEqual(poolAccount.merkleRoot, Array.from(current));
   });
 
   it("Performs single shielded chirp verification (MODE A)", async () => {
@@ -165,6 +206,8 @@ describe("zk_lorawan", () => {
     const attestationHash = Buffer.from(singleChirpProof.attestation_hash, "hex");
     const zkVdeProofHash = Buffer.from(singleChirpProof.identity_hash, "hex");
     const ciphertextHash = Buffer.from(singleChirpProof.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(singleChirpProof.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(singleChirpProof.firmware_hash, "hex");
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
     // Real, mathematically verified Groth16 proof coordinates
@@ -183,6 +226,9 @@ describe("zk_lorawan", () => {
     const initialTreasuryBal = await provider.connection.getBalance(treasuryAddress);
     const nullifierRent = await provider.connection.getMinimumBalanceForRentExemption(8 + 32 + 8);
 
+    // Compute Merkle proof for index 0 (all siblings are zero hashes)
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
+
     // Call verify_single
     await program.methods
       .verifySingle(
@@ -193,8 +239,10 @@ describe("zk_lorawan", () => {
         Array.from(attestationHash),
         Array.from(zkVdeProofHash),
         Array.from(ciphertextHash),
+        Array.from(depositCommitment),
+        Array.from(firmwareHash),
         timestamp,
-        [],
+        proof0.map(p => Array.from(p)),
         0
       )
       .accounts({
@@ -282,27 +330,39 @@ describe("zk_lorawan", () => {
 
     const timestamp = new anchor.BN(Math.floor(Date.now() / 1000));
 
-    // Compute the Merkle root of the 3 leaves
-    const leaves = [chirp1VdeProof, chirp2VdeProof, chirp3VdeProof];
-    const level1_0 = Buffer.from(keccak_256(Buffer.concat([chirp1VdeProof, chirp2VdeProof])));
-    const level1_1 = Buffer.from(keccak_256(Buffer.concat([chirp3VdeProof, chirp3VdeProof])));
-    const batchMerkleRoot = Buffer.from(keccak_256(Buffer.concat([level1_0, level1_1])));
+    // All leaves currently in the tree: [single_chirp_leaf, leaf1, leaf2, leaf3]
+    const allLeaves = [
+      Buffer.from(singleChirpProof.identity_hash, "hex"),
+      chirp1VdeProof,
+      chirp2VdeProof,
+      chirp3VdeProof,
+    ];
 
-    // Deposit SOL to set shieldedPool.merkleRoot to the batch Merkle root
-    const batchAmount = new anchor.BN(4 * anchor.web3.LAMPORTS_PER_SOL);
-    await program.methods
-      .depositShielded(batchAmount, Array.from(batchMerkleRoot))
-      .accounts({
-        sender: sender.publicKey,
-        shieldedPool: shieldedPoolPda,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .signers([sender])
-      .rpc();
+    // Deposit the 3 new batch leaves to the shielded pool on-chain
+    const amountPerChirp = new anchor.BN(150000);
+    for (let i = 1; i <= 3; i++) {
+      await program.methods
+        .depositShielded(amountPerChirp, Array.from(allLeaves[i]))
+        .accounts({
+          sender: sender.publicKey,
+          shieldedPool: shieldedPoolPda,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([sender])
+        .rpc();
+    }
 
-    const proof1 = buildMerkleProof(leaves, 0);
-    const proof2 = buildMerkleProof(leaves, 1);
-    const proof3 = buildMerkleProof(leaves, 2);
+    // Compute Merkle proof for each leaf in the 16-depth pool tree
+    const proof1 = buildOnChainMerkleProof(allLeaves, 1);
+    const proof2 = buildOnChainMerkleProof(allLeaves, 2);
+    const proof3 = buildOnChainMerkleProof(allLeaves, 3);
+
+    const depositCommitment1 = Buffer.from(batchChirpProofs[0].deposit_commitment, "hex");
+    const firmwareHash1 = Buffer.from(batchChirpProofs[0].firmware_hash, "hex");
+    const depositCommitment2 = Buffer.from(batchChirpProofs[1].deposit_commitment, "hex");
+    const firmwareHash2 = Buffer.from(batchChirpProofs[1].firmware_hash, "hex");
+    const depositCommitment3 = Buffer.from(batchChirpProofs[2].deposit_commitment, "hex");
+    const firmwareHash3 = Buffer.from(batchChirpProofs[2].firmware_hash, "hex");
 
     await program.methods
       .addChirp(
@@ -313,13 +373,16 @@ describe("zk_lorawan", () => {
         Array.from(chirp1Attestation),
         Array.from(chirp1VdeProof),
         Array.from(chirp1Payload),
+        Array.from(depositCommitment1),
+        Array.from(firmwareHash1),
         timestamp,
         proof1.map(p => Array.from(p)),
-        0
+        1
       )
       .accounts({
         batch: batchPda,
         shieldedPool: shieldedPoolPda,
+        registry: registryPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])
@@ -334,13 +397,16 @@ describe("zk_lorawan", () => {
         Array.from(chirp2Attestation),
         Array.from(chirp2VdeProof),
         Array.from(chirp2Payload),
+        Array.from(depositCommitment2),
+        Array.from(firmwareHash2),
         timestamp,
         proof2.map(p => Array.from(p)),
-        1
+        2
       )
       .accounts({
         batch: batchPda,
         shieldedPool: shieldedPoolPda,
+        registry: registryPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])
@@ -355,13 +421,16 @@ describe("zk_lorawan", () => {
         Array.from(chirp3Attestation),
         Array.from(chirp3VdeProof),
         Array.from(chirp3Payload),
+        Array.from(depositCommitment3),
+        Array.from(firmwareHash3),
         timestamp,
         proof3.map(p => Array.from(p)),
-        2
+        3
       )
       .accounts({
         batch: batchPda,
         shieldedPool: shieldedPoolPda,
+        registry: registryPda,
         gateway: gateway.publicKey,
       })
       .signers([gateway])
