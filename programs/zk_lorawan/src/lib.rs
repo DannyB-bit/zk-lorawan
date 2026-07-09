@@ -62,7 +62,10 @@ pub mod zk_lorawan {
 
         let next_index = shielded_pool.next_index;
         // Enforce max depth index limit (2^MERKLE_DEPTH = 1,024 leaves)
-        require!(next_index < (1u64 << MERKLE_DEPTH as u64), ZKLoRaError::CalculationOverflow);
+        require!(
+            next_index < (1u64 << MERKLE_DEPTH as u64),
+            ZKLoRaError::CalculationOverflow
+        );
 
         let new_root =
             insert_leaf_on_chain(&mut shielded_pool.filled_subtrees, next_index, leaf_hash);
@@ -112,7 +115,10 @@ pub mod zk_lorawan {
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
+        require!(
+            merkle_proof.len() == MERKLE_DEPTH,
+            ZKLoRaError::InvalidMerkleProof
+        );
         require!(
             (leaf_index as u64) < ctx.accounts.shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -211,7 +217,10 @@ pub mod zk_lorawan {
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
+        require!(
+            merkle_proof.len() == MERKLE_DEPTH,
+            ZKLoRaError::InvalidMerkleProof
+        );
         require!(
             (leaf_index as u64) < shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -348,7 +357,10 @@ pub mod zk_lorawan {
         );
 
         // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
-        require!(merkle_proof.len() == MERKLE_DEPTH, ZKLoRaError::InvalidMerkleProof);
+        require!(
+            merkle_proof.len() == MERKLE_DEPTH,
+            ZKLoRaError::InvalidMerkleProof
+        );
         require!(
             (leaf_index as u64) < ctx.accounts.shielded_pool.next_index,
             ZKLoRaError::InvalidMerkleProof
@@ -595,6 +607,282 @@ pub mod zk_lorawan {
             registry.approved_firmware_hashes.push(hash);
         }
         msg!("Registered firmware hash: {:?}", hash);
+        Ok(())
+    }
+
+    // ========================================================================
+    // Chunked Proof Flow — split proof data across multiple small transactions
+    // ========================================================================
+
+    /// Step 1: Create the ProofContext PDA (empty, ready for chunks)
+    pub fn initialize_proof_context(
+        ctx: Context<InitializeProofContext>,
+        _nonce: u64,
+    ) -> Result<()> {
+        let pc = &mut ctx.accounts.proof_context;
+        pc.gateway = ctx.accounts.gateway.key();
+        pc.chunks_written = 0;
+        pc.is_complete = false;
+        pc.created_at = Clock::get()?.unix_timestamp;
+        pc.bump = ctx.bumps.proof_context;
+        msg!("ProofContext initialized for gateway {}", pc.gateway);
+        Ok(())
+    }
+
+    /// Step 2: Write one chunk of proof data into the PDA
+    /// chunk_index 0 = proof_a (64) + proof_b (128) = 192 bytes
+    /// chunk_index 1 = proof_c (64) + public_inputs (256) = 320 bytes
+    /// chunk_index 2 = merkle_proof (MERKLE_DEPTH*32) + leaf_index (4)
+    pub fn write_proof_chunk(
+        ctx: Context<WriteProofChunk>,
+        _nonce: u64,
+        chunk_index: u8,
+        data: Vec<u8>,
+    ) -> Result<()> {
+        let pc = &mut ctx.accounts.proof_context;
+
+        // Gateway binding: only the original gateway can write
+        require!(
+            pc.gateway == ctx.accounts.gateway.key(),
+            ZKLoRaError::ProofContextUnauthorized
+        );
+        require!(chunk_index < 3, ZKLoRaError::InvalidChunkIndex);
+
+        match chunk_index {
+            0 => {
+                // proof_a (64) + proof_b (128) = 192 bytes
+                require!(data.len() == 192, ZKLoRaError::InvalidChunkDataLength);
+                pc.proof_a.copy_from_slice(&data[0..64]);
+                pc.proof_b.copy_from_slice(&data[64..192]);
+            }
+            1 => {
+                // proof_c (64) + public_inputs (8 * 32 = 256) = 320 bytes
+                require!(data.len() == 320, ZKLoRaError::InvalidChunkDataLength);
+                pc.proof_c.copy_from_slice(&data[0..64]);
+                for i in 0..8 {
+                    pc.public_inputs[i].copy_from_slice(&data[64 + i * 32..64 + (i + 1) * 32]);
+                }
+            }
+            2 => {
+                // merkle_proof (MERKLE_DEPTH * 32) + leaf_index (4)
+                let expected = MERKLE_DEPTH * 32 + 4;
+                require!(data.len() == expected, ZKLoRaError::InvalidChunkDataLength);
+                for i in 0..MERKLE_DEPTH {
+                    pc.merkle_proof[i].copy_from_slice(&data[i * 32..(i + 1) * 32]);
+                }
+                let leaf_bytes: [u8; 4] = data[MERKLE_DEPTH * 32..MERKLE_DEPTH * 32 + 4]
+                    .try_into()
+                    .unwrap();
+                pc.leaf_index = u32::from_le_bytes(leaf_bytes);
+            }
+            _ => return Err(ZKLoRaError::InvalidChunkIndex.into()),
+        }
+
+        pc.chunks_written |= 1 << chunk_index; // bitmask: bit 0, 1, 2
+        if pc.chunks_written == 0b111 {
+            pc.is_complete = true;
+            msg!("ProofContext complete — all 3 chunks written");
+        } else {
+            msg!(
+                "ProofContext chunk {} written (mask: {:03b})",
+                chunk_index,
+                pc.chunks_written
+            );
+        }
+        Ok(())
+    }
+
+    /// Step 3: Verify the proof using data from the PDA — real Groth16 + all checks
+    /// Instruction data is only 16 bytes (discriminator + nonce)
+    pub fn verify_proof_context(ctx: Context<VerifyProofContext>, _nonce: u64) -> Result<()> {
+        let pc = &ctx.accounts.proof_context;
+
+        // 0. Ensure proof context is complete
+        require!(pc.is_complete, ZKLoRaError::ProofContextIncomplete);
+        require!(
+            pc.gateway == ctx.accounts.gateway.key(),
+            ZKLoRaError::ProofContextUnauthorized
+        );
+
+        let merkle_proof: Vec<[u8; 32]> = pc.merkle_proof.to_vec();
+        let leaf_index = pc.leaf_index;
+        let shielded_pool = &ctx.accounts.shielded_pool;
+
+        // 1. Verify Merkle membership proof (allowing historical roots)
+        require!(
+            merkle_proof.len() == MERKLE_DEPTH,
+            ZKLoRaError::InvalidMerkleProof
+        );
+        require!(
+            (leaf_index as u64) < shielded_pool.next_index,
+            ZKLoRaError::InvalidMerkleProof
+        );
+
+        // Compute Merkle root from leaf + proof
+        let leaf_hash = pc.public_inputs[0]; // identity_hash — the leaf deposited into pool
+        let computed_root = compute_merkle_root_from_proof(&leaf_hash, &merkle_proof, leaf_index);
+
+        let is_member = is_known_root(shielded_pool, &computed_root);
+        require!(is_member, ZKLoRaError::InvalidMerkleProof);
+
+        // 2. Firmware hash whitelist check
+        let firmware_hash = pc.public_inputs[7]; // firmware_hash is public_input[7]
+        let registry = &ctx.accounts.registry;
+        require!(
+            registry.approved_firmware_hashes.contains(&firmware_hash),
+            ZKLoRaError::InvalidAttestation
+        );
+
+        // 3. Gateway public input binding
+        // public_inputs[4] = gateway_part1 (lower 16 bytes)
+        // public_inputs[5] = gateway_part2 (upper 16 bytes)
+        let gateway_key_bytes = ctx.accounts.gateway.key().to_bytes();
+        let mut expected_part1 = [0u8; 32];
+        expected_part1[16..32].copy_from_slice(&gateway_key_bytes[0..16]);
+        let mut expected_part2 = [0u8; 32];
+        expected_part2[16..32].copy_from_slice(&gateway_key_bytes[16..32]);
+        require!(
+            pc.public_inputs[4] == expected_part1,
+            ZKLoRaError::UnauthorizedGateway
+        );
+        require!(
+            pc.public_inputs[5] == expected_part2,
+            ZKLoRaError::UnauthorizedGateway
+        );
+
+        // 4. Groth16 proof verification via alt_bn128 precompile
+        verify_groth16(&pc.proof_a, &pc.proof_b, &pc.proof_c, &pc.public_inputs)?;
+
+        // 5. Nullifier spend prevention (PDA init ensures uniqueness)
+        let nullifier_record = &mut ctx.accounts.nullifier_record;
+        nullifier_record.nullifier_hash = pc.public_inputs[1];
+        nullifier_record.spent_at = Clock::get()?.unix_timestamp;
+
+        // 6. Escrow balance check & payouts
+        let shielded_pool_info = ctx.accounts.shielded_pool.to_account_info();
+        let gateway_info = ctx.accounts.gateway.to_account_info();
+        let treasury_info = ctx.accounts.treasury.to_account_info();
+
+        let rent_minimum = Rent::get()?.minimum_balance(shielded_pool_info.data_len());
+        let available_balance = shielded_pool_info.lamports().saturating_sub(rent_minimum);
+        require!(
+            available_balance >= TOTAL_FEE_PER_CHIRP,
+            ZKLoRaError::InsufficientEscrowFunding
+        );
+
+        // Transfer gateway reward
+        **shielded_pool_info.try_borrow_mut_lamports()? = shielded_pool_info
+            .lamports()
+            .checked_sub(GATEWAY_REWARD_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+        **gateway_info.try_borrow_mut_lamports()? = gateway_info
+            .lamports()
+            .checked_add(GATEWAY_REWARD_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+
+        // Transfer protocol fee to treasury
+        **shielded_pool_info.try_borrow_mut_lamports()? = shielded_pool_info
+            .lamports()
+            .checked_sub(PROTOCOL_FEE_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+        **treasury_info.try_borrow_mut_lamports()? = treasury_info
+            .lamports()
+            .checked_add(PROTOCOL_FEE_LAMPORTS)
+            .ok_or(ZKLoRaError::CalculationOverflow)?;
+
+        // 7. Update registry stats
+        let registry = &mut ctx.accounts.registry;
+        registry.total_chirps_verified += 1;
+        registry.total_fees_collected += TOTAL_FEE_PER_CHIRP;
+        registry.total_gateway_rewards += GATEWAY_REWARD_LAMPORTS;
+        registry.total_treasury_fees += PROTOCOL_FEE_LAMPORTS;
+
+        msg!(
+            "ZK-LoRaWAN: Chunked proof verified — gateway {} | nullifier {:?}... | firmware {:?}...",
+            ctx.accounts.gateway.key(),
+            &pc.public_inputs[1][..4],
+            &firmware_hash[..4]
+        );
+        Ok(())
+    }
+
+    /// Step 4: Close the ProofContext PDA and return rent to gateway
+    pub fn close_proof_context(_ctx: Context<CloseProofContext>, _nonce: u64) -> Result<()> {
+        msg!("ProofContext closed, rent returned to gateway");
+        Ok(())
+    }
+
+    /// Batch variant: add a chirp from a completed ProofContext PDA
+    pub fn add_chirp_from_context(ctx: Context<AddChirpFromContext>, _nonce: u64) -> Result<()> {
+        let pc = &ctx.accounts.proof_context;
+        let batch = &mut ctx.accounts.batch;
+
+        require!(pc.is_complete, ZKLoRaError::ProofContextIncomplete);
+        require!(
+            pc.gateway == ctx.accounts.gateway.key(),
+            ZKLoRaError::ProofContextUnauthorized
+        );
+        require!(!batch.is_finalized, ZKLoRaError::BatchAlreadyFinalized);
+        require!(
+            batch.gateway == ctx.accounts.gateway.key(),
+            ZKLoRaError::UnauthorizedGateway
+        );
+        require!(
+            (batch.chirp_count as usize) < MAX_BATCH_SIZE,
+            ZKLoRaError::BatchFull
+        );
+
+        // Verify Merkle membership
+        let merkle_proof: Vec<[u8; 32]> = pc.merkle_proof.to_vec();
+        require!(
+            merkle_proof.len() == MERKLE_DEPTH,
+            ZKLoRaError::InvalidMerkleProof
+        );
+        require!(
+            (pc.leaf_index as u64) < ctx.accounts.shielded_pool.next_index,
+            ZKLoRaError::InvalidMerkleProof
+        );
+
+        let leaf_hash = pc.public_inputs[0];
+        let computed_root =
+            compute_merkle_root_from_proof(&leaf_hash, &merkle_proof, pc.leaf_index);
+        let is_member = is_known_root(&ctx.accounts.shielded_pool, &computed_root);
+        require!(is_member, ZKLoRaError::InvalidMerkleProof);
+
+        // Firmware hash whitelist check
+        let firmware_hash = pc.public_inputs[7];
+        require!(
+            ctx.accounts
+                .registry
+                .approved_firmware_hashes
+                .contains(&firmware_hash),
+            ZKLoRaError::InvalidAttestation
+        );
+
+        // Gateway binding
+        let gateway_key_bytes = ctx.accounts.gateway.key().to_bytes();
+        let mut expected_part1 = [0u8; 32];
+        expected_part1[16..32].copy_from_slice(&gateway_key_bytes[0..16]);
+        let mut expected_part2 = [0u8; 32];
+        expected_part2[16..32].copy_from_slice(&gateway_key_bytes[16..32]);
+        require!(
+            pc.public_inputs[4] == expected_part1,
+            ZKLoRaError::UnauthorizedGateway
+        );
+        require!(
+            pc.public_inputs[5] == expected_part2,
+            ZKLoRaError::UnauthorizedGateway
+        );
+
+        // Add nullifier to batch
+        batch.nullifiers.push(pc.public_inputs[1]);
+        batch.chirp_count += 1;
+
+        msg!(
+            "ZK-LoRaWAN: Chirp added to batch #{} from context (count: {})",
+            batch.batch_id,
+            batch.chirp_count
+        );
         Ok(())
     }
 
@@ -1140,6 +1428,24 @@ pub struct NullifierRecord {
     pub spent_at: i64,
 }
 
+/// Staged proof context PDA — accumulates proof data across multiple small
+/// transactions so the final verify instruction carries only a 16-byte payload.
+#[account]
+pub struct ProofContext {
+    pub gateway: Pubkey,                        // 32
+    pub proof_a: [u8; 64],                      // 64
+    pub proof_b: [u8; 128],                     // 128
+    pub proof_c: [u8; 64],                      // 64
+    pub public_inputs: [[u8; 32]; 8],           // 256
+    pub merkle_proof: [[u8; 32]; MERKLE_DEPTH], // 320
+    pub leaf_index: u32,                        // 4
+    pub chunks_written: u8,                     // 1
+    pub is_complete: bool,                      // 1
+    pub created_at: i64,                        // 8
+    pub bump: u8,                               // 1
+}
+pub const PROOF_CONTEXT_SEED: &[u8] = b"proof-ctx";
+
 // ============================================================================
 // Instruction Contexts
 // ============================================================================
@@ -1292,6 +1598,106 @@ pub struct VerifyChirpInclusion<'info> {
 }
 
 // ============================================================================
+// Chunked Proof Flow — Instruction Contexts
+// ============================================================================
+
+#[derive(Accounts)]
+#[instruction(nonce: u64)]
+pub struct InitializeProofContext<'info> {
+    #[account(
+        init,
+        payer = gateway,
+        space = 887, // 8 + 32 + 64 + 128 + 64 + 256 + 320 + 4 + 1 + 1 + 8 + 1
+        seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
+        bump,
+    )]
+    pub proof_context: Account<'info, ProofContext>,
+    #[account(mut)]
+    pub gateway: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(nonce: u64)]
+pub struct WriteProofChunk<'info> {
+    #[account(
+        mut,
+        seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
+        bump = proof_context.bump,
+    )]
+    pub proof_context: Account<'info, ProofContext>,
+    pub gateway: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(nonce: u64)]
+pub struct VerifyProofContext<'info> {
+    #[account(
+        mut,
+        seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
+        bump = proof_context.bump,
+    )]
+    pub proof_context: Account<'info, ProofContext>,
+    #[account(mut, seeds = [REGISTRY_SEED], bump)]
+    pub registry: Account<'info, ProtocolRegistry>,
+    #[account(
+        mut,
+        seeds = [b"shielded-pool"],
+        bump,
+    )]
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    #[account(
+        init,
+        payer = gateway,
+        space = 8 + 32 + 8,
+        seeds = [b"nullifier", proof_context.public_inputs[1].as_ref()],
+        bump,
+    )]
+    pub nullifier_record: Account<'info, NullifierRecord>,
+    #[account(mut)]
+    pub gateway: Signer<'info>,
+    /// CHECK: Protocol treasury wallet verified via hardcoded address
+    #[account(mut, address = pubkey!("CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ"))]
+    pub treasury: AccountInfo<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(nonce: u64)]
+pub struct CloseProofContext<'info> {
+    #[account(
+        mut,
+        close = gateway,
+        seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
+        bump = proof_context.bump,
+    )]
+    pub proof_context: Account<'info, ProofContext>,
+    #[account(mut)]
+    pub gateway: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(nonce: u64)]
+pub struct AddChirpFromContext<'info> {
+    #[account(
+        mut,
+        seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
+        bump = proof_context.bump,
+    )]
+    pub proof_context: Account<'info, ProofContext>,
+    #[account(mut)]
+    pub batch: Account<'info, BatchAccumulator>,
+    #[account(
+        seeds = [b"shielded-pool"],
+        bump,
+    )]
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    #[account(seeds = [REGISTRY_SEED], bump)]
+    pub registry: Account<'info, ProtocolRegistry>,
+    pub gateway: Signer<'info>,
+}
+
+// ============================================================================
 // Errors
 // ============================================================================
 #[error_code]
@@ -1330,6 +1736,16 @@ pub enum ZKLoRaError {
     InvalidCiphertext,
     #[msg("Invalid deposit amount, must be exactly 150,000 lamports")]
     InvalidDepositAmount,
+    #[msg("Proof context is not complete (missing chunks)")]
+    ProofContextIncomplete,
+    #[msg("Invalid proof chunk index")]
+    InvalidChunkIndex,
+    #[msg("Only the original gateway can modify this proof context")]
+    ProofContextUnauthorized,
+    #[msg("Proof context chunk already written")]
+    ChunkAlreadyWritten,
+    #[msg("Invalid chunk data length")]
+    InvalidChunkDataLength,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
