@@ -20,7 +20,7 @@ pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000; // treasury per chirp
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000; // gateway per chirp
 pub const TOTAL_FEE_PER_CHIRP: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MAX_BATCH_SIZE: usize = 100;
-pub const MERKLE_DEPTH: usize = 16; // 2^16 = 65,536 leaves; fits in Solana 1232-byte tx thanks to chunked flow
+pub const MERKLE_DEPTH: usize = 10; // 2^16 = 65,536 leaves; fits in Solana 1232-byte tx thanks to chunked flow
 pub const BATCH_SEED: &[u8] = b"zk-lorawan-batch";
 pub const REGISTRY_SEED: &[u8] = b"zk-lorawan-registry";
 #[cfg(feature = "integration-test")]
@@ -61,7 +61,7 @@ pub mod zk_lorawan {
         let shielded_pool = &mut ctx.accounts.shielded_pool;
 
         let next_index = shielded_pool.next_index;
-        // Enforce max depth index limit (2^MERKLE_DEPTH = 65,536 leaves)
+        // Enforce max depth index limit (2^MERKLE_DEPTH = 1,024 leaves)
         require!(
             next_index < (1u64 << MERKLE_DEPTH as u64),
             ZKLoRaError::CalculationOverflow
@@ -1429,7 +1429,7 @@ pub struct ProofContext {
     pub proof_b: [u8; 128],                     // 128
     pub proof_c: [u8; 64],                      // 64
     pub public_inputs: [[u8; 32]; 8],           // 256
-    pub merkle_proof: [[u8; 32]; MERKLE_DEPTH], // 512
+    pub merkle_proof: [[u8; 32]; MERKLE_DEPTH], // 320
     pub leaf_index: u32,                        // 4
     pub chunks_written: u8,                     // 1
     pub is_complete: bool,                      // 1
@@ -1464,7 +1464,7 @@ pub struct DepositShielded<'info> {
     #[account(
         init_if_needed,
         payer = sender,
-        space = 900, // 8 + 8 + 32 + 8 + 8 + 16 * 32 + 8 * 32 + 8 + 1
+        space = 708, // 8 + 8 + 32 + 8 + 8 + 16 * 32 + 8 * 32 + 8 + 1
         seeds = [b"shielded-pool"],
         bump
     )]
@@ -1599,7 +1599,7 @@ pub struct InitializeProofContext<'info> {
     #[account(
         init,
         payer = gateway,
-        space = 1150, // 8 + 32 + 64 + 128 + 64 + 256 + 512 + 4 + 1 + 1 + 8 + 1
+        space = 887, // 8 + 32 + 64 + 128 + 64 + 256 + 512 + 4 + 1 + 1 + 8 + 1
         seeds = [PROOF_CONTEXT_SEED, gateway.key().as_ref(), &nonce.to_le_bytes()],
         bump,
     )]
