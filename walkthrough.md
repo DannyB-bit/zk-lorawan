@@ -72,3 +72,11 @@ This document records the updates implemented to bring `WHITEPAPER.md` and the c
 - **Device SDK Test**: `python sdk/device_sdk.py` executes successfully using real encoders and FEC (no mocks).
 - **Typecheck**: `npm run typecheck` compiles TypeScript test fixtures with zero compiler warnings.
 - **Rust Verification**: Cargo workspace test suite compiles and executes successfully.
+
+### 11. Cryptographic and Shielded Pool Hardening (Active Resolution)
+- **Circuit Gateway Binding**: Bound the gateway/payee public key directly as a public input (`gateway_part1` and `gateway_part2`) to the ZK-SNARK circuit to prevent front-running rewards.
+- **On-Chain Merkle Membership Checks**: Integrated Merkle proof validation in the Solana Anchor program (`verify_single`, `verify_single_proof`, and `add_chirp`) against the shielded pool's current root. This ensures that the caller proofs are funded in the Merkle tree before any on-chain action or reward distribution occurs, preventing pool draining.
+- **Upgrade to 220 MiMC Rounds**: Upgraded the MiMC rounds count to `220` (from `10`) across the circuit, prover CLI, and FFI verifier for standard cryptographic soundness on the BN254 curve.
+- **Dynamic Integration Tests**: Refactored the TypeScript test suite (`tests/zk_lorawan.ts`) and Python gateway (`gateway/gateway.py`) to dynamically invoke the compiled `zk_lorawan_prove` CLI tool, generating mathematically valid proofs bound to the dynamic runtime gateway address.
+- **Verification**: Running `cargo test --workspace` verifies circuit soundness and Rust program unit tests, while the `verify_all_modules.py` harness confirms all python modules, range proofs, and gateway engines pass successfully (`8/8 passed`).
+

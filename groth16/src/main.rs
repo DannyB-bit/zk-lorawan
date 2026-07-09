@@ -17,7 +17,7 @@ use rand::SeedableRng;
 pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000;
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000;
 pub const TOTAL_FEE_LAMPORTS: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
-pub const MIMC_ROUNDS: usize = 10;
+pub const MIMC_ROUNDS: usize = 220;
 
 // ============================================================================
 // ZK-LoRaWAN Proof Bundle (serialized for LoRa transmission)
@@ -68,6 +68,7 @@ impl ZKLoRaWANProver {
         decryption_key_bytes: &[u8],
         coordinate_val: u64,
         firmware_hash_bytes: &[u8],
+        gateway_address_bytes: &[u8],
     ) -> ZKLoRaWANProofBundle {
         let mut rng = rand::thread_rng();
 
@@ -76,6 +77,15 @@ impl ZKLoRaWANProver {
         let decryption_key_fr = Fr::from_le_bytes_mod_order(decryption_key_bytes);
         let coordinate_fr = Fr::from(coordinate_val);
         let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash_bytes);
+
+        // Split 32-byte gateway address into two 16-byte halves and map to Fr
+        let mut part1_bytes = [0u8; 32];
+        part1_bytes[0..16].copy_from_slice(&gateway_address_bytes[0..16]);
+        let gateway_part1_fr = Fr::from_le_bytes_mod_order(&part1_bytes);
+
+        let mut part2_bytes = [0u8; 32];
+        part2_bytes[0..16].copy_from_slice(&gateway_address_bytes[16..32]);
+        let gateway_part2_fr = Fr::from_le_bytes_mod_order(&part2_bytes);
 
         // Compute the public hashes
         let identity_hash = circuit::mimc_hash(private_key_fr, None, &self.constants);
@@ -97,6 +107,8 @@ impl ZKLoRaWANProver {
             nullifier_hash,
             attestation_hash,
             ciphertext_hash,
+            gateway_part1_fr,
+            gateway_part2_fr,
             self.constants.clone(),
             &mut rng,
         )
@@ -153,7 +165,11 @@ impl ZKLoRaWANProver {
     }
 
     /// Verify a proof bundle (used by gateway)
-    pub fn verify_bundle(&self, bundle: &ZKLoRaWANProofBundle) -> bool {
+    pub fn verify_bundle(
+        &self,
+        bundle: &ZKLoRaWANProofBundle,
+        gateway_address_bytes: &[u8],
+    ) -> bool {
         // Deserialize proof points
         let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed)
         {
@@ -195,6 +211,15 @@ impl ZKLoRaWANProver {
             Err(_) => return false,
         };
 
+        // Split 32-byte gateway address into two 16-byte halves and map to Fr
+        let mut part1_bytes = [0u8; 32];
+        part1_bytes[0..16].copy_from_slice(&gateway_address_bytes[0..16]);
+        let gateway_part1_fr = Fr::from_le_bytes_mod_order(&part1_bytes);
+
+        let mut part2_bytes = [0u8; 32];
+        part2_bytes[0..16].copy_from_slice(&gateway_address_bytes[16..32]);
+        let gateway_part2_fr = Fr::from_le_bytes_mod_order(&part2_bytes);
+
         // Run real Groth16 verification (bilinear pairing check)
         matches!(
             circuit::verify_proof(
@@ -204,6 +229,8 @@ impl ZKLoRaWANProver {
                 nullifier_hash,
                 attestation_hash,
                 ciphertext_hash,
+                gateway_part1_fr,
+                gateway_part2_fr,
             ),
             Ok(true)
         )
@@ -268,6 +295,11 @@ fn main() {
             let ciphertext_hash =
                 circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &prover.constants);
 
+            let part1_bytes = [0u8; 32];
+            let gateway_part1_fr = Fr::from_le_bytes_mod_order(&part1_bytes);
+            let part2_bytes = [0u8; 32];
+            let gateway_part2_fr = Fr::from_le_bytes_mod_order(&part2_bytes);
+
             let mut rng = rand::thread_rng();
             let proof = circuit::generate_proof(
                 &prover.proving_key,
@@ -279,6 +311,8 @@ fn main() {
                 nullifier_hash,
                 attestation_hash,
                 ciphertext_hash,
+                gateway_part1_fr,
+                gateway_part2_fr,
                 prover.constants.clone(),
                 &mut rng,
             )
@@ -369,9 +403,69 @@ fn main() {
         std::process::exit(0);
     }
 
+    if args.len() > 1 && args[1] == "generate" {
+        if args.len() < 7 {
+            eprintln!("Usage: zk_lorawan_prove generate <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex>");
+            std::process::exit(2);
+        }
+        let private_key = hex::decode(&args[2]).expect("Invalid private_key hex");
+        let decryption_key = hex::decode(&args[3]).expect("Invalid decryption_key hex");
+        let coordinate_val: u64 = args[4].parse().expect("Invalid coordinate_val");
+        let firmware_hash = hex::decode(&args[5]).expect("Invalid firmware_hash hex");
+        let gateway_address = hex::decode(&args[6]).expect("Invalid gateway_address hex");
+
+        let prover = ZKLoRaWANProver::new();
+        let bundle = prover.generate_proof(
+            &private_key,
+            &decryption_key,
+            coordinate_val,
+            &firmware_hash,
+            &gateway_address,
+        );
+
+        let proof_a =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed).unwrap();
+        let proof_b =
+            ark_bn254::G2Affine::deserialize_compressed(&*bundle.proof_b_compressed).unwrap();
+        let proof_c =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed).unwrap();
+
+        println!("{{");
+        println!(
+            "  \"proof_a\": \"{}\",",
+            hex::encode(to_solana_g1(&proof_a))
+        );
+        println!(
+            "  \"proof_b\": \"{}\",",
+            hex::encode(to_solana_g2(&proof_b))
+        );
+        println!(
+            "  \"proof_c\": \"{}\",",
+            hex::encode(to_solana_g1(&proof_c))
+        );
+        println!(
+            "  \"identity_hash\": \"{}\",",
+            hex::encode(&bundle.identity_hash)
+        );
+        println!(
+            "  \"nullifier_hash\": \"{}\",",
+            hex::encode(&bundle.nullifier_hash)
+        );
+        println!(
+            "  \"attestation_hash\": \"{}\",",
+            hex::encode(&bundle.attestation_hash)
+        );
+        println!(
+            "  \"ciphertext_hash\": \"{}\"",
+            hex::encode(&bundle.ciphertext_hash)
+        );
+        println!("}}");
+        std::process::exit(0);
+    }
+
     if args.len() > 1 && args[1] == "verify" {
-        if args.len() < 9 {
-            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash>");
+        if args.len() < 10 {
+            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex>");
             std::process::exit(2);
         }
         let proof_a_bytes = hex::decode(&args[2]).expect("Invalid proof_a hex");
@@ -381,6 +475,7 @@ fn main() {
         let nullifier_bytes = hex::decode(&args[6]).expect("Invalid nullifier_hash hex");
         let attestation_bytes = hex::decode(&args[7]).expect("Invalid attestation_hash hex");
         let ciphertext_bytes = hex::decode(&args[8]).expect("Invalid ciphertext_hash hex");
+        let gateway_bytes = hex::decode(&args[9]).expect("Invalid gateway_address hex");
 
         let bundle = ZKLoRaWANProofBundle {
             proof_a_compressed: proof_a_bytes,
@@ -394,7 +489,7 @@ fn main() {
         };
 
         let prover = ZKLoRaWANProver::new();
-        let is_valid = prover.verify_bundle(&bundle);
+        let is_valid = prover.verify_bundle(&bundle, &gateway_bytes);
         if is_valid {
             println!("VALID");
             std::process::exit(0);
@@ -422,9 +517,16 @@ fn main() {
     let decryption_key = b"zk-lorawan-decryption-key-secret";
     let coordinate_val = 123456789u64;
     let firmware_hash = b"enclave-firmware-version-v1.0.2";
+    let dummy_gateway = [0u8; 32];
 
     println!("  [2] Generating Groth16 proof...");
-    let bundle = prover.generate_proof(private_key, decryption_key, coordinate_val, firmware_hash);
+    let bundle = prover.generate_proof(
+        private_key,
+        decryption_key,
+        coordinate_val,
+        firmware_hash,
+        &dummy_gateway,
+    );
     println!("      ✅ Proof generated");
     println!(
         "      proof_a (G1): {} bytes compressed",
@@ -453,7 +555,7 @@ fn main() {
 
     // Verify the proof
     println!("  [3] Verifying proof (bilinear pairing check)...");
-    let is_valid = prover.verify_bundle(&bundle);
+    let is_valid = prover.verify_bundle(&bundle, &dummy_gateway);
     println!(
         "      Verification result: {}",
         if is_valid { "✅ VALID" } else { "❌ INVALID" }
@@ -505,8 +607,13 @@ fn main() {
     // Test with wrong key / tampered inputs
     println!("  [6] Tamper test (wrong inputs)...");
     let wrong_key = b"this-is-the-wrong-key-should-fail";
-    let wrong_bundle =
-        prover.generate_proof(wrong_key, decryption_key, coordinate_val, firmware_hash);
+    let wrong_bundle = prover.generate_proof(
+        wrong_key,
+        decryption_key,
+        coordinate_val,
+        firmware_hash,
+        &dummy_gateway,
+    );
 
     // Tamper with proof_a to simulate corruption
     let mut tampered = ZKLoRaWANProofBundle {
@@ -523,7 +630,7 @@ fn main() {
     if !tampered.proof_a_compressed.is_empty() {
         tampered.proof_a_compressed[0] ^= 0xFF;
     }
-    let tamper_valid = prover.verify_bundle(&tampered);
+    let tamper_valid = prover.verify_bundle(&tampered, &dummy_gateway);
     println!(
         "      Tampered proof result: {}",
         if !tamper_valid {

@@ -55,13 +55,13 @@ def committed_vk(root: str) -> dict[str, str]:
             raise RuntimeError(f"Could not find {name} in on-chain program")
         actual[name] = hex_array(match.group(1))
 
-    match = re.search(r"let vk_ic: \[\[u8; 64\]; 5\] = \[(.*?)\];", source, re.S)
+    match = re.search(r"let vk_ic: \[\[u8; 64\]; 7\] = \[(.*?)\];", source, re.S)
     if not match:
         raise RuntimeError("Could not find vk_ic in on-chain program")
     joined_ic = hex_array(match.group(1))
-    if len(joined_ic) != 5 * 64 * 2:
-        raise RuntimeError(f"vk_ic has {len(joined_ic) // 2} bytes, expected 320")
-    for index in range(5):
+    if len(joined_ic) != 7 * 64 * 2:
+        raise RuntimeError(f"vk_ic has {len(joined_ic) // 2} bytes, expected 448")
+    for index in range(7):
         actual[f"vk_ic[{index}]"] = joined_ic[index * 128:(index + 1) * 128]
     return actual
 

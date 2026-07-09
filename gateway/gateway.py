@@ -71,6 +71,7 @@ def load_groth16_lib():
                     ctypes.c_char_p, ctypes.c_size_t,
                     ctypes.c_char_p, ctypes.c_size_t,
                     ctypes.c_char_p, ctypes.c_size_t,
+                    ctypes.c_char_p, ctypes.c_size_t,
                 ]
                 lib.verify_zk_proof_raw.restype = ctypes.c_uint32
 
@@ -417,10 +418,13 @@ class ZKVerifier:
                 "payload": payload_and_fec,
             }
     
-    def verify_proof(self, frame: dict) -> bool:
+    def verify_proof(self, frame: dict, gateway_address_hex: str = None) -> bool:
         """
         Verify the Groth16 proof locally using real ark-groth16 FFI or subprocess fallback.
         """
+        if gateway_address_hex is None:
+            gateway_address_hex = "0000000000000000000000000000000000000000000000000000000000000000"
+
         proof_a_hex = frame["proof_a"].hex().encode('utf-8')
         proof_b_hex = frame["proof_b"].hex().encode('utf-8')
         proof_c_hex = frame["proof_c"].hex().encode('utf-8')
@@ -428,6 +432,7 @@ class ZKVerifier:
         nullifier_hash_hex = frame.get("nullifier_hash", b"").hex().encode('utf-8')
         attestation_hash_hex = frame.get("attestation_hash", b"").hex().encode('utf-8')
         ciphertext_hash_hex = frame.get("ciphertext_hash", b"").hex().encode('utf-8')
+        gateway_address_hex_bytes = gateway_address_hex.encode('utf-8')
 
         # Try FFI library
         lib, path = load_groth16_lib()
@@ -439,7 +444,8 @@ class ZKVerifier:
                 identity_hash_hex, len(identity_hash_hex),
                 nullifier_hash_hex, len(nullifier_hash_hex),
                 attestation_hash_hex, len(attestation_hash_hex),
-                ciphertext_hash_hex, len(ciphertext_hash_hex)
+                ciphertext_hash_hex, len(ciphertext_hash_hex),
+                gateway_address_hex_bytes, len(gateway_address_hex_bytes)
             )
             return res == 1
 
@@ -462,7 +468,8 @@ class ZKVerifier:
                         frame["identity_hash"].hex(),
                         frame.get("nullifier_hash", b"").hex(),
                         frame.get("attestation_hash", b"").hex(),
-                        frame.get("ciphertext_hash", b"").hex()
+                        frame.get("ciphertext_hash", b"").hex(),
+                        gateway_address_hex
                     ]
                     proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
                     if proc.returncode == 0 and "VALID" in proc.stdout:
@@ -557,6 +564,30 @@ class MerkleTree:
         
         return current[0]
 
+    @staticmethod
+    def build_proof(leaves: list, index: int) -> list:
+        """Generate a Merkle proof of membership for a leaf at a given index."""
+        if not leaves:
+            return []
+        proof = []
+        current = list(leaves)
+        idx = index
+        while len(current) > 1:
+            next_level = []
+            for i in range(0, len(current), 2):
+                left = current[i]
+                right = current[i + 1] if i + 1 < len(current) else left
+                if i == idx or i + 1 == idx:
+                    sibling = right if i == idx else left
+                    proof.append(sibling)
+                
+                h = keccak.new(digest_bits=256)
+                h.update(left + right)
+                next_level.append(h.digest())
+            current = next_level
+            idx = idx // 2
+        return proof
+
 
 # ============================================================================
 # Solana Submitter (RPC interface)
@@ -635,6 +666,9 @@ class SolanaSubmitter:
                 proof_b_list = proof_b_list[:128]
                 proof_c_list = proof_c_list[:64]
 
+            merkle_proof = getattr(chirp, 'merkle_proof', [])
+            leaf_index = getattr(chirp, 'leaf_index', 0)
+
             tx = await self.program.methods.verifySingle(
                 proof_a_list,
                 proof_b_list,
@@ -643,7 +677,9 @@ class SolanaSubmitter:
                 list(chirp.attestation_hash),
                 list(chirp.zk_vde_proof_hash),
                 list(chirp.ciphertext_hash),
-                int(chirp.timestamp)
+                int(chirp.timestamp),
+                [list(p) for p in merkle_proof],
+                int(leaf_index)
             ).accounts({
                 "registry": registry_pda,
                 "shieldedPool": shielded_pool_pda,
@@ -728,8 +764,11 @@ class SolanaSubmitter:
             self.logger.info(f"Initialized batch #{batch_id} on-chain: {init_tx}")
             
             # Add chirps
+            leaves = [chirp.zk_vde_proof_hash for chirp in batch.chirps]
+            shielded_pool_pda = await self.get_shielded_pool_pda()
             for idx, chirp in enumerate(batch.chirps):
                 proof_a_list, proof_b_list, proof_c_list = decompressed_batch_coords[idx]
+                merkle_proof = MerkleTree.build_proof(leaves, idx)
 
                 add_tx = await self.program.methods.addChirp(
                     proof_a_list,
@@ -739,15 +778,17 @@ class SolanaSubmitter:
                     list(chirp.attestation_hash),
                     list(chirp.zk_vde_proof_hash),
                     list(chirp.ciphertext_hash), # ciphertext hash is payload hash on-chain
-                    int(chirp.timestamp)
+                    int(chirp.timestamp),
+                    [list(p) for p in merkle_proof],
+                    int(idx)
                 ).accounts({
                     "batch": batch_pda,
+                    "shieldedPool": shielded_pool_pda,
                     "gateway": self.keypair.pubkey()
                 }).signers([self.keypair]).rpc()
                 self.logger.debug(f"Added chirp {idx+1}/{n} to batch #{batch_id}: {add_tx}")
                 
             # Submit batch
-            shielded_pool_pda = await self.get_shielded_pool_pda()
             treasury_pubkey = Pubkey.from_string(self.config.treasury_pubkey)
             
             nullifier_pdas = []
@@ -813,7 +854,11 @@ class Gateway:
             return
         
         # Step 2: Verify ZK proof locally (FREE)
-        if not self.verifier.verify_proof(frame):
+        gateway_address_hex = None
+        if os.environ.get("ZK_LORAWAN_DEMO_MODE") != "1":
+            gateway_address_hex = bytes(self.submitter.keypair.pubkey()).hex()
+
+        if not self.verifier.verify_proof(frame, gateway_address_hex):
             chirp.status = ChirpStatus.REJECTED
             self.stats["chirps_rejected"] += 1
             self.logger.warning(f"Chirp rejected: invalid ZK proof")
@@ -927,14 +972,13 @@ async def _demo():
     # Simulate 25 chirps arriving using LLD-AC compressed frames
     encoder = LLDACEncoder()
     for i in range(25):
-        # Generate structured/padded real proof components
-        proof_a = bytes.fromhex("60a428a2d7709ef24fc7ec0d988ff5ccc539e1d8f6fe907ed862cdc02cc9e1ab")
-        proof_b = bytes.fromhex("fdec3e75b276d34d32a5658e48a09137425ae7d0ce2f0d6c4182f00b344d37191b64fcbe1c153dc38c418c04280b65482cf76764251113cff6077158877d5001")
-        proof_c = bytes.fromhex("83615137666a9b5f2bca7b5c0e6f5a35848147fc01164b2f02abdd546a85d7a7")
-        identity_hash = bytes.fromhex("79dc773d5b710f70fb4ce375853e25ad99d021bff5cd58d67c2e8f0032eee01f")
-        nullifier_hash = bytes.fromhex("333d2924f9563337ce7aa25b5c25e315a510c0c510db6219b05fc7c396a7ee2c")
-        attestation_hash = bytes.fromhex("8b8cda973f4e99fb4729d7914dadd85533dea3d4ac45231ae2e72cc9c5c3ca17")
-        ciphertext_hash = bytes.fromhex("77bd13e5607e8bd91c59bc51c1a17d9c65ac3f29d5df56276cf9eb9d3ef30122")
+        proof_a = bytes.fromhex("89c083f3ddcb401f9af0b20ecc8e9641961cfacf7a646aae1f5ff97a4448db9d")
+        proof_b = bytes.fromhex("044470d2839b106b3e3bffd9df2d7f56fce17407616793fb5fee91b2cf42c20aeed63e81755d62eb509289e472115f25d0ed715e81a621b78f41695e7afce011")
+        proof_c = bytes.fromhex("9d7717a14c50c0e86664992b8d2da1e542bb13190f7ac0152694bb2ed619f0a2")
+        identity_hash = bytes.fromhex("88a58813b470911a633ed3e58dfd0da9e97a232433ed25772359d7852e2fd21b")
+        nullifier_hash = bytes.fromhex("fa81252c14c38e6066ac9c79035e425d0e1671745fb639f05eda12d03e155328")
+        attestation_hash = bytes.fromhex("616520b99d8872d70626d8d1fad700c6e3f4a012718ae2695fb46866417b7c2d")
+        ciphertext_hash = bytes.fromhex("2261a97ccdfb4ce6111ff973fa732a81836c425d355781435512bec9e9549005")
         
         # Combine to form proof bytes
         raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash

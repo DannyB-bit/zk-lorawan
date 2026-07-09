@@ -31,7 +31,6 @@ use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisE
 use ark_snark::{CircuitSpecificSetupSNARK, SNARK};
 use ark_std::rand::{CryptoRng, Rng};
 
-
 /// ZKLoRaCircuit defines the ZK-SNARK circuit for the upgraded ZK-LoRaWAN protocol.
 /// It proves:
 ///   1. Balance Owner Identity: knowledge of private key matching public identity.
@@ -50,6 +49,8 @@ pub struct ZKLoRaCircuit<F: PrimeField> {
     pub nullifier_hash: Option<F>,
     pub attestation_hash: Option<F>,
     pub ciphertext_hash: Option<F>,
+    pub gateway_part1: Option<F>,
+    pub gateway_part2: Option<F>,
 
     pub round_constants: Vec<F>,
 }
@@ -180,6 +181,11 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
             ciphertext_hash_var.into(),
         )?;
 
+        let _gateway_part1_var =
+            cs.new_input_variable(|| self.gateway_part1.ok_or(SynthesisError::AssignmentMissing))?;
+        let _gateway_part2_var =
+            cs.new_input_variable(|| self.gateway_part2.ok_or(SynthesisError::AssignmentMissing))?;
+
         Ok(())
     }
 }
@@ -225,6 +231,8 @@ pub fn setup_keys<R: Rng + CryptoRng>(
         nullifier_hash: None,
         attestation_hash: None,
         ciphertext_hash: None,
+        gateway_part1: None,
+        gateway_part2: None,
         round_constants: constants,
     };
 
@@ -243,6 +251,8 @@ pub fn generate_proof<R: Rng + CryptoRng>(
     nullifier_hash: Fr,
     attestation_hash: Fr,
     ciphertext_hash: Fr,
+    gateway_part1: Fr,
+    gateway_part2: Fr,
     constants: Vec<Fr>,
     rng: &mut R,
 ) -> Result<Proof<Bn254>, SynthesisError> {
@@ -255,6 +265,8 @@ pub fn generate_proof<R: Rng + CryptoRng>(
         nullifier_hash: Some(nullifier_hash),
         attestation_hash: Some(attestation_hash),
         ciphertext_hash: Some(ciphertext_hash),
+        gateway_part1: Some(gateway_part1),
+        gateway_part2: Some(gateway_part2),
         round_constants: constants,
     };
 
@@ -262,6 +274,7 @@ pub fn generate_proof<R: Rng + CryptoRng>(
 }
 
 /// Verifies a Groth16 proof against public inputs.
+#[allow(clippy::too_many_arguments)]
 pub fn verify_proof(
     pvk: &PreparedVerifyingKey<Bn254>,
     proof: &Proof<Bn254>,
@@ -269,12 +282,16 @@ pub fn verify_proof(
     nullifier_hash: Fr,
     attestation_hash: Fr,
     ciphertext_hash: Fr,
+    gateway_part1: Fr,
+    gateway_part2: Fr,
 ) -> Result<bool, SynthesisError> {
     let public_inputs = vec![
         identity_hash,
         nullifier_hash,
         attestation_hash,
         ciphertext_hash,
+        gateway_part1,
+        gateway_part2,
     ];
     Groth16::<Bn254>::verify_with_processed_vk(pvk, &public_inputs, proof)
 }
