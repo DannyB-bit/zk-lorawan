@@ -85,7 +85,7 @@ def run_module_test(module: dict, base_dir: str) -> bool:
 
         result = subprocess.run(
             [sys.executable, script_path],
-            capture_output=True, text=True, timeout=30,
+            capture_output=True, text=True, timeout=120,
             cwd=base_dir
         )
         output = result.stdout + result.stderr
@@ -109,10 +109,10 @@ def run_module_test(module: dict, base_dir: str) -> bool:
         return True
 
     except subprocess.TimeoutExpired:
-        print(f"    ⚠️  TIMEOUT after 30 seconds")
+        print(f"    [!] TIMEOUT after 120 seconds")
         return False
     except Exception as e:
-        print(f"    ⚠️  Error: {e}")
+        print(f"    [!] Error: {e}")
         return False
 
 

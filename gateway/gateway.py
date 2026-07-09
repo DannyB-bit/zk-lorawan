@@ -210,24 +210,24 @@ class GatewayConfig:
     lora_sf: int = 12                    # Spreading factor (7-12, 12=max range)
     lora_bw: int = 125_000               # Bandwidth (Hz)
     lora_cr: int = 5                     # Coding rate (5=4/5, 8=4/8)
-    
+
     # Solana
     solana_rpc: str = "http://127.0.0.1:8899" # Default to local validator
     program_id: str = "4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC"
     treasury_pubkey: str = "CotbUcSMqaqn69YSmh2YgYZjKfE7cZk4fTsEmE3kfWJ" # Protocol treasury
     gateway_pubkey: str = "BrqnKE7S8wY8etChZgUx8GGnYuvqdFoZhUAD7PTL5PV3"  # This gateway's wallet
     keypair_path: str = "~/.config/solana/id.json"
-    
+
     # Batch settings
     mode: str = "batch"                  # "single" or "batch"
     batch_size: int = 100                # Max chirps per batch
     batch_timeout_sec: int = 900         # 15 minutes max wait
-    
+
     # Protocol fees (lamports)
     fee_gateway: int = 100_000
     fee_treasury: int = 50_000
     fee_total: int = 150_000
-    
+
     # Firmware whitelist for verification
     firmware_hash: bytes = b"enclave-firmware-version-v1.0.2"
 
@@ -257,28 +257,28 @@ class Chirp:
     proof_a: bytes = b""
     proof_b: bytes = b""
     proof_c: bytes = b""
-    
+
     def __post_init__(self):
         if self.timestamp == 0.0:
             self.timestamp = time.time()
 
 
-@dataclass 
+@dataclass
 class Batch:
     """A batch of chirps ready for Solana submission."""
     chirps: list = field(default_factory=list)
     created_at: float = 0.0
     merkle_root: bytes = b""
     tx_signature: str = ""
-    
+
     def __post_init__(self):
         if self.created_at == 0.0:
             self.created_at = time.time()
-    
+
     @property
     def is_full(self) -> bool:
         return len(self.chirps) >= 100
-    
+
     @property
     def is_expired(self) -> bool:
         return (time.time() - self.created_at) > 900  # 15 min
@@ -293,40 +293,40 @@ class ZKVerifier:
     Verifies Groth16 ZK proofs locally on the gateway.
     This is FREE — no Solana transaction needed.
     """
-    
+
     PROOF_SIZE = 256   # bytes: proof_a(32) + proof_b(64) + proof_c(32) + 4 * hashes(32)
     FRAME_HEADER = 3   # bytes
     COORD_SIZE = 6     # bytes (Cuneiform-U coordinates)
     TAG_SIZE = 8       # bytes (receiver tag)
     OVERHEAD = FRAME_HEADER + COORD_SIZE + TAG_SIZE  # 17 bytes
     MAX_FRAME = 255    # LoRa MTU
-    
+
     def parse_frame(self, raw: bytes) -> Optional[dict]:
         """
         Parse a ZK-LoRaWAN frame (supports both compressed and uncompressed).
         """
         if not raw:
             return None
-            
+
         if raw[0] == 0xAE:
             # LLD-AC Compressed frame
             if len(raw) < 4:
                 return None
             flags = raw[1]
             proof_len = (raw[2] << 8) | raw[3]
-            
+
             offset = 4
             if len(raw) < offset + proof_len:
                 return None
             compressed_proof = raw[offset:offset + proof_len]
             offset += proof_len
-            
+
             # Read coordinates (6 bytes)
             if len(raw) < offset + 6:
                 return None
             coords = raw[offset:offset + 6]
             offset += 6
-            
+
             # Read FEC parity if flags specify it
             fec_parity = b""
             if flags & 0x01:
@@ -338,7 +338,7 @@ class ZKVerifier:
                     return None
                 fec_parity = raw[offset:offset + fec_len]
                 offset += fec_len
-                
+
             # Decompress proof using LLDACEncoder
             try:
                 encoder = LLDACEncoder()
@@ -346,7 +346,7 @@ class ZKVerifier:
                 decompressed = encoder.decode(compressed_proof, 256)
                 if len(decompressed) < 256:
                     return None
-                    
+
                 proof_a = decompressed[0:32]
                 proof_b = decompressed[32:96]
                 proof_c = decompressed[96:128]
@@ -356,7 +356,7 @@ class ZKVerifier:
                 ciphertext_hash = decompressed[224:256]
             except Exception:
                 return None
-                
+
             return {
                 "version": 1,
                 "frame_type": 1,
@@ -376,32 +376,32 @@ class ZKVerifier:
             # Parse version 1 frame with proof length prefix (supports both compressed and uncompressed proofs)
             if len(raw) < 18:
                 return None
-            
+
             offset = 0
-            
+
             # Frame header (3 bytes)
             version = raw[offset]
             frame_type = raw[offset + 1]
             flags = raw[offset + 2]
             offset += 3
-            
+
             # Cuneiform-U coordinates (6 bytes)
             coords = raw[offset:offset + 6]
             offset += 6
-            
+
             # Receiver tag (8 bytes)
             tag = raw[offset:offset + 8]
             offset += 8
-            
+
             # Read proof length byte
             proof_len = raw[offset] + 1
             offset += 1
-            
+
             if len(raw) < offset + proof_len:
                 return None
             compressed_proof = raw[offset:offset + proof_len]
             offset += proof_len
-            
+
             # Decompress proof (handles 256-byte and 160-byte formats, compressed or raw)
             proof_a = b""
             proof_b = b""
@@ -410,7 +410,7 @@ class ZKVerifier:
             nullifier_hash = b""
             attestation_hash = b""
             ciphertext_hash = b""
-            
+
             is_compressed = (flags & 0x01) == 0x01
             try:
                 if not is_compressed:
@@ -459,9 +459,9 @@ class ZKVerifier:
                     ciphertext_hash = identity_hash
                 else:
                     return None
-            
+
             payload_and_fec = raw[offset:]
-            
+
             return {
                 "version": version,
                 "frame_type": frame_type,
@@ -477,7 +477,7 @@ class ZKVerifier:
                 "ciphertext_hash": ciphertext_hash,
                 "payload": payload_and_fec,
             }
-    
+
     def verify_proof(self, frame: dict, gateway_address_hex: str = None) -> bool:
         """
         Verify the Groth16 proof locally using real ark-groth16 FFI or subprocess fallback.
@@ -493,7 +493,7 @@ class ZKVerifier:
         attestation_hash_hex = frame.get("attestation_hash", b"").hex().encode('utf-8')
         ciphertext_hash_hex = frame.get("ciphertext_hash", b"").hex().encode('utf-8')
         gateway_address_hex_bytes = gateway_address_hex.encode('utf-8')
-        
+
         deposit_value = 150000
         firmware_hash_hex = b"enclave-firmware-version-v1.0.2".hex().encode('utf-8')
 
@@ -521,7 +521,7 @@ class ZKVerifier:
             os.path.join(base_dir, "target", "release", bin_name),
             os.path.join(base_dir, "target", "debug", bin_name),
         ]
-        
+
         for bin_path in bin_paths:
             if os.path.exists(bin_path):
                 try:
@@ -543,7 +543,7 @@ class ZKVerifier:
                         return True
                 except Exception as e:
                     logging.getLogger("gateway").warning(f"Subprocess verification failed: {e}")
-                    
+
         # Allow mock proofs behind ZK_LORAWAN_ALLOW_MOCK_PROOFS=1 environment variable
         if os.environ.get("ZK_LORAWAN_ALLOW_MOCK_PROOFS") == "1":
             logging.getLogger("gateway").warning(
@@ -559,7 +559,7 @@ class ZKVerifier:
         # Fail closed if neither library nor binary is present
         logging.getLogger("gateway").error("No local Groth16 verifier library or binary found. FAILED CLOSED.")
         return False
-    
+
     def compute_proof_hash(self, frame: dict) -> bytes:
         """Hash the proof for Merkle tree inclusion."""
         h = hashlib.sha256()
@@ -571,7 +571,7 @@ class ZKVerifier:
         h.update(frame.get("attestation_hash", b""))
         h.update(frame.get("ciphertext_hash", b""))
         return h.digest()
-    
+
     def compute_payload_hash(self, frame: dict) -> bytes:
         """Hash the payload for audit trail."""
         return hashlib.sha256(frame["payload"]).digest()
@@ -608,7 +608,7 @@ class ZKVerifier:
 
 class MerkleTree:
     """Keccak-256 Merkle tree matching the Solana on-chain implementation."""
-    
+
     @staticmethod
     def compute_root(leaves: list) -> bytes:
         """Compute Merkle root from leaf hashes using Keccak-256."""
@@ -616,19 +616,19 @@ class MerkleTree:
             return b'\x00' * 32
         if len(leaves) == 1:
             return leaves[0]
-        
+
         current = list(leaves)
         while len(current) > 1:
             next_level = []
             for i in range(0, len(current), 2):
                 left = current[i]
                 right = current[i + 1] if i + 1 < len(current) else left
-                
+
                 h = keccak.new(digest_bits=256)
                 h.update(left + right)
                 next_level.append(h.digest())
             current = next_level
-        
+
         return current[0]
 
     @staticmethod
@@ -647,7 +647,7 @@ class MerkleTree:
                 if i == idx or i + 1 == idx:
                     sibling = right if i == idx else left
                     proof.append(sibling)
-                
+
                 h = keccak.new(digest_bits=256)
                 h.update(left + right)
                 next_level.append(h.digest())
@@ -664,7 +664,7 @@ class SolanaSubmitter:
     """
     Submits chirp batches to Solana.
     """
-    
+
     def __init__(self, config: GatewayConfig):
         self.config = config
         self.logger = logging.getLogger("solana")
@@ -676,7 +676,7 @@ class SolanaSubmitter:
         self.idl = load_idl_or_fallback()
         self.program = Program(self.idl, self.program_id, self.provider)
         self.logger.info(f"Initialized Solana submitter for gateway wallet: {self.keypair.pubkey()}")
-        
+
     async def get_registry_pda(self) -> Pubkey:
         pda, _ = Pubkey.find_program_address([b"zk-lorawan-registry"], self.program_id)
         return pda
@@ -688,7 +688,7 @@ class SolanaSubmitter:
     async def get_nullifier_pda(self, nullifier: bytes) -> Pubkey:
         pda, _ = Pubkey.find_program_address([b"nullifier", nullifier], self.program_id)
         return pda
-    
+
     async def submit_single(self, chirp: Chirp) -> str:
         """
         Submit a single chirp to Solana (MODE A).
@@ -698,7 +698,7 @@ class SolanaSubmitter:
             f"nullifier={chirp.nullifier_hash[:4].hex()}... | "
             f"fee={self.config.fee_total} lamports"
         )
-        
+
         try:
             registry_pda = await self.get_registry_pda()
             shielded_pool_pda = await self.get_shielded_pool_pda()
@@ -723,12 +723,12 @@ class SolanaSubmitter:
                 proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
                 proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
                 proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
-                
+
                 # Ensure precise sizes
                 if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
                 if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
                 if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
-                
+
                 proof_a_list = proof_a_list[:64]
                 proof_b_list = proof_b_list[:128]
                 proof_c_list = proof_c_list[:64]
@@ -763,7 +763,7 @@ class SolanaSubmitter:
                 self.logger.warning("Running in demo mode: returning simulated transaction signature.")
                 return f"sim_single_{int(chirp.timestamp)}"
             raise e
-    
+
     async def submit_batch(self, batch: Batch) -> str:
         """
         Submit a batch of chirps to Solana (MODE B) on-chain.
@@ -775,7 +775,7 @@ class SolanaSubmitter:
             f"merkle={batch.merkle_root[:4].hex()}... | "
             f"total_fee={total_fee} lamports"
         )
-        
+
         # Pre-flight: Decompress and validate all proofs in the batch before making any on-chain RPC calls
         decompressed_batch_coords = []
         for idx, chirp in enumerate(batch.chirps):
@@ -798,12 +798,12 @@ class SolanaSubmitter:
                 proof_a_list = list(chirp.proof_a) if chirp.proof_a else [0]*64
                 proof_b_list = list(chirp.proof_b) if chirp.proof_b else [0]*128
                 proof_c_list = list(chirp.proof_c) if chirp.proof_c else [0]*64
-                
+
                 # Ensure precise sizes
                 if len(proof_a_list) < 64: proof_a_list += [0] * (64 - len(proof_a_list))
                 if len(proof_b_list) < 128: proof_b_list += [0] * (128 - len(proof_b_list))
                 if len(proof_c_list) < 64: proof_c_list += [0] * (64 - len(proof_c_list))
-                
+
                 decompressed_batch_coords.append((
                     proof_a_list[:64],
                     proof_b_list[:128],
@@ -814,13 +814,13 @@ class SolanaSubmitter:
             registry_pda = await self.get_registry_pda()
             registry_account = await self.program.account["ProtocolRegistry"].fetch(registry_pda)
             batch_id = registry_account.next_batch_id
-            
+
             batch_id_bytes = batch_id.to_bytes(8, byteorder='little')
             batch_pda, _ = Pubkey.find_program_address(
                 [b"zk-lorawan-batch", bytes(self.keypair.pubkey()), batch_id_bytes],
                 self.program_id
             )
-            
+
             # Initialize batch
             init_tx = await self.program.methods.initializeBatch().accounts({
                 "batch": batch_pda,
@@ -829,7 +829,7 @@ class SolanaSubmitter:
                 "systemProgram": Pubkey.from_string("11111111111111111111111111111111")
             }).signers([self.keypair]).rpc()
             self.logger.info(f"Initialized batch #{batch_id} on-chain: {init_tx}")
-            
+
             # Add chirps
             leaves = [chirp.zk_vde_proof_hash for chirp in batch.chirps]
             shielded_pool_pda = await self.get_shielded_pool_pda()
@@ -854,15 +854,15 @@ class SolanaSubmitter:
                     "gateway": self.keypair.pubkey()
                 }).signers([self.keypair]).rpc()
                 self.logger.debug(f"Added chirp {idx+1}/{n} to batch #{batch_id}: {add_tx}")
-                
+
             # Submit batch
             treasury_pubkey = Pubkey.from_string(self.config.treasury_pubkey)
-            
+
             nullifier_pdas = []
             for chirp in batch.chirps:
                 pda = await self.get_nullifier_pda(chirp.nullifier_hash)
                 nullifier_pdas.append(AccountMeta(pubkey=pda, is_signer=False, is_writable=True))
-                
+
             finalize_tx = await self.program.methods.submitBatch().accounts({
                 "batch": batch_pda,
                 "registry": registry_pda,
@@ -871,7 +871,7 @@ class SolanaSubmitter:
                 "treasury": treasury_pubkey,
                 "systemProgram": Pubkey.from_string("11111111111111111111111111111111")
             }).remaining_accounts(nullifier_pdas).signers([self.keypair]).rpc()
-            
+
             self.logger.info(f"Successfully finalized batch #{batch_id} on-chain: {finalize_tx}")
             return str(finalize_tx)
         except Exception as e:
@@ -890,7 +890,7 @@ class Gateway:
     """
     ZK-LoRaWAN Gateway — bridges LoRa radio to Solana blockchain.
     """
-    
+
     def __init__(self, config: GatewayConfig):
         self.config = config
         self.verifier = ZKVerifier()
@@ -905,13 +905,13 @@ class Gateway:
             "total_earnings_lamports": 0,
         }
         self.logger = logging.getLogger("gateway")
-    
+
     async def handle_chirp(self, raw_bytes: bytes, rssi: int = -80, snr: float = 5.0):
         """Process a single received LoRa chirp."""
         self.stats["chirps_received"] += 1
-        
+
         chirp = Chirp(raw_bytes=raw_bytes, rssi=rssi, snr=snr)
-        
+
         # Step 1: Parse frame
         frame = self.verifier.parse_frame(raw_bytes)
         if frame is None:
@@ -919,7 +919,7 @@ class Gateway:
             self.stats["chirps_rejected"] += 1
             self.logger.warning(f"Chirp rejected: invalid frame ({len(raw_bytes)} bytes)")
             return
-        
+
         # Step 2: Verify ZK proof locally (FREE)
         gateway_address_hex = None
         if os.environ.get("ZK_LORAWAN_DEMO_MODE") != "1":
@@ -930,80 +930,80 @@ class Gateway:
             self.stats["chirps_rejected"] += 1
             self.logger.warning(f"Chirp rejected: invalid ZK proof")
             return
-        
+
         chirp.status = ChirpStatus.VERIFIED
         chirp.proof_hash = self.verifier.compute_proof_hash(frame)
         chirp.payload_hash = self.verifier.compute_payload_hash(frame)
-        
+
         chirp.nullifier_hash = frame.get("nullifier_hash", b"")
         chirp.attestation_hash = frame.get("attestation_hash", b"")
         chirp.zk_vde_proof_hash = frame.get("identity_hash", b"") # Maps to circuit identity_hash
         chirp.ciphertext_hash = frame.get("ciphertext_hash", b"")
-        
+
         chirp.proof_a = frame.get("proof_a", b"")
         chirp.proof_b = frame.get("proof_b", b"")
         chirp.proof_c = frame.get("proof_c", b"")
-        
+
         self.stats["chirps_verified"] += 1
-        
+
         self.logger.info(
             f"Chirp verified | RSSI={rssi}dBm SNR={snr:.1f}dB | "
             f"nullifier={chirp.nullifier_hash[:4].hex()}..."
         )
-        
+
         # Step 3: Submit or batch
         if self.config.mode == "single":
             sig = await self.submitter.submit_single(chirp)
             chirp.status = ChirpStatus.SUBMITTED
             self.stats["total_earnings_lamports"] += self.config.fee_gateway
             self.logger.info(f"Single chirp submitted: {sig}")
-        
+
         elif self.config.mode == "batch":
             if self.current_batch is None:
                 self.current_batch = Batch()
-            
+
             self.current_batch.chirps.append(chirp)
-            
+
             # Check batch triggers
             if self.current_batch.is_full or self.current_batch.is_expired:
                 await self._submit_current_batch()
-    
+
     async def _submit_current_batch(self):
         """Finalize and submit the current batch to Solana."""
         if self.current_batch is None or len(self.current_batch.chirps) == 0:
             return
-        
+
         batch = self.current_batch
         n = len(batch.chirps)
-        
+
         # Build Merkle tree using the nullifiers as leaves
         leaves = [c.nullifier_hash for c in batch.chirps]
         batch.merkle_root = self.merkle.compute_root(leaves)
-        
+
         # Submit to Solana
         sig = await self.submitter.submit_batch(batch)
         batch.tx_signature = sig
-        
+
         for c in batch.chirps:
             c.status = ChirpStatus.SUBMITTED
-        
+
         self.stats["batches_submitted"] += 1
         self.stats["total_earnings_lamports"] += self.config.fee_gateway * n
-        
+
         self.logger.info(
             f"Batch submitted: {n} chirps | "
             f"merkle={batch.merkle_root[:4].hex()}... | "
             f"earnings=+{self.config.fee_gateway * n} lamports | "
             f"tx={sig}"
         )
-        
+
         self.current_batch = None
-    
+
     async def flush(self):
         """Force-submit any pending batch (called on shutdown or timer)."""
         if self.current_batch and len(self.current_batch.chirps) > 0:
             await self._submit_current_batch()
-    
+
     def get_stats(self) -> dict:
         """Return gateway statistics."""
         sol_earnings = self.stats["total_earnings_lamports"] / 1_000_000_000
@@ -1020,23 +1020,24 @@ class Gateway:
 # Self-test & Demo
 # ============================================================================
 
-def generate_real_demo_proof() -> dict:
+def generate_real_demo_proof(private_key_hex: str = None) -> dict:
     """Generate a real ZK proof dynamically using the prover binary."""
     import subprocess
     import platform
     import json
-    
+
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     bin_name = "zk_lorawan_prove.exe" if platform.system() == "Windows" else "zk_lorawan_prove"
     prover_path = os.path.join(base_dir, "target", "release", bin_name)
     if not os.path.exists(prover_path):
         prover_path = os.path.join(base_dir, "target", "debug", bin_name)
-    
+
     # Test private key and decryption key
-    private_key_hex = bytes.fromhex("0102030405060708010203040506070801020304050607080102030405060708").hex()
+    if private_key_hex is None:
+        private_key_hex = bytes.fromhex("0102030405060708010203040506070801020304050607080102030405060708").hex()
     decryption_key_hex = bytes.fromhex("090a0b0c0d0e0f10090a0b0c0d0e0f10090a0b0c0d0e0f10090a0b0c0d0e0f10").hex()
     coordinate_val = "15" # Modality range coordinate
-    firmware_hash_hex = b"enclave-firmware-version-v1.0.2".hex()
+    firmware_hash_hex = b"enclave-firmware-version-v1.0.2\0".hex()
     gateway_address_hex = "0000000000000000000000000000000000000000000000000000000000000000"
     deposit_value = "150000"
 
@@ -1050,10 +1051,11 @@ def generate_real_demo_proof() -> dict:
         gateway_address_hex,
         deposit_value
     ]
-    
+
     env = os.environ.copy()
-    env["ZK_LORAWAN_REPRODUCIBLE_SETUP"] = "1"
-    
+    if "ZK_LORAWAN_REPRODUCIBLE_SETUP" in env:
+        del env["ZK_LORAWAN_REPRODUCIBLE_SETUP"]
+
     proc = subprocess.run(cmd, capture_output=True, text=True, check=True, env=env)
     return json.loads(proc.stdout)
 
@@ -1062,66 +1064,74 @@ async def _demo():
     """Run a gateway demo with simulated chirps."""
     os.environ["ZK_LORAWAN_DEMO_MODE"] = "1"
     os.environ["ZK_LORAWAN_ALLOW_MOCK_PROOFS"] = "0" # Perform REAL ZK verification!
-    
+
     logging.basicConfig(
         level=logging.INFO,
         format="  %(name)-8s | %(message)s"
     )
-    
+
     print("=" * 72)
     print("  ZK-LoRaWAN Gateway - Demo (simulated chirps)")
     print("=" * 72)
     print()
-    
-    # Generate real proof once
-    print("Generating a mathematically valid ZK proof for the demo...")
-    real_proof = generate_real_demo_proof()
-    
+
+    # Load secure production keys from keys/ directory
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    keys_dir = os.path.join(base_dir, "keys")
+    print(f"Loading secure keys from {keys_dir}...")
+
+    print("Generating mathematically valid ZK proofs with unique nullifiers dynamically...")
     config = GatewayConfig(mode="batch", batch_size=10)
     gw = Gateway(config)
-    
-    # Extract components from real proof (use compressed components to fit 256-byte limit)
-    proof_a = bytes.fromhex(real_proof["proof_a_compressed"])
-    proof_b = bytes.fromhex(real_proof["proof_b_compressed"])
-    proof_c = bytes.fromhex(real_proof["proof_c_compressed"])
-    identity_hash = bytes.fromhex(real_proof["identity_hash"])
-    nullifier_hash = bytes.fromhex(real_proof["nullifier_hash"])
-    attestation_hash = bytes.fromhex(real_proof["attestation_hash"])
-    ciphertext_hash = bytes.fromhex(real_proof["ciphertext_hash"])
-    
-    # Raw compressed proof buffer (fits within 256 bytes)
-    raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash
-    
-    # Compress proof via LLD-AC
-    encoder = LLDACEncoder()
-    compressed_proof = encoder.encode(raw_proof)
-    if len(compressed_proof) >= len(raw_proof):
-        compressed_proof = raw_proof
-    
-    # Pack version 1 frame structure
-    # [Header 3B: version=1, type=1, flags=1 (compressed)] [Coords 6B] [Tag 8B] [ProofLen 1B] [Proof] [Semantic 57B]
-    flags = 0x01 if len(compressed_proof) < len(raw_proof) else 0x00
-    header = struct.pack("BBB", 1, 1, flags)
-    coords_bytes = struct.pack("BBBBBB", 42, 7, 15, 128, 200, 15) # match coord 15 (Modality)
-    tag = bytes([0] * 8)
-    proof_len_byte = struct.pack("B", len(compressed_proof) - 1)
-    semantic_payload = bytes([0] * 57)
-    
-    core_data = header + coords_bytes + tag + proof_len_byte + compressed_proof + semantic_payload
-    
-    # Apply FEC protection
-    from fec.xor_fec import XorFEC
-    fec = XorFEC()
-    padded, parity_blocks, _, checksum = fec.encode(core_data)
-    frame = padded + b"".join(parity_blocks) + checksum
-    
+
     for i in range(25):
+        # Derive a unique private key for each chirp
+        priv_key = bytearray(bytes.fromhex("0102030405060708010203040506070801020304050607080102030405060708"))
+        priv_key[-1] = (priv_key[-1] + i) & 0xFF
+
+        real_proof = generate_real_demo_proof(priv_key.hex())
+
+        # Extract components from real proof (use compressed components to fit 256-byte limit)
+        proof_a = bytes.fromhex(real_proof["proof_a_compressed"])
+        proof_b = bytes.fromhex(real_proof["proof_b_compressed"])
+        proof_c = bytes.fromhex(real_proof["proof_c_compressed"])
+        identity_hash = bytes.fromhex(real_proof["identity_hash"])
+        nullifier_hash = bytes.fromhex(real_proof["nullifier_hash"])
+        attestation_hash = bytes.fromhex(real_proof["attestation_hash"])
+        ciphertext_hash = bytes.fromhex(real_proof["ciphertext_hash"])
+
+        # Raw compressed proof buffer (fits within 256 bytes)
+        raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash
+
+        # Compress proof via LLD-AC
+        encoder = LLDACEncoder()
+        compressed_proof = encoder.encode(raw_proof)
+        if len(compressed_proof) >= len(raw_proof):
+            compressed_proof = raw_proof
+
+        # Pack version 1 frame structure
+        # [Header 3B: version=1, type=1, flags=1 (compressed)] [Coords 6B] [Tag 8B] [ProofLen 1B] [Proof] [Semantic 57B]
+        flags = 0x01 if len(compressed_proof) < len(raw_proof) else 0x00
+        header = struct.pack("BBB", 1, 1, flags)
+        coords_bytes = struct.pack("BBBBBB", 42, 7, 15, 128, 200, 15) # match coord 15 (Modality)
+        tag = bytes([0] * 8)
+        proof_len_byte = struct.pack("B", len(compressed_proof) - 1)
+        semantic_payload = bytes([0] * 57)
+
+        core_data = header + coords_bytes + tag + proof_len_byte + compressed_proof + semantic_payload
+
+        # Apply FEC protection
+        from fec.xor_fec import XorFEC
+        fec = XorFEC()
+        padded, parity_blocks, _, checksum = fec.encode(core_data)
+        frame = padded + b"".join(parity_blocks) + checksum
+
         await gw.handle_chirp(frame, rssi=-75 - (i % 20), snr=8.0 - (i % 5))
         await asyncio.sleep(0.01)
-    
+
     # Flush remaining
     await gw.flush()
-    
+
     # Print stats
     stats = gw.get_stats()
     print()

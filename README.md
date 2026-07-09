@@ -36,7 +36,7 @@ By integrating the **Language-U Semantic Communication Protocol** with Solana's 
 
 ```
                        OVER-THE-AIR (LoRa RF)             ON-CHAIN SETTLEMENT
-                                                          
+
   ┌──────────────────┐                     ┌─────────────┐                    ┌──────────────┐
   │  Edge IoT Node   │                     │   Gateway   │                    │    Solana    │
   │  (Temp, GPS, etc)│                     │  Relayer    │                    │  Blockchain  │

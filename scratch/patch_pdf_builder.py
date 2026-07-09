@@ -81,34 +81,34 @@ def get_fee_split_diagram():
             # Draw dark background
             self.setFillColor(colors.HexColor("#0d0f14"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
-            
+
             # Draw top stripe (Solana color gradient)
             self.setFillColor(colors.HexColor("#14F195"))
             self.rect(0, 826.89, 297.63, 15, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#9945FF"))
             self.rect(297.63, 826.89, 297.64, 15, fill=True, stroke=False)
-            
+
             # Draw title text
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawCentredString(297.63, 720, "PROJECT: ZK-LORAWAN")
-            
+
             # Draw logo image (BIGGER - 420x420)
             if os.path.exists("zk_lorawan_logo.png"):
                 self.drawImage("zk_lorawan_logo.png", 87.63, 240, width=420, height=420)
-            
+
             # Draw rated ZK box
             self.setStrokeColor(colors.HexColor("#14F195"))
             self.setLineWidth(1.5)
             self.rect(54, 120, 487.27, 80, fill=False, stroke=True)
             self.setFillColor(colors.HexColor("#1A202C"))
             self.rect(55, 121, 485.27, 78, fill=True, stroke=False)
-            
+
             # Text inside box
             self.setFont("Helvetica-Bold", 12)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawString(74, 155, "RATED ZK")
-            
+
             self.setFont("Helvetica-Bold", 10)
             self.setFillColor(colors.HexColor("#FFFFFF"))
             self.drawString(170, 172, "FOR: ZK-LORAWAN PRIVACY LAYER")
@@ -116,17 +116,17 @@ def get_fee_split_diagram():
             self.setFillColor(colors.HexColor("#A0AEC0"))
             self.drawString(170, 155, "ZERO-KNOWLEDGE LORAWAN MESH NETWORKS")
             self.drawString(170, 140, "UNDER DECENTRALIZED INCENTIVIZATION PROTOCOL")
-            
+
             # Legal notice at the bottom
             self.setFont("Helvetica", 7)
             self.setFillColor(colors.HexColor("#718096"))
             self.drawString(54, 85, "LEGAL NOTICE: To safeguard developer intellectual property, the ZK-LoRaWAN codebase and all its multi-language")
             self.drawString(54, 75, "implementations are currently published under a protected, proprietary license pending grant evaluation. Upon formal")
             self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source MIT License.")
-            
+
             self.restoreState()
             return"""
-            
+
     code = re.sub(
         r"        # Page 1: Cover Page.*?return",
         new_cover_code,
@@ -140,13 +140,13 @@ def get_fee_split_diagram():
             self.saveState()
             self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
-            
+
             cx = 297.63
-            
+
             # Draw logo image centered ABOVE the triangle
             if os.path.exists("theaicollective_logo.jpg"):
                 self.drawImage("theaicollective_logo.jpg", cx - 70, 510, width=140, height=140)
-            
+
             # Draw network lines representing AI swarm/meditation (shifted down, cy=380)
             t_cy = 380
             self.setStrokeColor(colors.HexColor("#9945FF"))
@@ -156,7 +156,7 @@ def get_fee_split_diagram():
             self.line(cx, t_cy + 40, cx + 50, t_cy - 30)
             self.setStrokeColor(colors.HexColor("#A0AEC0"))
             self.line(cx - 50, t_cy - 30, cx + 50, t_cy - 30)
-            
+
             # Draw nodes
             self.setFillColor(colors.HexColor("#14F195"))
             self.circle(cx, t_cy + 40, 7, fill=True, stroke=False)
@@ -164,13 +164,13 @@ def get_fee_split_diagram():
             self.circle(cx - 50, t_cy - 30, 7, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#14F195"))
             self.circle(cx + 50, t_cy - 30, 7, fill=True, stroke=False)
-            
+
             # Inner details
             self.setFillColor(colors.HexColor("#000000"))
             self.circle(cx, t_cy + 40, 3, fill=True, stroke=False)
             self.circle(cx - 50, t_cy - 30, 3, fill=True, stroke=False)
             self.circle(cx + 50, t_cy - 30, 3, fill=True, stroke=False)
-            
+
             # Identity text (shifted down, cy=280)
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#9945FF"))
@@ -178,7 +178,7 @@ def get_fee_split_diagram():
             self.setFont("Helvetica-Bold", 16)
             self.setFillColor(colors.HexColor("#FFFFFF"))
             self.drawCentredString(cx, 220, "THE AI COLLECTIVE")
-            
+
             # Search address look-up bar style
             self.setStrokeColor(colors.HexColor("#4A5568"))
             self.setFillColor(colors.HexColor("#1A202C"))
@@ -186,19 +186,19 @@ def get_fee_split_diagram():
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawCentredString(cx, 185, "Q  TheAiCollective.art")
-            
+
             # Quote
             self.setFont("Helvetica-Oblique", 11)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawCentredString(cx, 110, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
             self.drawCentredString(cx, 92, 'math a work in progress, and truth waiting to be discovered."')
-            
+
             # Thank you note
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#718096"))
             self.drawCentredString(cx, 45, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
             self.drawCentredString(cx, 30, "This whitepaper is intended for educational and project evaluation purposes only.")
-            
+
             self.restoreState()
             return"""
 

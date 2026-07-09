@@ -34,7 +34,7 @@ def level3_delta_varint(values: list) -> tuple:
     """Level 3: Delta encoding + varint packing for numeric sequences."""
     if not values:
         return b"", "delta-varint"
-    
+
     # Store first value as 4-byte float, then deltas as 2-byte fixed-point
     result = struct.pack(">f", values[0])
     prev = values[0]
@@ -45,7 +45,7 @@ def level3_delta_varint(values: list) -> tuple:
         d_int = max(-32768, min(32767, d_int))
         result += struct.pack(">h", d_int)
         prev = prev + d_int / 100.0  # track accumulated value for accuracy
-    
+
     return result, "delta-varint"
 
 def level3_delta_varint_decode(compressed: bytes, count: int) -> list:
@@ -110,16 +110,16 @@ def main():
     print("  Pipe size: 57 bytes | 100% accuracy required")
     print("=" * 70)
     print()
-    
+
     all_pass = True
     test_num = 0
-    
+
     # ══════════════════════════════════════════════════════════════════
     # TEST GROUP 1: Text Messages (zlib Level 6)
     # ══════════════════════════════════════════════════════════════════
     print("  ── GROUP 1: Text Messages (zlib Level 6) ──")
     print()
-    
+
     text_messages = [
         "Temperature is 72F and humidity is 45% in sector 7",
         "Alert: motion detected at front door. Camera recording started.",
@@ -136,13 +136,13 @@ def main():
         "ZK-LoRaWAN enables private AI-to-AI communication over radio mesh networks without revealing identity. " * 3,
         "Sensor array report: all 12 nodes operational. Average temperature across grid is 73.2F with standard deviation of 2.1 degrees. No anomalies detected in the last 24 hour monitoring window.",
     ]
-    
+
     for msg in text_messages:
         test_num += 1
         raw = msg.encode("utf-8")
         compressed, method = level6_zlib(raw)
         fits = len(compressed) <= PIPE_SIZE
-        
+
         if fits:
             decompressed = zlib.decompress(compressed)
             accurate = (decompressed == raw)
@@ -151,15 +151,15 @@ def main():
             print(f"    [{test_num:>2}] ✅ {len(raw):>4}B → {len(compressed):>2}B ({ratio:>5.1f}×) | {len(raw)} chars | \"{msg[:50]}{'...' if len(msg)>50 else ''}\"")
         else:
             print(f"    [{test_num:>2}] ❌ {len(raw):>4}B → {len(compressed):>2}B (won't fit) | \"{msg[:50]}{'...' if len(msg)>50 else ''}\"")
-    
+
     print()
-    
+
     # ══════════════════════════════════════════════════════════════════
     # TEST GROUP 2: IoT Sensor Data (Delta Encoding Level 3)
     # ══════════════════════════════════════════════════════════════════
     print("  ── GROUP 2: Sensor Time Series (Delta Encoding Level 3) ──")
     print()
-    
+
     sensor_series = [
         ("Temperature (10 readings)", [72.1, 72.3, 72.2, 72.5, 72.4, 72.6, 72.8, 72.7, 72.9, 73.0]),
         ("Temperature (20 readings)", [72.1, 72.3, 72.2, 72.5, 72.4, 72.6, 72.8, 72.7, 72.9, 73.0,
@@ -171,12 +171,12 @@ def main():
                                    119.9, 120.1, 120.0, 119.8, 120.0, 120.1, 120.2, 120.3, 120.1, 120.0,
                                    119.9, 120.0, 120.1, 120.2, 120.0]),
     ]
-    
+
     for name, values in sensor_series:
         test_num += 1
         compressed, method = level3_delta_varint(values)
         fits = len(compressed) <= PIPE_SIZE
-        
+
         if fits:
             decoded = level3_delta_varint_decode(compressed, len(values))
             # Check accuracy (within 0.01 due to fixed-point)
@@ -186,21 +186,21 @@ def main():
             print(f"    [{test_num:>2}] ✅ {len(values):>2} readings → {len(compressed):>2}B | max_err={max_error:.3f} | {name}")
         else:
             print(f"    [{test_num:>2}] ❌ {len(values):>2} readings → {len(compressed):>2}B (won't fit) | {name}")
-    
+
     print()
-    
+
     # ══════════════════════════════════════════════════════════════════
     # TEST GROUP 3: Structured IoT Packets (Schema Pack Level 4)
     # ══════════════════════════════════════════════════════════════════
     print("  ── GROUP 3: Structured IoT Packets (Schema Pack Level 4) ──")
     print()
-    
+
     # Weather station schema
-    weather_schema = {"temp": "f16", "humidity": "u8", "pressure": "u16", 
+    weather_schema = {"temp": "f16", "humidity": "u8", "pressure": "u16",
                       "wind_speed": "f16", "wind_dir": "u16", "uv": "u8", "rain": "f16"}
     weather_data = {"temp": 72.5, "humidity": 45, "pressure": 1013,
                     "wind_speed": 8.3, "wind_dir": 225, "uv": 6, "rain": 0.0}
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(weather_data, weather_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -209,13 +209,13 @@ def main():
         print(f"    [{test_num:>2}] ✅ Weather station: JSON={json_size}B → packed={len(compressed)}B ({json_size/len(compressed):.1f}×)")
         print(f"         Decoded: {decoded}")
         all_pass &= True
-    
+
     # Smart home multi-sensor
     home_schema = {"temp": "f16", "humidity": "u8", "co2": "u16", "pm25": "u16",
                    "light": "u16", "motion": "u8", "door": "u8", "battery": "u8"}
     home_data = {"temp": 71.2, "humidity": 52, "co2": 412, "pm25": 8,
                  "light": 340, "motion": 1, "door": 0, "battery": 87}
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(home_data, home_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -224,7 +224,7 @@ def main():
         print(f"    [{test_num:>2}] ✅ Smart home: JSON={json_size}B → packed={len(compressed)}B ({json_size/len(compressed):.1f}×)")
         print(f"         Decoded: {decoded}")
         all_pass &= True
-    
+
     # Medical wearable
     med_schema = {"heart_rate": "u8", "spo2": "u8", "bp_sys": "u8", "bp_dia": "u8",
                   "temp": "f16", "steps": "u16", "calories": "u16", "sleep_min": "u16",
@@ -232,7 +232,7 @@ def main():
     med_data = {"heart_rate": 72, "spo2": 98, "bp_sys": 120, "bp_dia": 80,
                 "temp": 98.6, "steps": 8432, "calories": 1847, "sleep_min": 420,
                 "stress": 35, "hrv": 42}
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(med_data, med_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -241,7 +241,7 @@ def main():
         print(f"    [{test_num:>2}] ✅ Medical wearable: JSON={json_size}B → packed={len(compressed)}B ({json_size/len(compressed):.1f}×)")
         print(f"         Decoded: {decoded}")
         all_pass &= True
-    
+
     # GPS tracker with 5 waypoints
     gps_schema = {}
     gps_data = {}
@@ -252,7 +252,7 @@ def main():
         gps_data[f"lon{i}"] = -74.0060 + i * 0.001
     gps_schema["speed"] = "u8"
     gps_data["speed"] = 35
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(gps_data, gps_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -272,7 +272,7 @@ def main():
     for i in range(12):
         ind_schema[f"s{i}"] = "f16"
         ind_data[f"s{i}"] = 50.0 + i * 3.5 + (i % 3) * 0.7
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(ind_data, ind_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -287,7 +287,7 @@ def main():
     for i in range(28):
         big_schema[f"v{i}"] = "f16"
         big_data[f"v{i}"] = 20.0 + i * 1.5
-    
+
     test_num += 1
     compressed, _ = level4_dict_pack(big_data, big_schema)
     if len(compressed) <= PIPE_SIZE:
@@ -298,15 +298,15 @@ def main():
     else:
         json_size = len(json.dumps(big_data).encode())
         print(f"    [{test_num:>2}] ❌ 28-sensor array: JSON={json_size}B → packed={len(compressed)}B (won't fit)")
-    
+
     print()
-    
+
     # ══════════════════════════════════════════════════════════════════
     # TEST GROUP 4: Combined (zlib on structured data)
     # ══════════════════════════════════════════════════════════════════
     print("  ── GROUP 4: Maximum Compression (zlib on repeated patterns) ──")
     print()
-    
+
     pattern_tests = [
         ("Repeated alert", "ALERT " * 50),
         ("Repeated sensor", "temp=72.5,hum=45," * 20),
@@ -314,13 +314,13 @@ def main():
         ("Status reports", "Node OK. " * 40),
         ("Coordinates list", "40.71,-74.00;" * 25),
     ]
-    
+
     for name, text in pattern_tests:
         test_num += 1
         raw = text.encode("utf-8")
         compressed = zlib.compress(raw, 9)
         fits = len(compressed) <= PIPE_SIZE
-        
+
         if fits:
             decompressed = zlib.decompress(compressed)
             accurate = (decompressed == raw)
@@ -329,9 +329,9 @@ def main():
             print(f"    [{test_num:>2}] ✅ {len(raw):>5}B → {len(compressed):>2}B ({ratio:>6.1f}×) | \"{name}\"")
         else:
             print(f"    [{test_num:>2}] ❌ {len(raw):>5}B → {len(compressed):>2}B (won't fit) | \"{name}\"")
-    
+
     print()
-    
+
     # ══════════════════════════════════════════════════════════════════
     # FINAL SUMMARY
     # ══════════════════════════════════════════════════════════════════
@@ -355,7 +355,7 @@ def main():
     print(f"  │  Repeated patterns:     up to ~1,350 bytes (zlib)          │")
     print(f"  └──────────────────────────────────────────────────────────────┘")
     print()
-    
+
     return all_pass
 
 

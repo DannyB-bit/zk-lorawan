@@ -15,7 +15,7 @@ maintaining total sender privacy.
 Mathematical Basis:
   Given a committed value v in a Pedersen commitment C = g^v * h^r,
   a range proof demonstrates that v ∈ [a, b] without revealing v.
-  
+
   We implement this as a Groth16 circuit that:
   1. Takes the coordinate value as a private witness
   2. Takes the min/max bounds as public inputs
@@ -35,7 +35,7 @@ BN254_R = 2188824287183927522224640574525727508854836440041603434369820418657580
 class CuneiformCoordinate:
     """
     6D Cuneiform-U semantic coordinate.
-    
+
     Axes:
       [0] Domain    — top-level semantic category (0-255)
       [1] Subdomain — subcategory refinement (0-255)
@@ -71,15 +71,15 @@ class CuneiformCoordinate:
 class PedersenCommitment:
     """
     Pedersen commitment scheme over the BN254 scalar field.
-    
+
     C = g^v * h^r (mod p)
-    
+
     Where:
     - g, h are generator points (simulated as large primes)
     - v is the committed value
     - r is the blinding factor (random)
     - C is the commitment (publicly shared)
-    
+
     Properties:
     - Hiding: C reveals nothing about v (information-theoretically)
     - Binding: Cannot find v' ≠ v with same C (computationally)
@@ -93,17 +93,17 @@ class PedersenCommitment:
     def commit(cls, value: int, blinding: int = None) -> tuple:
         """
         Create a Pedersen commitment to a value.
-        
+
         Args:
             value: The value to commit to (coordinate axis value, 0-255)
             blinding: Random blinding factor (auto-generated if None)
-            
+
         Returns:
             (commitment, blinding_factor)
         """
         if blinding is None:
             blinding = secrets.randbelow(BN254_R)
-        
+
         commitment = (pow(cls.G, value, BN254_R) * pow(cls.H, blinding, BN254_R)) % BN254_R
         return commitment, blinding
 
@@ -117,17 +117,17 @@ class PedersenCommitment:
 class SemanticRangeProof:
     """
     Zero-knowledge range proof for Cuneiform-U coordinates.
-    
+
     Proves that a committed coordinate value lies within [min_bound, max_bound]
     without revealing the actual value.
-    
+
     Construction:
     1. Sender commits to coordinate value v with blinding r: C = g^v * h^r
     2. Sender generates sub-proofs:
        a. v - min_bound ≥ 0 (non-negativity proof)
        b. max_bound - v ≥ 0 (upper bound proof)
     3. Verifier checks commitments and sub-proofs
-    
+
     This is a simplified Sigma-protocol-based range proof suitable for
     the small range [0, 255] of Cuneiform-U axes.
     """
@@ -152,13 +152,13 @@ class SemanticRangeProof:
               min_bound: int, max_bound: int) -> dict:
         """
         Generate a range proof for a single coordinate axis.
-        
+
         Args:
             axis_index: Which Cuneiform-U axis (0-5)
             value: The actual coordinate value (private witness)
             min_bound: Minimum allowed value (public input)
             max_bound: Maximum allowed value (public input)
-            
+
         Returns:
             Proof dictionary containing commitment, challenge, and responses
         """
@@ -231,15 +231,15 @@ class SemanticRangeProof:
     def verify(cls, proof: dict) -> bool:
         """
         Verify a range proof.
-        
+
         The verifier learns:
           ✅ The committed value is within [min_bound, max_bound]
           ❌ The verifier does NOT learn the actual value
           ❌ The verifier does NOT learn which specific coordinate was sent
-        
+
         Args:
             proof: Proof dictionary from prove()
-            
+
         Returns:
             True if proof is valid, False otherwise
         """

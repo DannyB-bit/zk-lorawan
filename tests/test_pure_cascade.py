@@ -67,24 +67,24 @@ def L5_compress(data: bytes) -> bytes:
     """Level 5: Byte pair encoding — replace most common pair with unused byte"""
     if len(data) < 4:
         return data
-    
+
     working = bytearray(data)
     replacements = []
-    
+
     for iteration in range(10):  # up to 10 BPE merges
         # Find most common adjacent pair
         pair_count = {}
         for i in range(len(working) - 1):
             pair = (working[i], working[i+1])
             pair_count[pair] = pair_count.get(pair, 0) + 1
-        
+
         if not pair_count:
             break
-        
+
         best_pair = max(pair_count, key=pair_count.get)
         if pair_count[best_pair] < 2:
             break
-        
+
         # Find unused byte value
         used = set(working)
         unused = None
@@ -94,7 +94,7 @@ def L5_compress(data: bytes) -> bytes:
                 break
         if unused is None:
             break
-        
+
         # Replace all occurrences
         replacements.append((unused, best_pair[0], best_pair[1]))
         new_working = bytearray()
@@ -107,18 +107,18 @@ def L5_compress(data: bytes) -> bytes:
                 new_working.append(working[i])
                 i += 1
         working = new_working
-    
+
     # Header: num_replacements(1B) + [unused(1B) + first(1B) + second(1B)]...
     header = bytes([len(replacements)])
     for unused, first, second in replacements:
         header += bytes([unused, first, second])
-    
+
     return header + bytes(working)
 
 def L5_decompress(data: bytes) -> bytes:
     if len(data) < 1:
         return data
-    
+
     num_rep = data[0]
     replacements = []
     offset = 1
@@ -128,9 +128,9 @@ def L5_decompress(data: bytes) -> bytes:
         second = data[offset+2]
         replacements.append((unused, first, second))
         offset += 3
-    
+
     working = bytearray(data[offset:])
-    
+
     # Reverse replacements in reverse order
     for unused, first, second in reversed(replacements):
         new_working = bytearray()
@@ -141,7 +141,7 @@ def L5_decompress(data: bytes) -> bytes:
             else:
                 new_working.append(b)
         working = new_working
-    
+
     return bytes(working)
 
 def L6_compress(data: bytes) -> bytes:
@@ -159,11 +159,11 @@ def cascade_compress(data: bytes, levels) -> tuple:
     """Run pure cascade: each output → next input. Returns (final, sizes_at_each_stage)."""
     current = data
     sizes = [("Input", len(current))]
-    
+
     for name, comp_fn, _ in levels:
         current = comp_fn(current)
         sizes.append((name, len(current)))
-    
+
     return current, sizes
 
 def cascade_decompress(data: bytes, levels) -> bytes:
@@ -180,7 +180,7 @@ def main():
     print("  Pipe: 57 bytes | 100% round-trip required")
     print("=" * 70)
     print()
-    
+
     # Define different cascade combos
     cascades = {
         "A: zlib only": [
@@ -213,7 +213,7 @@ def main():
             ("L3-zlib", L1_compress, L1_decompress),
         ],
     }
-    
+
     test_texts = [
         "Temperature is 72F and humidity is 45% in sector 7",
         "Alert motion detected at front door camera recording started notify owner",
@@ -225,49 +225,49 @@ def main():
         "alert sensor active battery ok " * 8,
         "The quick brown fox jumps over the lazy dog " * 4,
     ]
-    
+
     # Track best result per text
     best_results = {}
-    
+
     for cascade_name, levels in cascades.items():
         print(f"  ── {cascade_name} ──")
-        
+
         for text in test_texts:
             raw = text.encode("utf-8")
-            
+
             try:
                 compressed, sizes = cascade_compress(raw, levels)
                 decompressed = cascade_decompress(compressed, levels)
                 accurate = (decompressed == raw)
                 fits = len(compressed) <= PIPE
-                
+
                 cascade_str = " → ".join([f"{n}:{s}B" for n, s in sizes])
-                
+
                 if accurate:
                     mark = "✅" if fits else "⚠️ "
                     label = "FITS" if fits else "OVER"
                 else:
                     mark = "❌"
                     label = "FAIL"
-                
+
                 print(f"    {mark} {len(raw):>4}B→{len(compressed):>3}B {label} | {cascade_str}")
-                
+
                 # Track best
                 key = text[:50]
                 if accurate and (key not in best_results or len(compressed) < best_results[key][1]):
                     best_results[key] = (cascade_name, len(compressed), len(raw), fits)
-                    
+
             except Exception as e:
                 print(f"    💥 ERROR: {e}")
-        
+
         print()
-    
+
     # ── Best results ──
     print("=" * 70)
     print("  BEST CASCADE RESULT PER TEXT")
     print("=" * 70)
     print()
-    
+
     for text in test_texts:
         key = text[:50]
         raw_len = len(text.encode("utf-8"))

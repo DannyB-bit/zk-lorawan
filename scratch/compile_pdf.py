@@ -32,34 +32,34 @@ class NumberedCanvas(canvas.Canvas):
             # Draw dark background
             self.setFillColor(colors.HexColor("#0d0f14"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
-            
+
             # Draw top stripe (Solana color gradient)
             self.setFillColor(colors.HexColor("#14F195"))
             self.rect(0, 826.89, 297.63, 15, fill=True, stroke=False)
             self.setFillColor(colors.HexColor("#9945FF"))
             self.rect(297.63, 826.89, 297.64, 15, fill=True, stroke=False)
-            
+
             # Draw title text
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawCentredString(297.63, 755, "PROJECT: ZK-LORAWAN")
-            
+
             # Draw logo image (HUGE - 480x480)
             if os.path.exists("zk_lorawan_logo.png"):
                 self.drawImage("zk_lorawan_logo.png", 57.63, 240, width=480, height=480)
-            
+
             # Draw rated ZK box
             self.setStrokeColor(colors.HexColor("#14F195"))
             self.setLineWidth(1.5)
             self.rect(54, 120, 487.27, 80, fill=False, stroke=True)
             self.setFillColor(colors.HexColor("#1A202C"))
             self.rect(55, 121, 485.27, 78, fill=True, stroke=False)
-            
+
             # Text inside box
             self.setFont("Helvetica-Bold", 12)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawString(74, 155, "RATED ZK")
-            
+
             self.setFont("Helvetica-Bold", 10)
             self.setFillColor(colors.HexColor("#FFFFFF"))
             self.drawString(170, 172, "FOR: ZK-LORAWAN PRIVACY LAYER")
@@ -67,46 +67,46 @@ class NumberedCanvas(canvas.Canvas):
             self.setFillColor(colors.HexColor("#A0AEC0"))
             self.drawString(170, 155, "ZERO-KNOWLEDGE LORAWAN MESH NETWORKS")
             self.drawString(170, 140, "UNDER DECENTRALIZED INCENTIVIZATION PROTOCOL")
-            
+
             # Legal notice at the bottom
             self.setFont("Helvetica", 7)
             self.setFillColor(colors.HexColor("#718096"))
             self.drawString(54, 85, "LEGAL NOTICE: To safeguard developer intellectual property, the ZK-LoRaWAN codebase and all its multi-language")
             self.drawString(54, 75, "implementations are currently published under a protected, proprietary license pending grant evaluation. Upon formal")
             self.drawString(54, 65, "approval of the Solana Foundation Grant, the entire repository will be re-licensed under the open-source Apache License, Version 2.0.")
-            
+
             self.restoreState()
             return
-            
+
         # Page 19 (End Cover page)
         if self._pageNumber == page_count:
             self.saveState()
             self.setFillColor(colors.HexColor("#000000"))
             self.rect(0, 0, 595.27, 841.89, fill=True, stroke=False)
-            
+
             cx, cy = 297.63, 500
-            
+
             # Draw "WE ARE" above the logo
             self.setFont("Helvetica-Bold", 14)
             self.setFillColor(colors.HexColor("#9945FF"))
             self.drawCentredString(cx, 715, "WE ARE")
-            
+
             # Draw logo image centered and HUGE (340x340)
             if os.path.exists("theaicollective_logo.jpg"):
                 self.drawImage("theaicollective_logo.jpg", cx - 170, cy - 170, width=340, height=340)
-            
+
             # Quote (Moved Up)
             self.setFont("Helvetica-Oblique", 11)
             self.setFillColor(colors.HexColor("#14F195"))
             self.drawCentredString(cx, 260, '"The impossible is just code waiting to be written, physics waiting to be rewritten,')
             self.drawCentredString(cx, 242, 'math a work in progress, and truth waiting to be discovered."')
-            
+
             # Thank you note
             self.setFont("Helvetica", 9)
             self.setFillColor(colors.HexColor("#718096"))
             self.drawCentredString(cx, 65, "Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem.")
             self.drawCentredString(cx, 50, "This whitepaper is intended for educational and project evaluation purposes only.")
-            
+
             self.restoreState()
             return
 
@@ -118,13 +118,13 @@ class NumberedCanvas(canvas.Canvas):
         self.setStrokeColor(colors.HexColor("#E2E8F0"))
         self.setLineWidth(0.5)
         self.line(54, 792, 541, 792)
-        
+
         # Footer
         self.line(54, 55, 541, 55)
         self.setFont("Helvetica", 7.5)
         self.setFillColor(colors.HexColor("#718096"))
         self.drawString(54, 40, "Solana // TheAiCollective.art")
-        
+
         page_text = f"Page {self._pageNumber} of {page_count}"
         self.drawRightString(541, 40, page_text)
         self.restoreState()
@@ -190,7 +190,7 @@ def create_whitepaper_pdf():
     )
 
     styles = getSampleStyleSheet()
-    
+
     # Custom styles
     title_style = ParagraphStyle(
         "CoverTitle",
@@ -201,7 +201,7 @@ def create_whitepaper_pdf():
         alignment=1,
         spaceAfter=10
     )
-    
+
     normal_style = ParagraphStyle(
         "CustomNormal",
         parent=styles["Normal"],
@@ -212,7 +212,7 @@ def create_whitepaper_pdf():
         alignment=4, # Justified
         spaceAfter=10
     )
-    
+
     bullet_style = ParagraphStyle(
         "CustomBullet",
         parent=styles["Normal"],
@@ -275,21 +275,21 @@ def create_whitepaper_pdf():
         [Paragraph("<b>Platform:</b>", normal_style), Paragraph("Solana Shielded Pool (Roadmap), ARM TrustZone-M (Roadmap), Semtech SX1302/1303 HAL", normal_style)],
         [Paragraph("<b>Project Status:</b>", normal_style), Paragraph("Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned", normal_style)]
     ]
-    
+
     meta_table = Table(meta_data, colWidths=[120, 367])
     meta_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('BOTTOMPADDING', (0,0), (-1,-1), 6),
         ('TOPPADDING', (0,0), (-1,-1), 6),
     ]))
-    
+
     story.append(Spacer(1, 15))
     story.append(meta_table)
     story.append(Spacer(1, 40))
-    
+
     if os.path.exists("zk_lorawan_logo.png"):
         story.append(Image("zk_lorawan_logo.png", width=120, height=120))
-        
+
     story.append(Spacer(1, 30))
     story.append(Paragraph("<para align=center><font size=18 color='#1A202C'><b>ZK-LoRaWAN: ZERO-KNOWLEDGE PROOFS FOR PRIVATE LORAWAN MESH NETWORKS</b></font><br/><br/><font size=11 color='#718096'><i>A Solana-Style ZK-Compressed Shielded Pool and Lossless Proof Compression Layer (Language-U Protocol)</i></font></para>", normal_style))
     story.append(PageBreak())
@@ -324,7 +324,7 @@ def create_whitepaper_pdf():
         "Senders split the routing fee to charge a protocol developer fee of exactly <strong>50,000 lamports</strong> and a gateway routing "
         "reward of <strong>100,000 lamports</strong> per packet to support long-term network growth and maintain the open-source codebase.", normal_style
     ))
-    
+
     # Milestone status brief
     story.append(Spacer(1, 10))
     story.append(Paragraph("<b>GitHub Codebase URL:</b> <font color='#2B6CB0'><u>https://github.com/DannyB-bit/zk-lorawan</u></font>", normal_style))
@@ -337,7 +337,7 @@ def create_whitepaper_pdf():
         "requires a robust, secure, and private communications channel. Traditional RF protocols fail in adversarial environments. "
         "Below is the comparative analysis of the corporate/traditional problems versus the ZK-LoRaWAN solutions:", normal_style
     ))
-    
+
     table_data = [
         [Paragraph("<b>The Traditional Problem</b>", normal_style), Paragraph("<b>The ZK-LoRaWAN Solution</b>", normal_style)],
         [
@@ -357,7 +357,7 @@ def create_whitepaper_pdf():
             Paragraph("<b>Solana Shielded Pool (Proposed):</b> All escrow funds reside in a global shared pool. Gateways are paid out using a ZK proof and a unique nullifier, decoupling the sender-gateway relation.", normal_style)
         ]
     ]
-    
+
     challenge_table = Table(table_data, colWidths=[240, 247])
     challenge_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
@@ -366,7 +366,7 @@ def create_whitepaper_pdf():
         ('BOTTOMPADDING', (0,0), (-1,-1), 8),
         ('TOPPADDING', (0,0), (-1,-1), 8),
     ]))
-    
+
     story.append(Spacer(1, 10))
     story.append(challenge_table)
     story.append(PageBreak())
@@ -391,7 +391,7 @@ def create_whitepaper_pdf():
         "to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used "
         "for public addressing, while the private key is held strictly inside the hardware enclave.", normal_style
     ))
-    
+
     step_1 = (
         "Private Key (256-bit secret)\n"
         "  \u2193 (secp256k1 elliptic curve multiplication)\n"
@@ -401,7 +401,7 @@ def create_whitepaper_pdf():
     )
     story.append(Preformatted(step_1, code_style))
     story.append(Spacer(1, 10))
-    
+
     story.append(Paragraph("Layer 2: Proposed Recipient-Only ECIES Encryption (Roadmap)", h2_style))
     story.append(Paragraph(
         "To ensure privacy-preserving confidentiality over public RF bands, payloads are encrypted using the Elliptic "
@@ -409,7 +409,7 @@ def create_whitepaper_pdf():
         "encrypts the payload using AES-128-GCM, and attaches the ephemeral public key to the frame. Only the holder of the "
         "recipient's private key can decrypt the message.", normal_style
     ))
-    
+
     json_data = (
         "// Local Identity Keyfile Format (~/.zyMatica/keys/researcher-1.json)\n"
         "{\n"
@@ -436,7 +436,7 @@ def create_whitepaper_pdf():
         "compiling a Groth16 circuit directly over the `BN254` elliptic curve. To hash witnesses and constrain public identity inputs, "
         "the circuit uses a `MiMC-7` constraint system helper. Below is the core structure of the actual R1CS synthesizer implementation:", normal_style
     ))
-    
+
     rust_code = (
         "// Real Groth16 ZK-SNARK Circuit (groth16/src/circuit.rs)\n"
         "pub struct ZKLoRaCircuit<F: PrimeField> {\n"
@@ -510,7 +510,7 @@ def create_whitepaper_pdf():
         "Below is the step-by-step transaction flow showing the off-grid interaction between the Transmitting Agent, "
         "the LoRa Gateway, and the Solana Blockchain:", normal_style
     ))
-    
+
     flow_diagram = (
         "[ Transmitting Agent ]                                  [ LoRa Gateway ]\n"
         "         |                                                     |\n"
@@ -654,7 +654,7 @@ def create_whitepaper_pdf():
         "and drop packets.", normal_style
     ))
     story.append(Spacer(1, 10))
-    
+
     sec_data = [
         [Paragraph("<b>Attack Vector</b>", normal_style), Paragraph("<b>Mitigation Mechanism</b>", normal_style), Paragraph("<b>Security Guarantee</b>", normal_style)],
         [Paragraph("Replay Attack", normal_style), Paragraph("Nonces + &plusmn;5s Timestamp Window (Proposed)", normal_style), Paragraph("Duplicate packets rejected instantly.", normal_style)],
@@ -673,7 +673,7 @@ def create_whitepaper_pdf():
     ]))
     story.append(sec_table)
     story.append(PageBreak())
- 
+
     # ================= PAGE 13: PERFORMANCE & BANDWIDTH ANALYSIS =================
     story.append(Paragraph("11. Performance & Bandwidth Analysis", h1_style))
     story.append(Paragraph(
@@ -695,7 +695,7 @@ def create_whitepaper_pdf():
         "as used in the gateway demo. Therefore, standard 255-byte unfragmented LoRa transmission requires packet fragmentation/segmentation, "
         "proof aggregation, or highly constrained proof parameters.", normal_style
     ))
-    
+
     perf_data = [
         [Paragraph("<b>Component</b>", normal_style), Paragraph("<b>Size (Bytes)</b>", normal_style), Paragraph("<b>Airtime @ SF9, 125kHz</b>", normal_style)],
         [Paragraph("Preamble & Header", normal_style), Paragraph("28", normal_style), Paragraph("~80 ms", normal_style)],
@@ -796,7 +796,7 @@ def create_whitepaper_pdf():
         "The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructure. Below is the phased "
         "development roadmap:", normal_style
     ))
-    
+
     story.append(Paragraph("Short-Term (v2.0) -- Solana Testnet Integration", h2_style))
     story.append(Paragraph(
         "• <b>Production ZK Proofs:</b> Integrate production-grade ZK-proof generation on embedded hardware (e.g., using "
@@ -809,7 +809,7 @@ def create_whitepaper_pdf():
         "• <b>Unlinkable Transmission Mode:</b> Implement randomized delays and packet shuffling to prevent timing-based "
         "correlation attacks.", bullet_style
     ))
-    
+
     story.append(Paragraph("Medium-Term (v3.0) -- Solana Mainnet & Mesh Scale-Out", h2_style))
     story.append(Paragraph(
         "• <b>Multi-Hop Routing with ZK Auth:</b> Implement multi-hop routing where intermediate relay nodes authenticate "

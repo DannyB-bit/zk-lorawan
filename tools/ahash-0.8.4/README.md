@@ -1,8 +1,8 @@
-# aHash     ![Build Status](https://img.shields.io/github/actions/workflow/status/tkaitchuck/aHash/rust.yml?branch=master) ![Licence](https://img.shields.io/crates/l/ahash) ![Downloads](https://img.shields.io/crates/d/ahash) 
+# aHash     ![Build Status](https://img.shields.io/github/actions/workflow/status/tkaitchuck/aHash/rust.yml?branch=master) ![Licence](https://img.shields.io/crates/l/ahash) ![Downloads](https://img.shields.io/crates/d/ahash)
 
-AHash is the [fastest](https://github.com/tkaitchuck/aHash/blob/master/compare/readme.md#Speed), 
+AHash is the [fastest](https://github.com/tkaitchuck/aHash/blob/master/compare/readme.md#Speed),
 [DOS resistant hash](https://github.com/tkaitchuck/aHash/wiki/How-aHash-is-resists-DOS-attacks) currently available in Rust.
-AHash is intended *exclusively* for use in in-memory hashmaps. 
+AHash is intended *exclusively* for use in in-memory hashmaps.
 
 AHash's output is of [high quality](https://github.com/tkaitchuck/aHash/blob/master/compare/readme.md#Quality) but aHash is **not** a cryptographically secure hash.
 
@@ -28,7 +28,7 @@ Additionally, aHash is not intended to be cryptographically secure and should no
 
 ## Usage
 
-AHash is a drop in replacement for the default implementation of the `Hasher` trait. To construct a `HashMap` using aHash 
+AHash is a drop in replacement for the default implementation of the `Hasher` trait. To construct a `HashMap` using aHash
 as its hasher do the following:
 
 ```rust
@@ -75,13 +75,13 @@ as HashBrown now uses aHash as its hasher by default.
 
 ## Hash quality
 
-AHash passes the full [SMHasher test suite](https://github.com/rurban/smhasher). 
+AHash passes the full [SMHasher test suite](https://github.com/rurban/smhasher).
 
 The code to reproduce the result, and the full output [are checked into the repo](https://github.com/tkaitchuck/aHash/tree/master/smhasher).
 
 ## Additional FAQ
 
-A separate FAQ document is maintained [here](https://github.com/tkaitchuck/aHash/blob/master/FAQ.md). 
+A separate FAQ document is maintained [here](https://github.com/tkaitchuck/aHash/blob/master/FAQ.md).
 If you have questions not covered there, open an issue [here](https://github.com/tkaitchuck/aHash/issues).
 
 ## License

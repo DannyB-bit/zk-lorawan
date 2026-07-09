@@ -25,12 +25,14 @@ def hex_array(block: str) -> str:
 
 
 def expected_vk(root: str) -> dict[str, str]:
+    env = os.environ.copy()
     result = subprocess.run(
         ["cargo", "run", "--quiet", "-p", "zk-lorawan-groth16", "--", "print-vk"],
         cwd=root,
         capture_output=True,
         text=True,
         timeout=120,
+        env=env,
     )
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or "print-vk failed")

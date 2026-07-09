@@ -100,13 +100,13 @@ VAL_NAMES = {VAL_U8: "u8", VAL_I16: "i16", VAL_F16: "f16", VAL_F32: "f32", VAL_B
 class SemanticCodec:
     """
     Encodes structured readings as semantic tokens.
-    
+
     Wire format per reading:
         concept_id (1 byte) + value_type (1 byte) + value (1-4 bytes)
-    
+
     Header:
         reading_count (1 byte)
-    
+
     Capacity in 57 bytes:
         - U8 values (3 bytes each):  18 readings max
         - F16 values (4 bytes each): 14 readings max
@@ -119,13 +119,13 @@ class SemanticCodec:
     def encode(self, readings: list) -> bytes:
         """
         Encode a list of semantic readings into compact bytes.
-        
+
         Args:
             readings: list of (concept_name: str, value, value_type: int)
-        
+
         Returns:
             Packed bytes ready for ZK-LoRaWAN payload slot
-        
+
         Raises:
             ValueError: if result exceeds 57 bytes or concept unknown
         """
@@ -163,10 +163,10 @@ class SemanticCodec:
     def decode(self, data: bytes) -> list:
         """
         Decode semantic tokens back to (concept_name, value) pairs.
-        
+
         Args:
             data: bytes from ZK-LoRaWAN payload slot
-        
+
         Returns:
             list of (concept_name: str, value)
         """
@@ -208,7 +208,7 @@ class SemanticCodec:
     def reconstruct_english(self, readings: list) -> str:
         """
         Reconstruct a human-readable English message from decoded readings.
-        
+
         This is the RECEIVER side — it takes decoded semantic tokens and
         produces full English sentences for the end user.
         """

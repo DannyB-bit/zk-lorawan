@@ -29,7 +29,8 @@ fn load_or_generate_vk() -> ark_groth16::PreparedVerifyingKey<ark_bn254::Bn254> 
     }
 
     // Fallback: generate with OsRng or StdRng (first FFI call, no main.rs run yet)
-    let use_reproducible = std::env::var("ZK_LORAWAN_REPRODUCIBLE_SETUP").unwrap_or_default() == "1";
+    let use_reproducible =
+        std::env::var("ZK_LORAWAN_REPRODUCIBLE_SETUP").unwrap_or_default() == "1";
     let constants = circuit::generate_mimc_constants(220);
     let (_pk, vk) = if use_reproducible {
         use rand::SeedableRng;

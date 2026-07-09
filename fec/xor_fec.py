@@ -22,12 +22,12 @@ import hashlib
 class XorFEC:
     """
     XOR Forward Error Correction encoder/decoder.
-    
+
     Operates on fixed-size blocks. For each group of N data blocks,
     generates one parity block computed as XOR of all N blocks.
     If any single block in the group is lost, it can be reconstructed
     from the remaining (N-1) data blocks XOR'd with the parity block.
-    
+
     Block size is configurable but defaults to 16 bytes (aligned to
     AES block size for compatibility with encrypted payloads).
     """
@@ -66,10 +66,10 @@ class XorFEC:
     def encode(self, data: bytes) -> tuple:
         """
         Encode data with XOR-FEC parity blocks.
-        
+
         Args:
             data: Raw byte stream (compressed ZK proof)
-            
+
         Returns:
             Tuple of (encoded_data, parity_blocks, original_length)
             where encoded_data contains the original data unchanged,
@@ -98,7 +98,7 @@ class XorFEC:
                corrupted_indices: list = None) -> bytes:
         """
         Decode and reconstruct data using XOR-FEC parity.
-        
+
         Args:
             padded_data: Received data (may contain corrupted blocks)
             parity_blocks: Received parity blocks
@@ -106,7 +106,7 @@ class XorFEC:
             checksum: 4-byte SHA-256 integrity checksum
             corrupted_indices: List of block indices known to be corrupted
                               (detected via CRC failure on LoRa frame)
-            
+
         Returns:
             Reconstructed original data
         """

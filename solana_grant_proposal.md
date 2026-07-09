@@ -21,7 +21,7 @@ An on-chain Groth16 zero-knowledge proof verification, ZK-compressed state pool,
 
 ## 🚀 Executive Summary & Scope
 
-ZK-LoRaWAN is an advanced privacy and security upgrade designed specifically for Solana-based DePIN (Decentralized Physical Infrastructure) networks, such as the Zymatica Voice semantic mesh. Senders run data transmission and signature flows inside a tamper-proof microcontroller enclave. They utilize zero-knowledge proofs to route packets through crowdsourced gateways and settle incentives without revealing their hardware identities, location signatures, or wallet keys to the public ledger. 
+ZK-LoRaWAN is an advanced privacy and security upgrade designed specifically for Solana-based DePIN (Decentralized Physical Infrastructure) networks, such as the Zymatica Voice semantic mesh. Senders run data transmission and signature flows inside a tamper-proof microcontroller enclave. They utilize zero-knowledge proofs to route packets through crowdsourced gateways and settle incentives without revealing their hardware identities, location signatures, or wallet keys to the public ledger.
 
 The transaction fees, gateway rewards, and protocol splits are processed dynamically on-chain using native **SOL**. The program programmatically charges a protocol developer fee of exactly **50,000 lamports** and a gateway routing reward of **100,000 lamports** per packet to fund long-term network growth.
 

@@ -51,12 +51,12 @@ function buildMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] {
     for (let i = 0; i < currentLevel.length; i += 2) {
       let left = currentLevel[i];
       let right = i + 1 < currentLevel.length ? currentLevel[i + 1] : left;
-      
+
       if (i === index || i + 1 === index) {
         let sibling = i === index ? right : left;
         proof.push(sibling);
       }
-      
+
       let combined = Buffer.concat([left, right]);
       nextLevel.push(Buffer.from(keccak_256(combined)));
     }
@@ -132,7 +132,7 @@ describe("zk_lorawan", () => {
     // Generate single chirp proof dynamically for gateway key
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
-    
+
     const generateProof = (privKey: string, decKey: string, coord: number, fwHash: string, gwHex: string) => {
       const cmd = `"${proverPath}" generate ${privKey} ${decKey} ${coord} ${fwHash} ${gwHex}`;
       const stdout = execSync(cmd).toString();
@@ -192,7 +192,7 @@ describe("zk_lorawan", () => {
 
     const poolAccount = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     assert.isTrue(poolAccount.totalBalance.toNumber() >= amount.toNumber());
-    
+
     // Compute the expected root after index 0 insertion
     let current = singleZkVdeProofHash;
     for (let level = 0; level < 16; level++) {
