@@ -173,6 +173,18 @@ describe("zk_lorawan", () => {
     const registryAccount = await program.account.protocolRegistry.fetch(registryPda) as any;
     assert.ok(registryAccount.authority.equals(admin.publicKey));
     assert.equal(registryAccount.nextBatchId.toNumber(), 0);
+
+    // Whitelist the firmware hash (0x03) used for normal/sound witness generation in tests
+    const testFwHash = Buffer.alloc(32, 0);
+    testFwHash[31] = 3;
+    await program.methods
+      .registerFirmwareHash(Array.from(testFwHash))
+      .accounts({
+        registry: registryPda,
+        authority: admin.publicKey,
+      })
+      .signers([admin])
+      .rpc();
   });
 
   it("Deposits SOL into the Shared Shielded Pool", async () => {
