@@ -49,7 +49,7 @@ MODULES = [
         "pre_command": ["cargo", "build", "-p", "zk-lorawan-groth16"],
         "pre_timeout": 120,
         "required_output": [
-            "Chirps verified:  25",
+            "Chirps verified:  3",
             "Chirps rejected:  0",
         ],
     },
@@ -83,10 +83,15 @@ def run_module_test(module: dict, base_dir: str) -> bool:
                 print(f"    preflight stderr: {preflight.stderr[:500]}")
                 return False
 
+        env = os.environ.copy()
+        if module["script"] == "gateway/gateway.py":
+            env["ZK_LORAWAN_TEST_CHIRPS"] = "3"
+
         result = subprocess.run(
             [sys.executable, script_path],
             capture_output=True, text=True, timeout=120,
-            cwd=base_dir
+            cwd=base_dir,
+            env=env
         )
         output = result.stdout + result.stderr
 

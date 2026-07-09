@@ -40,5 +40,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
+cargo build -p zk-lorawan-groth16 --release
 anchor build -- --features integration-test
 anchor test --skip-build --provider.wallet "${ANCHOR_WALLET}"

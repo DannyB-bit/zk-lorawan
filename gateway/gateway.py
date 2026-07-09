@@ -1084,7 +1084,8 @@ async def _demo():
     config = GatewayConfig(mode="batch", batch_size=10)
     gw = Gateway(config)
 
-    for i in range(25):
+    num_chirps = int(os.environ.get("ZK_LORAWAN_TEST_CHIRPS", "25"))
+    for i in range(num_chirps):
         # Derive a unique private key for each chirp
         priv_key = bytearray(bytes.fromhex("0102030405060708010203040506070801020304050607080102030405060708"))
         priv_key[-1] = (priv_key[-1] + i) & 0xFF

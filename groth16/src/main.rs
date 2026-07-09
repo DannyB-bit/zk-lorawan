@@ -619,7 +619,7 @@ fn main() {
     // Initialize prover (includes trusted setup)
     println!("  [1] Running Groth16 trusted setup on BN254...");
     let prover = ZKLoRaWANProver::new();
-    println!("      ✅ Trusted setup complete (OsRng, file-persisted keys)");
+    println!("      ✅ Secure random single-party setup complete (OsRng, file-persisted keys for demo/devnet)");
     println!("      MiMC rounds: {}", MIMC_ROUNDS);
     println!("      Public inputs: 8 (identity, nullifier, attestation, ciphertext, gateway×2, deposit, firmware)");
     println!();
