@@ -148,7 +148,7 @@ describe("zk_lorawan", () => {
     );
 
     // Generate 3 unique proofs for batch
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 2; i <= 4; i++) {
       batchChirpProofs.push(generateProof(
         `000000000000000000000000000000000000000000000000000000000000000${i}`,
         "0000000000000000000000000000000000000000000000000000000000000002",
@@ -564,9 +564,9 @@ describe("zk_lorawan", () => {
     // Gateway binding: match how the circuit encodes it
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16); // lower 16 bytes at offset 16
+    gwBytes.copy(gwPart1, 0, 0, 16); // lower 16 bytes at offset 0
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32); // upper 16 bytes at offset 16
+    gwBytes.copy(gwPart2, 0, 16, 32); // upper 16 bytes at offset 0
 
     const publicInputs: Buffer[] = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -870,9 +870,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -962,9 +962,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -1046,9 +1046,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -1114,9 +1114,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -1185,9 +1185,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
@@ -1254,9 +1254,9 @@ describe("zk_lorawan", () => {
 
     const gwBytes = Buffer.from(gateway.publicKey.toBytes());
     const gwPart1 = Buffer.alloc(32);
-    gwBytes.copy(gwPart1, 16, 0, 16);
+    gwBytes.copy(gwPart1, 0, 0, 16);
     const gwPart2 = Buffer.alloc(32);
-    gwBytes.copy(gwPart2, 16, 16, 32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
 
     const publicInputs = [
       identityHash, nullifierHash, attestationHash, ciphertextHash,
