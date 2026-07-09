@@ -72,6 +72,8 @@ def load_groth16_lib():
                     ctypes.c_char_p, ctypes.c_size_t,
                     ctypes.c_char_p, ctypes.c_size_t,
                     ctypes.c_char_p, ctypes.c_size_t,
+                    ctypes.c_uint64,
+                    ctypes.c_char_p, ctypes.c_size_t,
                 ]
                 lib.verify_zk_proof_raw.restype = ctypes.c_uint32
 
@@ -225,6 +227,9 @@ class GatewayConfig:
     fee_gateway: int = 100_000
     fee_treasury: int = 50_000
     fee_total: int = 150_000
+    
+    # Firmware whitelist for verification
+    firmware_hash: bytes = b"enclave-firmware-version-v1.0.2"
 
 
 class ChirpStatus(Enum):
@@ -368,10 +373,8 @@ class ZKVerifier:
                 "payload": fec_parity,
             }
         else:
-            # Legacy uncompressed frame (fallback support)
-            legacy_overhead = 3 + 6 + 8
-            legacy_proof_size = 160
-            if len(raw) < legacy_overhead + legacy_proof_size:
+            # Parse version 1 frame with proof length prefix (supports both compressed and uncompressed proofs)
+            if len(raw) < 18:
                 return None
             
             offset = 0
@@ -390,15 +393,72 @@ class ZKVerifier:
             tag = raw[offset:offset + 8]
             offset += 8
             
-            # ZK Proof (160 bytes legacy)
-            proof_a = raw[offset:offset + 32]
-            offset += 32
-            proof_b = raw[offset:offset + 64]
-            offset += 64
-            proof_c = raw[offset:offset + 32]
-            offset += 32
-            public_hash = raw[offset:offset + 32]
-            offset += 32
+            # Read proof length byte
+            proof_len = raw[offset] + 1
+            offset += 1
+            
+            if len(raw) < offset + proof_len:
+                return None
+            compressed_proof = raw[offset:offset + proof_len]
+            offset += proof_len
+            
+            # Decompress proof (handles 256-byte and 160-byte formats, compressed or raw)
+            proof_a = b""
+            proof_b = b""
+            proof_c = b""
+            identity_hash = b""
+            nullifier_hash = b""
+            attestation_hash = b""
+            ciphertext_hash = b""
+            
+            is_compressed = (flags & 0x01) == 0x01
+            try:
+                if not is_compressed:
+                    raise ValueError("Raw uncompressed proof")
+                encoder = LLDACEncoder()
+                # Try decompressing to 256 bytes (modern proof with 4 distinct hashes)
+                decompressed = encoder.decode(compressed_proof, 256)
+                if len(decompressed) == 256:
+                    proof_a = decompressed[0:32]
+                    proof_b = decompressed[32:96]
+                    proof_c = decompressed[96:128]
+                    identity_hash = decompressed[128:160]
+                    nullifier_hash = decompressed[160:192]
+                    attestation_hash = decompressed[192:224]
+                    ciphertext_hash = decompressed[224:256]
+                else:
+                    # Try decompressing to 160 bytes (legacy format)
+                    decompressed = encoder.decode(compressed_proof, 160)
+                    if len(decompressed) == 160:
+                        proof_a = decompressed[0:32]
+                        proof_b = decompressed[32:96]
+                        proof_c = decompressed[96:128]
+                        identity_hash = decompressed[128:160]
+                        nullifier_hash = identity_hash
+                        attestation_hash = identity_hash
+                        ciphertext_hash = identity_hash
+                    else:
+                        raise ValueError("Invalid length")
+            except Exception:
+                # If decompression fails or raw flag is set, treat compressed_proof as raw
+                if len(compressed_proof) == 256:
+                    proof_a = compressed_proof[0:32]
+                    proof_b = compressed_proof[32:96]
+                    proof_c = compressed_proof[96:128]
+                    identity_hash = compressed_proof[128:160]
+                    nullifier_hash = compressed_proof[160:192]
+                    attestation_hash = compressed_proof[192:224]
+                    ciphertext_hash = compressed_proof[224:256]
+                elif len(compressed_proof) == 160:
+                    proof_a = compressed_proof[0:32]
+                    proof_b = compressed_proof[32:96]
+                    proof_c = compressed_proof[96:128]
+                    identity_hash = compressed_proof[128:160]
+                    nullifier_hash = identity_hash
+                    attestation_hash = identity_hash
+                    ciphertext_hash = identity_hash
+                else:
+                    return None
             
             payload_and_fec = raw[offset:]
             
@@ -411,10 +471,10 @@ class ZKVerifier:
                 "proof_a": proof_a,
                 "proof_b": proof_b,
                 "proof_c": proof_c,
-                "identity_hash": public_hash,
-                "nullifier_hash": public_hash,       # duplicate for legacy
-                "attestation_hash": public_hash,     # duplicate for legacy
-                "ciphertext_hash": public_hash,      # duplicate for legacy
+                "identity_hash": identity_hash,
+                "nullifier_hash": nullifier_hash,
+                "attestation_hash": attestation_hash,
+                "ciphertext_hash": ciphertext_hash,
                 "payload": payload_and_fec,
             }
     
@@ -433,6 +493,9 @@ class ZKVerifier:
         attestation_hash_hex = frame.get("attestation_hash", b"").hex().encode('utf-8')
         ciphertext_hash_hex = frame.get("ciphertext_hash", b"").hex().encode('utf-8')
         gateway_address_hex_bytes = gateway_address_hex.encode('utf-8')
+        
+        deposit_value = 150000
+        firmware_hash_hex = b"enclave-firmware-version-v1.0.2".hex().encode('utf-8')
 
         # Try FFI library
         lib, path = load_groth16_lib()
@@ -445,7 +508,9 @@ class ZKVerifier:
                 nullifier_hash_hex, len(nullifier_hash_hex),
                 attestation_hash_hex, len(attestation_hash_hex),
                 ciphertext_hash_hex, len(ciphertext_hash_hex),
-                gateway_address_hex_bytes, len(gateway_address_hex_bytes)
+                gateway_address_hex_bytes, len(gateway_address_hex_bytes),
+                deposit_value,
+                firmware_hash_hex, len(firmware_hash_hex)
             )
             return res == 1
 
@@ -469,7 +534,9 @@ class ZKVerifier:
                         frame.get("nullifier_hash", b"").hex(),
                         frame.get("attestation_hash", b"").hex(),
                         frame.get("ciphertext_hash", b"").hex(),
-                        gateway_address_hex
+                        gateway_address_hex,
+                        str(deposit_value),
+                        b"enclave-firmware-version-v1.0.2".hex()
                     ]
                     proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
                     if proc.returncode == 0 and "VALID" in proc.stdout:
@@ -953,9 +1020,49 @@ class Gateway:
 # Self-test & Demo
 # ============================================================================
 
+def generate_real_demo_proof() -> dict:
+    """Generate a real ZK proof dynamically using the prover binary."""
+    import subprocess
+    import platform
+    import json
+    
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bin_name = "zk_lorawan_prove.exe" if platform.system() == "Windows" else "zk_lorawan_prove"
+    prover_path = os.path.join(base_dir, "target", "release", bin_name)
+    if not os.path.exists(prover_path):
+        prover_path = os.path.join(base_dir, "target", "debug", bin_name)
+    
+    # Test private key and decryption key
+    private_key_hex = bytes.fromhex("0102030405060708010203040506070801020304050607080102030405060708").hex()
+    decryption_key_hex = bytes.fromhex("090a0b0c0d0e0f10090a0b0c0d0e0f10090a0b0c0d0e0f10090a0b0c0d0e0f10").hex()
+    coordinate_val = "15" # Modality range coordinate
+    firmware_hash_hex = b"enclave-firmware-version-v1.0.2".hex()
+    gateway_address_hex = "0000000000000000000000000000000000000000000000000000000000000000"
+    deposit_value = "150000"
+
+    cmd = [
+        prover_path,
+        "generate",
+        private_key_hex,
+        decryption_key_hex,
+        coordinate_val,
+        firmware_hash_hex,
+        gateway_address_hex,
+        deposit_value
+    ]
+    
+    env = os.environ.copy()
+    env["ZK_LORAWAN_REPRODUCIBLE_SETUP"] = "1"
+    
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=True, env=env)
+    return json.loads(proc.stdout)
+
+
 async def _demo():
     """Run a gateway demo with simulated chirps."""
     os.environ["ZK_LORAWAN_DEMO_MODE"] = "1"
+    os.environ["ZK_LORAWAN_ALLOW_MOCK_PROOFS"] = "0" # Perform REAL ZK verification!
+    
     logging.basicConfig(
         level=logging.INFO,
         format="  %(name)-8s | %(message)s"
@@ -966,33 +1073,50 @@ async def _demo():
     print("=" * 72)
     print()
     
+    # Generate real proof once
+    print("Generating a mathematically valid ZK proof for the demo...")
+    real_proof = generate_real_demo_proof()
+    
     config = GatewayConfig(mode="batch", batch_size=10)
     gw = Gateway(config)
     
-    # Simulate 25 chirps arriving using LLD-AC compressed frames
+    # Extract components from real proof (use compressed components to fit 256-byte limit)
+    proof_a = bytes.fromhex(real_proof["proof_a_compressed"])
+    proof_b = bytes.fromhex(real_proof["proof_b_compressed"])
+    proof_c = bytes.fromhex(real_proof["proof_c_compressed"])
+    identity_hash = bytes.fromhex(real_proof["identity_hash"])
+    nullifier_hash = bytes.fromhex(real_proof["nullifier_hash"])
+    attestation_hash = bytes.fromhex(real_proof["attestation_hash"])
+    ciphertext_hash = bytes.fromhex(real_proof["ciphertext_hash"])
+    
+    # Raw compressed proof buffer (fits within 256 bytes)
+    raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash
+    
+    # Compress proof via LLD-AC
     encoder = LLDACEncoder()
+    compressed_proof = encoder.encode(raw_proof)
+    if len(compressed_proof) >= len(raw_proof):
+        compressed_proof = raw_proof
+    
+    # Pack version 1 frame structure
+    # [Header 3B: version=1, type=1, flags=1 (compressed)] [Coords 6B] [Tag 8B] [ProofLen 1B] [Proof] [Semantic 57B]
+    flags = 0x01 if len(compressed_proof) < len(raw_proof) else 0x00
+    header = struct.pack("BBB", 1, 1, flags)
+    coords_bytes = struct.pack("BBBBBB", 42, 7, 15, 128, 200, 15) # match coord 15 (Modality)
+    tag = bytes([0] * 8)
+    proof_len_byte = struct.pack("B", len(compressed_proof) - 1)
+    semantic_payload = bytes([0] * 57)
+    
+    core_data = header + coords_bytes + tag + proof_len_byte + compressed_proof + semantic_payload
+    
+    # Apply FEC protection
+    from fec.xor_fec import XorFEC
+    fec = XorFEC()
+    padded, parity_blocks, _, checksum = fec.encode(core_data)
+    frame = padded + b"".join(parity_blocks) + checksum
+    
     for i in range(25):
-        proof_a = bytes.fromhex("89c083f3ddcb401f9af0b20ecc8e9641961cfacf7a646aae1f5ff97a4448db9d")
-        proof_b = bytes.fromhex("044470d2839b106b3e3bffd9df2d7f56fce17407616793fb5fee91b2cf42c20aeed63e81755d62eb509289e472115f25d0ed715e81a621b78f41695e7afce011")
-        proof_c = bytes.fromhex("9d7717a14c50c0e86664992b8d2da1e542bb13190f7ac0152694bb2ed619f0a2")
-        identity_hash = bytes.fromhex("88a58813b470911a633ed3e58dfd0da9e97a232433ed25772359d7852e2fd21b")
-        nullifier_hash = bytes.fromhex("fa81252c14c38e6066ac9c79035e425d0e1671745fb639f05eda12d03e155328")
-        attestation_hash = bytes.fromhex("616520b99d8872d70626d8d1fad700c6e3f4a012718ae2695fb46866417b7c2d")
-        ciphertext_hash = bytes.fromhex("2261a97ccdfb4ce6111ff973fa732a81836c425d355781435512bec9e9549005")
-        
-        # Combine to form proof bytes
-        raw_proof = proof_a + proof_b + proof_c + identity_hash + nullifier_hash + attestation_hash + ciphertext_hash
-        
-        # Compress
-        compressed_proof = encoder.encode(raw_proof)
-        
-        # Pack (pass max_size=512 for the demo high-entropy proof)
-        coords = [42, 7, 3, 128, 200, 15]
-        frame = pack_lora_frame(compressed_proof, coords, max_size=512)
-        
         await gw.handle_chirp(frame, rssi=-75 - (i % 20), snr=8.0 - (i % 5))
-        
-        # Small delay to simulate real timing
         await asyncio.sleep(0.01)
     
     # Flush remaining

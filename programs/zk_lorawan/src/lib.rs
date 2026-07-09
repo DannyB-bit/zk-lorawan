@@ -39,6 +39,8 @@ pub mod zk_lorawan {
         amount: u64,
         leaf_hash: [u8; 32],
     ) -> Result<()> {
+        require!(amount == TOTAL_FEE_PER_CHIRP, ZKLoRaError::InvalidDepositAmount);
+
         anchor_lang::solana_program::program::invoke(
             &system_instruction::transfer(
                 &ctx.accounts.sender.key(),
@@ -53,15 +55,33 @@ pub mod zk_lorawan {
         )?;
 
         let shielded_pool = &mut ctx.accounts.shielded_pool;
+        
+        let next_index = shielded_pool.next_index;
+        // Enforce max depth index limit (2^16 = 65,536 leaves)
+        require!(next_index < 65536, ZKLoRaError::CalculationOverflow);
+
+        let new_root = insert_leaf_on_chain(
+            &mut shielded_pool.filled_subtrees,
+            next_index,
+            leaf_hash,
+        );
+
         shielded_pool.total_balance = shielded_pool.to_account_info().lamports();
-        shielded_pool.merkle_root = leaf_hash;
+        shielded_pool.merkle_root = new_root;
+        shielded_pool.next_index = next_index.checked_add(1).ok_or(ZKLoRaError::CalculationOverflow)?;
         shielded_pool.last_updated = Clock::get()?.unix_timestamp;
         shielded_pool.bump = ctx.bumps.shielded_pool;
 
+        // Maintain the 8-root history ring buffer
+        let hist_idx = shielded_pool.history_index as usize;
+        shielded_pool.roots_history[hist_idx] = new_root;
+        shielded_pool.history_index = (shielded_pool.history_index + 1) % 8;
+
         msg!(
-            "Deposited {} lamports into Shielded Pool, updated Merkle Root to {:?}",
+            "Deposited {} lamports into Shielded Pool (index {}), updated Merkle Root to {:?}",
             amount,
-            leaf_hash
+            next_index,
+            new_root
         );
         Ok(())
     }
@@ -88,14 +108,19 @@ pub mod zk_lorawan {
         let gateway_info = ctx.accounts.gateway.to_account_info();
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
-        // 0. Verify Merkle membership proof in the shielded pool
-        let is_member = verify_merkle_proof(
-            &zk_vde_proof_hash,
-            &merkle_proof,
-            leaf_index,
-            &ctx.accounts.shielded_pool.merkle_root,
-        );
+        // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
+        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!((leaf_index as u64) < ctx.accounts.shielded_pool.next_index, ZKLoRaError::InvalidMerkleProof);
+
+        let computed_root = compute_merkle_root_from_proof(&zk_vde_proof_hash, &merkle_proof, leaf_index);
+        let is_member = is_known_root(&ctx.accounts.shielded_pool, &computed_root);
         require!(is_member, ZKLoRaError::InvalidMerkleProof);
+
+        // Verify firmware is whitelisted
+        require!(
+            verify_firmware_hash(&ctx.accounts.registry, &firmware_hash),
+            ZKLoRaError::InvalidAttestation
+        );
 
         // 1. Verify ZK Groth16 proof using alt_bn128 pairing check (with gateway address binding)
         let gateway_key = ctx.accounts.gateway.key().to_bytes();
@@ -169,18 +194,39 @@ pub mod zk_lorawan {
         merkle_proof: Vec<[u8; 32]>,
         leaf_index: u32,
     ) -> Result<()> {
+        let pool_account_info = ctx.accounts.shielded_pool.to_account_info();
+        let pool_data = pool_account_info.try_borrow_data()?;
+        let mut pool_ptr = &pool_data[8..];
+        let shielded_pool: Box<ShieldedEscrowPool> = Box::new(
+            ShieldedEscrowPool::deserialize(&mut pool_ptr)?
+        );
         let shielded_pool_info = ctx.accounts.shielded_pool.to_account_info();
         let gateway_info = ctx.accounts.gateway.to_account_info();
         let treasury_info = ctx.accounts.treasury.to_account_info();
 
-        // 0. Verify Merkle membership proof in the shielded pool
-        let is_member = verify_merkle_proof(
-            &public_inputs[0],
-            &merkle_proof,
-            leaf_index,
-            &ctx.accounts.shielded_pool.merkle_root,
-        );
+        // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
+        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!((leaf_index as u64) < shielded_pool.next_index, ZKLoRaError::InvalidMerkleProof);
+
+        let computed_root = compute_merkle_root_from_proof(&public_inputs[0], &merkle_proof, leaf_index);
+        let is_member = is_known_root(&shielded_pool, &computed_root);
         require!(is_member, ZKLoRaError::InvalidMerkleProof);
+
+        // Verify firmware is whitelisted
+        require!(
+            verify_firmware_hash(&ctx.accounts.registry, &public_inputs[7]),
+            ZKLoRaError::InvalidAttestation
+        );
+
+        // Verify gateway binding: public_inputs[4] and [5] must encode gateway's public key
+        let gateway_key = ctx.accounts.gateway.key().to_bytes();
+        let mut gateway_part1 = [0u8; 32];
+        gateway_part1[16..32].copy_from_slice(&gateway_key[0..16]);
+        let mut gateway_part2 = [0u8; 32];
+        gateway_part2[16..32].copy_from_slice(&gateway_key[16..32]);
+
+        require!(public_inputs[4] == gateway_part1, ZKLoRaError::UnauthorizedGateway);
+        require!(public_inputs[5] == gateway_part2, ZKLoRaError::UnauthorizedGateway);
 
         // 1. Verify ZK Groth16 proof using alt_bn128 pairing check
         verify_groth16(&proof_a, &proof_b, &proof_c, &public_inputs)?;
@@ -285,14 +331,19 @@ pub mod zk_lorawan {
             ZKLoRaError::UnauthorizedGateway
         );
 
-        // 0. Verify Merkle membership proof in the shielded pool
-        let is_member = verify_merkle_proof(
-            &zk_vde_proof_hash,
-            &merkle_proof,
-            leaf_index,
-            &ctx.accounts.shielded_pool.merkle_root,
-        );
+        // 0. Verify Merkle membership proof in the shielded pool (allowing historical roots)
+        require!(merkle_proof.len() == 16, ZKLoRaError::InvalidMerkleProof);
+        require!((leaf_index as u64) < ctx.accounts.shielded_pool.next_index, ZKLoRaError::InvalidMerkleProof);
+
+        let computed_root = compute_merkle_root_from_proof(&zk_vde_proof_hash, &merkle_proof, leaf_index);
+        let is_member = is_known_root(&ctx.accounts.shielded_pool, &computed_root);
         require!(is_member, ZKLoRaError::InvalidMerkleProof);
+
+        // Verify firmware is whitelisted
+        require!(
+            verify_firmware_hash(&ctx.accounts.registry, &firmware_hash),
+            ZKLoRaError::InvalidAttestation
+        );
 
         // 1. Verify Groth16 proof per chirp inside the batch on-chain (with gateway address binding)
         let gateway_key = ctx.accounts.gateway.key().to_bytes();
@@ -513,6 +564,97 @@ pub mod zk_lorawan {
         );
         Ok(())
     }
+
+    pub fn register_firmware_hash(
+        ctx: Context<RegisterFirmware>,
+        hash: [u8; 32],
+    ) -> Result<()> {
+        let registry = &mut ctx.accounts.registry;
+        require!(
+            registry.approved_firmware_hashes.len() < 10,
+            ZKLoRaError::CalculationOverflow
+        );
+        if !registry.approved_firmware_hashes.contains(&hash) {
+            registry.approved_firmware_hashes.push(hash);
+        }
+        msg!("Registered firmware hash: {:?}", hash);
+        Ok(())
+    }
+
+    pub fn migrate_accounts(ctx: Context<MigrateAccounts>) -> Result<()> {
+        let registry_info = ctx.accounts.registry.to_account_info();
+        let pool_info = ctx.accounts.shielded_pool.to_account_info();
+        let authority_info = ctx.accounts.authority.to_account_info();
+        let rent = Rent::get()?;
+
+        // Upgrade Registry space to 500 if smaller
+        let registry_target_size = 500;
+        if registry_info.data_len() < registry_target_size {
+            let needed_rent = rent.minimum_balance(registry_target_size);
+            let diff = needed_rent.saturating_sub(registry_info.lamports());
+            if diff > 0 {
+                anchor_lang::solana_program::program::invoke(
+                    &anchor_lang::solana_program::system_instruction::transfer(
+                        ctx.accounts.authority.key,
+                        &ctx.accounts.registry.key(),
+                        diff,
+                    ),
+                    &[
+                        authority_info.clone(),
+                        registry_info.clone(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                )?;
+            }
+            registry_info.realloc(registry_target_size, false)?;
+            msg!("Registry migrated to 500 bytes");
+        }
+
+        // Upgrade Pool space to 900 if smaller
+        let pool_target_size = 900;
+        if pool_info.data_len() < pool_target_size {
+            let needed_rent = rent.minimum_balance(pool_target_size);
+            let diff = needed_rent.saturating_sub(pool_info.lamports());
+            if diff > 0 {
+                anchor_lang::solana_program::program::invoke(
+                    &anchor_lang::solana_program::system_instruction::transfer(
+                        ctx.accounts.authority.key,
+                        &ctx.accounts.shielded_pool.key(),
+                        diff,
+                    ),
+                    &[
+                        authority_info.clone(),
+                        pool_info.clone(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                )?;
+            }
+            pool_info.realloc(pool_target_size, false)?;
+            
+            // Set the first root in the newly allocated roots_history array
+            let pool = &mut ctx.accounts.shielded_pool;
+            if pool.roots_history[0] == [0; 32] {
+                pool.roots_history[0] = pool.merkle_root;
+                pool.history_index = 1;
+            }
+            msg!("Shielded pool migrated to 900 bytes");
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct RegisterFirmware<'info> {
+    #[account(
+        mut,
+        seeds = [REGISTRY_SEED],
+        bump,
+        has_one = authority,
+    )]
+    pub registry: Account<'info, ProtocolRegistry>,
+    #[account(mut)]
+    pub authority: Signer<'info>,
 }
 
 // ============================================================================
@@ -549,12 +691,11 @@ fn compute_merkle_root(leaves: &Vec<[u8; 32]>) -> [u8; 32] {
     current_level[0]
 }
 
-fn verify_merkle_proof(
+fn compute_merkle_root_from_proof(
     leaf: &[u8; 32],
     proof: &Vec<[u8; 32]>,
     leaf_index: u32,
-    root: &[u8; 32],
-) -> bool {
+) -> [u8; 32] {
     let mut current = *leaf;
     let mut index = leaf_index;
 
@@ -568,7 +709,73 @@ fn verify_merkle_proof(
         index /= 2;
     }
 
-    current == *root
+    current
+}
+
+fn verify_merkle_proof(
+    leaf: &[u8; 32],
+    proof: &Vec<[u8; 32]>,
+    leaf_index: u32,
+    root: &[u8; 32],
+) -> bool {
+    let computed = compute_merkle_root_from_proof(leaf, proof, leaf_index);
+    computed == *root
+}
+
+fn is_known_root(pool: &ShieldedEscrowPool, root: &[u8; 32]) -> bool {
+    if pool.merkle_root == *root {
+        return true;
+    }
+    for historical_root in pool.roots_history.iter() {
+        if *historical_root == *root {
+            return true;
+        }
+    }
+    false
+}
+
+fn get_zero_hash(level: usize) -> [u8; 32] {
+    let mut current = [0u8; 32];
+    for _ in 0..level {
+        let combined = [current.as_slice(), current.as_slice()].concat();
+        current = keccak::hash(&combined).to_bytes();
+    }
+    current
+}
+
+fn insert_leaf_on_chain(
+    filled_subtrees: &mut [[u8; 32]; 16],
+    next_index: u64,
+    leaf: [u8; 32],
+) -> [u8; 32] {
+    let mut current_level_hash = leaf;
+    let mut index = next_index;
+
+    for level in 0..16 {
+        if index % 2 == 0 {
+            filled_subtrees[level] = current_level_hash;
+            let zero_hash = get_zero_hash(level);
+            let combined = [current_level_hash.as_slice(), zero_hash.as_slice()].concat();
+            current_level_hash = keccak::hash(&combined).to_bytes();
+        } else {
+            let left_hash = filled_subtrees[level];
+            let combined = [left_hash.as_slice(), current_level_hash.as_slice()].concat();
+            current_level_hash = keccak::hash(&combined).to_bytes();
+        }
+        index /= 2;
+    }
+    current_level_hash
+}
+
+fn verify_firmware_hash(registry: &ProtocolRegistry, hash: &[u8; 32]) -> bool {
+    if registry.approved_firmware_hashes.is_empty() {
+        // Fallback default approved firmware hash (for initial setup/demo compatibility)
+        let mut default_hash = [0u8; 32];
+        let default_bytes = b"enclave-firmware-version-v1.0.2";
+        default_hash[..default_bytes.len()].copy_from_slice(default_bytes);
+        return hash == &default_hash;
+    }
+    registry.approved_firmware_hashes.contains(hash)
 }
 
 // ============================================================================
@@ -838,6 +1045,7 @@ pub struct ProtocolRegistry {
     pub total_gateway_rewards: u64,
     pub total_treasury_fees: u64,
     pub created_at: i64,
+    pub approved_firmware_hashes: Vec<[u8; 32]>,
 }
 
 #[account]
@@ -857,6 +1065,10 @@ pub struct ShieldedEscrowPool {
     pub total_balance: u64,
     pub merkle_root: [u8; 32],
     pub last_updated: i64,
+    pub next_index: u64,
+    pub filled_subtrees: [[u8; 32]; 16],
+    pub roots_history: [[u8; 32]; 8],
+    pub history_index: u64,
     pub bump: u8,
 }
 
@@ -875,7 +1087,7 @@ pub struct InitializeRegistry<'info> {
     #[account(
         init,
         payer = authority,
-        space = 8 + 32 + 8 + 8 + 8 + 8 + 8 + 8 + 8,
+        space = 500, // 8 + 32 + 8 + 8 + 8 + 8 + 8 + 8 + 8 + (4 + 10 * 32)
         seeds = [REGISTRY_SEED],
         bump,
     )]
@@ -892,7 +1104,7 @@ pub struct DepositShielded<'info> {
     #[account(
         init_if_needed,
         payer = sender,
-        space = 8 + 8 + 32 + 8 + 1,
+        space = 900, // 8 + 8 + 32 + 8 + 8 + 16 * 32 + 8 * 32 + 8 + 1
         seeds = [b"shielded-pool"],
         bump
     )]
@@ -937,12 +1149,13 @@ pub struct VerifySingle<'info> {
 pub struct VerifySingleProof<'info> {
     #[account(mut, seeds = [REGISTRY_SEED], bump)]
     pub registry: Account<'info, ProtocolRegistry>,
+    /// CHECK: Seeds checked on-chain, deserialized on the heap in handler
     #[account(
         mut,
         seeds = [b"shielded-pool"],
         bump,
     )]
-    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    pub shielded_pool: UncheckedAccount<'info>,
     #[account(
         init,
         payer = gateway,
@@ -986,6 +1199,8 @@ pub struct AddChirp<'info> {
         bump,
     )]
     pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    #[account(seeds = [REGISTRY_SEED], bump)]
+    pub registry: Account<'info, ProtocolRegistry>,
     pub gateway: Signer<'info>,
 }
 
@@ -1051,4 +1266,17 @@ pub enum ZKLoRaError {
     InvalidVdeProof,
     #[msg("Invalid ciphertext hash")]
     InvalidCiphertext,
+    #[msg("Invalid deposit amount, must be exactly 150,000 lamports")]
+    InvalidDepositAmount,
+}
+
+#[derive(Accounts)]
+pub struct MigrateAccounts<'info> {
+    #[account(mut, seeds = [REGISTRY_SEED], bump)]
+    pub registry: Account<'info, ProtocolRegistry>,
+    #[account(mut, seeds = [b"shielded-pool"], bump)]
+    pub shielded_pool: Account<'info, ShieldedEscrowPool>,
+    #[account(mut, address = ADMIN_AUTHORITY)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }

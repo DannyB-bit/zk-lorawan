@@ -112,6 +112,8 @@ class ZKLoRaWANDeviceSDK:
 
         # 4. Assemble Frame Header (3 bytes)
         flags = 0x00
+        if len(compressed_proof) < len(raw_proof_bytes):
+            flags |= 0x01  # Bit 0: PROOF_COMPRESSED
         header = struct.pack("BBB", self.VERSION, self.FRAME_TYPE_DATA, flags)
 
         # 5. Concatenate Payload Core with length-prefixed proof
