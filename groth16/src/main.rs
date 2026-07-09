@@ -8,8 +8,6 @@ use ark_bn254::{Bn254, Fr};
 use ark_ff::PrimeField;
 use ark_groth16::{PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use rand::rngs::StdRng;
-use rand::SeedableRng;
 
 // ============================================================================
 // ZK-LoRaWAN Protocol Constants
@@ -18,6 +16,11 @@ pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000;
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000;
 pub const TOTAL_FEE_LAMPORTS: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MIMC_ROUNDS: usize = 220;
+
+/// Path for persisted proving/verifying keys (generated once with OsRng, reused thereafter)
+const KEYS_DIR: &str = "keys";
+const PK_FILE: &str = "keys/proving_key.bin";
+const VK_FILE: &str = "keys/verifying_key.bin";
 
 // ============================================================================
 // ZK-LoRaWAN Proof Bundle (serialized for LoRa transmission)
@@ -34,7 +37,7 @@ pub struct ZKLoRaWANProofBundle {
 }
 
 // ============================================================================
-// ZK-LoRaWAN Prover (generates real Groth16 proofs for LoRa packets)
+// ZK-LoRaWAN Prover — Uses OsRng with file-based key persistence
 // ============================================================================
 pub struct ZKLoRaWANProver {
     pub proving_key: ProvingKey<Bn254>,
@@ -44,14 +47,50 @@ pub struct ZKLoRaWANProver {
 }
 
 impl ZKLoRaWANProver {
-    /// Initialize the prover with a trusted setup
+    /// Initialize the prover with file-persisted keys (generated via OsRng on first run).
+    /// This eliminates the deterministic seed [42;32] toxic waste vulnerability.
     pub fn new() -> Self {
-        let mut rng = StdRng::from_seed([42u8; 32]);
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+
+        // Try to load existing keys from disk
+        if let (Ok(pk_data), Ok(vk_data)) =
+            (std::fs::read(PK_FILE), std::fs::read(VK_FILE))
+        {
+            if let (Ok(pk), Ok(vk)) = (
+                ProvingKey::<Bn254>::deserialize_compressed(&pk_data[..]),
+                VerifyingKey::<Bn254>::deserialize_compressed(&vk_data[..]),
+            ) {
+                let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
+                return ZKLoRaWANProver {
+                    proving_key: pk,
+                    verifying_key: vk,
+                    prepared_vk,
+                    constants,
+                };
+            }
+            eprintln!("Warning: Key files exist but are corrupt; regenerating with OsRng");
+        }
+
+        // Generate new keys with OsRng (cryptographically secure, non-deterministic)
+        eprintln!("Generating new trusted setup keys with OsRng (first run)...");
+        let mut rng = rand::rngs::OsRng;
         let (pk, vk) =
             circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed");
-        let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
 
+        // Persist keys to disk
+        std::fs::create_dir_all(KEYS_DIR).ok();
+        let mut pk_buf = Vec::new();
+        pk.serialize_compressed(&mut pk_buf)
+            .expect("Failed to serialize proving key");
+        std::fs::write(PK_FILE, &pk_buf).expect("Failed to write proving key");
+
+        let mut vk_buf = Vec::new();
+        vk.serialize_compressed(&mut vk_buf)
+            .expect("Failed to serialize verifying key");
+        std::fs::write(VK_FILE, &vk_buf).expect("Failed to write verifying key");
+        eprintln!("Keys saved to {PK_FILE} and {VK_FILE}");
+
+        let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
         ZKLoRaWANProver {
             proving_key: pk,
             verifying_key: vk,
@@ -60,8 +99,9 @@ impl ZKLoRaWANProver {
         }
     }
 
-    /// Generate a Groth16 proof for private key, decryption key, coordinate value, and firmware hash
-    /// Returns a compressed proof bundle ready for LoRa transmission
+    /// Generate a Groth16 proof for private key, decryption key, coordinate value, firmware hash,
+    /// gateway address, and deposit value.
+    #[allow(clippy::too_many_arguments)]
     pub fn generate_proof(
         &self,
         private_key_bytes: &[u8],
@@ -69,6 +109,7 @@ impl ZKLoRaWANProver {
         coordinate_val: u64,
         firmware_hash_bytes: &[u8],
         gateway_address_bytes: &[u8],
+        deposit_value: u64,
     ) -> ZKLoRaWANProofBundle {
         let mut rng = rand::thread_rng();
 
@@ -77,6 +118,7 @@ impl ZKLoRaWANProver {
         let decryption_key_fr = Fr::from_le_bytes_mod_order(decryption_key_bytes);
         let coordinate_fr = Fr::from(coordinate_val);
         let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash_bytes);
+        let deposit_value_fr = Fr::from(deposit_value);
 
         // Split 32-byte gateway address into two 16-byte halves and map to Fr
         let mut part1_bytes = [0u8; 32];
@@ -95,6 +137,8 @@ impl ZKLoRaWANProver {
             circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &self.constants);
         let ciphertext_hash =
             circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &self.constants);
+        let deposit_commitment =
+            circuit::mimc_hash(identity_hash, Some(deposit_value_fr), &self.constants);
 
         // Generate the real Groth16 proof
         let proof = circuit::generate_proof(
@@ -103,12 +147,15 @@ impl ZKLoRaWANProver {
             decryption_key_fr,
             coordinate_fr,
             firmware_hash_fr,
+            deposit_value_fr,
             identity_hash,
             nullifier_hash,
             attestation_hash,
             ciphertext_hash,
             gateway_part1_fr,
             gateway_part2_fr,
+            deposit_commitment,
+            firmware_hash_fr, // firmware_hash_public == firmware_hash_witness
             self.constants.clone(),
             &mut rng,
         )
@@ -165,10 +212,13 @@ impl ZKLoRaWANProver {
     }
 
     /// Verify a proof bundle (used by gateway)
+    #[allow(clippy::too_many_arguments)]
     pub fn verify_bundle(
         &self,
         bundle: &ZKLoRaWANProofBundle,
         gateway_address_bytes: &[u8],
+        deposit_value: u64,
+        firmware_hash_bytes: &[u8],
     ) -> bool {
         // Deserialize proof points
         let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed)
@@ -220,6 +270,12 @@ impl ZKLoRaWANProver {
         part2_bytes[0..16].copy_from_slice(&gateway_address_bytes[16..32]);
         let gateway_part2_fr = Fr::from_le_bytes_mod_order(&part2_bytes);
 
+        // Compute deposit commitment and firmware hash Fr
+        let deposit_value_fr = Fr::from(deposit_value);
+        let deposit_commitment =
+            circuit::mimc_hash(identity_hash, Some(deposit_value_fr), &self.constants);
+        let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash_bytes);
+
         // Run real Groth16 verification (bilinear pairing check)
         matches!(
             circuit::verify_proof(
@@ -231,6 +287,8 @@ impl ZKLoRaWANProver {
                 ciphertext_hash,
                 gateway_part1_fr,
                 gateway_part2_fr,
+                deposit_commitment,
+                firmware_hash_fr,
             ),
             Ok(true)
         )
@@ -273,6 +331,7 @@ fn main() {
         let decryption_key = b"zk-lorawan-decryption-key-secret";
         let coordinate_val = 123456789u64;
         let firmware_hash = b"enclave-firmware-version-v1.0.2";
+        let deposit_value = 100_000u64;
 
         use ark_bn254::Fr;
         use ark_ff::PrimeField;
@@ -286,6 +345,7 @@ fn main() {
             let decryption_key_fr = Fr::from_le_bytes_mod_order(decryption_key);
             let coordinate_fr = Fr::from(coordinate_val);
             let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash);
+            let deposit_value_fr = Fr::from(deposit_value);
 
             let identity_hash = circuit::mimc_hash(private_key_fr, None, &prover.constants);
             let nullifier_hash =
@@ -294,6 +354,8 @@ fn main() {
                 circuit::mimc_hash(private_key_fr, Some(firmware_hash_fr), &prover.constants);
             let ciphertext_hash =
                 circuit::mimc_hash(decryption_key_fr, Some(coordinate_fr), &prover.constants);
+            let deposit_commitment =
+                circuit::mimc_hash(identity_hash, Some(deposit_value_fr), &prover.constants);
 
             let part1_bytes = [0u8; 32];
             let gateway_part1_fr = Fr::from_le_bytes_mod_order(&part1_bytes);
@@ -307,12 +369,15 @@ fn main() {
                 decryption_key_fr,
                 coordinate_fr,
                 firmware_hash_fr,
+                deposit_value_fr,
                 identity_hash,
                 nullifier_hash,
                 attestation_hash,
                 ciphertext_hash,
                 gateway_part1_fr,
                 gateway_part2_fr,
+                deposit_commitment,
+                firmware_hash_fr,
                 prover.constants.clone(),
                 &mut rng,
             )
@@ -404,8 +469,8 @@ fn main() {
     }
 
     if args.len() > 1 && args[1] == "generate" {
-        if args.len() < 7 {
-            eprintln!("Usage: zk_lorawan_prove generate <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex>");
+        if args.len() < 8 {
+            eprintln!("Usage: zk_lorawan_prove generate <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex> <deposit_value>");
             std::process::exit(2);
         }
         let private_key = hex::decode(&args[2]).expect("Invalid private_key hex");
@@ -413,6 +478,7 @@ fn main() {
         let coordinate_val: u64 = args[4].parse().expect("Invalid coordinate_val");
         let firmware_hash = hex::decode(&args[5]).expect("Invalid firmware_hash hex");
         let gateway_address = hex::decode(&args[6]).expect("Invalid gateway_address hex");
+        let deposit_value: u64 = args[7].parse().expect("Invalid deposit_value");
 
         let prover = ZKLoRaWANProver::new();
         let bundle = prover.generate_proof(
@@ -421,6 +487,7 @@ fn main() {
             coordinate_val,
             &firmware_hash,
             &gateway_address,
+            deposit_value,
         );
 
         let proof_a =
@@ -464,8 +531,8 @@ fn main() {
     }
 
     if args.len() > 1 && args[1] == "verify" {
-        if args.len() < 10 {
-            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex>");
+        if args.len() < 12 {
+            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex> <deposit_value> <firmware_hash_hex>");
             std::process::exit(2);
         }
         let proof_a_bytes = hex::decode(&args[2]).expect("Invalid proof_a hex");
@@ -476,6 +543,8 @@ fn main() {
         let attestation_bytes = hex::decode(&args[7]).expect("Invalid attestation_hash hex");
         let ciphertext_bytes = hex::decode(&args[8]).expect("Invalid ciphertext_hash hex");
         let gateway_bytes = hex::decode(&args[9]).expect("Invalid gateway_address hex");
+        let deposit_value: u64 = args[10].parse().expect("Invalid deposit_value");
+        let firmware_hash = hex::decode(&args[11]).expect("Invalid firmware_hash hex");
 
         let bundle = ZKLoRaWANProofBundle {
             proof_a_compressed: proof_a_bytes,
@@ -489,7 +558,7 @@ fn main() {
         };
 
         let prover = ZKLoRaWANProver::new();
-        let is_valid = prover.verify_bundle(&bundle, &gateway_bytes);
+        let is_valid = prover.verify_bundle(&bundle, &gateway_bytes, deposit_value, &firmware_hash);
         if is_valid {
             println!("VALID");
             std::process::exit(0);
@@ -502,14 +571,16 @@ fn main() {
     println!("======================================================================");
     println!("  ZK-LoRaWAN | Groth16 BN254 Proof Engine (Real ark-works)");
     println!("  Proving Balance Identity + Nullifiers + Micro-TEE + zk-VDE");
+    println!("  + Gateway Binding + Deposit Commitment + Firmware Whitelist");
     println!("======================================================================");
     println!();
 
     // Initialize prover (includes trusted setup)
     println!("  [1] Running Groth16 trusted setup on BN254...");
     let prover = ZKLoRaWANProver::new();
-    println!("      ✅ Trusted setup complete");
+    println!("      ✅ Trusted setup complete (OsRng, file-persisted keys)");
     println!("      MiMC rounds: {}", MIMC_ROUNDS);
+    println!("      Public inputs: 8 (identity, nullifier, attestation, ciphertext, gateway×2, deposit, firmware)");
     println!();
 
     // Generate a proof for sample witnesses
@@ -518,6 +589,7 @@ fn main() {
     let coordinate_val = 123456789u64;
     let firmware_hash = b"enclave-firmware-version-v1.0.2";
     let dummy_gateway = [0u8; 32];
+    let deposit_value = 100_000u64;
 
     println!("  [2] Generating Groth16 proof...");
     let bundle = prover.generate_proof(
@@ -526,6 +598,7 @@ fn main() {
         coordinate_val,
         firmware_hash,
         &dummy_gateway,
+        deposit_value,
     );
     println!("      ✅ Proof generated");
     println!(
@@ -555,7 +628,8 @@ fn main() {
 
     // Verify the proof
     println!("  [3] Verifying proof (bilinear pairing check)...");
-    let is_valid = prover.verify_bundle(&bundle, &dummy_gateway);
+    let is_valid =
+        prover.verify_bundle(&bundle, &dummy_gateway, deposit_value, firmware_hash);
     println!(
         "      Verification result: {}",
         if is_valid { "✅ VALID" } else { "❌ INVALID" }
@@ -613,6 +687,7 @@ fn main() {
         coordinate_val,
         firmware_hash,
         &dummy_gateway,
+        deposit_value,
     );
 
     // Tamper with proof_a to simulate corruption
@@ -630,7 +705,8 @@ fn main() {
     if !tampered.proof_a_compressed.is_empty() {
         tampered.proof_a_compressed[0] ^= 0xFF;
     }
-    let tamper_valid = prover.verify_bundle(&tampered, &dummy_gateway);
+    let tamper_valid =
+        prover.verify_bundle(&tampered, &dummy_gateway, deposit_value, firmware_hash);
     println!(
         "      Tampered proof result: {}",
         if !tamper_valid {
