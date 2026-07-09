@@ -94,39 +94,39 @@ def main():
     print(f"    ZK-LoRaWAN fee:         {ZK_LAMPORTS_PER_PACKET:,} lamports (${ZK_COST_PER_PACKET_USD:.6f})")
     print(f"    SOL price:              ${SOL_PRICE_USD}")
     print()
-    
+
     # Header
     print(f"  {'─' * 76}")
     print(f"  {'Use Case':<24} {'Readings':>8} {'':>4} {'Helium DR0':>16} {'ZK-LoRaWAN':>16} {'Savings':>8}")
     print(f"  {'':24} {'/day':>8} {'':>4} {'pkts    cost':>16} {'chirps  cost':>16} {'':>8}")
     print(f"  {'─' * 76}")
-    
+
     total_helium_yearly = 0
     total_zk_yearly = 0
-    
+
     results = []
-    
+
     for uc in USE_CASES:
         total_readings = uc["readings_per_transmission"] * uc["transmissions_per_day"]
-        
+
         # Helium: how many packets needed?
         packets_per_tx = max(1, -(-uc["readings_per_transmission"] // HELIUM_DR0_READINGS_PER_PACKET))  # ceiling division
         helium_packets_day = packets_per_tx * uc["transmissions_per_day"]
         helium_cost_day = helium_packets_day * HELIUM_DC_PRICE_USD
         helium_cost_year = helium_cost_day * 365
-        
+
         # ZK-LoRaWAN: how many chirps needed?
         chirps_per_tx = max(1, -(-uc["readings_per_transmission"] // ZK_READINGS_PER_CHIRP_U8))
         zk_chirps_day = chirps_per_tx * uc["transmissions_per_day"]
         zk_cost_day = zk_chirps_day * ZK_COST_PER_PACKET_USD
         zk_cost_year = zk_cost_day * 365
-        
+
         # Packet reduction
         packet_reduction = ((helium_packets_day - zk_chirps_day) / helium_packets_day) * 100 if helium_packets_day > 0 else 0
-        
+
         total_helium_yearly += helium_cost_year
         total_zk_yearly += zk_cost_year
-        
+
         results.append({
             "name": uc["name"],
             "desc": uc["description"],
@@ -139,16 +139,16 @@ def main():
             "zk_cost_year": zk_cost_year,
             "packet_reduction": packet_reduction,
         })
-        
+
         print(f"  {uc['name']:<24} {total_readings:>6}   →  {helium_packets_day:>5} ${helium_cost_day:>8.5f}  {zk_chirps_day:>5}  ${zk_cost_day:>7.4f}  {packet_reduction:>5.0f}%↓")
-    
+
     print(f"  {'─' * 76}")
     print()
-    
+
     # ── Detailed breakdown ──
     print("  ── DETAILED BREAKDOWN ──")
     print()
-    
+
     for r in results:
         print(f"  📡 {r['name']} — {r['desc']}")
         print(f"     Readings/day: {r['readings_day']:,}")
@@ -161,7 +161,7 @@ def main():
         print(f"     {'Packet reduction':20} {'—':>20} {'{:.0f}% fewer packets'.format(r['packet_reduction']):>20}")
         print(f"     {'Privacy':20} {'❌ None':>20} {'✅ Full ZK':>20}")
         print()
-    
+
     # ── The real comparison ──
     print("=" * 80)
     print("  THE REAL COMPARISON")
@@ -174,10 +174,10 @@ def main():
     print(f"    Helium DR0:    ${HELIUM_DC_PRICE_USD / HELIUM_DR0_READINGS_PER_PACKET:.7f} per reading (2 readings/packet)")
     print(f"    ZK-LoRaWAN:    ${ZK_COST_PER_PACKET_USD / ZK_READINGS_PER_CHIRP_U8:.7f} per reading (18 readings/chirp)")
     print()
-    
+
     helium_per_reading = HELIUM_DC_PRICE_USD / HELIUM_DR0_READINGS_PER_PACKET
     zk_per_reading = ZK_COST_PER_PACKET_USD / ZK_READINGS_PER_CHIRP_U8
-    
+
     if zk_per_reading > helium_per_reading:
         ratio = zk_per_reading / helium_per_reading
         print(f"  ZK-LoRaWAN costs {ratio:.0f}× more per reading than Helium.")
@@ -186,22 +186,22 @@ def main():
         print(f"  ZK-LoRaWAN exposes: NOTHING.")
     else:
         print(f"  ZK-LoRaWAN is CHEAPER per reading than Helium!")
-    
+
     print()
     print(f"  ┌────────────────────────────────────────────────────────────────┐")
     print(f"  │  WHAT THE CLIENT PAYS FOR PRIVACY                            │")
     print(f"  ├────────────────────────────────────────────────────────────────┤")
-    
+
     for r in results:
         premium = r['zk_cost_year'] - r['helium_cost_year']
         print(f"  │  {r['name']:<28} +${premium:>8.2f}/year for full ZK   │")
-    
+
     print(f"  ├────────────────────────────────────────────────────────────────┤")
     print(f"  │  Average privacy premium: ~${(total_zk_yearly - total_helium_yearly)/len(results):>6.2f}/year per device   │")
     print(f"  │  That's ${(total_zk_yearly - total_helium_yearly)/len(results)/12:>6.2f}/month for COMPLETE ANONYMITY       │")
     print(f"  └────────────────────────────────────────────────────────────────┘")
     print()
-    
+
     # ── Packet efficiency ──
     print(f"  ── PACKET EFFICIENCY ──")
     print()

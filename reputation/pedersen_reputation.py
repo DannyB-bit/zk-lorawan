@@ -13,7 +13,7 @@ proving the gateway is trustworthy without revealing the score or identity.
 
 Reputation Update Model:
   score_new = score_old * decay + observation_signal * (1 - decay)
-  
+
   Where:
   - decay ∈ (0, 1) controls how quickly old history fades
   - observation_signal ∈ {0, 1}: 1 if packet delivered, 0 if dropped
@@ -35,10 +35,10 @@ H_REP = int.from_bytes(hashlib.sha256(b"ZK-LoRaWAN-reputation-h").digest(), 'big
 class ReputationScore:
     """
     Gateway reputation score with RCRA exponential moving average.
-    
+
     The score is maintained as an integer in [0, 1000] representing
     a fixed-point reputation percentage (e.g., 850 = 85.0% reliability).
-    
+
     The Cognitive Observer's Reflexion loop monitors packet delivery
     outcomes and updates the score using exponential decay alignment.
     """
@@ -58,10 +58,10 @@ class ReputationScore:
     def observe(self, delivered: bool):
         """
         Record a packet routing observation.
-        
+
         Uses RCRA Resonance Alignment: the score exponentially decays
         toward the true delivery rate, "healing" noise from outlier events.
-        
+
         Args:
             delivered: True if packet was successfully delivered, False if dropped
         """
@@ -91,7 +91,7 @@ class ReputationScore:
 class ReputationCommitment:
     """
     Pedersen commitment scheme for gateway reputation scores.
-    
+
     The commitment C = g^score * h^blinding (mod p) is published on-chain.
     The gateway proves its score exceeds a threshold using a ZK range proof
     without revealing the exact score.
@@ -101,11 +101,11 @@ class ReputationCommitment:
     def commit(score: int, blinding: int = None) -> tuple:
         """
         Create a Pedersen commitment to a reputation score.
-        
+
         Args:
             score: Reputation score [0, 1000]
             blinding: Random blinding factor (auto-generated if None)
-            
+
         Returns:
             (commitment_value, blinding_factor)
         """
@@ -125,12 +125,12 @@ class ReputationRangeProof:
     """
     ZK range proof asserting that a committed reputation score exceeds
     a minimum threshold, without revealing the exact score.
-    
+
     Construction (Sigma-protocol based):
     1. Prover commits to (score - threshold), which must be ≥ 0
     2. Prover generates a proof that the committed delta is non-negative
     3. Verifier checks the proof against the public commitment and threshold
-    
+
     What the verifier learns:
       ✅ Gateway's reputation score ≥ threshold
       ❌ Does NOT learn the exact score
@@ -153,13 +153,13 @@ class ReputationRangeProof:
               threshold: int) -> dict:
         """
         Generate a ZK range proof that score >= threshold.
-        
+
         Args:
             score: Actual reputation score (PRIVATE witness)
             blinding: Blinding factor used in commitment (PRIVATE)
             commitment: The public Pedersen commitment
             threshold: Minimum acceptable score (PUBLIC input)
-            
+
         Returns:
             Proof dictionary
         """
@@ -193,7 +193,7 @@ class ReputationRangeProof:
         q = BN254_R - 1
         resp_delta = (k_delta + challenge * delta) % q
         resp_delta_blind = (k_delta_blind + challenge * delta_blinding) % q
-        
+
         diff_blind = (blinding - delta_blinding) % q
         resp_diff_blind = (k_diff + challenge * diff_blind) % q
 
@@ -213,14 +213,14 @@ class ReputationRangeProof:
     def verify(cls, proof: dict) -> bool:
         """
         Verify a reputation range proof.
-        
+
         The verifier confirms:
           ✅ The committed score is ≥ threshold
           ❌ Without learning the exact score
-          
+
         Args:
             proof: Proof dictionary from prove()
-            
+
         Returns:
             True if proof is valid
         """

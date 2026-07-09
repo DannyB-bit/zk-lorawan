@@ -25,14 +25,14 @@ import zlib
 class VerifyingKey:
     """
     Representation of a Groth16 verifying key.
-    
+
     A standard Groth16 VK for BN254 contains:
     - alpha_g1: G1 point (64 bytes)
     - beta_g2: G2 point (128 bytes)
     - gamma_g2: G2 point (128 bytes)
     - delta_g2: G2 point (128 bytes)
     - ic: List of G1 points for public inputs (64 bytes each)
-    
+
     For a circuit with N public inputs, total VK size = 448 + 64*N bytes.
     """
 
@@ -88,7 +88,7 @@ class VerifyingKey:
 class MicroByteJIT:
     """
     microByte JIT Verifying Key Compressor.
-    
+
     Compression pipeline:
     1. Delta encoding: VK elements share structural patterns (same curve,
        similar coordinate ranges). Encode differences between consecutive
@@ -98,7 +98,7 @@ class MicroByteJIT:
        compress well.
     3. Seed header: Store a compact metadata header containing the IC count,
        compression parameters, and a SHA-256 integrity hash.
-    
+
     Inflation (JIT):
     1. Read the seed header
     2. zlib inflate the compressed payload
@@ -113,10 +113,10 @@ class MicroByteJIT:
     def compress(cls, vk: VerifyingKey) -> bytes:
         """
         Compress a verifying key into a compact seed.
-        
+
         Args:
             vk: Full Groth16 verifying key
-            
+
         Returns:
             Compressed seed bytes
         """
@@ -146,12 +146,12 @@ class MicroByteJIT:
     def inflate(cls, seed: bytes) -> VerifyingKey:
         """
         JIT inflate a compressed VK seed back to a full verifying key.
-        
+
         This is called at verification time on the edge device.
-        
+
         Args:
             seed: Compressed seed bytes from compress()
-            
+
         Returns:
             Reconstructed VerifyingKey
         """

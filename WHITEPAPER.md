@@ -217,7 +217,7 @@ Tens of thousands of soil moisture and wildfire detection sensors are scattered 
 # 11. Performance & Bandwidth Analysis
 Because LoRa is a low-bandwidth modulation scheme operating in unlicensed Industrial, Scientific, and Medical (ISM) radio bands, packet size and regulatory compliance are critical. ZK-LoRaWAN operates on license-free spectrum globally, including US915 (902-928 MHz) in North America, EU868 (863-870 MHz) in Europe (subject to a strict 1% duty cycle limit), and AU915 in South America. This allows completely permissionless deployment with typical transmission ranges of 2 to 5 km in urban areas, 10 to 15 km in rural line-of-sight, and up to 30+ km from high-elevation nodes (such as hilltops or drones).
 
-To maximize efficiency and avoid packet fragmentation, ZK-LoRaWAN optimizes its packet size. While the physical layer limit of Semtech transceivers is 255 bytes, standard unfragmented LoRaWAN payloads are capped between 222 and 242 bytes. ZK-LoRaWAN supports an **Unfragmented Single-Packet Mode** by utilizing our **LLD-AC arithmetic coding** to compress a structured mock proof and attestation bundle to just `189 bytes` (or `118 bytes` total including coordinates in self-tests). 
+To maximize efficiency and avoid packet fragmentation, ZK-LoRaWAN optimizes its packet size. While the physical layer limit of Semtech transceivers is 255 bytes, standard unfragmented LoRaWAN payloads are capped between 222 and 242 bytes. ZK-LoRaWAN supports an **Unfragmented Single-Packet Mode** by utilizing our **LLD-AC arithmetic coding** to compress a structured mock proof and attestation bundle to just `189 bytes` (or `118 bytes` total including coordinates in self-tests).
 
 > [!NOTE]
 > **Important Qualification on Real Proof Material:** High-entropy real proofs (such as those generated dynamically by standard libraries) contain higher noise levels and require up to 512 bytes for uncompressed coordinate representation, as used in the gateway demo. Therefore, standard 255-byte unfragmented LoRa transmission requires packet fragmentation/segmentation, proof aggregation, or highly constrained proof parameters.
@@ -287,7 +287,7 @@ Running intelligent nodes on solar power requires strict computational budget se
 
 ---
 
-Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge. 
+Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge.
 
 ### WE ARE THE AI COLLECTIVE
 

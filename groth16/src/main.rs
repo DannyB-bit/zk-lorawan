@@ -53,28 +53,33 @@ impl ZKLoRaWANProver {
     /// so that fresh checkouts always match the deployed verifier's VK.
     pub fn new() -> Self {
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+        let use_reproducible =
+            std::env::var("ZK_LORAWAN_REPRODUCIBLE_SETUP").unwrap_or_default() == "1";
 
-        // Try to load existing keys from disk
-        if let (Ok(pk_data), Ok(vk_data)) = (std::fs::read(PK_FILE), std::fs::read(VK_FILE)) {
-            if let (Ok(pk), Ok(vk)) = (
-                ProvingKey::<Bn254>::deserialize_compressed(&pk_data[..]),
-                VerifyingKey::<Bn254>::deserialize_compressed(&vk_data[..]),
-            ) {
-                let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
-                return ZKLoRaWANProver {
-                    proving_key: pk,
-                    verifying_key: vk,
-                    prepared_vk,
-                    constants,
-                };
+        // If not forcing reproducible setup, try to load existing keys from disk first
+        if !use_reproducible {
+            if let (Ok(pk_data), Ok(vk_data)) = (std::fs::read(PK_FILE), std::fs::read(VK_FILE)) {
+                if let (Ok(pk), Ok(vk)) = (
+                    ProvingKey::<Bn254>::deserialize_compressed(&pk_data[..]),
+                    VerifyingKey::<Bn254>::deserialize_compressed(&vk_data[..]),
+                ) {
+                    let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
+                    return ZKLoRaWANProver {
+                        proving_key: pk,
+                        verifying_key: vk,
+                        prepared_vk,
+                        constants,
+                    };
+                }
+                eprintln!("Warning: Key files exist but are corrupt; regenerating");
             }
-            eprintln!("Warning: Key files exist but are corrupt; regenerating");
         }
 
         // Determine RNG source based on environment variable for developer vs production safety
-        let use_reproducible = std::env::var("ZK_LORAWAN_REPRODUCIBLE_SETUP").unwrap_or_default() == "1";
         let (pk, vk) = if use_reproducible {
-            eprintln!("Generating new trusted setup keys deterministically (seed = 42) for testing/CI...");
+            eprintln!(
+                "Generating new trusted setup keys deterministically (seed = 42) for testing/CI..."
+            );
             let mut rng = rand::rngs::StdRng::from_seed([42u8; 32]);
             circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed")
         } else {
@@ -84,18 +89,20 @@ impl ZKLoRaWANProver {
             circuit::setup_keys(&mut rng, constants.clone()).expect("Trusted setup failed")
         };
 
-        // Persist keys to disk
-        std::fs::create_dir_all(KEYS_DIR).ok();
-        let mut pk_buf = Vec::new();
-        pk.serialize_compressed(&mut pk_buf)
-            .expect("Failed to serialize proving key");
-        std::fs::write(PK_FILE, &pk_buf).expect("Failed to write proving key");
+        // Only persist to disk if NOT in reproducible mode (so we don't overwrite production/OsRng keys on disk)
+        if !use_reproducible {
+            std::fs::create_dir_all(KEYS_DIR).ok();
+            let mut pk_buf = Vec::new();
+            pk.serialize_compressed(&mut pk_buf)
+                .expect("Failed to serialize proving key");
+            std::fs::write(PK_FILE, &pk_buf).expect("Failed to write proving key");
 
-        let mut vk_buf = Vec::new();
-        vk.serialize_compressed(&mut vk_buf)
-            .expect("Failed to serialize verifying key");
-        std::fs::write(VK_FILE, &vk_buf).expect("Failed to write verifying key");
-        eprintln!("Keys saved to {PK_FILE} and {VK_FILE}");
+            let mut vk_buf = Vec::new();
+            vk.serialize_compressed(&mut vk_buf)
+                .expect("Failed to serialize verifying key");
+            std::fs::write(VK_FILE, &vk_buf).expect("Failed to write verifying key");
+            eprintln!("Keys saved to {PK_FILE} and {VK_FILE}");
+        }
 
         let prepared_vk = ark_groth16::prepare_verifying_key(&vk);
         ZKLoRaWANProver {
@@ -506,10 +513,13 @@ fn main() {
 
         let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
         let identity_fr = Fr::deserialize_compressed(&bundle.identity_hash[..]).unwrap();
-        let deposit_commitment_fr = circuit::mimc_hash(identity_fr, Some(Fr::from(deposit_value)), &constants);
+        let deposit_commitment_fr =
+            circuit::mimc_hash(identity_fr, Some(Fr::from(deposit_value)), &constants);
         let mut deposit_commitment_buf = Vec::new();
         use ark_serialize::CanonicalSerialize;
-        deposit_commitment_fr.serialize_compressed(&mut deposit_commitment_buf).unwrap();
+        deposit_commitment_fr
+            .serialize_compressed(&mut deposit_commitment_buf)
+            .unwrap();
 
         println!("{{");
         println!(
@@ -556,10 +566,7 @@ fn main() {
             "  \"deposit_commitment\": \"{}\",",
             hex::encode(deposit_commitment_buf)
         );
-        println!(
-            "  \"firmware_hash\": \"{}\"",
-            hex::encode(&firmware_hash)
-        );
+        println!("  \"firmware_hash\": \"{}\"", hex::encode(&firmware_hash));
         println!("}}");
         std::process::exit(0);
     }

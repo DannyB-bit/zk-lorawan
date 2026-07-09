@@ -4,7 +4,7 @@
  * ZK-LoRaWAN ESP32 Firmware Reference Implementation
  * ===================================================
  * Target Hardware: ESP32-S3 + Semtech SX1276 / SX1262 LoRa module.
- * 
+ *
  * Demonstrates:
  *   1. Hardware SPI initialization for the LoRa transceiver.
  *   2. Semantic encoding of environmental parameters.
@@ -91,25 +91,25 @@ void applyXorFec(uint8_t* frame, size_t dataLen, size_t fecLen) {
 void encodeSemanticPayload(SensorReadings& sensors, uint8_t* buffer) {
     // Byte 0: Count of readings (3)
     buffer[0] = 3;
-    
+
     // Reading 1: Temperature (concept 0x01, type 0x02 [F16 fixed point])
     buffer[1] = 0x01; // concept ID for temperature
     buffer[2] = 0x02; // Type = F16
     int16_t temp_scaled = (int16_t)(sensors.temperature * 100.0f);
     buffer[3] = (temp_scaled >> 8) & 0xFF;
     buffer[4] = temp_scaled & 0xFF;
-    
+
     // Reading 2: Humidity (concept 0x02, type 0x00 [U8])
     buffer[5] = 0x02; // concept ID for humidity
     buffer[6] = 0x00; // Type = U8
     buffer[7] = sensors.humidity;
-    
+
     // Reading 3: CO2 (concept 0x0C, type 0x01 [I16])
     buffer[8] = 0x0C; // concept ID for CO2
     buffer[9] = 0x01; // Type = I16
     buffer[10] = (sensors.co2 >> 8) & 0xFF;
     buffer[11] = sensors.co2 & 0xFF;
-    
+
     // Pad remaining payload bytes to 57
     for (int i = 12; i < PAYLOAD_SIZE; i++) {
         buffer[i] = 0x00;
@@ -147,7 +147,7 @@ uint8_t atcab_init(ATCAIfaceCfg* cfg) {
 
 uint8_t atcab_is_locked(uint16_t zone, bool* locked) {
     // Enforce that configuration and data zones are locked for secure physical protection
-    *locked = true; 
+    *locked = true;
     return ATCA_SUCCESS;
 }
 
@@ -180,7 +180,7 @@ bool initSecureElement() {
     Wire.beginTransmission(0x60);
     if (Wire.endTransmission() == 0) {
         Serial.println("ATECC608A Secure Element found at I2C address 0x60.");
-        
+
         // Execute active CryptoAuthLib setup
         uint8_t status = atcab_init(&cfg_ateccx08a_i2c_default);
         bool configLocked = false;
@@ -207,7 +207,7 @@ void generateHardwareAttestation(const uint8_t* firmwareHash, size_t hashLen, ui
         atcab_sign(0, firmwareHash, attestationOut);
 #else
         Serial.println("Micro-TEE: Requesting ECDSA signature of firmware hash from ATECC608A Slot 0...");
-        
+
         // Perform active sign call inside secure element boundary
         uint8_t status = atcab_sign(0, firmwareHash, attestationOut);
         if (status == ATCA_SUCCESS) {
@@ -226,39 +226,39 @@ void generateHardwareAttestation(const uint8_t* firmwareHash, size_t hashLen, ui
 void setup() {
     Serial.begin(115200);
     while(!Serial);
-    
+
     Serial.println("Initializing ZK-LoRaWAN ESP32 Node...");
-    
+
     // Initialize Hardware Secure Element (Micro-TEE)
     isSecureElementInitialized = initSecureElement();
-    
+
     // Initialize SPI pins
     pinMode(LORA_SS, OUTPUT);
     digitalWrite(LORA_SS, HIGH);
     pinMode(LORA_RST, OUTPUT);
     digitalWrite(LORA_RST, HIGH);
-    
+
     // Start SPI interface
     loraSpi = new SPIClass(VSPI);
     loraSpi->begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_SS);
-    
+
     // Reset LoRa Transceiver
     digitalWrite(LORA_RST, LOW);
     delay(10);
     digitalWrite(LORA_RST, HIGH);
     delay(10);
-    
+
     // Put transceiver in Sleep mode to verify connection
     writeRegister(0x01, 0x00); // RegOpMode -> SLEEP
     uint8_t mode = readRegister(0x01);
-    
+
     if (mode == 0x00) {
         Serial.println("Semtech LoRa chip detected successfully via SPI.");
     } else {
         Serial.println("Error: Semtech LoRa chip not responding. Check SPI connections.");
         while(true);
     }
-    
+
     // Configure LoRa registers for 915 MHz, Bandwidth 125kHz, SF12 (Maximum range)
     writeRegister(0x01, 0x80); // RegOpMode -> LoRa mode + SLEEP
     writeRegister(0x06, 0xE4); // RegFrMsb -> 915 MHz
@@ -274,19 +274,19 @@ void loop() {
     sensors.temperature = 24.57f; // Simulated Celsius
     sensors.humidity = 55;        // Simulated %RH
     sensors.co2 = 412;            // Simulated PPM
-    
+
     Serial.println("\n--- Generating ZK-LoRaWAN Packet ---");
-    Serial.printf("Sensor readings: Temp=%.2fC, Hum=%d%%, CO2=%dppm\n", 
+    Serial.printf("Sensor readings: Temp=%.2fC, Hum=%d%%, CO2=%dppm\n",
                   sensors.temperature, sensors.humidity, sensors.co2);
-    
+
     // 2. Initialize raw frame structure
     ZKLoRaFrame txFrame;
     memset(&txFrame, 0, sizeof(ZKLoRaFrame));
-    
+
     txFrame.version = 1;
     txFrame.type = 0x01;  // Data frame
     txFrame.flags = 0x00; // Reserved
-    
+
     // 3. Define 6D Cuneiform Routing Coordinates (gating values)
     txFrame.coords[0] = 42;  // Domain
     txFrame.coords[1] = 7;   // Subdomain
@@ -294,10 +294,10 @@ void loop() {
     txFrame.coords[3] = 128; // Polarity
     txFrame.coords[4] = 200; // Strength
     txFrame.coords[5] = 15;  // Depth
-    
+
     // Set receiver identity tag
     memcpy(txFrame.receiver_tag, "RX-NODE1", 8);
-    
+
     // 4. Generate Micro-TEE Firmware Attestation & Groth16 Proof
     // firmware hash: "enclave-firmware-version-v1.0.2" (32 bytes)
     const uint8_t currentFirmwareHash[32] = {
@@ -306,10 +306,10 @@ void loop() {
         0x2d, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
         0x2d, 0x76, 0x31, 0x2e, 0x30, 0x2e, 0x32, 0x00
     };
-    
+
     uint8_t hardwareAttestation[64];
     generateHardwareAttestation(currentFirmwareHash, 32, hardwareAttestation);
-    
+
     // In production, the Groth16 proof is generated by the local hardware acceleration layer (e.g. accelerated arkworks)
     // using coordinates and the hardware-enclave private identity key
     for (int i = 0; i < PROOF_SIZE; i++) {
@@ -317,43 +317,43 @@ void loop() {
     }
     // Bind hardware attestation signature bytes to the proof block payload
     memcpy(txFrame.compressed_proof, hardwareAttestation, 64);
-    
+
     // 5. Compress readings via UFO Semantic Codec
     encodeSemanticPayload(sensors, txFrame.semantic_payload);
-    
+
     // 6. Wrap packet with XOR-FEC parity bytes for error resilience
     // Protects the first 234 bytes of the packet using 21 parity bytes.
     applyXorFec((uint8_t*)&txFrame, 234, FEC_SIZE);
-    
+
     // 7. Transmit frame via SX1276 LoRa transceiver
     Serial.println("Transmitting 255-byte frame over-the-air...");
-    
+
     // Put chip in Standby mode
     writeRegister(0x01, 0x81); // RegOpMode -> STANDBY
-    
+
     // Set FIFO pointers and load frame to chip memory
     writeRegister(0x0D, 0x00); // RegFifoAddrPtr -> 0x00
     writeRegister(0x22, FRAME_SIZE); // RegPayloadLength -> 255
-    
+
     // Write frame data to RegFifo (0x00)
     uint8_t* rawBytes = (uint8_t*)&txFrame;
     for (int i = 0; i < FRAME_SIZE; i++) {
         writeRegister(0x00, rawBytes[i]);
     }
-    
+
     // Trigger transmission: RegOpMode -> TX (0x83)
     writeRegister(0x01, 0x83);
-    
+
     // Wait for TX Done flag in RegIrqFlags (0x12)
     uint8_t irqFlags = readRegister(0x12);
     while ((irqFlags & 0x08) == 0x00) { // Bit 3 is TxDone
         delay(10);
         irqFlags = readRegister(0x12);
     }
-    
+
     // Clear IRQ flags
     writeRegister(0x12, 0xFF);
-    
+
     Serial.println("Transmission complete! Going to sleep for 30 seconds.");
     delay(30000);
 }

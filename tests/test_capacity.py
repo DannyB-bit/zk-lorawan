@@ -5,7 +5,7 @@ ZK-LoRaWAN Empirical Capacity Test
 ====================================
 NOT theoretical. This script:
 1. Builds REAL ZK-LoRaWAN frames with actual proof bytes
-2. Adds REAL LLD-AC compression  
+2. Adds REAL LLD-AC compression
 3. Adds REAL XOR-FEC parity
 4. Measures EXACT bytes remaining for user payload
 5. Tests lossless round-trip on every single byte
@@ -58,19 +58,19 @@ def generate_proof_bytes(private_key: bytes) -> tuple:
 # ============================================================================
 def measure_capacity(use_fec: bool, fec_block_size: int = 16, fec_group_size: int = 4):
     """Build a real frame and measure exact payload capacity."""
-    
+
     # 1. Generate proof bytes (exact BN254 sizes)
     proof_raw, proof_raw_size = generate_proof_bytes(b"zk-lorawan-key-2026")
-    
+
     # 2. Compress proof with LLD-AC
     encoder = LLDACEncoder()
     proof_compressed = encoder.encode(proof_raw)
     proof_decompressed = encoder.decode(proof_compressed, proof_raw_size)
     proof_roundtrip = (proof_decompressed == proof_raw)
-    
+
     # 3. Fixed overhead
     fixed_overhead = FRAME_HEADER_SIZE + RECEIVER_TAG_SIZE + CUNEIFORM_SIZE + len(proof_compressed)
-    
+
     # 4. FEC overhead
     if use_fec:
         fec = XorFEC(block_size=fec_block_size, group_size=fec_group_size)
@@ -93,7 +93,7 @@ def measure_capacity(use_fec: bool, fec_block_size: int = 16, fec_group_size: in
     else:
         max_payload = LORA_MTU - fixed_overhead
         fec_overhead = 0
-    
+
     return {
         "proof_raw_size": proof_raw_size,
         "proof_compressed_size": len(proof_compressed),
@@ -108,18 +108,18 @@ def measure_capacity(use_fec: bool, fec_block_size: int = 16, fec_group_size: in
 
 def test_payload_roundtrip(payload: bytes, use_fec: bool, fec_block_size: int = 16):
     """Build a complete frame with payload and verify 100% lossless round-trip."""
-    
+
     proof_raw, proof_raw_size = generate_proof_bytes(b"zk-lorawan-key-2026")
     encoder = LLDACEncoder()
     proof_compressed = encoder.encode(proof_raw)
-    
+
     # Build frame header
     header = bytes([0x01, 0x10, 0x00])
     receiver_tag = hashlib.sha256(b"receiver_pda").digest()[:RECEIVER_TAG_SIZE]
     coords = bytes([42, 7, 220, 128, 200, 15])
-    
+
     frame_prefix = header + receiver_tag + coords + proof_compressed
-    
+
     if use_fec:
         fec = XorFEC(block_size=fec_block_size, group_size=4)
         padded, parity_blocks, orig_len, checksum = fec.encode(payload)
@@ -127,22 +127,22 @@ def test_payload_roundtrip(payload: bytes, use_fec: bool, fec_block_size: int = 
         frame = frame_prefix + payload + fec_bytes
     else:
         frame = frame_prefix + payload
-    
+
     fits = len(frame) <= LORA_MTU
-    
+
     # Extract payload back
     prefix_len = len(frame_prefix)
     if use_fec:
         extracted = frame[prefix_len:prefix_len + len(payload)]
     else:
         extracted = frame[prefix_len:]
-    
+
     payload_match = (extracted == payload)
-    
+
     # Verify proof decompression
     proof_decompressed = encoder.decode(proof_compressed, proof_raw_size)
     proof_match = (proof_decompressed == proof_raw)
-    
+
     return {
         "frame_size": len(frame),
         "fits_mtu": fits,
@@ -161,23 +161,23 @@ def main():
     print("  100% Real. 100% Measured. Zero Theory.")
     print("=" * 70)
     print()
-    
+
     # ── Measure overhead for 3 FEC modes ──
     modes = [
         ("No FEC (clean RF link)", False, 16),
         ("Light FEC (16B blocks)", True, 16),
         ("Heavy FEC (32B blocks)", True, 32),
     ]
-    
+
     capacities = {}
-    
+
     print("  ── OVERHEAD BREAKDOWN ──")
     print()
-    
+
     for name, use_fec, bs in modes:
         r = measure_capacity(use_fec=use_fec, fec_block_size=bs)
         capacities[name] = r
-        
+
         print(f"  [{name}]")
         print(f"    Raw proof (BN254):     {r['proof_raw_size']} bytes (G1+G2+G1+Fr)")
         print(f"    Compressed proof:      {r['proof_compressed_size']} bytes (LLD-AC)")
@@ -189,14 +189,14 @@ def main():
         print(f"    TOTAL OVERHEAD:        {r['total_overhead']} bytes")
         print(f"    ▶ PAYLOAD CAPACITY:    {r['payload_capacity']} bytes")
         print()
-    
+
     # ── Payload round-trip tests ──
     print("  ── PAYLOAD ROUND-TRIP TESTS (Standard FEC) ──")
     print()
-    
+
     std_cap = capacities["Light FEC (16B blocks)"]["payload_capacity"]
     all_pass = True
-    
+
     # Test 1: ASCII text
     text = "Hello from ZK-LoRaWAN! Private message over radio."
     text_bytes = text.encode("utf-8")
@@ -205,7 +205,7 @@ def main():
         ok = r["all_pass"]
         all_pass &= ok
         print(f"    [Text]     {len(text_bytes):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  \"{text[:40]}...\"")
-    
+
     # Test 2: JSON sensor
     sensor = json.dumps({"t":23.5,"h":67,"p":1013,"bat":3.7}).encode()
     if len(sensor) <= std_cap:
@@ -213,7 +213,7 @@ def main():
         ok = r["all_pass"]
         all_pass &= ok
         print(f"    [Sensor]   {len(sensor):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  {sensor.decode()}")
-    
+
     # Test 3: GPS coordinates
     gps = struct.pack(">ff", 40.7128, -74.0060)  # NYC
     if len(gps) <= std_cap:
@@ -222,33 +222,33 @@ def main():
         all_pass &= ok
         lat, lon = struct.unpack(">ff", gps)
         print(f"    [GPS]      {len(gps):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  lat={lat:.4f} lon={lon:.4f}")
-    
+
     # Test 4: Binary random (max capacity)
     max_bin = os.urandom(std_cap)
     r = test_payload_roundtrip(max_bin, use_fec=True, fec_block_size=16)
     ok = r["all_pass"]
     all_pass &= ok
     print(f"    [MaxBin]   {len(max_bin):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  {std_cap} random bytes")
-    
+
     # Test 5: Every possible byte value
     all_bytes = bytes(range(256))[:std_cap]
     r = test_payload_roundtrip(all_bytes, use_fec=True, fec_block_size=16)
     ok = r["all_pass"]
     all_pass &= ok
     print(f"    [AllVals]  {len(all_bytes):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  All byte values 0x00-0xFF")
-    
+
     # Test 6: Empty payload (ZK proof only, no data)
     r = test_payload_roundtrip(b"", use_fec=False)
     ok = r["all_pass"]
     all_pass &= ok
     print(f"    [Empty]    {0:>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  ZK proof only, zero payload")
-    
+
     # Test 7: Single byte
     r = test_payload_roundtrip(b"\x42", use_fec=True, fec_block_size=16)
     ok = r["all_pass"]
     all_pass &= ok
     print(f"    [1Byte]    {1:>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  Single byte 0x42")
-    
+
     # Test 8: Zlib compressed text
     big_text = ("ZK-LoRaWAN private AI mesh " * 50).encode()
     compressed = zlib.compress(big_text, 9)
@@ -259,20 +259,20 @@ def main():
         print(f"    [Zlib]     {len(compressed):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  {len(big_text)}B text → {len(compressed)}B compressed")
     else:
         print(f"    [Zlib]     {len(compressed):>3}B  →  ⚠️  EXCEEDS CAPACITY ({len(compressed)} > {std_cap})")
-    
+
     # ── No-FEC capacity tests ──
     print()
     print("  ── PAYLOAD ROUND-TRIP TESTS (No FEC) ──")
     print()
-    
+
     nofec_cap = capacities["No FEC (clean RF link)"]["payload_capacity"]
-    
+
     max_nofec = os.urandom(nofec_cap)
     r = test_payload_roundtrip(max_nofec, use_fec=False)
     ok = r["all_pass"]
     all_pass &= ok
     print(f"    [MaxNoFEC] {len(max_nofec):>3}B  →  {'✅ PASS' if ok else '❌ FAIL'}  {nofec_cap} random bytes (no FEC)")
-    
+
     # ── Multi-chirp table ──
     print()
     print("  ── MULTI-CHIRP CAPACITY TABLE ──")
@@ -280,7 +280,7 @@ def main():
     print(f"    Payload per chirp (with FEC): {std_cap} bytes")
     print(f"    Payload per chirp (no FEC):   {nofec_cap} bytes")
     print()
-    
+
     targets = [
         ("Short SMS (160 chars)", 160),
         ("Tweet (280 chars)", 280),
@@ -291,28 +291,28 @@ def main():
         ("28-byte tokenizer ref", 28),
         ("67 KB geometric seed (L7)", 67_000),
     ]
-    
+
     print(f"    {'Data Type':<32} {'Size':>8} {'Chirps(FEC)':>12} {'Chirps(noFEC)':>14} {'Airtime':>10}")
     print(f"    {'─'*32} {'─'*8} {'─'*12} {'─'*14} {'─'*10}")
-    
+
     for name, size in targets:
         chirps_fec = (size + std_cap - 1) // std_cap
         chirps_nofec = (size + nofec_cap - 1) // nofec_cap
         airtime = chirps_fec * 1.5
         t = f"{airtime:.1f}s" if airtime < 60 else f"{airtime/60:.1f}m"
         print(f"    {name:<32} {size:>6} B {chirps_fec:>11} {chirps_nofec:>13} {t:>10}")
-    
+
     # ── Final verdict ──
     print()
     print("=" * 70)
     print("  FACTUAL RESULTS — EMPIRICALLY MEASURED")
     print("=" * 70)
     print()
-    
+
     nofec = capacities["No FEC (clean RF link)"]["payload_capacity"]
     light = capacities["Light FEC (16B blocks)"]["payload_capacity"]
     heavy = capacities["Heavy FEC (32B blocks)"]["payload_capacity"]
-    
+
     print(f"  ┌───────────────────────────────────────────────────────────┐")
     print(f"  │  USABLE PAYLOAD PER ZK-LoRaWAN CHIRP                    │")
     print(f"  │  (100% ZK privacy, 100% lossless, 100% verified)        │")
@@ -325,13 +325,13 @@ def main():
     print(f"  │  ZK Proof compressed (LLD-AC):  {capacities['No FEC (clean RF link)']['proof_compressed_size']:>3} bytes              │")
     print(f"  └───────────────────────────────────────────────────────────┘")
     print()
-    
+
     if all_pass:
         print("  ✅ ALL ROUND-TRIP TESTS PASSED — These numbers are FACTUAL")
     else:
         print("  ❌ SOME TESTS FAILED — Check results above")
     print()
-    
+
     return all_pass
 
 

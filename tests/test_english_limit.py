@@ -18,7 +18,7 @@ def find_max_compressible(text_generator, label, max_chars=5000):
     """Binary search for the maximum text length that compresses to ≤57 bytes."""
     best = 0
     best_text = ""
-    
+
     for length in range(1, max_chars):
         text = text_generator(length)
         if text is None:
@@ -31,7 +31,7 @@ def find_max_compressible(text_generator, label, max_chars=5000):
             if decompressed == raw:
                 best = length
                 best_text = text
-        
+
     return best, best_text
 
 def main():
@@ -74,7 +74,7 @@ def main():
     # ── Type 3: Unique English sentences (worst case) ──
     print("  ── Type 3: Unique English text (worst case — no repetition) ──")
     print()
-    
+
     unique_texts = [
         "Hi",
         "Help me",
@@ -93,13 +93,13 @@ def main():
         "Sensor array report all 12 nodes operational average temperature across grid is 73.2F with standard deviation of 2.1 degrees",
         "The quick brown fox jumps over the lazy dog and then runs through the forest while the sun sets behind the mountains on a warm summer evening",
     ]
-    
+
     print(f"    {'Chars':>5} {'zlib':>5} {'Fits':>5}  Text")
     print(f"    {'─'*5} {'─'*5} {'─'*5}  {'─'*50}")
-    
+
     max_unique = 0
     max_unique_text = ""
-    
+
     for text in unique_texts:
         raw = text.encode("utf-8")
         compressed = zlib.compress(raw, 9)
@@ -112,18 +112,18 @@ def main():
             max_unique_text = text
         else:
             mark = "❌"
-        
+
         print(f"    {len(text):>5} {len(compressed):>5} {mark:>5}  \"{text[:60]}{'...' if len(text)>60 else ''}\"")
 
     print()
-    
+
     # ── Type 4: Brute-force find exact limit for unique English ──
     print("  ── Type 4: Exact limit — character by character ──")
     print()
-    
+
     # Start from a long text and trim character by character
     long_text = "Heart rate 72bpm SpO2 98 percent blood pressure 120 over 80 patient stable condition green all vitals within normal range"
-    
+
     for length in range(len(long_text), 0, -1):
         chunk = long_text[:length]
         compressed = zlib.compress(chunk.encode("utf-8"), 9)
@@ -133,9 +133,9 @@ def main():
                 print(f"    Max from medical text: {length} chars → {len(compressed)}B")
                 print(f"    \"{chunk}\"")
                 break
-    
+
     print()
-    
+
     long_text2 = "Alert motion detected at front door camera recording started notify owner immediately and log event in security database"
     for length in range(len(long_text2), 0, -1):
         chunk = long_text2[:length]
@@ -146,9 +146,9 @@ def main():
                 print(f"    Max from security text: {length} chars → {len(compressed)}B")
                 print(f"    \"{chunk}\"")
                 break
-    
+
     print()
-    
+
     long_text3 = "GPS coordinates latitude 40.7128 north longitude 74.0060 west speed 35 miles per hour heading north on highway 95 near exit 12"
     for length in range(len(long_text3), 0, -1):
         chunk = long_text3[:length]
@@ -159,7 +159,7 @@ def main():
                 print(f"    Max from GPS text: {length} chars → {len(compressed)}B")
                 print(f"    \"{chunk}\"")
                 break
-    
+
     print()
 
     # ── FINAL ANSWER ──

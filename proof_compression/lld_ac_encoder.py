@@ -21,10 +21,10 @@ import math
 class LLDACEncoder:
     """
     Logits-Driven Arithmetic Range Coder.
-    
+
     Uses a learned probability model over the byte distribution of serialized
     Groth16 proof elements to achieve near-entropy-optimal compression.
-    
+
     The "Logits-Driven" aspect: the probability table is derived from the
     statistical distribution of BN254 field element bytes, which cluster
     heavily in certain ranges due to the prime field modulus structure.
@@ -48,7 +48,7 @@ class LLDACEncoder:
     def _build_bn254_frequency_table(self):
         """
         Construct byte frequency table for BN254 field elements.
-        
+
         The top 2 bytes of a 32-byte field element are constrained by the
         modulus (0x30644e72....), so bytes 0-1 have heavily skewed distributions.
         The remaining 30 bytes are approximately uniform.
@@ -89,10 +89,10 @@ class LLDACEncoder:
     def encode(self, data: bytes) -> bytes:
         """
         Arithmetic encode a byte stream using the BN254 frequency model.
-        
+
         Args:
             data: Raw serialized Groth16 proof bytes
-            
+
         Returns:
             Compressed byte stream
         """
@@ -155,11 +155,11 @@ class LLDACEncoder:
     def decode(self, compressed: bytes, original_length: int) -> bytes:
         """
         Arithmetic decode a compressed byte stream.
-        
+
         Args:
             compressed: LLD-AC compressed bytes
             original_length: Number of bytes in the original uncompressed data
-            
+
         Returns:
             Decompressed byte stream
         """
@@ -229,13 +229,13 @@ class LLDACEncoder:
 def serialize_groth16_proof(proof_a_hex, proof_b_hex, proof_c_hex, public_inputs):
     """
     Serialize a Groth16 proof into a compact binary format.
-    
+
     Standard Groth16 proof structure:
     - proof_a: G1 point (2 x 32 bytes = 64 bytes)
     - proof_b: G2 point (2 x 2 x 32 bytes = 128 bytes)
     - proof_c: G1 point (2 x 32 bytes = 64 bytes)
     - public_inputs: variable length field elements
-    
+
     Total uncompressed: 256 bytes + public inputs
     """
     data = bytearray()
@@ -262,16 +262,16 @@ def pack_lora_frame(compressed_proof, cuneiform_coords, fec_parity=None, max_siz
     """
     Pack a compressed ZK proof + 6D Cuneiform-U coordinates into a
     LoRa-compliant frame (≤ 255 bytes by default).
-    
+
     Frame layout:
     [1B magic] [1B flags] [2B proof_len] [NB compressed_proof] [6B coords] [MB FEC parity]
-    
+
     Args:
         compressed_proof: LLD-AC compressed proof bytes
         cuneiform_coords: 6-element list of coordinate values [0-255]
         fec_parity: Optional XOR-FEC parity bytes
         max_size: Maximum allowable frame size (standard LoRaWAN MTU is 255)
-        
+
     Returns:
         Complete LoRa frame bytes
     """

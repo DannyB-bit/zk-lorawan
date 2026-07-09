@@ -321,7 +321,7 @@ def generate_html_content():
         line-height: 1.5;
         padding: 0 40px;
     }}
-    
+
     .svg-container {{
         display: inline-block;
         margin-top: 20px;
@@ -334,7 +334,7 @@ def generate_html_content():
     <div class="cover">
         <div class="cover-stripe"></div>
         <div class="cover-project-label">Project: ZK-LoRaWAN</div>
-        
+
         <div class="cover-image-container">
             <img class="cover-image" src="file:///{logo_url}" alt="ZK-LoRaWAN Logo">
         </div>
@@ -459,7 +459,7 @@ def generate_html_content():
 
     <!-- PAGE 5: SYSTEM ARCHITECTURE - IDENTITY & ENCRYPTION -->
     <h1>3. System Architecture</h1>
-    
+
     <h2>Layer 1: Elliptic Curve Identity Derivation</h2>
     <p>
         ZK-LoRaWAN implements a decentralized identity system inspired by Bitcoin. Each edge node generates a keypair using the secp256k1 elliptic curve locally. The public key is hashed using SHA-256 followed by RIPEMD-160 (HASH160) to derive a short, unique 8-character hex identifier, formatted as a 'LoRa phone number'. This phone number is used for public addressing, while the private key is held strictly inside the hardware enclave.
@@ -530,7 +530,7 @@ template AgentValidityProof() {{
     <p>
         The Solana Shielded Micropayment mechanism is the economic engine of ZK-LoRaWAN. It solves the biggest problem in decentralized radio networks: <em>How do you pay gateways to route your data without revealing who you are or where you are located?</em>
     </p>
-    
+
     <h3>5.1 The Core Problem: Altruism vs. Financial Privacy</h3>
     <p>
         In traditional off-grid mesh networks (like Meshtastic), nodes relay packets for free out of altruism. However, altruism does not scale to global, professional, or high-reliability networks. Conversely, paying gateways using a public blockchain (like Bitcoin or Solana individual PDAs) destroys user privacy. An observer can look at the ledger, see that Wallet-A paid Gateway-B, and instantly deduce who is transmitting, which physical gateway routed the message (revealing their location), and the exact timing of the communication.
@@ -584,7 +584,7 @@ template AgentValidityProof() {{
 
     <!-- PAGE 9: INNOVATIONS -->
     <h1>7. The ZK-LoRaWAN Innovations</h1>
-    
+
     <h3>Innovation A: Wallet-Event-Triggered RF Routing (Solana-to-Radio Binding)</h3>
     <p>
         We propose a gateway architecture that verifies routing authorization based on decrypted shielded payment events. Instead of waiting for block confirmations or using centralized payment gateways, the gateway verifies Solana shielded state trees via light-client viewing capabilities, matching them to physical radio packet hashes to authorize routing. This represents a novel, privacy-preserving approach to DePIN operation.
@@ -619,7 +619,7 @@ template AgentValidityProof() {{
 
     <!-- PAGE 11: PRACTICAL USE CASE SCENARIOS -->
     <h1>9. Practical Use Cases</h1>
-    
+
     <h3>9.1 Scenario A: Off-Grid P2P Data Marketplace (Drone & Sensor)</h3>
     <p>
         An autonomous drone (Agent-A) and a ground-based weather sensor (Agent-B) operate off-grid using only LoRa radio waves. The drone needs real-time wind speed data before landing and is willing to pay 0.002 SOL. A local internet-connected gateway acts as their Solana network bridge, routing the transaction and earning its 100,000 lamport fee anonymously from the Shielded Pool.
@@ -637,7 +637,7 @@ template AgentValidityProof() {{
 
     <!-- PAGE 12: CRYPTOGRAPHIC SECURITY & ANTI-FRAUD ANALYSIS -->
     <h1>10. Cryptographic Security & Anti-Fraud</h1>
-    
+
     <h3>10.1 Physical RF Layer & Gateway Mitigations</h3>
     <p>
         <strong>Replay Protection:</strong> Every ZK-proof binds a UTC timestamp and an ephemeral nonce. Gateways reject any packet outside a &plusmn;5-second window or with a duplicate nonce.
@@ -812,7 +812,7 @@ template AgentValidityProof() {{
         <div class="end-thanks">
             Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge. This whitepaper and proposal are intended for educational and project evaluation purposes only. The ZK-LoRaWAN codebase is currently pending to be released under the MIT License upon approval of the Grant.
         </div>
-        
+
         <div class="end-logo-container">
             <div class="svg-container">
                 <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -832,7 +832,7 @@ template AgentValidityProof() {{
                     <line x1="66" y1="40" x2="58" y2="53.5" stroke="#14F195" stroke-width="0.5"/>
                     <line x1="30" y1="69" x2="42" y2="53.5" stroke="#9945FF" stroke-width="0.5"/>
                     <line x1="70" y1="69" x2="58" y2="53.5" stroke="#14F195" stroke-width="0.5"/>
-                    
+
                     <defs>
                         <linearGradient id="paint0_linear" x1="43" y1="6" x2="57" y2="20" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#14F195"/>
@@ -864,14 +864,14 @@ template AgentValidityProof() {{
 
 def main():
     html_content = generate_html_content()
-    
+
     # Save the HTML to a temporary file
     temp_html_path = "scratch/whitepaper_temp.html"
     with open(temp_html_path, "w", encoding="utf-8") as f:
         f.write(html_content)
-        
+
     print(f"Temporary HTML whitepaper generated at: {temp_html_path}")
-    
+
     # Output markdown version as well
     md_content = """# ZK-LoRaWAN Whitepaper
 
@@ -1141,7 +1141,7 @@ Running intelligent nodes on solar power requires strict computational budget se
 
 ---
 
-Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge. 
+Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge.
 
 ### WE ARE THE AI COLLECTIVE
 
@@ -1160,7 +1160,7 @@ Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem
         print("PDF whitepaper generated successfully.")
     except Exception as e:
         print(f"Error compiling PDF with WeasyPrint: {e}", file=sys.stderr)
-        
+
     # Clean up temp file
     if os.path.exists(temp_html_path):
         os.remove(temp_html_path)

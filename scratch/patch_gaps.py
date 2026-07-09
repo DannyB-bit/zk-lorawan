@@ -25,7 +25,7 @@ def main():
         "disclosing the node's exact data values or geographical location.", normal_style
     ))
     story.append(Spacer(1, 5))"""
-    
+
     code = re.sub(
         r'story\.append\(Paragraph\("3\. System Architecture", h1_style\)\)\n\s+story\.append\(Spacer\(1, 10\)\)\n\s+story\.append\(get_system_topology_diagram\(\)\)\n\s+story\.append\(Spacer\(1, 10\)\)',
         cuneiform_insert,
@@ -122,7 +122,7 @@ def main():
         'A Solana-Style ZK-Compressed Shielded Pool and Lossless Proof Compression Layer (Language-U Protocol)',
         md
     )
-    
+
     # Insert cuneiform coordinates in md
     md = re.sub(
         r'## Layer 1: Elliptic Curve Identity Derivation',

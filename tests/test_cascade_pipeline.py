@@ -33,7 +33,7 @@ class Level1_Tokenizer:
         for w in words:
             if w not in vocab:
                 vocab[w] = len(vocab)
-        
+
         # Pack: vocab_size(2B) + [word_len(1B) + word_bytes]... + [token_ids as varints]
         result = struct.pack(">H", len(vocab))
         for word in vocab:
@@ -42,14 +42,14 @@ class Level1_Tokenizer:
         # Token IDs as 1-byte indices (up to 256 unique words)
         for w in words:
             result += struct.pack("B", vocab[w])
-        
+
         return result
-    
+
     def decompress(self, data: bytes) -> bytes:
         offset = 0
         vocab_size = struct.unpack(">H", data[offset:offset+2])[0]
         offset += 2
-        
+
         vocab = []
         for _ in range(vocab_size):
             wlen = struct.unpack("B", data[offset:offset+1])[0]
@@ -57,13 +57,13 @@ class Level1_Tokenizer:
             word = data[offset:offset+wlen].decode("utf-8")
             offset += wlen
             vocab.append(word)
-        
+
         tokens = []
         while offset < len(data):
             tid = struct.unpack("B", data[offset:offset+1])[0]
             offset += 1
             tokens.append(vocab[tid])
-        
+
         return "".join(tokens).encode("utf-8")
 
 
@@ -78,11 +78,11 @@ class Level2_PrefixSuffix:
         chunks = [data[i:i+chunk_size] for i in range(0, len(data), chunk_size)]
         if len(data) % chunk_size != 0:
             pass  # last chunk may be shorter
-        
+
         # Dictionary of seen chunks → index
         seen = {}
         result = struct.pack(">H", len(data))  # original length
-        
+
         for chunk in chunks:
             if chunk in seen and len(chunk) == chunk_size:
                 # Reference: 0xFF + index(1B)
@@ -93,22 +93,22 @@ class Level2_PrefixSuffix:
                     seen[chunk] = idx
                 # Literal: length(1B) + raw bytes
                 result += struct.pack("B", len(chunk)) + chunk
-        
+
         return result
-    
+
     def decompress(self, data: bytes) -> bytes:
         offset = 0
         orig_len = struct.unpack(">H", data[offset:offset+2])[0]
         offset += 2
-        
+
         seen = {}
         result = b""
         idx = 0
-        
+
         while offset < len(data):
             marker = data[offset]
             offset += 1
-            
+
             if marker == 0xFF:
                 ref = struct.unpack("B", data[offset:offset+1])[0]
                 offset += 1
@@ -121,7 +121,7 @@ class Level2_PrefixSuffix:
                     seen[idx % 256] = chunk
                     idx += 1
                 result += chunk
-        
+
         return result[:orig_len]
 
 
@@ -139,7 +139,7 @@ class Level3_Delta:
             delta = (data[i] - data[i-1]) % 256
             result += bytes([delta])
         return result
-    
+
     def decompress(self, data: bytes) -> bytes:
         orig_len = struct.unpack(">H", data[:2])[0]
         if orig_len == 0:
@@ -159,7 +159,7 @@ class Level4_RLE:
     def compress(self, data: bytes) -> bytes:
         if not data:
             return struct.pack(">H", 0)
-        
+
         result = struct.pack(">H", len(data))
         i = 0
         while i < len(data):
@@ -177,7 +177,7 @@ class Level4_RLE:
                         result += bytes([b])
             i += count
         return result
-    
+
     def decompress(self, data: bytes) -> bytes:
         orig_len = struct.unpack(">H", data[:2])[0]
         if orig_len == 0:
@@ -205,24 +205,24 @@ class Level5_FreqReorder:
         freq = {}
         for b in data:
             freq[b] = freq.get(b, 0) + 1
-        
+
         # Sort by frequency descending
         sorted_bytes = sorted(freq.keys(), key=lambda x: freq[x], reverse=True)
-        
+
         # Build mapping table: original → new index
         mapping = {b: i for i, b in enumerate(sorted_bytes)}
-        
+
         # Header: table_size(1B) + original_bytes
         result = struct.pack("B", len(sorted_bytes))
         result += bytes(sorted_bytes)
         result += struct.pack(">H", len(data))
-        
+
         # Remap data
         for b in data:
             result += bytes([mapping[b]])
-        
+
         return result
-    
+
     def decompress(self, data: bytes) -> bytes:
         offset = 0
         table_size = data[offset]
@@ -231,12 +231,12 @@ class Level5_FreqReorder:
         offset += table_size
         orig_len = struct.unpack(">H", data[offset:offset+2])[0]
         offset += 2
-        
+
         result = bytearray()
         for i in range(orig_len):
             idx = data[offset + i]
             result.append(table[idx])
-        
+
         return bytes(result)
 
 
@@ -248,7 +248,7 @@ class Level6_Zlib:
     def compress(self, data: bytes) -> bytes:
         compressed = zlib.compress(data, 9)
         return struct.pack(">H", len(data)) + compressed
-    
+
     def decompress(self, data: bytes) -> bytes:
         orig_len = struct.unpack(">H", data[:2])[0]
         return zlib.decompress(data[2:])
@@ -260,18 +260,18 @@ class Level6_Zlib:
 class UFOPipeline:
     def __init__(self, levels):
         self.levels = levels
-    
+
     def compress(self, data: bytes) -> tuple:
         """Run data through all levels in sequence. Return (final, intermediates)."""
         current = data
         intermediates = [("Input", len(data))]
-        
+
         for i, level in enumerate(self.levels):
             current = level.compress(current)
             intermediates.append((f"L{i+1} ({level.__class__.__name__})", len(current)))
-        
+
         return current, intermediates
-    
+
     def decompress(self, data: bytes) -> bytes:
         """Reverse the pipeline."""
         current = data
@@ -290,9 +290,9 @@ def main():
     print("  Pipe limit: 57 bytes | 100% accuracy required")
     print("=" * 70)
     print()
-    
+
     all_pass = True
-    
+
     # Define pipeline levels
     levels_full = [
         Level1_Tokenizer(),    # L1: Text → tokens
@@ -301,19 +301,19 @@ def main():
         Level5_FreqReorder(),  # L4: Frequency reordering
         Level6_Zlib(),         # L5: zlib deflate
     ]
-    
+
     # Also test subsets of the pipeline
     levels_3stage = [
         Level1_Tokenizer(),
         Level3_Delta(),
         Level6_Zlib(),
     ]
-    
+
     levels_2stage = [
         Level3_Delta(),
         Level6_Zlib(),
     ]
-    
+
     test_texts = [
         "Temperature is 72F and humidity is 45% in sector 7",
         "Alert motion detected at front door camera recording started",
@@ -329,36 +329,36 @@ def main():
         "temperature normal humidity normal pressure normal " * 6,
         "alert alert alert alert sensor 1 sensor 2 sensor 3 sensor 4 status ok status ok " * 3,
     ]
-    
+
     pipelines = [
         ("2-Stage (Delta → zlib)", levels_2stage),
         ("3-Stage (Tokenize → Delta → zlib)", levels_3stage),
         ("5-Stage (Token → Delta → RLE → FreqSort → zlib)", levels_full),
     ]
-    
+
     for pipe_name, levels in pipelines:
         print(f"  ── Pipeline: {pipe_name} ──")
         print()
-        
+
         pipeline = UFOPipeline(levels)
-        
+
         for text in test_texts:
             raw = text.encode("utf-8")
-            
+
             try:
                 compressed, intermediates = pipeline.compress(raw)
                 decompressed = pipeline.decompress(compressed)
                 accurate = (decompressed == raw)
                 fits = len(compressed) <= PIPE
-                
+
                 if accurate:
                     all_pass &= True
                     status = "✅" if fits else "⚠️ "
                     ratio = len(raw) / len(compressed) if len(compressed) > 0 else float('inf')
-                    
+
                     # Show cascade
                     cascade = " → ".join([f"{s}B" for _, s in intermediates])
-                    
+
                     print(f"    {status} {len(raw):>4}B → {len(compressed):>3}B ({ratio:>5.1f}×) {'FITS' if fits else 'OVER'} | {cascade}")
                     if fits:
                         print(f"       \"{text[:65]}{'...' if len(text)>65 else ''}\"")
@@ -369,9 +369,9 @@ def main():
                     print(f"       Got back:  {decompressed[:40]}...")
             except Exception as e:
                 print(f"    💥 ERROR on \"{text[:40]}...\": {e}")
-        
+
         print()
-    
+
     # ── Summary ──
     print("=" * 70)
     print("  CASCADING PIPELINE RESULTS")
@@ -379,16 +379,16 @@ def main():
     print()
     print(f"  Round-trip accuracy: {'✅ 100% on all tests' if all_pass else '❌ FAILURES DETECTED'}")
     print()
-    
+
     # Find the best pipeline for each text
     print("  Best results per text (what fits in 57 bytes):")
     print()
-    
+
     for text in test_texts:
         raw = text.encode("utf-8")
         best_size = len(raw)
         best_pipe = "raw"
-        
+
         for pipe_name, levels in pipelines:
             try:
                 pipeline = UFOPipeline(levels)
@@ -399,11 +399,11 @@ def main():
                     best_pipe = pipe_name
             except:
                 pass
-        
+
         fits = "✅" if best_size <= PIPE else "❌"
         print(f"    {fits} {len(raw):>4}B → {best_size:>3}B via {best_pipe}")
         print(f"       \"{text[:70]}{'...' if len(text)>70 else ''}\"")
-    
+
     print()
     print("  ✅ All decompressions verified byte-for-byte")
     print()
