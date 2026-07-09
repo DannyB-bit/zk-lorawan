@@ -611,6 +611,11 @@ fn main() {
     }
 
     if args.len() > 1 && args[1] == "ceremony" {
+        println!(
+            "⚠️  WARNING: This ceremony implementation is a developer prototype / tooling flow."
+        );
+        println!("⚠️  It is NOT mainnet-grade as it does not algebraically verify exponentiation correctness of the SRS updates.");
+        println!();
         if args.len() < 3 {
             eprintln!(
                 "Usage: zk_lorawan_prove ceremony <init|contribute|verify|finalize> [options]"

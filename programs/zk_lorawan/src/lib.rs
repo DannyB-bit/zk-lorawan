@@ -20,7 +20,7 @@ pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000; // treasury per chirp
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000; // gateway per chirp
 pub const TOTAL_FEE_PER_CHIRP: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MAX_BATCH_SIZE: usize = 100;
-pub const MERKLE_DEPTH: usize = 10; // 2^10 = 1,024 leaves; fits in Solana 1232-byte tx
+pub const MERKLE_DEPTH: usize = 16; // 2^16 = 65,536 leaves; fits in Solana 1232-byte tx thanks to chunked flow
 pub const BATCH_SEED: &[u8] = b"zk-lorawan-batch";
 pub const REGISTRY_SEED: &[u8] = b"zk-lorawan-registry";
 #[cfg(feature = "integration-test")]
@@ -61,7 +61,7 @@ pub mod zk_lorawan {
         let shielded_pool = &mut ctx.accounts.shielded_pool;
 
         let next_index = shielded_pool.next_index;
-        // Enforce max depth index limit (2^MERKLE_DEPTH = 1,024 leaves)
+        // Enforce max depth index limit (2^MERKLE_DEPTH = 65,536 leaves)
         require!(
             next_index < (1u64 << MERKLE_DEPTH as u64),
             ZKLoRaError::CalculationOverflow
@@ -1182,14 +1182,6 @@ pub fn verify_groth16(
     proof_c: &[u8; 64],
     public_inputs: &[[u8; 32]; 8],
 ) -> Result<()> {
-    #[cfg(feature = "mock-verifier")]
-    {
-        if proof_a[0] == 0xDD {
-            msg!("ZK-LoRaWAN: Developer mock proof bypass authorized via cargo feature.");
-            return Ok(());
-        }
-    }
-
     // Verifying Key (VK) coordinates from secure random single-party setup for demo/devnet (8 public inputs)
     let vk_alpha: [u8; 64] = [
         0x27, 0xdd, 0x7c, 0xd6, 0xaf, 0xf9, 0x1a, 0xeb, 0xd1, 0x9c, 0xb6, 0x7f, 0xd5, 0xe6, 0x86,
@@ -1437,7 +1429,7 @@ pub struct ProofContext {
     pub proof_b: [u8; 128],                     // 128
     pub proof_c: [u8; 64],                      // 64
     pub public_inputs: [[u8; 32]; 8],           // 256
-    pub merkle_proof: [[u8; 32]; MERKLE_DEPTH], // 320
+    pub merkle_proof: [[u8; 32]; MERKLE_DEPTH], // 512
     pub leaf_index: u32,                        // 4
     pub chunks_written: u8,                     // 1
     pub is_complete: bool,                      // 1

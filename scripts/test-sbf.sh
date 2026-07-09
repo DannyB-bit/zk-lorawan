@@ -37,9 +37,12 @@ cleanup() {
     if [[ "${created_wallet}" -eq 1 ]]; then
         rm -f "${generated_wallet}"
     fi
+    rm -f Cargo.lock.bak
 }
 trap cleanup EXIT
 
+cp Cargo.lock Cargo.lock.bak
 cargo +1.80.0 build -p zk-lorawan-groth16 --release
+cp Cargo.lock.bak Cargo.lock
 anchor build -- --features integration-test
 anchor test --skip-build --provider.wallet "${ANCHOR_WALLET}"

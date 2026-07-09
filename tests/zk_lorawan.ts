@@ -19,7 +19,7 @@ function buildOnChainMerkleProof(leaves: Buffer[], leafIndex: number): Buffer[] 
   let index = leafIndex;
   let currentLevel = [...leaves];
 
-  for (let level = 0; level < 10; level++) {
+  for (let level = 0; level < 16; level++) {
     let nextLevel: Buffer[] = [];
     const zeroHash = getZeroHash(level);
 
@@ -195,7 +195,7 @@ describe("zk_lorawan", () => {
 
     // Compute the expected root after index 0 insertion
     let current = singleZkVdeProofHash;
-    for (let level = 0; level < 10; level++) {
+    for (let level = 0; level < 16; level++) {
       current = Buffer.from(keccak_256(Buffer.concat([current, getZeroHash(level)])));
     }
     assert.deepEqual(poolAccount.merkleRoot, Array.from(current));
@@ -227,7 +227,7 @@ describe("zk_lorawan", () => {
     const nullifierRent = await provider.connection.getMinimumBalanceForRentExemption(8 + 32 + 8);
 
     // Compute Merkle proof for index 0 (all siblings are zero hashes)
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const proof0 = Array.from({ length: 16 }, (_, i) => getZeroHash(i));
 
     // Call verify_single
     await program.methods
@@ -352,7 +352,7 @@ describe("zk_lorawan", () => {
         .rpc();
     }
 
-    // Compute Merkle proof for each leaf in the 10-depth pool tree
+    // Compute Merkle proof for each leaf in the 16-depth pool tree
     const proof1 = buildOnChainMerkleProof(allLeaves, 1);
     const proof2 = buildOnChainMerkleProof(allLeaves, 2);
     const proof3 = buildOnChainMerkleProof(allLeaves, 3);
@@ -619,12 +619,12 @@ describe("zk_lorawan", () => {
       .signers([gateway])
       .rpc();
 
-    // === Step 2c: Write Chunk 2 — merkle_proof (10*32=320) + leaf_index (4) = 324 bytes ===
+    // === Step 2c: Write Chunk 2 — merkle_proof (16*32=512) + leaf_index (4) = 516 bytes ===
     const merkleProofBuf = Buffer.concat(merkleProof.map(p => Buffer.from(p)));
     const leafIndexBuf = Buffer.alloc(4);
     leafIndexBuf.writeUInt32LE(leafIndex, 0);
     const chunk2 = Buffer.concat([merkleProofBuf, leafIndexBuf]);
-    assert.equal(chunk2.length, 324);
+    assert.equal(chunk2.length, 516);
 
     const write2Tx = await program.methods
       .writeProofChunk(nonce, 2, Buffer.from(chunk2))
@@ -740,66 +740,168 @@ describe("zk_lorawan", () => {
   });
 
   // ==========================================================================
-  // Negative Tests — 6 security test cases
+  // Production Chunked Negative & Edge Case Tests
   // ==========================================================================
 
+  // Helper to initialize and write all 3 chunks for a proof context
+  async function setupProofContextChunks(
+    nonce: anchor.BN,
+    proofA: Buffer,
+    proofB: Buffer,
+    proofC: Buffer,
+    publicInputs: Buffer[],
+    merkleProof: Buffer[],
+    leafIndex: number,
+    gwKey: anchor.web3.Keypair,
+    options: {
+      skipInit?: boolean;
+      skipChunk0?: boolean;
+      skipChunk1?: boolean;
+      skipChunk2?: boolean;
+      corruptChunk0?: boolean;
+      corruptChunk2?: boolean;
+    } = {}
+  ) {
+    const [proofCtxPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("proof-ctx"), gwKey.publicKey.toBuffer(), nonce.toArrayLike(Buffer, "le", 8)],
+      program.programId
+    );
+
+    if (!options.skipInit) {
+      await program.methods
+        .initializeProofContext(nonce)
+        .accounts({
+          proofContext: proofCtxPda,
+          gateway: gwKey.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([gwKey])
+        .rpc();
+    }
+
+    if (!options.skipChunk0) {
+      let chunk0 = Buffer.concat([proofA, proofB]);
+      if (options.corruptChunk0) {
+        chunk0[0] ^= 0xFF; // Flip a byte
+      }
+      await program.methods
+        .writeProofChunk(nonce, 0, Buffer.from(chunk0))
+        .accounts({
+          proofContext: proofCtxPda,
+          gateway: gwKey.publicKey,
+        })
+        .signers([gwKey])
+        .rpc();
+    }
+
+    if (!options.skipChunk1) {
+      const chunk1 = Buffer.concat([proofC, ...publicInputs]);
+      await program.methods
+        .writeProofChunk(nonce, 1, Buffer.from(chunk1))
+        .accounts({
+          proofContext: proofCtxPda,
+          gateway: gwKey.publicKey,
+        })
+        .signers([gwKey])
+        .rpc();
+    }
+
+    if (!options.skipChunk2) {
+      let merkleProofBuf = Buffer.concat(merkleProof.map(p => Buffer.from(p)));
+      if (options.corruptChunk2) {
+        merkleProofBuf = Buffer.alloc(320, 0xDE); // bad siblings
+      }
+      const leafIndexBuf = Buffer.alloc(4);
+      leafIndexBuf.writeUInt32LE(leafIndex, 0);
+      const chunk2 = Buffer.concat([merkleProofBuf, leafIndexBuf]);
+      await program.methods
+        .writeProofChunk(nonce, 2, Buffer.from(chunk2))
+        .accounts({
+          proofContext: proofCtxPda,
+          gateway: gwKey.publicKey,
+        })
+        .signers([gwKey])
+        .rpc();
+    }
+
+    return proofCtxPda;
+  }
+
   it("Rejects tampered proof", async () => {
-    // Generate a unique proof
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
-    const tamperedProofData = JSON.parse(
+    const proofData = JSON.parse(
       execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000a 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
     );
 
     // Deposit leaf
-    const leafHash = Buffer.from(tamperedProofData.identity_hash, "hex");
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
     await program.methods
       .depositShielded(new anchor.BN(150000), Array.from(leafHash))
       .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
       .signers([sender])
       .rpc();
 
-    // Tamper with proof_a — flip one byte
-    const proofA = Buffer.from(tamperedProofData.proof_a, "hex");
-    proofA[0] ^= 0xFF; // Flip first byte
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
 
-    const nullifierHash = Buffer.from(tamperedProofData.nullifier_hash, "hex");
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+
+    const nonce = new anchor.BN(Date.now() + 1);
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
-    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
-    const leafIndex = poolState.nextIndex.toNumber() - 1;
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    // Write chunks but tamper with chunk0 (proof_a / proof_b)
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      { corruptChunk0: true }
+    );
 
     try {
       await program.methods
-        .verifySingle(
-          Array.from(proofA),
-          Array.from(Buffer.from(tamperedProofData.proof_b, "hex")),
-          Array.from(Buffer.from(tamperedProofData.proof_c, "hex")),
-          Array.from(nullifierHash),
-          Array.from(Buffer.from(tamperedProofData.attestation_hash, "hex")),
-          Array.from(Buffer.from(tamperedProofData.identity_hash, "hex")),
-          Array.from(Buffer.from(tamperedProofData.ciphertext_hash, "hex")),
-          Array.from(Buffer.from(tamperedProofData.deposit_commitment, "hex")),
-          Array.from(Buffer.from(tamperedProofData.firmware_hash, "hex")),
-          new anchor.BN(Math.floor(Date.now() / 1000)),
-          proof0.map(p => Array.from(p)),
-          leafIndex
-        )
+        .verifyProofContext(nonce)
         .accounts({
-          registry: registryPda, shieldedPool: shieldedPoolPda,
-          nullifierRecord: nullifierPda, gateway: gateway.publicKey,
-          treasury: treasuryAddress, systemProgram: anchor.web3.SystemProgram.programId,
+          proofContext: proofCtxPda,
+          registry: registryPda,
+          shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda,
+          gateway: gateway.publicKey,
+          treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([gateway])
         .rpc();
       assert.fail("Should have rejected tampered proof");
     } catch (e: any) {
       assert.include(e.message, "Zero Knowledge witness verification failed");
-      console.log("  ✅ Tampered proof correctly rejected");
+      console.log("  ✅ Tampered proof rejected on production chunked path");
     }
+
+    // Clean up
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
   });
 
   it("Rejects wrong deposit amount", async () => {
@@ -817,56 +919,98 @@ describe("zk_lorawan", () => {
   });
 
   it("Rejects nullifier replay", async () => {
-    // Try to re-use the same nullifier from the single chirp verification (already spent)
-    const nullifierHash = Buffer.from(singleChirpProof.nullifier_hash, "hex");
+    // Generate a unique proof
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    const proofData = JSON.parse(
+      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000f 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
+    );
+
+    // Deposit leaf
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
+    await program.methods
+      .depositShielded(new anchor.BN(150000), Array.from(leafHash))
+      .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
+      .signers([sender])
+      .rpc();
+
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
-    const proofA = Buffer.from(singleChirpProof.proof_a, "hex");
-    const proofB = Buffer.from(singleChirpProof.proof_b, "hex");
-    const proofC = Buffer.from(singleChirpProof.proof_c, "hex");
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    // First, verify successfully on the chunked path
+    const nonce1 = new anchor.BN(Date.now() + 10);
+    const proofCtxPda1 = await setupProofContextChunks(
+      nonce1, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+    );
+    await program.methods
+      .verifyProofContext(nonce1)
+      .accounts({
+        proofContext: proofCtxPda1, registry: registryPda, shieldedPool: shieldedPoolPda,
+        nullifierRecord: nullifierPda, gateway: gateway.publicKey, treasury: treasuryAddress,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([gateway])
+      .rpc();
+    await program.methods.closeProofContext(nonce1).accounts({ proofContext: proofCtxPda1, gateway: gateway.publicKey }).signers([gateway]).rpc();
+
+    // Now attempt nullifier replay via a second chunked verify context
+    const nonce2 = new anchor.BN(Date.now() + 20);
+    const proofCtxPda2 = await setupProofContextChunks(
+      nonce2, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+    );
 
     try {
       await program.methods
-        .verifySingle(
-          Array.from(proofA),
-          Array.from(proofB),
-          Array.from(proofC),
-          Array.from(nullifierHash),
-          Array.from(Buffer.from(singleChirpProof.attestation_hash, "hex")),
-          Array.from(Buffer.from(singleChirpProof.identity_hash, "hex")),
-          Array.from(Buffer.from(singleChirpProof.ciphertext_hash, "hex")),
-          Array.from(Buffer.from(singleChirpProof.deposit_commitment, "hex")),
-          Array.from(Buffer.from(singleChirpProof.firmware_hash, "hex")),
-          new anchor.BN(Math.floor(Date.now() / 1000)),
-          proof0.map(p => Array.from(p)),
-          0
-        )
+        .verifyProofContext(nonce2)
         .accounts({
-          registry: registryPda, shieldedPool: shieldedPoolPda,
-          nullifierRecord: nullifierPda, gateway: gateway.publicKey,
-          treasury: treasuryAddress, systemProgram: anchor.web3.SystemProgram.programId,
+          proofContext: proofCtxPda2, registry: registryPda, shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda, gateway: gateway.publicKey, treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([gateway])
         .rpc();
       assert.fail("Should have rejected nullifier replay");
     } catch (e: any) {
-      // Anchor will reject because the nullifier PDA already exists (cannot init twice)
-      console.log("  ✅ Nullifier replay correctly rejected");
+      console.log("  ✅ Nullifier replay correctly rejected on chunked path");
     }
+
+    await program.methods.closeProofContext(nonce2).accounts({ proofContext: proofCtxPda2, gateway: gateway.publicKey }).signers([gateway]).rpc();
   });
 
   it("Rejects unapproved firmware hash", async () => {
-    // Generate proof with a different (unapproved) firmware hash
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
     const badFwProof = JSON.parse(
-      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000b 0000000000000000000000000000000000000000000000000000000000000002 123456789 000000000000000000000000000000000000000000000000000000000000dead ${gatewayHex} 150000`).toString()
+      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000b 000000000000000000000000000000000000000000000000000000000000dead ${gatewayHex} 150000`).toString()
     );
 
-    // Deposit leaf
     const leafHash = Buffer.from(badFwProof.identity_hash, "hex");
     await program.methods
       .depositShielded(new anchor.BN(150000), Array.from(leafHash))
@@ -877,51 +1021,64 @@ describe("zk_lorawan", () => {
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
+    const proofA = Buffer.from(badFwProof.proof_a, "hex");
+    const proofB = Buffer.from(badFwProof.proof_b, "hex");
+    const proofC = Buffer.from(badFwProof.proof_c, "hex");
     const nullifierHash = Buffer.from(badFwProof.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(badFwProof.identity_hash, "hex");
+    const attestationHash = Buffer.from(badFwProof.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(badFwProof.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(badFwProof.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(badFwProof.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+
+    const nonce = new anchor.BN(Date.now() + 30);
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway
+    );
 
     try {
       await program.methods
-        .verifySingle(
-          Array.from(Buffer.from(badFwProof.proof_a, "hex")),
-          Array.from(Buffer.from(badFwProof.proof_b, "hex")),
-          Array.from(Buffer.from(badFwProof.proof_c, "hex")),
-          Array.from(nullifierHash),
-          Array.from(Buffer.from(badFwProof.attestation_hash, "hex")),
-          Array.from(Buffer.from(badFwProof.identity_hash, "hex")),
-          Array.from(Buffer.from(badFwProof.ciphertext_hash, "hex")),
-          Array.from(Buffer.from(badFwProof.deposit_commitment, "hex")),
-          Array.from(Buffer.from(badFwProof.firmware_hash, "hex")),
-          new anchor.BN(Math.floor(Date.now() / 1000)),
-          proof0.map(p => Array.from(p)),
-          leafIndex
-        )
+        .verifyProofContext(nonce)
         .accounts({
-          registry: registryPda, shieldedPool: shieldedPoolPda,
-          nullifierRecord: nullifierPda, gateway: gateway.publicKey,
-          treasury: treasuryAddress, systemProgram: anchor.web3.SystemProgram.programId,
+          proofContext: proofCtxPda, registry: registryPda, shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda, gateway: gateway.publicKey, treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([gateway])
         .rpc();
       assert.fail("Should have rejected unapproved firmware");
     } catch (e: any) {
       assert.include(e.message, "Invalid firmware attestation hash");
-      console.log("  ✅ Unapproved firmware correctly rejected");
+      console.log("  ✅ Unapproved firmware correctly rejected on chunked path");
     }
+
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
   });
 
   it("Rejects wrong gateway signer", async () => {
-    // Generate proof bound to the real gateway
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
     const wrongGwProof = JSON.parse(
       execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000c 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
     );
 
-    // Deposit leaf
     const leafHash = Buffer.from(wrongGwProof.identity_hash, "hex");
     await program.methods
       .depositShielded(new anchor.BN(150000), Array.from(leafHash))
@@ -929,60 +1086,70 @@ describe("zk_lorawan", () => {
       .signers([sender])
       .rpc();
 
-    // Now try to verify with a DIFFERENT gateway (not the one the proof is bound to)
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+
+    const proofA = Buffer.from(wrongGwProof.proof_a, "hex");
+    const proofB = Buffer.from(wrongGwProof.proof_b, "hex");
+    const proofC = Buffer.from(wrongGwProof.proof_c, "hex");
+    const nullifierHash = Buffer.from(wrongGwProof.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(wrongGwProof.identity_hash, "hex");
+    const attestationHash = Buffer.from(wrongGwProof.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(wrongGwProof.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(wrongGwProof.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(wrongGwProof.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("nullifier"), nullifierHash], program.programId
+    );
+
     const fakeGateway = anchor.web3.Keypair.generate();
     const sig = await provider.connection.requestAirdrop(fakeGateway.publicKey, anchor.web3.LAMPORTS_PER_SOL);
     await provider.connection.confirmTransaction(sig);
 
-    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
-    const leafIndex = poolState.nextIndex.toNumber() - 1;
-
-    const nullifierHash = Buffer.from(wrongGwProof.nullifier_hash, "hex");
-    const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("nullifier"), nullifierHash], program.programId
+    const nonce = new anchor.BN(Date.now() + 40);
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, fakeGateway
     );
-    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
 
     try {
-      // Use the FAKE gateway as signer — proof is bound to the REAL gateway
       await program.methods
-        .verifySingle(
-          Array.from(Buffer.from(wrongGwProof.proof_a, "hex")),
-          Array.from(Buffer.from(wrongGwProof.proof_b, "hex")),
-          Array.from(Buffer.from(wrongGwProof.proof_c, "hex")),
-          Array.from(nullifierHash),
-          Array.from(Buffer.from(wrongGwProof.attestation_hash, "hex")),
-          Array.from(Buffer.from(wrongGwProof.identity_hash, "hex")),
-          Array.from(Buffer.from(wrongGwProof.ciphertext_hash, "hex")),
-          Array.from(Buffer.from(wrongGwProof.deposit_commitment, "hex")),
-          Array.from(Buffer.from(wrongGwProof.firmware_hash, "hex")),
-          new anchor.BN(Math.floor(Date.now() / 1000)),
-          proof0.map(p => Array.from(p)),
-          leafIndex
-        )
+        .verifyProofContext(nonce)
         .accounts({
-          registry: registryPda, shieldedPool: shieldedPoolPda,
-          nullifierRecord: nullifierPda, gateway: fakeGateway.publicKey,
-          treasury: treasuryAddress, systemProgram: anchor.web3.SystemProgram.programId,
+          proofContext: proofCtxPda, registry: registryPda, shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda, gateway: fakeGateway.publicKey, treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([fakeGateway])
         .rpc();
       assert.fail("Should have rejected wrong gateway signer");
     } catch (e: any) {
-      // Will fail because the gateway public key doesn't match what's in the proof
-      console.log("  ✅ Wrong gateway signer correctly rejected");
+      console.log("  ✅ Wrong gateway signer correctly rejected on chunked path");
     }
+
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: fakeGateway.publicKey }).signers([fakeGateway]).rpc();
   });
 
   it("Rejects wrong Merkle proof", async () => {
-    // Generate a new unique proof
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
     const badMerkleProof = JSON.parse(
       execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000d 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
     );
 
-    // Deposit leaf
     const leafHash = Buffer.from(badMerkleProof.identity_hash, "hex");
     await program.methods
       .depositShielded(new anchor.BN(150000), Array.from(leafHash))
@@ -993,42 +1160,125 @@ describe("zk_lorawan", () => {
     const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
     const leafIndex = poolState.nextIndex.toNumber() - 1;
 
+    const proofA = Buffer.from(badMerkleProof.proof_a, "hex");
+    const proofB = Buffer.from(badMerkleProof.proof_b, "hex");
+    const proofC = Buffer.from(badMerkleProof.proof_c, "hex");
     const nullifierHash = Buffer.from(badMerkleProof.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(badMerkleProof.identity_hash, "hex");
+    const attestationHash = Buffer.from(badMerkleProof.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(badMerkleProof.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(badMerkleProof.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(badMerkleProof.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
     const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("nullifier"), nullifierHash], program.programId
     );
 
-    // Corrupt Merkle proof — use all zeros instead of correct siblings
-    const corruptProof = Array.from({ length: 10 }, () => Array(32).fill(0xDE));
+    const nonce = new anchor.BN(Date.now() + 50);
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      { corruptChunk2: true }
+    );
 
     try {
       await program.methods
-        .verifySingle(
-          Array.from(Buffer.from(badMerkleProof.proof_a, "hex")),
-          Array.from(Buffer.from(badMerkleProof.proof_b, "hex")),
-          Array.from(Buffer.from(badMerkleProof.proof_c, "hex")),
-          Array.from(nullifierHash),
-          Array.from(Buffer.from(badMerkleProof.attestation_hash, "hex")),
-          Array.from(Buffer.from(badMerkleProof.identity_hash, "hex")),
-          Array.from(Buffer.from(badMerkleProof.ciphertext_hash, "hex")),
-          Array.from(Buffer.from(badMerkleProof.deposit_commitment, "hex")),
-          Array.from(Buffer.from(badMerkleProof.firmware_hash, "hex")),
-          new anchor.BN(Math.floor(Date.now() / 1000)),
-          corruptProof,
-          leafIndex
-        )
+        .verifyProofContext(nonce)
         .accounts({
-          registry: registryPda, shieldedPool: shieldedPoolPda,
-          nullifierRecord: nullifierPda, gateway: gateway.publicKey,
-          treasury: treasuryAddress, systemProgram: anchor.web3.SystemProgram.programId,
+          proofContext: proofCtxPda, registry: registryPda, shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda, gateway: gateway.publicKey, treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([gateway])
         .rpc();
       assert.fail("Should have rejected wrong Merkle proof");
     } catch (e: any) {
       assert.include(e.message, "Merkle proof does not match");
-      console.log("  ✅ Wrong Merkle proof correctly rejected");
+      console.log("  ✅ Wrong Merkle proof correctly rejected on chunked path");
     }
-  });
-});
 
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
+  });
+
+  it("Rejects incomplete context", async () => {
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    const proofData = JSON.parse(
+      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000e 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
+    );
+
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
+    await program.methods
+      .depositShielded(new anchor.BN(150000), Array.from(leafHash))
+      .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
+      .signers([sender])
+      .rpc();
+
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 16, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 16, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const proof0 = Array.from({ length: 10 }, (_, i) => getZeroHash(i));
+    const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("nullifier"), nullifierHash], program.programId
+    );
+
+    const nonce = new anchor.BN(Date.now() + 60);
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, proof0, leafIndex, gateway,
+      { skipChunk2: true }
+    );
+
+    try {
+      await program.methods
+        .verifyProofContext(nonce)
+        .accounts({
+          proofContext: proofCtxPda, registry: registryPda, shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda, gateway: gateway.publicKey, treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([gateway])
+        .rpc();
+      assert.fail("Should have rejected incomplete proof context");
+    } catch (e: any) {
+      assert.include(e.message, "IncompleteProofContext");
+      console.log("  ✅ Incomplete proof context correctly rejected");
+    }
+
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
+  });
+
+});
