@@ -138,9 +138,9 @@ pub mod zk_lorawan {
         // 1. Verify ZK Groth16 proof using alt_bn128 pairing check (with gateway address binding)
         let gateway_key = ctx.accounts.gateway.key().to_bytes();
         let mut gateway_part1 = [0u8; 32];
-        gateway_part1[16..32].copy_from_slice(&gateway_key[0..16]);
+        gateway_part1[0..16].copy_from_slice(&gateway_key[0..16]);
         let mut gateway_part2 = [0u8; 32];
-        gateway_part2[16..32].copy_from_slice(&gateway_key[16..32]);
+        gateway_part2[0..16].copy_from_slice(&gateway_key[16..32]);
 
         let public_inputs = [
             zk_vde_proof_hash,
@@ -240,9 +240,9 @@ pub mod zk_lorawan {
         // Verify gateway binding: public_inputs[4] and [5] must encode gateway's public key
         let gateway_key = ctx.accounts.gateway.key().to_bytes();
         let mut gateway_part1 = [0u8; 32];
-        gateway_part1[16..32].copy_from_slice(&gateway_key[0..16]);
+        gateway_part1[0..16].copy_from_slice(&gateway_key[0..16]);
         let mut gateway_part2 = [0u8; 32];
-        gateway_part2[16..32].copy_from_slice(&gateway_key[16..32]);
+        gateway_part2[0..16].copy_from_slice(&gateway_key[16..32]);
 
         require!(
             public_inputs[4] == gateway_part1,
@@ -380,9 +380,9 @@ pub mod zk_lorawan {
         // 1. Verify Groth16 proof per chirp inside the batch on-chain (with gateway address binding)
         let gateway_key = ctx.accounts.gateway.key().to_bytes();
         let mut gateway_part1 = [0u8; 32];
-        gateway_part1[16..32].copy_from_slice(&gateway_key[0..16]);
+        gateway_part1[0..16].copy_from_slice(&gateway_key[0..16]);
         let mut gateway_part2 = [0u8; 32];
-        gateway_part2[16..32].copy_from_slice(&gateway_key[16..32]);
+        gateway_part2[0..16].copy_from_slice(&gateway_key[16..32]);
 
         let public_inputs = [
             zk_vde_proof_hash,
@@ -738,9 +738,9 @@ pub mod zk_lorawan {
         // public_inputs[5] = gateway_part2 (upper 16 bytes)
         let gateway_key_bytes = ctx.accounts.gateway.key().to_bytes();
         let mut expected_part1 = [0u8; 32];
-        expected_part1[16..32].copy_from_slice(&gateway_key_bytes[0..16]);
+        expected_part1[0..16].copy_from_slice(&gateway_key_bytes[0..16]);
         let mut expected_part2 = [0u8; 32];
-        expected_part2[16..32].copy_from_slice(&gateway_key_bytes[16..32]);
+        expected_part2[0..16].copy_from_slice(&gateway_key_bytes[16..32]);
         require!(
             pc.public_inputs[4] == expected_part1,
             ZKLoRaError::UnauthorizedGateway
@@ -862,9 +862,9 @@ pub mod zk_lorawan {
         // Gateway binding
         let gateway_key_bytes = ctx.accounts.gateway.key().to_bytes();
         let mut expected_part1 = [0u8; 32];
-        expected_part1[16..32].copy_from_slice(&gateway_key_bytes[0..16]);
+        expected_part1[0..16].copy_from_slice(&gateway_key_bytes[0..16]);
         let mut expected_part2 = [0u8; 32];
-        expected_part2[16..32].copy_from_slice(&gateway_key_bytes[16..32]);
+        expected_part2[0..16].copy_from_slice(&gateway_key_bytes[16..32]);
         require!(
             pc.public_inputs[4] == expected_part1,
             ZKLoRaError::UnauthorizedGateway
