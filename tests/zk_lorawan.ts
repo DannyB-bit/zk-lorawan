@@ -1008,7 +1008,7 @@ describe("zk_lorawan", () => {
     const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
     const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
     const badFwProof = JSON.parse(
-      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000b 000000000000000000000000000000000000000000000000000000000000dead ${gatewayHex} 150000`).toString()
+      execSync(`"${proverPath}" generate 000000000000000000000000000000000000000000000000000000000000000b 0000000000000000000000000000000000000000000000000000000000000002 123456789 000000000000000000000000000000000000000000000000000000000000dead ${gatewayHex} 150000`).toString()
     );
 
     const leafHash = Buffer.from(badFwProof.identity_hash, "hex");
