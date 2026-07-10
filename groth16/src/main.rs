@@ -611,9 +611,7 @@ fn main() {
     }
 
     if args.len() > 1 && args[1] == "ceremony" {
-        println!(
-            "✅ MPC Ceremony CLI — Mainnet Hardened Setup Tooling"
-        );
+        println!("✅ MPC Ceremony CLI — Mainnet Hardened Setup Tooling");
         println!("🔒 Cryptographically verifies SRS delta transitions, proof of knowledge, and query vectors via bilinear pairings.");
         println!();
         if args.len() < 3 {
