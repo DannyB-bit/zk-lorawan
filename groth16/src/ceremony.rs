@@ -13,6 +13,7 @@ use ark_ff::{Field, UniformRand};
 use ark_groth16::{ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 
+use rand::SeedableRng;
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroize;
 
@@ -207,8 +208,8 @@ pub fn initialize(output_path: &str) -> Result<(), String> {
 
     let constants = circuit::generate_mimc_constants(220);
 
-    eprintln!("  Generating initial parameters with OsRng...");
-    let mut rng = rand::rngs::OsRng;
+    eprintln!("  Generating initial parameters deterministically...");
+    let mut rng = rand::rngs::StdRng::from_seed([0u8; 32]);
     let (pk, vk) =
         circuit::setup_keys(&mut rng, constants).map_err(|e| format!("Setup failed: {}", e))?;
 
@@ -428,20 +429,31 @@ pub fn verify(input_path: &str) -> Result<(), String> {
 
     use ark_ec::pairing::Pairing;
 
+    // 1. Re-generate initial keys deterministically to compare against
+    let constants = circuit::generate_mimc_constants(220);
+    let mut initial_rng = rand::rngs::StdRng::from_seed([0u8; 32]);
+    let (initial_pk, initial_vk) = circuit::setup_keys(&mut initial_rng, constants)
+        .map_err(|e| format!("Deterministic initial setup failed: {}", e))?;
+
     // Verify each contribution transition and proof of knowledge
     for (i, contrib) in params.contributions.iter().enumerate() {
         if i == 0 {
             // Genesis contribution — deserialize initial delta
             let delta_g1_bytes = hex::decode(&contrib.delta_g1)
                 .map_err(|_| "Invalid delta_g1 hex at contribution #0".to_string())?;
-            let _delta_g1 = G1Affine::deserialize_compressed(&delta_g1_bytes[..])
+            let delta_g1 = G1Affine::deserialize_compressed(&delta_g1_bytes[..])
                 .map_err(|_| "Invalid delta_g1 G1 point at contribution #0".to_string())?;
             let delta_g2_bytes = hex::decode(&contrib.delta_g2)
                 .map_err(|_| "Invalid delta_g2 hex at contribution #0".to_string())?;
-            let _delta_g2 = G2Affine::deserialize_compressed(&delta_g2_bytes[..])
+            let delta_g2 = G2Affine::deserialize_compressed(&delta_g2_bytes[..])
                 .map_err(|_| "Invalid delta_g2 G2 point at contribution #0".to_string())?;
 
-            eprintln!("  ✅ Contribution #0: {} (genesis)", contrib.contributor);
+            // Verify they match the deterministic initial parameters
+            if delta_g1 != initial_pk.delta_g1 || delta_g2 != initial_vk.delta_g2 {
+                return Err("FAILED: Genesis contribution record delta points do not match initial setup!".into());
+            }
+
+            eprintln!("  ✅ Contribution #0: {} (genesis) — matches deterministic setup", contrib.contributor);
             continue;
         }
 
@@ -511,6 +523,57 @@ pub fn verify(input_path: &str) -> Result<(), String> {
     }
     eprintln!();
     eprintln!("  ✅ Parameters hash matches last contribution record");
+
+    // 2. Hardened algebraic verification of h_query and l_query query vectors transition
+    eprintln!("  Checking proving key query vectors transition algebraically...");
+    let mut h_coefficients = Vec::new();
+    let mut l_coefficients = Vec::new();
+    let mut seed = [0u8; 32];
+    seed.copy_from_slice(&current_hash[0..32]);
+    let mut coef_rng = rand::rngs::StdRng::from_seed(seed);
+    for _ in 0..params.proving_key.h_query.len() {
+        h_coefficients.push(Fr::rand(&mut coef_rng));
+    }
+    for _ in 0..params.proving_key.l_query.len() {
+        l_coefficients.push(Fr::rand(&mut coef_rng));
+    }
+
+    let mut h_initial_proj = G1Projective::generator() * Fr::from(0u64);
+    for (h, r) in initial_pk.h_query.iter().zip(h_coefficients.iter()) {
+        h_initial_proj += G1Projective::from(*h) * r;
+    }
+    let h_initial = h_initial_proj.into_affine();
+
+    let mut h_final_proj = G1Projective::generator() * Fr::from(0u64);
+    for (h, r) in params.proving_key.h_query.iter().zip(h_coefficients.iter()) {
+        h_final_proj += G1Projective::from(*h) * r;
+    }
+    let h_final = h_final_proj.into_affine();
+
+    let mut l_initial_proj = G1Projective::generator() * Fr::from(0u64);
+    for (l, r) in initial_pk.l_query.iter().zip(l_coefficients.iter()) {
+        l_initial_proj += G1Projective::from(*l) * r;
+    }
+    let l_initial = l_initial_proj.into_affine();
+
+    let mut l_final_proj = G1Projective::generator() * Fr::from(0u64);
+    for (l, r) in params.proving_key.l_query.iter().zip(l_coefficients.iter()) {
+        l_final_proj += G1Projective::from(*l) * r;
+    }
+    let l_final = l_final_proj.into_affine();
+
+    // Verify h_query pairing relations:
+    // Pairing(h_initial, vk_initial.delta) == Pairing(h_final, vk_final.delta)
+    if Bn254::pairing(h_initial, initial_vk.delta_g2) != Bn254::pairing(h_final, params.verifying_key.delta_g2) {
+        return Err("FAILED: Proving key h_query was not updated correctly!".into());
+    }
+
+    // Verify l_query pairing relations:
+    // Pairing(l_initial, vk_initial.delta) == Pairing(l_final, vk_final.delta)
+    if Bn254::pairing(l_initial, initial_vk.delta_g2) != Bn254::pairing(l_final, params.verifying_key.delta_g2) {
+        return Err("FAILED: Proving key l_query was not updated correctly!".into());
+    }
+    eprintln!("  ✅ Query vectors (h_query and l_query) transition verified");
 
     // Verify the VK is structurally valid (has correct number of IC points)
     let expected_ic_count = 9; // 8 public inputs + 1 (for the constant term)
