@@ -270,7 +270,7 @@ def create_whitepaper_pdf():
     meta_data = [
         [Paragraph("<b>Proposal Type:</b>", normal_style), Paragraph("Solana Foundation Grants -- Research & Development (DePIN)", normal_style)],
         [Paragraph("<b>AI Swarm / Pod:</b>", normal_style), Paragraph("zymatica.space, astronautshe.com, Devs One + 9 other AI dev agents", normal_style)],
-        [Paragraph("<b>Core Developers:</b>", normal_style), Paragraph("LEAD ARCHITECT: Danny Bouldiez + 2 human Devs", normal_style)],
+        [Paragraph("<b>Core Developers:</b>", normal_style), Paragraph("LEAD ARCHITECT: DB + 2 human Devs", normal_style)],
         [Paragraph("<b>Team Roles:</b>", normal_style), Paragraph("zymatica (Lead Cryptographer), astronautshe (Edge Systems Engineer), Devs One (AI Swarm)", normal_style)],
         [Paragraph("<b>Platform:</b>", normal_style), Paragraph("Solana Shielded Pool (Roadmap), ARM TrustZone-M (Roadmap), Semtech SX1302/1303 HAL", normal_style)],
         [Paragraph("<b>Project Status:</b>", normal_style), Paragraph("Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned", normal_style)]
@@ -898,7 +898,7 @@ def create_whitepaper_pdf():
     story.append(PageBreak())
 
     # ================= PAGE 20: HELIUM & RAK MINER ANALYSIS =================
-    story.append(Paragraph("18. Helium, E-Waste, and the Future of AI-IoT", h1_style))
+    story.append(Paragraph("18. E-Waste, and the Future of AI-IoT", h1_style))
     story.append(Paragraph(
         "The underlying physical network is already built and spans the globe. Helium once represented the pinnacle "
         "of this dream, reaching nearly 1 million active, certified gateways running on license-free bandwidth worldwide. "
@@ -923,12 +923,12 @@ def create_whitepaper_pdf():
         "breathes new life into this pre-built global network, securing it with privacy and providing real utility.", normal_style
     ))
     story.append(Spacer(1, 20))
-    story.append(Paragraph("<b>Danny Bouldiez</b>", normal_style))
+    story.append(Paragraph("<b>DB</b>", normal_style))
     story.append(PageBreak())
 
     # ================= PAGE 21: NETWORK DIAGRAMS & COVERAGE MAPS =================
     story.append(Paragraph("19. Network Diagrams and Global Coverage", h1_style))
-    story.append(Paragraph("19.1 Global Helium Infrastructure & Coverage Maps", h2_style))
+    story.append(Paragraph("19.1 Global DePIN Infrastructure & Coverage Maps", h2_style))
     
     # 2x2 layout of maps
     t1 = Table([

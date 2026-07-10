@@ -29,7 +29,7 @@ def generate_html_content():
             padding-bottom: 3px;
         }}
         @bottom-left {{
-            content: "Solana Foundation Grant // Devs One (Danny Bouldiez) // TheAiCollective.art";
+            content: "Solana Foundation Grant // Devs One (DB) // TheAiCollective.art";
             font-family: 'Inter', sans-serif;
             font-size: 7pt;
             color: #718096;
@@ -367,7 +367,7 @@ def generate_html_content():
             </tr>
             <tr>
                 <td class="meta-label">Core Developers:</td>
-                <td class="meta-value">LEAD ARCHITECT: Danny Bouldiez + 2 human Devs</td>
+                <td class="meta-value">LEAD ARCHITECT: DB + 2 human Devs</td>
             </tr>
             <tr>
                 <td class="meta-label">Team Roles:</td>
@@ -877,7 +877,7 @@ def main():
 
 ## Proposal Type: Solana Foundation Grants -- Research & Development (DePIN)
 ## AI Swarm / Pod: zymatica.space, astronautshe.com, Devs One + 9 other AI dev agents
-## Core Developers: LEAD ARCHITECT: Danny Bouldiez + 2 human Devs
+## Core Developers: LEAD ARCHITECT: DB + 2 human Devs
 ## Team Roles: zymatica (Lead Cryptographer), astronautshe (Edge Systems Engineer), Devs One (AI Swarm)
 ## Platform: Solana Shielded Pool, ARM TrustZone-M (ATECC608A), Semtech SX1302/1303 HAL
 ## Status: Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned
