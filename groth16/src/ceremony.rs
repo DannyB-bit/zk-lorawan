@@ -433,13 +433,13 @@ pub fn verify(input_path: &str) -> Result<(), String> {
         if i == 0 {
             // Genesis contribution — deserialize initial delta
             let delta_g1_bytes = hex::decode(&contrib.delta_g1)
-                .map_err(|_| format!("Invalid delta_g1 hex at contribution #0"))?;
+                .map_err(|_| "Invalid delta_g1 hex at contribution #0".to_string())?;
             let _delta_g1 = G1Affine::deserialize_compressed(&delta_g1_bytes[..])
-                .map_err(|_| format!("Invalid delta_g1 G1 point at contribution #0"))?;
+                .map_err(|_| "Invalid delta_g1 G1 point at contribution #0".to_string())?;
             let delta_g2_bytes = hex::decode(&contrib.delta_g2)
-                .map_err(|_| format!("Invalid delta_g2 hex at contribution #0"))?;
+                .map_err(|_| "Invalid delta_g2 hex at contribution #0".to_string())?;
             let _delta_g2 = G2Affine::deserialize_compressed(&delta_g2_bytes[..])
-                .map_err(|_| format!("Invalid delta_g2 G2 point at contribution #0"))?;
+                .map_err(|_| "Invalid delta_g2 G2 point at contribution #0".to_string())?;
 
             eprintln!("  ✅ Contribution #0: {} (genesis)", contrib.contributor);
             continue;
