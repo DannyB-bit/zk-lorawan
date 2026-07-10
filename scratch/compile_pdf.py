@@ -908,25 +908,14 @@ def create_whitepaper_pdf():
     
     # 2x2 layout of maps
     t1 = Table([
-        [Image("images/helium_global_map.jpg", width=225, height=130),
-         Image("images/helium_us_map.jpg", width=225, height=130)]
+        [Image("images/helium_explorer.png", width=225, height=130),
+         Image("images/depin_global_coverage_map_4k.png", width=225, height=130)]
     ])
     t1.setStyle(TableStyle([
         ('ALIGN', (0,0), (-1,-1), 'CENTER'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
     ]))
     story.append(t1)
-
-    t2 = Table([
-        [Image("images/helium_explorer.png", width=225, height=130),
-         Image("images/depin_global_coverage_map_4k.png", width=225, height=130)]
-    ])
-    t2.setStyle(TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-    ]))
-    story.append(t2)
     story.append(PageBreak())
 
     # ================= PAGE 21: RANGE TEST & MESH ARCHITECTURE =================
