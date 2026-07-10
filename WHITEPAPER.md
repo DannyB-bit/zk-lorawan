@@ -240,16 +240,7 @@ Using the ZK-LoRaWAN protocol, this identical physical link is secured and encry
 
 ---
 
-# 13. Soundness Bug & Decoupled Resilience
-In June 2026, Zcash (ZEC) experienced a major incident when developers disclosed a critical, dormant soundness vulnerability in the Orchard shielded pool. The flaw (discovered via AI-assisted analysis) existed in the cryptographic circuit since Orchard's activation in May 2022. Had it been exploited, it would have allowed an attacker to mint unlimited, undetectable ZEC out of thin air, as the zero-knowledge proof system would have verified the fraudulent transactions as valid without requiring on-chain signatures.
-
-ZK-LoRaWAN is designed to be immune to such catastrophic failures by enforcing a **Decoupled Layering (Separation of Concerns)** architecture. ZK-LoRaWAN operates strictly as a routing and identity verification layer, not a monetary consensus layer. ZK-LoRaWAN does not mint, print, or manage the supply of SOL. All payments are settled directly on the Solana blockchain. Even if an attacker exploited a soundness bug in the ZK-LoRaWAN circuit, the worst they could do is forge a proof of "legitimate node identity" to get a packet routed for free. They cannot counterfeit SOL because the Solana L1 blockchain verifies the actual coin transfer.
-
-Furthermore, we implement **Pre-Circuit Range Filtering** at the gateway application layer, session-locked symmetric HMACs to reduce active ZK attack surfaces, and run all circuits through Circomspect and Veridise static analysis tools to prevent under-constrained variables from reaching production.
-
----
-
-# 14. Cryptographic Audit & Vuln Mitigation
+# 13. Cryptographic Audit & Vuln Mitigation
 To achieve high-assurance, production-grade security, we audit the underlying mathematics, curves, and hardware implementations of our zero-knowledge systems:
 1. **Trusted Setup (Groth16):** If the phase-2 'toxic waste' (tau) is not destroyed, an attacker can forge proofs. Mitigation: We conduct a public multi-party computation (MPC) ceremony. The Solana verifier checks on-chain that the proof matches the compiled ceremony hash.
 2. **Curve Security (BN254):** NFS advances reduce BN254's security to ~100 bits. Mitigation: The program natively processes 128-byte BN254 compressed proofs on-chain for production-grade security, verifying pairing check algebra directly over the BN254 prime field.
@@ -258,7 +249,7 @@ To achieve high-assurance, production-grade security, we audit the underlying ma
 
 ---
 
-# 15. Project Roadmap & Future Work
+# 14. Project Roadmap & Future Work
 The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructure. Below is the phased development roadmap:
 
 ### Short-Term (v2.0) -- Solana Testnet Integration
@@ -274,20 +265,20 @@ The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructur
 
 ---
 
-# 16. Appendix: Architectural Q&A
+# 15. Appendix: Architectural Q&A
 
-### 16.1 Offline Sync & Bandwidth Management (Push vs. Pull)
+### 15.1 Offline Sync & Bandwidth Management (Push vs. Pull)
 In off-grid and bandwidth-constrained IoT scenarios, downloading or syncing block data locally is not feasible. ZK-LoRaWAN bypasses this by utilizing a push-based gateway-egress architecture: end-user nodes operate completely offline, generating ZK proofs locally and transmitting a compact routing token over the LoRa RF link, while physical gateways act as the mesh egress points equipped with backhaul connectivity (LTE, Starlink, or Wi-Fi).
 
-### 16.2 On-Chain Project Funding & Fee Distribution
+### 15.2 On-Chain Project Funding & Fee Distribution
 To ensure sustainable and decentralized maintenance of the routing infrastructure, a transparent developer fee is implemented: 98% is allocated to the gateway relay node, and 2% is sent directly to the project's developer/maintenance multisig treasury address. Gateway routing daemons validate incoming payments and automatically reject packets if the corresponding transaction does not contain the required split.
 
-### 16.3 Offline Edge AI Diagnostics & Energy Management
+### 15.3 Offline Edge AI Diagnostics & Energy Management
 Running intelligent nodes on solar power requires strict computational budget segregation. The local LLM acts strictly as an asynchronous system autopilot, evaluating local system logs and telemetry against its pre-trained runbooks to generate precise recovery commands (such as safe GPIO power-cycling or duty-cycle adjustments) without internet. The diagnostic LLM remains idle (0% CPU/RAM footprint) during standard operations, and is completely disabled if the local battery bank falls below 30% capacity.
 
 ---
 
-# 17. Author's Notes
+# 16. Author's Notes
 
 To me, this project is a pioneering bridge between physical IoT hardware and decentralized trust (DePIN).
 
@@ -295,24 +286,24 @@ If we break down what ZK-LoRaWAN is right now, it is a solution to a historicall
 
 Here is what the project is to me, explained through its core layers:
 
-### 17.1 A Private Rollup for the Physical World
+### 16.1 A Private Rollup for the Physical World
 Constrained devices (like ESP32 nodes with ATECC608A chips) communicate over LoRaWAN, which limits payloads to between 51 and 222 bytes. Standard ZK proofs are too large to fit. This project uses LLD-AC Proof Compression and XOR-FEC error correction to pack a complete Groth16 cryptographic proof and metadata into standard radio frames. It is a mini private rollup that compresses physical device state so it can traverse constrained networks and settle on Solana.
 
-### 17.2 A Cryptographic Chain of Custody
+### 16.2 A Cryptographic Chain of Custody
 With the newly completed trusted setup ceremony, the system is no longer a sandbox. It is a real cryptographic setup:
 * **The Device:** Proves in zero-knowledge that it knows a private hardware key and runs whitelisted firmware.
 * **The Gateway:** Semantic gates packets, batches them, and submits them to Solana.
 * **Solana:** Re-calculates and verifies the Groth16 proof using big-endian precompiled bilinear pairings on the BN254 curve, checking the whitelisted registry and updating nullifiers to prevent replay attacks.
 * **The Ceremony:** Ensures that the parameters used for these proofs cannot be forged by any single party (including the creator of the code).
 
-### 17.3 The Blueprint for Secure DePIN
+### 16.3 The Blueprint for Secure DePIN
 Many Decentralized Physical Infrastructure Networks (DePIN) suffer from sybil attacks (fake nodes simulating data). This project solves that at the hardware layer. By verifying hardware-backed signatures via ZK, it ensures that every packet on Solana came from a real, whitelisted secure element without exposing the device's public or private keys to the open ledger.
 
 It is a complete, mathematically sound, end-to-end slice of Applied Cryptography that proves ZK-IoT on high-performance blockchains is not just possible, but highly practical.
 
 ---
 
-# 18. E-Waste, and the Future of AI-IoT
+# 17. E-Waste, and the Future of AI-IoT
 
 The underlying physical network is already built and spans the globe. Helium once represented the pinnacle of this dream, reaching nearly 1 million active, certified gateways running on license-free bandwidth worldwide. Today, however, the economic model has collapsed. Operators find it unprofitable to run nodes, and proposed changes like **HIP 149** (which eliminates Proof of Coverage entirely) threaten to turn this massive, globally-coordinated deployment of physical hardware into absolute e-waste. 
 
@@ -322,11 +313,11 @@ ZK-LoRaWAN changes this paradigm. By running our edge-proving and routing daemon
 
 ---
 
-# 19. Network Diagrams and Global Coverage
+# 18. Network Diagrams and Global Coverage
 
 Below are the visualizations of the physical networks, real-world range capabilities, and the high-fidelity 4K architectures designed for this deployment:
 
-### 19.1 Global DePIN Infrastructure & Coverage Maps
+### 18.1 Global DePIN Infrastructure & Coverage Maps
 The following maps illustrate the dense global distribution of certified gateways in North America and Europe:
 
 | Global Hotspot Distribution | US Hotspot Density |
@@ -337,12 +328,12 @@ The following maps illustrate the dense global distribution of certified gateway
 | :---: | :---: |
 | ![Helium Explorer](images/helium_explorer.png) | ![4K Global Coverage Map](images/depin_global_coverage_map_4k.png) |
 
-### 19.2 The Power of LoRaWAN (131.6 km Link)
+### 18.2 The Power of LoRaWAN (131.6 km Link)
 A real-world test crossing Lake Ontario demonstrated a direct, un-amplified 131.6 km line-of-sight LoRaWAN link on just 5 Watts of power:
 
 ![LoRaWAN Range Test](images/lorawan_power_range.jpg)
 
-### 19.3 ZK-LoRaWAN AI-IoT Mesh Architecture
+### 18.3 ZK-LoRaWAN AI-IoT Mesh Architecture
 Our 4K high-fidelity diagram details how AI agents privately orchestrate data verification and Solana escrow settlements using ATECC608A secure elements:
 
 ![4K AI-IoT Mesh Diagram](images/lorawan_ai_agent_mesh_4k.png)

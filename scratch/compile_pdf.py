@@ -738,32 +738,8 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 15: SOUNDNESS BUG & RESILIENCE =================
-    story.append(Paragraph("13. Soundness Bug & Decoupled Resilience", h1_style))
-    story.append(Paragraph(
-        "In June 2026, Zcash (ZEC) experienced a major incident when developers disclosed a critical, dormant soundness "
-        "vulnerability in the Orchard shielded pool. The flaw (discovered via AI-assisted analysis) existed in the cryptographic "
-        "circuit since Orchard's activation in May 2022. Had it been exploited, it would have allowed an attacker to "
-        "mint unlimited, undetectable ZEC out of thin air, as the zero-knowledge proof system would have verified the "
-        "fraudulent transactions as valid without requiring on-chain signatures.", normal_style
-    ))
-    story.append(Paragraph(
-        "ZK-LoRaWAN is designed to be immune to such catastrophic failures by enforcing a <strong>Decoupled Layering "
-        "(Separation of Concerns)</strong> architecture. ZK-LoRaWAN operates strictly as a routing and identity verification "
-        "layer, not a monetary consensus layer. ZK-LoRaWAN does not mint, print, or manage the supply of SOL. All "
-        "payments are settled directly on the Solana blockchain. Even if an attacker exploited a soundness bug in the "
-        "ZK-LoRaWAN circuit, the worst they could do is forge a proof of 'legitimate node identity' to get a packet routed "
-        "for free. They cannot counterfeit SOL because the Solana L1 blockchain verifies the actual coin transfer.", normal_style
-    ))
-    story.append(Paragraph(
-        "Furthermore, we implement <strong>Pre-Circuit Range Filtering</strong> at the gateway application layer, "
-        "session-locked symmetric HMACs to reduce active ZK attack surfaces, and run all circuits through Circomspect "
-        "and Veridise static analysis tools to prevent under-constrained variables from reaching production.", normal_style
-    ))
-    story.append(PageBreak())
-
-    # ================= PAGE 16: CRYPTOGRAPHIC AUDIT =================
-    story.append(Paragraph("14. Cryptographic Audit & Vuln Mitigation", h1_style))
+    # ================= PAGE 15: CRYPTOGRAPHIC AUDIT =================
+    story.append(Paragraph("13. Cryptographic Audit & Vuln Mitigation", h1_style))
     story.append(Paragraph(
         "To achieve high-assurance, production-grade security, we audit the underlying mathematics, curves, and hardware "
         "implementations of our zero-knowledge systems:", normal_style
@@ -790,8 +766,8 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 17: PROJECT ROADMAP =================
-    story.append(Paragraph("15. Project Roadmap & Future Work", h1_style))
+    # ================= PAGE 16: PROJECT ROADMAP =================
+    story.append(Paragraph("14. Project Roadmap & Future Work", h1_style))
     story.append(Paragraph(
         "The ZK-LoRaWAN project bridges digital privacy with physical DePIN infrastructure. Below is the phased "
         "development roadmap:", normal_style
@@ -829,23 +805,23 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 18: APPENDIX =================
-    story.append(Paragraph("16. Appendix: Architectural Q&A", h1_style))
-    story.append(Paragraph("16.1 Offline Sync & Bandwidth Management (Push vs. Pull)", h2_style))
+    # ================= PAGE 17: APPENDIX =================
+    story.append(Paragraph("15. Appendix: Architectural Q&A", h1_style))
+    story.append(Paragraph("15.1 Offline Sync & Bandwidth Management (Push vs. Pull)", h2_style))
     story.append(Paragraph(
         "In off-grid and bandwidth-constrained IoT scenarios, downloading or syncing block data locally is not feasible. "
         "ZK-LoRaWAN bypasses this by utilizing a push-based gateway-egress architecture: end-user nodes operate completely "
         "offline, generating ZK proofs locally and transmitting a compact routing token over the LoRa RF link, while "
         "physical gateways act as the mesh egress points equipped with backhaul connectivity (LTE, Starlink, or Wi-Fi).", normal_style
     ))
-    story.append(Paragraph("16.2 On-Chain Project Funding & Fee Distribution", h2_style))
+    story.append(Paragraph("15.2 On-Chain Project Funding & Fee Distribution", h2_style))
     story.append(Paragraph(
         "To ensure sustainable and decentralized maintenance of the routing infrastructure, a transparent developer "
         "fee is implemented: 98% is allocated to the gateway relay node, and 2% is sent directly to the project's "
         "developer/maintenance multisig treasury address. Gateway routing daemons validate incoming payments and "
         "automatically reject packets if the corresponding transaction does not contain the required split.", normal_style
     ))
-    story.append(Paragraph("16.3 Offline Edge AI Diagnostics & Energy Management", h2_style))
+    story.append(Paragraph("15.3 Offline Edge AI Diagnostics & Energy Management", h2_style))
     story.append(Paragraph(
         "Running intelligent nodes on solar power requires strict computational budget segregation. The local LLM "
         "acts strictly as an asynchronous system autopilot, evaluating local system logs and telemetry against its "
@@ -855,8 +831,8 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 19: AUTHOR'S NOTES =================
-    story.append(Paragraph("17. Author's Notes", h1_style))
+    # ================= PAGE 18: AUTHOR'S NOTES =================
+    story.append(Paragraph("16. Author's Notes", h1_style))
     story.append(Paragraph(
         "To me, this project is a pioneering bridge between physical IoT hardware and decentralized trust (DePIN).", normal_style
     ))
@@ -868,7 +844,7 @@ def create_whitepaper_pdf():
     ))
     story.append(Paragraph("Here is what the project is to me, explained through its core layers:", normal_style))
     
-    story.append(Paragraph("17.1 A Private Rollup for the Physical World", h2_style))
+    story.append(Paragraph("16.1 A Private Rollup for the Physical World", h2_style))
     story.append(Paragraph(
         "Constrained devices (like ESP32 nodes with ATECC608A chips) communicate over LoRaWAN, which limits payloads "
         "to between 51 and 222 bytes. Standard ZK proofs are too large to fit. This project uses LLD-AC Proof Compression "
@@ -877,7 +853,7 @@ def create_whitepaper_pdf():
         "networks and settle on Solana.", normal_style
     ))
     
-    story.append(Paragraph("17.2 A Cryptographic Chain of Custody", h2_style))
+    story.append(Paragraph("16.2 A Cryptographic Chain of Custody", h2_style))
     story.append(Paragraph(
         "With the newly completed trusted setup ceremony, the system is no longer a sandbox. It is a real cryptographic setup:<br/>"
         "• <b>The Device:</b> Proves in zero-knowledge that it knows a private hardware key and runs whitelisted firmware.<br/>"
@@ -886,7 +862,7 @@ def create_whitepaper_pdf():
         "• <b>The Ceremony:</b> Ensures that the parameters used for these proofs cannot be forged by any single party (including the creator of the code).", normal_style
     ))
 
-    story.append(Paragraph("17.3 The Blueprint for Secure DePIN", h2_style))
+    story.append(Paragraph("16.3 The Blueprint for Secure DePIN", h2_style))
     story.append(Paragraph(
         "Many Decentralized Physical Infrastructure Networks (DePIN) suffer from sybil attacks (fake nodes simulating data). "
         "This project solves that at the hardware layer. By verifying hardware-backed signatures via ZK, it ensures that "
@@ -897,8 +873,8 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 20: HELIUM & RAK MINER ANALYSIS =================
-    story.append(Paragraph("18. E-Waste, and the Future of AI-IoT", h1_style))
+    # ================= PAGE 19: E-WASTE ANALYSIS =================
+    story.append(Paragraph("17. E-Waste, and the Future of AI-IoT", h1_style))
     story.append(Paragraph(
         "The underlying physical network is already built and spans the globe. Helium once represented the pinnacle "
         "of this dream, reaching nearly 1 million active, certified gateways running on license-free bandwidth worldwide. "
@@ -926,9 +902,9 @@ def create_whitepaper_pdf():
     story.append(Paragraph("<b>DB</b>", normal_style))
     story.append(PageBreak())
 
-    # ================= PAGE 21: NETWORK DIAGRAMS & COVERAGE MAPS =================
-    story.append(Paragraph("19. Network Diagrams and Global Coverage", h1_style))
-    story.append(Paragraph("19.1 Global DePIN Infrastructure & Coverage Maps", h2_style))
+    # ================= PAGE 20: NETWORK DIAGRAMS & COVERAGE MAPS =================
+    story.append(Paragraph("18. Network Diagrams and Global Coverage", h1_style))
+    story.append(Paragraph("18.1 Global DePIN Infrastructure & Coverage Maps", h2_style))
     
     # 2x2 layout of maps
     t1 = Table([
@@ -953,16 +929,16 @@ def create_whitepaper_pdf():
     story.append(t2)
     story.append(PageBreak())
 
-    # ================= PAGE 22: RANGE TEST & MESH ARCHITECTURE =================
-    story.append(Paragraph("19.2 The Power of LoRaWAN (131.6 km Link)", h2_style))
+    # ================= PAGE 21: RANGE TEST & MESH ARCHITECTURE =================
+    story.append(Paragraph("18.2 The Power of LoRaWAN (131.6 km Link)", h2_style))
     story.append(Image("images/lorawan_power_range.jpg", width=460, height=270))
     story.append(Spacer(1, 15))
     
-    story.append(Paragraph("19.3 ZK-LoRaWAN AI-IoT Mesh Architecture", h2_style))
+    story.append(Paragraph("18.3 ZK-LoRaWAN AI-IoT Mesh Architecture", h2_style))
     story.append(Image("images/lorawan_ai_agent_mesh_4k.png", width=460, height=240))
     story.append(PageBreak())
 
-    # ================= PAGE 23: END COVER =================
+    # ================= PAGE 22: END COVER =================
     # Spacers to push content down or let canvas draw the background
     story.append(Spacer(1, 400))
     story.append(PageBreak())
