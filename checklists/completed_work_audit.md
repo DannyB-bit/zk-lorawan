@@ -122,3 +122,8 @@ An Anchor-based smart contract deployed on Solana to register gateways, whitelis
 - [x] **Dynamic Witness Security:** Enforces on-chain that public inputs are bound to the gateway's public key and whitelisted firmware hashes.
 - [x] **Chunked Proof Upload Engine:** Breaks up large Groth16 proofs into 3 smaller transaction writes to stay within the 1232-byte Solana MTU limit.
 - [x] **Replay Attack Nullifiers:** Creates persistent nullifier accounts on-chain to block double-spend submissions.
+
+### Deployment Verification Info
+* **Program ID:** `4HRP2eV8qtYW54ozQmnGDjF7emwb8MvqFcF89UgSM6iC` (Live and executable on Solana Devnet)
+* **Deployment Signature:** `57QqbvmR5TuqA9Ckzq1pCK1asedpKwRtrhb9fzoVdfrZYkUnVxu56nYfTLDZcGHPe4MwFM3W6KmHMYie4nQ47iv9`
+* **Account Owner:** `BPFLoaderUpgradeab1e11111111111111111111111` (Solana BPFLoaderUpgradeable Program)
