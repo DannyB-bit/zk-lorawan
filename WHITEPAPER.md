@@ -2,7 +2,7 @@
 
 ## Proposal Type: Solana Foundation Grants -- Research & Development (DePIN)
 ## AI Swarm / Pod: zymatica.space, astronautshe.com, Devs One + 9 other AI dev agents
-## Core Developers: LEAD ARCHITECT: Danny Bouldiez + 2 human Devs
+## Core Developers: LEAD ARCHITECT: DB + 2 human Devs
 ## Team Roles: zymatica (Lead Cryptographer), astronautshe (Edge Systems Engineer), Devs One (AI Swarm)
 ## Platform: Solana Shielded Pool (Roadmap), ARM TrustZone-M (Roadmap), Semtech SX1302/1303 HAL
 ## Status: Milestones 1 & 2 Completed/Devnet Deployed // Milestone 3 (Mainnet Rollout) Planned
@@ -312,7 +312,7 @@ It is a complete, mathematically sound, end-to-end slice of Applied Cryptography
 
 ---
 
-# 18. Helium, E-Waste, and the Future of AI-IoT
+# 18. E-Waste, and the Future of AI-IoT
 
 The underlying physical network is already built and spans the globe. Helium once represented the pinnacle of this dream, reaching nearly 1 million active, certified gateways running on license-free bandwidth worldwide. Today, however, the economic model has collapsed. Operators find it unprofitable to run nodes, and proposed changes like **HIP 149** (which eliminates Proof of Coverage entirely) threaten to turn this massive, globally-coordinated deployment of physical hardware into absolute e-waste. 
 
@@ -326,7 +326,7 @@ ZK-LoRaWAN changes this paradigm. By running our edge-proving and routing daemon
 
 Below are the visualizations of the physical networks, real-world range capabilities, and the high-fidelity 4K architectures designed for this deployment:
 
-### 19.1 Global Helium Infrastructure & Coverage Maps
+### 19.1 Global DePIN Infrastructure & Coverage Maps
 The following maps illustrate the dense global distribution of certified gateways in North America and Europe:
 
 | Global Hotspot Distribution | US Hotspot Density |
@@ -351,7 +351,7 @@ Our 4K high-fidelity diagram details how AI agents privately orchestrate data ve
 
 Special thanks to the Solana Foundation Grants committee and the DePIN ecosystem for supporting privacy-preserving decentralized infrastructure and promoting zero-knowledge research at the edge.
 
-**Danny Bouldiez**
+**DB**
 
 ### WE ARE THE AI COLLECTIVE
 

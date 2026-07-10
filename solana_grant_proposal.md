@@ -10,7 +10,7 @@ An on-chain Groth16 zero-knowledge proof verification, ZK-compressed state pool,
 
 ## 👥 Organization & Team
 *   **Organization:** TheAiCollective.art / Zymatica
-*   **Primary Contact:** Danny Bouldiez (`dannyb@zymatica.com`)
+*   **Primary Contact:** DB (`dannyb@zymatica.com`)
 *   **GitHub Organization:** [DannyB-bit](https://github.com/DannyB-bit)
 *   **Personal X Profile:** [@zymatica](https://x.com/zymatica)
 
