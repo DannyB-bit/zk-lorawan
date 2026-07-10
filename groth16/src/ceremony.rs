@@ -421,6 +421,12 @@ pub fn verify(input_path: &str) -> Result<(), String> {
         std::fs::read(input_path).map_err(|e| format!("Failed to read {}: {}", input_path, e))?;
     let params = CeremonyParams::from_bytes(&data)?;
 
+    if params.contributions.len() < 2 {
+        return Err(
+            "FAILED: Ceremony must have at least one non-genesis contribution to be valid!".into(),
+        );
+    }
+
     eprintln!(
         "  Loaded ceremony params: {} contributions",
         params.contributions.len()
