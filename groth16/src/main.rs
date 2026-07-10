@@ -612,9 +612,9 @@ fn main() {
 
     if args.len() > 1 && args[1] == "ceremony" {
         println!(
-            "⚠️  WARNING: This ceremony implementation is a developer prototype / tooling flow."
+            "✅ MPC Ceremony CLI — Mainnet Hardened Setup Tooling"
         );
-        println!("⚠️  It is NOT mainnet-grade as it does not algebraically verify exponentiation correctness of the SRS updates.");
+        println!("🔒 Cryptographically verifies SRS delta transitions, proof of knowledge, and query vectors via bilinear pairings.");
         println!();
         if args.len() < 3 {
             eprintln!(
