@@ -320,10 +320,6 @@ Below are the visualizations of the physical networks, real-world range capabili
 ### 18.1 Global DePIN Infrastructure & Coverage Maps
 The following maps illustrate the dense global distribution of certified gateways in North America and Europe:
 
-| Global Hotspot Distribution | US Hotspot Density |
-| :---: | :---: |
-| ![Helium Global Map](images/helium_global_map.jpg) | ![Helium US Map](images/helium_us_map.jpg) |
-
 | Explorer View | 4K High-Quality Density Render |
 | :---: | :---: |
 | ![Helium Explorer](images/helium_explorer.png) | ![4K Global Coverage Map](images/depin_global_coverage_map_4k.png) |
