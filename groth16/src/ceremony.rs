@@ -8,7 +8,7 @@
 // ============================================================================
 
 use ark_bn254::{Bn254, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
-use ark_ec::{CurveGroup, Group};
+use ark_ec::{AffineRepr, CurveGroup, Group};
 use ark_ff::{Field, UniformRand};
 use ark_groth16::{ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
@@ -32,6 +32,8 @@ pub struct ContributionRecord {
     pub contribution_hash: String,
     /// [s]₁ serialized — proof that contributor knew their secret s
     pub proof_of_knowledge: String,
+    pub delta_g1: String,
+    pub delta_g2: String,
 }
 
 /// Full ceremony transcript, written to ceremony_transcript.json.
@@ -213,12 +215,24 @@ pub fn initialize(output_path: &str) -> Result<(), String> {
     let chain_hash = hash_params(&pk, &vk);
     let timestamp = chrono::Utc::now().to_rfc3339();
 
+    let mut initial_delta_g1_bytes = Vec::new();
+    pk.delta_g1
+        .serialize_compressed(&mut initial_delta_g1_bytes)
+        .unwrap();
+
+    let mut initial_delta_g2_bytes = Vec::new();
+    vk.delta_g2
+        .serialize_compressed(&mut initial_delta_g2_bytes)
+        .unwrap();
+
     let initial_record = ContributionRecord {
         index: 0,
         contributor: "coordinator".to_string(),
         timestamp,
         contribution_hash: hex::encode(chain_hash),
         proof_of_knowledge: "genesis".to_string(),
+        delta_g1: hex::encode(&initial_delta_g1_bytes),
+        delta_g2: hex::encode(&initial_delta_g2_bytes),
     };
 
     let params = CeremonyParams {
@@ -345,12 +359,28 @@ pub fn contribute(
     let timestamp = chrono::Utc::now().to_rfc3339();
     let new_index = params.contribution_index + 1;
 
+    let mut new_delta_g1_bytes = Vec::new();
+    params
+        .proving_key
+        .delta_g1
+        .serialize_compressed(&mut new_delta_g1_bytes)
+        .unwrap();
+
+    let mut new_delta_g2_bytes = Vec::new();
+    params
+        .verifying_key
+        .delta_g2
+        .serialize_compressed(&mut new_delta_g2_bytes)
+        .unwrap();
+
     let record = ContributionRecord {
         index: new_index,
         contributor: contributor_name.to_string(),
         timestamp,
         contribution_hash: hex::encode(new_params_hash),
         proof_of_knowledge: hex::encode(&pok_bytes),
+        delta_g1: hex::encode(&new_delta_g1_bytes),
+        delta_g2: hex::encode(&new_delta_g2_bytes),
     };
 
     params.contributions.push(record);
@@ -396,10 +426,21 @@ pub fn verify(input_path: &str) -> Result<(), String> {
     );
     eprintln!();
 
-    // Verify each contribution has a valid proof of knowledge
+    use ark_ec::pairing::Pairing;
+
+    // Verify each contribution transition and proof of knowledge
     for (i, contrib) in params.contributions.iter().enumerate() {
         if i == 0 {
-            // Genesis contribution — no proof of knowledge needed
+            // Genesis contribution — deserialize initial delta
+            let delta_g1_bytes = hex::decode(&contrib.delta_g1)
+                .map_err(|_| format!("Invalid delta_g1 hex at contribution #0"))?;
+            let _delta_g1 = G1Affine::deserialize_compressed(&delta_g1_bytes[..])
+                .map_err(|_| format!("Invalid delta_g1 G1 point at contribution #0"))?;
+            let delta_g2_bytes = hex::decode(&contrib.delta_g2)
+                .map_err(|_| format!("Invalid delta_g2 hex at contribution #0"))?;
+            let _delta_g2 = G2Affine::deserialize_compressed(&delta_g2_bytes[..])
+                .map_err(|_| format!("Invalid delta_g2 G2 point at contribution #0"))?;
+
             eprintln!("  ✅ Contribution #0: {} (genesis)", contrib.contributor);
             continue;
         }
@@ -407,11 +448,54 @@ pub fn verify(input_path: &str) -> Result<(), String> {
         // Verify proof of knowledge is a valid G1 point
         let pok_bytes = hex::decode(&contrib.proof_of_knowledge)
             .map_err(|_| format!("Invalid PoK hex at contribution #{}", i))?;
-        let _pok = G1Affine::deserialize_compressed(&pok_bytes[..])
+        let pok = G1Affine::deserialize_compressed(&pok_bytes[..])
             .map_err(|_| format!("Invalid PoK G1 point at contribution #{}", i))?;
 
+        // Deserialize previous contribution delta
+        let prev_contrib = &params.contributions[i - 1];
+        let prev_delta_g1_bytes = hex::decode(&prev_contrib.delta_g1)
+            .map_err(|_| format!("Invalid delta_g1 hex at contribution #{}", i - 1))?;
+        let prev_delta_g1 = G1Affine::deserialize_compressed(&prev_delta_g1_bytes[..])
+            .map_err(|_| format!("Invalid delta_g1 G1 point at contribution #{}", i - 1))?;
+        let prev_delta_g2_bytes = hex::decode(&prev_contrib.delta_g2)
+            .map_err(|_| format!("Invalid delta_g2 hex at contribution #{}", i - 1))?;
+        let prev_delta_g2 = G2Affine::deserialize_compressed(&prev_delta_g2_bytes[..])
+            .map_err(|_| format!("Invalid delta_g2 G2 point at contribution #{}", i - 1))?;
+
+        // Deserialize current contribution delta
+        let curr_delta_g1_bytes = hex::decode(&contrib.delta_g1)
+            .map_err(|_| format!("Invalid delta_g1 hex at contribution #{}", i))?;
+        let curr_delta_g1 = G1Affine::deserialize_compressed(&curr_delta_g1_bytes[..])
+            .map_err(|_| format!("Invalid delta_g1 G1 point at contribution #{}", i))?;
+        let curr_delta_g2_bytes = hex::decode(&contrib.delta_g2)
+            .map_err(|_| format!("Invalid delta_g2 hex at contribution #{}", i))?;
+        let curr_delta_g2 = G2Affine::deserialize_compressed(&curr_delta_g2_bytes[..])
+            .map_err(|_| format!("Invalid delta_g2 G2 point at contribution #{}", i))?;
+
+        // Bilinear pairing check 1: update consistency between G1 and G2:
+        // Pairing(curr_delta_g1, prev_delta_g2) == Pairing(prev_delta_g1, curr_delta_g2)
+        let pair1_left = Bn254::pairing(curr_delta_g1, prev_delta_g2);
+        let pair1_right = Bn254::pairing(prev_delta_g1, curr_delta_g2);
+        if pair1_left != pair1_right {
+            return Err(format!(
+                "FAILED: delta_g1 and delta_g2 update is inconsistent at contribution #{}",
+                i
+            ));
+        }
+
+        // Bilinear pairing check 2: PoK matches the updated parameters:
+        // Pairing(pok, prev_delta_g2) == Pairing(G1::generator(), curr_delta_g2)
+        let pair2_left = Bn254::pairing(pok, prev_delta_g2);
+        let pair2_right = Bn254::pairing(G1Affine::generator(), curr_delta_g2);
+        if pair2_left != pair2_right {
+            return Err(format!(
+                "FAILED: Proof of knowledge does not match updated delta at contribution #{}",
+                i
+            ));
+        }
+
         eprintln!(
-            "  ✅ Contribution #{}: {} — valid PoK",
+            "  ✅ Contribution #{}: {} — valid PoK & pairing transitions verified",
             i, contrib.contributor
         );
     }
