@@ -855,7 +855,114 @@ def create_whitepaper_pdf():
     ))
     story.append(PageBreak())
 
-    # ================= PAGE 19: END COVER =================
+    # ================= PAGE 19: AUTHOR'S NOTES =================
+    story.append(Paragraph("17. Author's Notes", h1_style))
+    story.append(Paragraph(
+        "To me, this project is a pioneering bridge between physical IoT hardware and decentralized trust (DePIN).", normal_style
+    ))
+    story.append(Paragraph(
+        "If we break down what ZK-LoRaWAN is right now, it is a solution to a historically difficult problem: "
+        "<b>How do you verify that physical hardware (IoT devices) is running authentic code and sending untampered data "
+        "over long-range, low-bandwidth networks, without compromising the privacy of the device or the scalability "
+        "of the blockchain?</b>", normal_style
+    ))
+    story.append(Paragraph("Here is what the project is to me, explained through its core layers:", normal_style))
+    
+    story.append(Paragraph("17.1 A Private Rollup for the Physical World", h2_style))
+    story.append(Paragraph(
+        "Constrained devices (like ESP32 nodes with ATECC608A chips) communicate over LoRaWAN, which limits payloads "
+        "to between 51 and 222 bytes. Standard ZK proofs are too large to fit. This project uses LLD-AC Proof Compression "
+        "and XOR-FEC error correction to pack a complete Groth16 cryptographic proof and metadata into standard radio "
+        "frames. It is a mini private rollup that compresses physical device state so it can traverse constrained "
+        "networks and settle on Solana.", normal_style
+    ))
+    
+    story.append(Paragraph("17.2 A Cryptographic Chain of Custody", h2_style))
+    story.append(Paragraph(
+        "With the newly completed trusted setup ceremony, the system is no longer a sandbox. It is a real cryptographic setup:<br/>"
+        "• <b>The Device:</b> Proves in zero-knowledge that it knows a private hardware key and runs whitelisted firmware.<br/>"
+        "• <b>The Gateway:</b> Semantic gates packets, batches them, and submits them to Solana.<br/>"
+        "• <b>Solana:</b> Re-calculates and verifies the Groth16 proof using big-endian precompiled pairings on the BN254 curve, checking the whitelisted registry and updating nullifiers to prevent replay attacks.<br/>"
+        "• <b>The Ceremony:</b> Ensures that the parameters used for these proofs cannot be forged by any single party (including the creator of the code).", normal_style
+    ))
+
+    story.append(Paragraph("17.3 The Blueprint for Secure DePIN", h2_style))
+    story.append(Paragraph(
+        "Many Decentralized Physical Infrastructure Networks (DePIN) suffer from sybil attacks (fake nodes simulating data). "
+        "This project solves that at the hardware layer. By verifying hardware-backed signatures via ZK, it ensures that "
+        "every packet on Solana came from a real, whitelisted secure element without exposing the device's public or "
+        "private keys to the open ledger.<br/><br/>"
+        "It is a complete, mathematically sound, end-to-end slice of Applied Cryptography that proves ZK-IoT on high-performance "
+        "blockchains is not just possible, but highly practical.", normal_style
+    ))
+    story.append(PageBreak())
+
+    # ================= PAGE 20: HELIUM & RAK MINER ANALYSIS =================
+    story.append(Paragraph("18. Helium, E-Waste, and the Future of AI-IoT", h1_style))
+    story.append(Paragraph(
+        "The underlying physical network is already built and spans the globe. Helium once represented the pinnacle "
+        "of this dream, reaching nearly 1 million active, certified gateways running on license-free bandwidth worldwide. "
+        "Today, however, the economic model has collapsed. Operators find it unprofitable to run nodes, and proposed "
+        "changes like <b>HIP 149</b> (which eliminates Proof of Coverage entirely) threaten to turn this massive, globally-coordinated "
+        "deployment of physical hardware into absolute e-waste.", normal_style
+    ))
+    story.append(Paragraph(
+        "As an early investor who bought into the Helium dream, I saw firsthand that the technology works. While the 5G "
+        "mobile program and its CBRS setups represent a separate cellular infrastructure layer, the IoT program is where "
+        "I focused—starting with the ubiquitous <b>RAK v2 miner</b>, Finestra, and Bobcat gateways operating on license-free "
+        "spectrum. It is a tragedy that administrative and economic hurdles have left this global IoT infrastructure "
+        "economically dormant. These RAK miners represent a massive physical footprint of pre-built, production-grade "
+        "infrastructure that is currently underutilized or offline.", normal_style
+    ))
+    story.append(Paragraph(
+        "ZK-LoRaWAN changes this paradigm. By running our edge-proving and routing daemon directly on these RAK miners, "
+        "we transform them from stranded assets into high-performance private gateways. By introducing a zero-knowledge "
+        "privacy layer, we enable a secure, permissionless channel for <b>AI-IoT Agent Communication</b>. In the future, "
+        "computational intelligence (AI agents) will need to query, instruct, and interact with edge devices. Enabling "
+        "devices to transmit data over miles on just 2 to 5 Watts of power is a technological no-brainer. ZK-LoRaWAN "
+        "breathes new life into this pre-built global network, securing it with privacy and providing real utility.", normal_style
+    ))
+    story.append(Spacer(1, 20))
+    story.append(Paragraph("<b>Danny Bouldiez</b>", normal_style))
+    story.append(PageBreak())
+
+    # ================= PAGE 21: NETWORK DIAGRAMS & COVERAGE MAPS =================
+    story.append(Paragraph("19. Network Diagrams and Global Coverage", h1_style))
+    story.append(Paragraph("19.1 Global Helium Infrastructure & Coverage Maps", h2_style))
+    
+    # 2x2 layout of maps
+    t1 = Table([
+        [Image("images/helium_global_map.jpg", width=225, height=130),
+         Image("images/helium_us_map.jpg", width=225, height=130)]
+    ])
+    t1.setStyle(TableStyle([
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+    ]))
+    story.append(t1)
+
+    t2 = Table([
+        [Image("images/helium_explorer.png", width=225, height=130),
+         Image("images/depin_global_coverage_map_4k.png", width=225, height=130)]
+    ])
+    t2.setStyle(TableStyle([
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+    ]))
+    story.append(t2)
+    story.append(PageBreak())
+
+    # ================= PAGE 22: RANGE TEST & MESH ARCHITECTURE =================
+    story.append(Paragraph("19.2 The Power of LoRaWAN (131.6 km Link)", h2_style))
+    story.append(Image("images/lorawan_power_range.jpg", width=460, height=270))
+    story.append(Spacer(1, 15))
+    
+    story.append(Paragraph("19.3 ZK-LoRaWAN AI-IoT Mesh Architecture", h2_style))
+    story.append(Image("images/lorawan_ai_agent_mesh_4k.png", width=460, height=240))
+    story.append(PageBreak())
+
+    # ================= PAGE 23: END COVER =================
     # Spacers to push content down or let canvas draw the background
     story.append(Spacer(1, 400))
     story.append(PageBreak())
