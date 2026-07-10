@@ -450,10 +450,16 @@ pub fn verify(input_path: &str) -> Result<(), String> {
 
             // Verify they match the deterministic initial parameters
             if delta_g1 != initial_pk.delta_g1 || delta_g2 != initial_vk.delta_g2 {
-                return Err("FAILED: Genesis contribution record delta points do not match initial setup!".into());
+                return Err(
+                    "FAILED: Genesis contribution record delta points do not match initial setup!"
+                        .into(),
+                );
             }
 
-            eprintln!("  ✅ Contribution #0: {} (genesis) — matches deterministic setup", contrib.contributor);
+            eprintln!(
+                "  ✅ Contribution #0: {} (genesis) — matches deterministic setup",
+                contrib.contributor
+            );
             continue;
         }
 
@@ -564,13 +570,17 @@ pub fn verify(input_path: &str) -> Result<(), String> {
 
     // Verify h_query pairing relations:
     // Pairing(h_initial, vk_initial.delta) == Pairing(h_final, vk_final.delta)
-    if Bn254::pairing(h_initial, initial_vk.delta_g2) != Bn254::pairing(h_final, params.verifying_key.delta_g2) {
+    if Bn254::pairing(h_initial, initial_vk.delta_g2)
+        != Bn254::pairing(h_final, params.verifying_key.delta_g2)
+    {
         return Err("FAILED: Proving key h_query was not updated correctly!".into());
     }
 
     // Verify l_query pairing relations:
     // Pairing(l_initial, vk_initial.delta) == Pairing(l_final, vk_final.delta)
-    if Bn254::pairing(l_initial, initial_vk.delta_g2) != Bn254::pairing(l_final, params.verifying_key.delta_g2) {
+    if Bn254::pairing(l_initial, initial_vk.delta_g2)
+        != Bn254::pairing(l_final, params.verifying_key.delta_g2)
+    {
         return Err("FAILED: Proving key l_query was not updated correctly!".into());
     }
     eprintln!("  ✅ Query vectors (h_query and l_query) transition verified");
