@@ -34,6 +34,33 @@ By integrating the **Language-U Semantic Communication Protocol** with Solana's 
 
 ---
 
+
+## 🛡️ Formal Groth16 R1CS Circuit & Witness Relation
+
+The ZK-LoRaWAN circuit enforces strict cryptographic binding between the edge device's private identity, packet nonce, and mesh gateway relay:
+
+```text
+  PRIVATE WITNESS:
+    • device_sk               : Private secret key of the edge device
+    • location_cell           : Fine-grained physical GPS coordinate cell
+    • monotonic_nonce         : Incrementing unique transaction counter
+    • firmware_measurement    : SHA-256 hash of device firmware binary
+    • semantic_packet_hash    : 32-byte Blake3/Poseidon hash of Language-U payload
+
+  PUBLIC INSTANCE (On-Chain / Gateway Verified):
+    • identity_commitment     = Poseidon(device_sk)
+    • nullifier               = Poseidon(device_sk, monotonic_nonce)
+    • gateway_commitment      = Poseidon(gateway_pubkey)
+    • approved_region_root    = MerkleRoot(permitted_geofence_cells)
+    • firmware_root           = MerkleRoot(allowlisted_firmware_hashes)
+    • packet_commitment       = Poseidon(Language_U_Packet)
+```
+
+### Verification Guarantees:
+1. **Zero Linkability**: Gateways and on-chain observers verify validity without learning `device_sk` or physical location.
+2. **Replay Immunity**: Monotonic nullifier prevents retransmission of sniffed radio packets.
+3. **Payload Binding**: Groth16 proof is mathematically invalid if a single bit in the Language-U payload is altered in transit.
+
 ## 🛠️ System Architecture
 
 ```
