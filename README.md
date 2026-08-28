@@ -5,6 +5,8 @@
 
 [📄 View Whitepaper (PDF)](zk_lorawan_whitepaper.pdf) | [📓 View Completed Work & Checklists (PDF)](zk_lorawan_completed_work_and_checklists.pdf) | [📖 Read Whitepaper (Markdown)](WHITEPAPER.md)
 
+[![Available on Amazon](https://img.shields.io/badge/Available_on-AMAZON.COM-FF9900?style=flat-square&logo=amazon)](https://www.amazon.com/dp/B0HGVC777F)
+[![Novel: 200 Amsterdam](https://img.shields.io/badge/Novel-200_AMSTERDAM-blueviolet?style=flat-square)](https://www.amazon.com/dp/B0HGVC777F)
 [![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
 [![Zero-Knowledge](https://img.shields.io/badge/ZK--SNARKs-Groth16-blue?style=flat-square)](https://arkworks.rs)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
