@@ -1,0 +1,61 @@
+name: Strict Verification
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.18.0"
+          cache: npm
+
+      - name: Install Rust components
+        run: rustup component add rustfmt clippy
+
+      - name: Check Groth16 formatting
+        run: cargo fmt -p zk-lorawan-groth16 -- --check
+
+      - name: Run Groth16 circuit soundness tests
+        run: cargo test -p zk-lorawan-groth16 --test circuit_soundness
+
+      - name: Compile and test Rust workspace
+        run: cargo test --workspace
+
+      - name: Run strict Groth16 clippy
+        run: cargo clippy -p zk-lorawan-groth16 --all-targets --no-deps -- -D warnings
+
+      - name: Install Python gateway dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-gateway.txt pycryptodome
+
+      - name: Build Groth16 FFI library
+        run: cargo build -p zk-lorawan-groth16
+
+      - name: Verify on-chain verifier key constants
+        run: python tests/verify_onchain_vk.py
+
+      - name: Run Python verification harness
+        run: python tests/verify_all_modules.py
+
+      - name: Install TypeScript dependencies
+        run: npm ci
+
+      - name: Run TypeScript typecheck
+        run: npm run typecheck

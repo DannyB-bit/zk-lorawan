@@ -1,0 +1,77 @@
+name: SBF Integration
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  local-validator:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.18.0"
+          cache: npm
+
+      - name: Install native dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev libudev-dev
+
+      - name: Install Rust toolchains
+        run: |
+          rustup toolchain install 1.75.0 --profile minimal
+          rustup toolchain install 1.80.0 --profile minimal
+          rustup default 1.75.0
+
+      - name: Cache Solana 1.17
+        id: cache-solana
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/solana-v1.17.0
+          key: solana-1.17.0-linux-x64
+
+      - name: Install Solana 1.17
+        if: steps.cache-solana.outputs.cache-hit != 'true'
+        run: |
+          curl -fL --retry 3 -o /tmp/solana-v1.17.0.tar.bz2 \
+            https://github.com/solana-labs/solana/releases/download/v1.17.0/solana-release-x86_64-unknown-linux-gnu.tar.bz2
+          echo "2f442ef8e9a822c73c67f5819f7f277bb8ceaadc9ef55613d641daae56cf7aee  /tmp/solana-v1.17.0.tar.bz2" | sha256sum --check
+          mkdir -p "$HOME/.local/share/solana-v1.17.0"
+          tar -xjf /tmp/solana-v1.17.0.tar.bz2 \
+            -C "$HOME/.local/share/solana-v1.17.0" --strip-components=1
+
+      - name: Add Solana to PATH
+        run: echo "$HOME/.local/share/solana-v1.17.0/bin" >> "$GITHUB_PATH"
+
+      - name: Cache Anchor 0.29
+        id: cache-anchor
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/anchor
+            ~/.cargo/git
+            ~/.cargo/registry
+          key: anchor-0.29.0-rust-1.75-prover-1.80-linux-x64
+
+      - name: Install Anchor 0.29
+        if: steps.cache-anchor.outputs.cache-hit != 'true'
+        run: cargo install --git https://github.com/solana-foundation/anchor --tag v0.29.0 anchor-cli --locked
+
+      - name: Verify toolchain
+        run: |
+          rustc --version
+          solana --version
+          anchor --version
+          node --version
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build, deploy, and test SBF program
+        run: npm run test:sbf
