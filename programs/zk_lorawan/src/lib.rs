@@ -20,7 +20,7 @@ pub const PROTOCOL_FEE_LAMPORTS: u64 = 50_000; // treasury per chirp
 pub const GATEWAY_REWARD_LAMPORTS: u64 = 100_000; // gateway per chirp
 pub const TOTAL_FEE_PER_CHIRP: u64 = PROTOCOL_FEE_LAMPORTS + GATEWAY_REWARD_LAMPORTS;
 pub const MAX_BATCH_SIZE: usize = 100;
-pub const MERKLE_DEPTH: usize = 10; // 2^16 = 65,536 leaves; fits in Solana 1232-byte tx thanks to chunked flow
+pub const MERKLE_DEPTH: usize = 10; // 2^10 = 1,024 leaves (audit L2: comment previously claimed 2^16/65,536 — wrong; capacity is 1,024 deposits)
 pub const BATCH_SEED: &[u8] = b"zk-lorawan-batch";
 pub const REGISTRY_SEED: &[u8] = b"zk-lorawan-registry";
 #[cfg(feature = "integration-test")]
@@ -648,6 +648,15 @@ pub mod zk_lorawan {
         );
         require!(chunk_index < 3, ZKLoRaError::InvalidChunkIndex);
 
+        // SECURITY FIX (audit M3): enforce write-once chunks. The
+        // ChunkAlreadyWritten error was declared but never raised, so a
+        // "completed" ProofContext could be silently rewritten and
+        // recycled (a component of the C1 batch-drain attack).
+        require!(
+            pc.chunks_written & (1 << chunk_index) == 0,
+            ZKLoRaError::ChunkAlreadyWritten
+        );
+
         match chunk_index {
             0 => {
                 // proof_a (64) + proof_b (128) = 192 bytes
@@ -874,6 +883,23 @@ pub mod zk_lorawan {
             ZKLoRaError::UnauthorizedGateway
         );
 
+        // SECURITY FIX (audit C1): the batch path previously pushed the
+        // nullifier and counted the chirp WITHOUT verifying the Groth16
+        // proof — allowing fabricated ProofContexts to drain the shielded
+        // pool at payout. Verify the proof exactly like the single and
+        // direct-batch paths do.
+        verify_groth16(&pc.proof_a, &pc.proof_b, &pc.proof_c, &pc.public_inputs)?;
+
+        // SECURITY FIX (audit C1): reject duplicate nullifiers within the
+        // same batch — a replayed context must not pay twice.
+        require!(
+            !batch
+                .nullifiers
+                .iter()
+                .any(|&n| n == pc.public_inputs[1]),
+            ZKLoRaError::NullifierAlreadySpent
+        );
+
         // Add nullifier to batch
         batch.nullifiers.push(pc.public_inputs[1]);
         batch.chirp_count += 1;
@@ -919,6 +945,10 @@ pub mod zk_lorawan {
             registry_info.realloc(registry_target_size, false)?;
 
             // Populate the new registry structure
+            // SECURITY FIX (audit H3/M5): stop injecting the hardcoded demo
+            // firmware hash into the migrated whitelist. A migrated registry
+            // starts EMPTY and fails closed; the admin must register real
+            // attested firmware hashes before any verification succeeds.
             let new_registry = ProtocolRegistry {
                 authority: old_registry.authority,
                 next_batch_id: old_registry.next_batch_id,
@@ -928,7 +958,7 @@ pub mod zk_lorawan {
                 total_gateway_rewards: old_registry.total_gateway_rewards,
                 total_treasury_fees: old_registry.total_treasury_fees,
                 created_at: old_registry.created_at,
-                approved_firmware_hashes: vec![*b"enclave-firmware-version-v1.0.2\0"],
+                approved_firmware_hashes: vec![],
             };
 
             // Write Anchor discriminator and serialized data
@@ -971,11 +1001,22 @@ pub mod zk_lorawan {
             let mut roots_history = [[0u8; 32]; 8];
             roots_history[0] = old_pool.merkle_root;
 
+            // SECURITY FIX (audit M5): the old pool format never stored
+            // next_index, so the true leaf count is unrecoverable. The
+            // previous code set next_index = 0, re-opening every leaf slot
+            // for re-proof against the preserved root. Instead, mark the
+            // migrated tree as FULL: existing deposits keep their spend
+            // proofs (leaf_index < capacity still passes, and the old root
+            // remains in roots_history), while no new deposits can be
+            // inserted into the untrustworthy reshaped tree. Fail-safe:
+            // security over liveness for a one-time migration.
+            let next_index = 1u64 << MERKLE_DEPTH as u64; // full capacity
+
             let new_pool = ShieldedEscrowPool {
                 total_balance: old_pool.total_balance,
                 merkle_root: old_pool.merkle_root,
                 last_updated: old_pool.last_updated,
-                next_index: 0,
+                next_index,
                 filled_subtrees,
                 roots_history,
                 history_index: 1,
@@ -1118,13 +1159,12 @@ fn insert_leaf_on_chain(
 }
 
 fn verify_firmware_hash(registry: &ProtocolRegistry, hash: &[u8; 32]) -> bool {
-    if registry.approved_firmware_hashes.is_empty() {
-        // Fallback default approved firmware hash (for initial setup/demo compatibility)
-        let mut default_hash = [0u8; 32];
-        let default_bytes = b"enclave-firmware-version-v1.0.2";
-        default_hash[..default_bytes.len()].copy_from_slice(default_bytes);
-        return hash == &default_hash;
-    }
+    // SECURITY FIX (audit H3): fail CLOSED. Previously an empty registry
+    // (the default state) fell back to accepting a hardcoded demo firmware
+    // hash, letting unattested devices pass the Micro-TEE check until an
+    // admin registered real hashes. An unregistered registry now rejects
+    // everything; initialize_registry + register_firmware_hash are required
+    // before any verification can succeed.
     registry.approved_firmware_hashes.contains(hash)
 }
 
