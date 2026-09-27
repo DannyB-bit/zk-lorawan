@@ -1302,4 +1302,243 @@ describe("zk_lorawan", () => {
     await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
   });
 
+  // ==========================================================================
+  // SECURITY REGRESSION TESTS — audit fixes C1 / M3 / H3 (2026-09-26)
+  // ==========================================================================
+
+  it("C1: rejects batch chirp without a valid Groth16 proof (addChirpFromContext)", async () => {
+    // The pre-fix vulnerability: a fabricated ProofContext could add paid
+    // chirps to a batch with no proof verification. Post-fix, the batch
+    // path verifies the Groth16 proof exactly like the single path, so a
+    // context whose proof bytes are garbage must be rejected.
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    const proofData = JSON.parse(
+      execSync(`"${proverPath}" generate 0000000000000000000000000000000000000000000000000000000000000011 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
+    );
+
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
+    await program.methods
+      .depositShielded(new anchor.BN(150000), Array.from(leafHash))
+      .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
+      .signers([sender])
+      .rpc();
+    accumulatedLeaves.push(leafHash);
+
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
+
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 0, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    // Set up a valid ProofContext, then corrupt the proof bytes so the
+    // Groth16 check must fail.
+    const nonce = new anchor.BN(Date.now() + 100);
+    const corruptProofA = Buffer.from(proofA);
+    corruptProofA[0] ^= 0xFF;
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, corruptProofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway
+    );
+
+    // Open a fresh batch for this gateway
+    const registryAccountBefore = await program.account.protocolRegistry.fetch(registryPda) as any;
+    const batchId = registryAccountBefore.nextBatchId;
+    const batchIdBytes = batchId.toArrayLike(Buffer, "le", 8);
+    const [batchPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("zk-lorawan-batch"), gateway.publicKey.toBuffer(), batchIdBytes],
+      program.programId
+    );
+    await program.methods
+      .initializeBatch()
+      .accounts({
+        batch: batchPda,
+        registry: registryPda,
+        gateway: gateway.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([gateway])
+      .rpc();
+
+    try {
+      await program.methods
+        .addChirpFromContext(nonce)
+        .accounts({
+          proofContext: proofCtxPda,
+          batch: batchPda,
+          shieldedPool: shieldedPoolPda,
+          registry: registryPda,
+          gateway: gateway.publicKey,
+        })
+        .signers([gateway])
+        .rpc();
+      assert.fail("addChirpFromContext must verify the Groth16 proof (audit C1)");
+    } catch (e: any) {
+      assert.include(e.message, "Zero Knowledge witness verification failed");
+      console.log("  ✅ C1: batch path now rejects unproven chirps");
+    }
+
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
+  });
+
+  it("M3: rejects rewriting an already-written proof chunk", async () => {
+    // Pre-fix: chunks were silently overwritable. Post-fix the declared
+    // ChunkAlreadyWritten error is enforced: writing the same chunk index
+    // twice must fail.
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    const proofData = JSON.parse(
+      execSync(`"${proverPath}" generate 0000000000000000000000000000000000000000000000000000000000000012 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000003 ${gatewayHex} 150000`).toString()
+    );
+
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
+    await program.methods
+      .depositShielded(new anchor.BN(150000), Array.from(leafHash))
+      .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
+      .signers([sender])
+      .rpc();
+    accumulatedLeaves.push(leafHash);
+
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+    const realMerkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
+
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 0, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
+
+    const publicInputs = [
+      identityHash, nullifierHash, attestationHash, ciphertextHash,
+      gwPart1, gwPart2, depositCommitment, firmwareHash,
+    ];
+
+    const nonce = new anchor.BN(Date.now() + 110);
+    const proofCtxPda = await setupProofContextChunks(
+      nonce, proofA, proofB, proofC, publicInputs, realMerkleProof, leafIndex, gateway
+    );
+
+    try {
+      await program.methods
+        .writeProofChunk(nonce, 0, Buffer.concat([proofA, proofB]))
+        .accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey })
+        .signers([gateway])
+        .rpc();
+      assert.fail("chunk rewrite must fail (audit M3)");
+    } catch (e: any) {
+      assert.include(e.message, "chunk already written");
+      console.log("  ✅ M3: chunk rewrite correctly rejected");
+    }
+
+    await program.methods.closeProofContext(nonce).accounts({ proofContext: proofCtxPda, gateway: gateway.publicKey }).signers([gateway]).rpc();
+  });
+
+  it("H3: empty firmware registry fails closed on verifySingle", async () => {
+    // Pre-fix: an empty whitelist fell back to accepting a hardcoded demo
+    // firmware hash. Post-fix: empty registry => reject. We cannot un-register
+    // hashes in the live test, so this asserts the deployed invariant directly:
+    // the whitelist is non-empty ONLY because the admin registered hashes, and
+    // verifySingle with a NON-whitelisted firmware hash must fail with
+    // InvalidAttestation even though the proof itself is valid.
+    const gatewayHex = Buffer.from(gateway.publicKey.toBytes()).toString("hex");
+    const proverPath = process.platform === "win32" ? "target\\release\\zk_lorawan_prove.exe" : "./target/release/zk_lorawan_prove";
+    // fw hash 0x...04 is NOT in the whitelist (only 0x...03 is)
+    const proofData = JSON.parse(
+      execSync(`"${proverPath}" generate 0000000000000000000000000000000000000000000000000000000000000013 0000000000000000000000000000000000000000000000000000000000000002 123456789 0000000000000000000000000000000000000000000000000000000000000004 ${gatewayHex} 150000`).toString()
+    );
+
+    const leafHash = Buffer.from(proofData.identity_hash, "hex");
+    await program.methods
+      .depositShielded(new anchor.BN(150000), Array.from(leafHash))
+      .accounts({ sender: sender.publicKey, shieldedPool: shieldedPoolPda, systemProgram: anchor.web3.SystemProgram.programId })
+      .signers([sender])
+      .rpc();
+    accumulatedLeaves.push(leafHash);
+
+    const poolState = await program.account.shieldedEscrowPool.fetch(shieldedPoolPda) as any;
+    const leafIndex = poolState.nextIndex.toNumber() - 1;
+    const merkleProof = buildOnChainMerkleProof(accumulatedLeaves, leafIndex);
+
+    const proofA = Buffer.from(proofData.proof_a, "hex");
+    const proofB = Buffer.from(proofData.proof_b, "hex");
+    const proofC = Buffer.from(proofData.proof_c, "hex");
+    const nullifierHash = Buffer.from(proofData.nullifier_hash, "hex");
+    const identityHash = Buffer.from(proofData.identity_hash, "hex");
+    const attestationHash = Buffer.from(proofData.attestation_hash, "hex");
+    const ciphertextHash = Buffer.from(proofData.ciphertext_hash, "hex");
+    const depositCommitment = Buffer.from(proofData.deposit_commitment, "hex");
+    const firmwareHash = Buffer.from(proofData.firmware_hash, "hex");
+
+    const gwBytes = Buffer.from(gateway.publicKey.toBytes());
+    const gwPart1 = Buffer.alloc(32);
+    gwBytes.copy(gwPart1, 0, 0, 16);
+    const gwPart2 = Buffer.alloc(32);
+    gwBytes.copy(gwPart2, 0, 16, 32);
+
+    const [nullifierPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("nullifier"), nullifierHash], program.programId
+    );
+
+    try {
+      await program.methods
+        .verifySingle(
+          Array.from(proofA),
+          Array.from(proofB),
+          Array.from(proofC),
+          Array.from(nullifierHash),
+          Array.from(attestationHash),
+          Array.from(identityHash),
+          Array.from(ciphertextHash),
+          Array.from(depositCommitment),
+          Array.from(firmwareHash),
+          new anchor.BN(Math.floor(Date.now() / 1000)),
+          merkleProof.map(p => Array.from(p)),
+          leafIndex
+        )
+        .accounts({
+          registry: registryPda,
+          shieldedPool: shieldedPoolPda,
+          nullifierRecord: nullifierPda,
+          gateway: gateway.publicKey,
+          treasury: treasuryAddress,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([gateway])
+        .rpc();
+      assert.fail("non-whitelisted firmware hash must fail (audit H3)");
+    } catch (e: any) {
+      assert.include(e.message, "Invalid firmware attestation hash");
+      console.log("  ✅ H3: non-whitelisted firmware hash correctly rejected");
+    }
+  });
+
 });
