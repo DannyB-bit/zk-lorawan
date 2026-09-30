@@ -1,0 +1,14 @@
+[Unit]
+Description=MINI-ME llama-server (CONSIDER-1 Q4_K_M on-node brain, Researcher Bravo)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/researcher-bravo/fleet-repos/hf/CONSIDER-1
+ExecStart=/home/researcher-bravo/fleet-repos/llama.cpp/build/bin/llama-server -m CONSIDER-v1-Q4_K_M-v3.gguf --host 127.0.0.1 --port 8808 -c 2048 --temp 0.3 -t 4
+Restart=always
+RestartSec=5
+User=researcher-bravo
+
+[Install]
+WantedBy=multi-user.target
