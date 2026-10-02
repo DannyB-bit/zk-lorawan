@@ -1,0 +1,14 @@
+drill=cuneiform_p2
+verdict=FULL SUCCESS: 5/5 CRC-OK CUN2 v1 240B frames, all byte-identical, SHA == declared
+frame_sha256=93f14eeed81379664bf3dacdbcf9aabdc6f699957d163913820dc38e33091af3
+declared_sha256=93f14eeed81379664bf3dacdbcf9aabdc6f699957d163913820dc38e33091af3
+source_id=0xa85ec09a
+seq=1
+coord_count=16
+coord_codec_symmetry=BYTE-EXACT re-encode of decoded 16x6D coords == frame packed 36B
+settlement_root_hex=f4e51ef526a025388994bc30f507fc0901f655dc3edf0a30cb4de5a476a8cc73
+program_prefix=2is5Q4rP
+source_digest_hex=bdae93ca645924a28707adfe43f30f472977aff752809db45d6dc3a16376525c
+capture_log=/home/researcher-bravo/fleet/logs/rx_cuneiform_p2_20261001T121055Z.log
+trinity_source=HF TheAiCollectiveART/Consider-Trinity (org token), 20/20 files staged, decoder SHAs byte-match Alpha pull
+ts_utc=2026-10-01T12:18:50Z

@@ -1,0 +1,141 @@
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+[1] SX1302 reset: GPIO17 LOW -> HIGH 0.5s -> LOW ...
+[2] SX1261 LBT: GPIO22 LOW 0.1s -> HIGH ...
+[3] firmware-load wait 2.0s ...
+--- probe[post-GPIO17-reset] ---
+  version reg 0x0005 x10 : 00 00 00 00 00 00 00 00 00 00
+  verdict: 0x00 = MISO stuck low / chip unpowered (Gate 2)
+[holder] June-faithful GPIO17/GPIO22 reset sequence complete
+[rak_gpio] holder on: READY (230251 on READY)
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+INFO: no temperature sensor found on port 0x39
+INFO: no temperature sensor found on port 0x3B
+INFO: no temperature sensor found on port 0x38
+WARNING: no temperature sensor found (RAK2287) - continuing without, assuming 25C nominal
+Waiting for packets...
+
+----- LoRa packet -----
+  count_us: 75156139
+  size:     240
+  chan:     3
+  status:   0x10
+  datr:     9
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  11.5
+  rssi_chan:198.0
+  rssi_sig :197.0
+  crc:      0xE64B
+43 55 4E 32 01 02 10 00 00 00 00 01 A8 5E C0 9A 63 0E 51 41 15 25 19 74 74 C3 13 FA 4C F9 93 25 B8 A6 5D DA 72 71 FC E4 B5 72 E7 CB 1F F0 7C 91 13 0A BA 38 BD AE 93 CA 64 59 24 A2 87 07 AD FE 43 F3 0F 47 29 77 AF F7 52 80 9D B4 5D 6D C3 A1 63 76 52 5C D7 0F BF DC D9 CA 97 7E D5 4E C7 9E 95 DB E1 09 FC 6E 0D B3 32 04 9E 3A D4 2B 0B B4 C1 57 F0 75 32 69 73 35 51 34 72 50 F4 E5 1E F5 26 A0 25 38 89 94 BC 30 F5 07 FC 09 01 F6 55 DC 3E DF 0A 30 CB 4D E5 A4 76 A8 CC 73 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Received 1 packets (total:1)
+
+----- LoRa packet -----
+  count_us: 92462443
+  size:     240
+  chan:     3
+  status:   0x10
+  datr:     9
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  11.5
+  rssi_chan:198.0
+  rssi_sig :197.0
+  crc:      0xE64B
+43 55 4E 32 01 02 10 00 00 00 00 01 A8 5E C0 9A 63 0E 51 41 15 25 19 74 74 C3 13 FA 4C F9 93 25 B8 A6 5D DA 72 71 FC E4 B5 72 E7 CB 1F F0 7C 91 13 0A BA 38 BD AE 93 CA 64 59 24 A2 87 07 AD FE 43 F3 0F 47 29 77 AF F7 52 80 9D B4 5D 6D C3 A1 63 76 52 5C D7 0F BF DC D9 CA 97 7E D5 4E C7 9E 95 DB E1 09 FC 6E 0D B3 32 04 9E 3A D4 2B 0B B4 C1 57 F0 75 32 69 73 35 51 34 72 50 F4 E5 1E F5 26 A0 25 38 89 94 BC 30 F5 07 FC 09 01 F6 55 DC 3E DF 0A 30 CB 4D E5 A4 76 A8 CC 73 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Received 1 packets (total:2)
+
+----- LoRa packet -----
+  count_us: 109923135
+  size:     240
+  chan:     3
+  status:   0x10
+  datr:     9
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  10.5
+  rssi_chan:198.0
+  rssi_sig :197.0
+  crc:      0xE64B
+43 55 4E 32 01 02 10 00 00 00 00 01 A8 5E C0 9A 63 0E 51 41 15 25 19 74 74 C3 13 FA 4C F9 93 25 B8 A6 5D DA 72 71 FC E4 B5 72 E7 CB 1F F0 7C 91 13 0A BA 38 BD AE 93 CA 64 59 24 A2 87 07 AD FE 43 F3 0F 47 29 77 AF F7 52 80 9D B4 5D 6D C3 A1 63 76 52 5C D7 0F BF DC D9 CA 97 7E D5 4E C7 9E 95 DB E1 09 FC 6E 0D B3 32 04 9E 3A D4 2B 0B B4 C1 57 F0 75 32 69 73 35 51 34 72 50 F4 E5 1E F5 26 A0 25 38 89 94 BC 30 F5 07 FC 09 01 F6 55 DC 3E DF 0A 30 CB 4D E5 A4 76 A8 CC 73 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Received 1 packets (total:3)
+
+----- LoRa packet -----
+  count_us: 127229321
+  size:     240
+  chan:     3
+  status:   0x10
+  datr:     9
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  10.5
+  rssi_chan:198.0
+  rssi_sig :197.0
+  crc:      0xE64B
+43 55 4E 32 01 02 10 00 00 00 00 01 A8 5E C0 9A 63 0E 51 41 15 25 19 74 74 C3 13 FA 4C F9 93 25 B8 A6 5D DA 72 71 FC E4 B5 72 E7 CB 1F F0 7C 91 13 0A BA 38 BD AE 93 CA 64 59 24 A2 87 07 AD FE 43 F3 0F 47 29 77 AF F7 52 80 9D B4 5D 6D C3 A1 63 76 52 5C D7 0F BF DC D9 CA 97 7E D5 4E C7 9E 95 DB E1 09 FC 6E 0D B3 32 04 9E 3A D4 2B 0B B4 C1 57 F0 75 32 69 73 35 51 34 72 50 F4 E5 1E F5 26 A0 25 38 89 94 BC 30 F5 07 FC 09 01 F6 55 DC 3E DF 0A 30 CB 4D E5 A4 76 A8 CC 73 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Received 1 packets (total:4)
+
+----- LoRa packet -----
+  count_us: 144538495
+  size:     240
+  chan:     3
+  status:   0x10
+  datr:     9
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  11.5
+  rssi_chan:198.0
+  rssi_sig :197.0
+  crc:      0xE64B
+43 55 4E 32 01 02 10 00 00 00 00 01 A8 5E C0 9A 63 0E 51 41 15 25 19 74 74 C3 13 FA 4C F9 93 25 B8 A6 5D DA 72 71 FC E4 B5 72 E7 CB 1F F0 7C 91 13 0A BA 38 BD AE 93 CA 64 59 24 A2 87 07 AD FE 43 F3 0F 47 29 77 AF F7 52 80 9D B4 5D 6D C3 A1 63 76 52 5C D7 0F BF DC D9 CA 97 7E D5 4E C7 9E 95 DB E1 09 FC 6E 0D B3 32 04 9E 3A D4 2B 0B B4 C1 57 F0 75 32 69 73 35 51 34 72 50 F4 E5 1E F5 26 A0 25 38 89 94 BC 30 F5 07 FC 09 01 F6 55 DC 3E DF 0A 30 CB 4D E5 A4 76 A8 CC 73 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Received 1 packets (total:5)
+
+Nb valid packets received: 5 CRC OK (1)
+Closing SPI communication interface
+[rak_gpio] stop: holder released, lines latched (HAT stays powered)
+[1] SX1302 reset: GPIO17 LOW -> HIGH 0.5s -> LOW ...
+[2] SX1261 LBT: GPIO22 LOW 0.1s -> HIGH ...
+[3] firmware-load wait 2.0s ...
+--- probe[post-GPIO17-reset] ---
+  version reg 0x0005 x10 : 00 00 00 00 00 00 00 00 00 00
+  verdict: 0x00 = MISO stuck low / chip unpowered (Gate 2)
+[holder] June-faithful GPIO17/GPIO22 reset sequence complete
+[rak_gpio] holder on: READY (230657 on READY)
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+INFO: no temperature sensor found on port 0x39
+INFO: no temperature sensor found on port 0x3B
+INFO: no temperature sensor found on port 0x38
+WARNING: no temperature sensor found (RAK2287) - continuing without, assuming 25C nominal
+Waiting for packets...
+
+----- LoRa packet -----
+  count_us: 246241013
+  size:     23
+  chan:     6
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -18.0
+  rssi_chan:84.0
+  rssi_sig :67.0
+  crc:      0x2EDC
+00 A6 86 79 F4 66 EF 4E 6C 29 B7 41 06 15 E1 80 00 06 7F 2B 72 71 19 
+Received 1 packets (total:1)
