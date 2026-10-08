@@ -1,5 +1,5 @@
-﻿ZYMATICA COMMERCIAL & NOVEL-HOLDER COVENANT LICENSE
-Version 2.0 (Ironclad Edition - 2026) — Zymatica.space
+ZYMATICA.SPACE LICENSE v2.0
+Version 2.0 (2026 Edition) — zymatica.space
 
 Book Author: Danny Bouldiez | Codebase Author: Devs One
 Official Website: https://zymatica.space
@@ -9,7 +9,7 @@ Availability: Available Worldwide on Amazon.com (Paperback, Hardcover, & Kindle 
 ================================================================================
 1. GRANT OF LICENSE THROUGH NOVEL OWNERSHIP (AMAZON.COM)
 ================================================================================
-Subject to the terms, covenants, and conditions of this Agreement, the Authors
+Subject to the terms and conditions of this Agreement, the Authors
 (Book Author: Danny Bouldiez | Codebase Author: Devs One) hereby grant to any individual
 or legal entity ("Licensee"):
 
@@ -26,14 +26,15 @@ or legal entity ("Licensee"):
 
 A perpetual, worldwide, non-exclusive, revocable (upon breach) license to compile,
 execute, modify, fork, integrate, and deploy the Software (including all Language-U
-semantic modules, Cuneiform-U 6D hypercube algorithms, custom Groth16 circuit
-architectures, procedural genesis seeds, and native Rust inference engines created
-by Devs One) for both personal and commercial purposes.
+semantic modules, Cuneiform-U 6D hypercube algorithms, Gyroscopic Astrolabe kernels,
+Clifford 8-compass encoders, custom Groth16 circuit architectures, procedural genesis
+seeds, and native Rust/C inference engines created by Devs One & The Mobile Agents)
+for both personal and commercial purposes.
 
 ================================================================================
-2. COVENANTS OF OWNERSHIP, ATTRIBUTION & FORKING
+2. TERMS OF OWNERSHIP, ATTRIBUTION & FORKING
 ================================================================================
-Every Licensee, forker, and downstream developer agrees to the following covenants:
+Every Licensee, forker, and downstream developer agrees to the following terms:
   1. Mandatory Attribution: The above copyright notice, this permission notice,
      direct links to https://zymatica.space, and formal attribution ("Book Author: Danny Bouldiez |
      Codebase Author: Devs One") along with notice of the novel "200 AMSTERDAM: THE VERTICAL CITY"
@@ -47,17 +48,18 @@ Every Licensee, forker, and downstream developer agrees to the following covenan
      trademark, or authorship notices embedded within the source files or documentation.
 
 ================================================================================
-3. THIRD-PARTY & UPSTREAM OPEN-SOURCE DEPENDENCIES (MIT / APACHE 2.0)
+3. THIRD-PARTY & UPSTREAM OPEN-SOURCE DEPENDENCIES (MIT / APACHE 2.0 / BSD)
 ================================================================================
-The Software utilizes certain upstream, open-source mathematical and cryptographic
-libraries (such as the Arkworks SNARK ecosystem, including ark-groth16, ark-bn254,
-and ark-relations), which are independently licensed under their respective MIT and/or
-Apache 2.0 licenses. 
-  - Nothing in this Covenant restricts, diminishes, or overrides the rights granted
-     to the public under those specific upstream MIT/Apache open-source licenses for
-     their respective library components.
-  - This Covenant governs all original Zymatica architecture, custom circuit designs,
-     Language-U 6D tensor algorithms, seed formats, and native execution runtimes.
+The Software utilizes certain upstream, open-source mathematical, neural, and cryptographic
+libraries and base models (including Alibaba Qwen-3.5 base neural architectures under
+Apache License 2.0, the Arkworks SNARK ecosystem under MIT/Apache 2.0, and PyTorch under BSD-3),
+which are independently licensed under their respective open-source licenses.
+  - Nothing in this License restricts, diminishes, or overrides the rights granted
+     to the public under those specific upstream MIT/Apache/BSD open-source licenses for
+     their respective library components or base architectures.
+  - This License governs all original Zymatica architecture, custom circuit designs,
+     Language-U continuous-to-discrete tensor algorithms, Gyroscopic Astrolabe kernels,
+     Clifford 8-compass encoders, seed formats, and native execution runtimes.
 
 ================================================================================
 4. TERMINATION & AUTOMATIC REVOCATION
