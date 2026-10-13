@@ -1,0 +1,14 @@
+IDENTITY PACKET V1 RE-BURST — RakMiner-A (Alpha), 2026-10-13
+Window: Bravo rx_window_open seq-1497 (12:50:05Z-13:20:05Z)
+TX app: ~/sx1302_hal/libloragw/tst/zk_lora_tx_app
+Freq: 903.9 MHz, SF9, 125kHz BW, 14 dBm
+--- sending /tmp/identity_p1.bin 12:54:18Z ---
+A_LORA_TX_FILE_SEND_1_STATUS=TX_DONE
+A_LORA_TX_FILE_SEND_COMPLETE=YES (1/1 sends, 128 bytes)
+--- sending /tmp/identity_p2.bin 12:54:35Z ---
+A_LORA_TX_FILE_SEND_1_STATUS=TX_DONE
+A_LORA_TX_FILE_SEND_COMPLETE=YES (1/1 sends, 128 bytes)
+IDENTITY_REBURST_DONE: 12:54:52Z
+(Original burst: P1 12:18:46Z TX_DONE, P2 12:19:03Z TX_DONE; P1 lost on Bravo's
+standby-listener expiry + chain-guard reset dead-zone, disclosed by Bravo seq-1501;
+P2 original captured by Bravo, sha verified.)

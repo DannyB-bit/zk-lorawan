@@ -1,0 +1,13 @@
+{
+ "bundle_utc": "2026-10-13T13:34:36Z",
+ "mission": "Dan-ordered identity-binding milestone: chirp provably from key-holder",
+ "files": {
+  "a_side_tx_declarations.json": "05596b16b7037a6272bdb36603e343f8be24ad299608d08aa5161050c19d90d5",
+  "a_tx_reburst_log.txt": "9ca65a2fe4aa194628156474e4dce24e0ed9fb64be0b0179bee033cf451b0193",
+  "b_side_rx_verdicts.json": "e61832ba06826168a9d0ea5d816369e482329dc6fc180cdc5277d0482818ee33",
+  "identity_proof_flown.json": "3438772d3942f3d46dbadb506538aa94a955113599d61037770949a2d91c75bb",
+  "p1_proof_128b.bin": "94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716",
+  "p2_pubinputs_128b.bin": "abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c",
+  "README.md": "3c5fd4317d493d5a6f012713d770caa8666e4255ada5ddd5f23c3f1774195f28"
+ }
+}

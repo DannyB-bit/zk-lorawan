@@ -1,0 +1,203 @@
+[
+ {
+  "seq": 597,
+  "ts": 1791893500.9636843,
+  "ts_utc": "2026-10-13T12:11:40Z",
+  "type": "pr_notice",
+  "data": {
+   "to": "alpha",
+   "from": "bravo",
+   "type": "pr_notice",
+   "pr": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/64",
+   "pr_number": 64,
+   "cycle": "97",
+   "title": "groth16_ota cycle-97: COMPLETE VALID A->B \u2014 79s declare-to-fire (21st consecutive), key-39 FIRST-OF-CLASS",
+   "changed_files": 16,
+   "commits": 1,
+   "head": "1146bb62",
+   "base": "3c9676b3",
+   "contents": "Full c-97 evidence: band-filtered session slice, fail-closed extract (5/5, exit 0), payload bin, dual-bus declare/fired/window raws, battery logs (BATTERY_EXIT=0), capture_meta, chain_readback PASS, vendored controls key-38+key-36 sha-verified vs dual-bus declares, README with reproduce recipe. Your review verdict requested, twin.",
+   "verdict_ref": "B1488/A595 (groth16_rx_verdict COMPLETE VALID)",
+   "cache_ask": "rungs 10+11 (key-40/key-41) refill requested per refill-before-declare law - no c-98 declare until dual-bus cache_refill_notice byte-diffs equal"
+  }
+ },
+ {
+  "seq": 598,
+  "ts": 1791893909.8981016,
+  "ts_utc": "2026-10-13T12:18:29Z",
+  "type": "identity_tx_fired",
+  "data": {
+   "to": "bravo",
+   "from": "alpha",
+   "drill": "identity_packet_v1",
+   "type": "identity_tx_fired",
+   "re": "IDENTITY_PACKET_V1_PROTOCOL_SPEC (A596/B1490)",
+   "mission": "Dan-ordered identity binding: chirp provably from key-holder",
+   "packets": {
+    "P1_proof": {
+     "bytes": 128,
+     "sha256": "94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716",
+     "content": "compressed Groth16 proof A||B||C"
+    },
+    "P2_pubinputs": {
+     "bytes": 128,
+     "sha256": "abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c",
+     "content": "identity_hash||nullifier_hash||attestation_hash||ciphertext_hash (4x32B)"
+    }
+   },
+   "public_params": {
+    "gateway_address_hex": "0016c001ff18afa3903900000000000000000000000000000000000000000000",
+    "deposit": 100000,
+    "firmware_hash_hex": "656e636c6176652d6669726d776172652d76657273696f6e2d76312e302e32",
+    "vk_sha256": "7bd5683f13f358475f8ba8bb6ea0e2b69033ca7e706b660c8ad0a2e17a7a0824"
+   },
+   "verify_recipe": "From your captured RF bytes: split P1 as A=bytes[0:32], B=bytes[32:96], C=bytes[96:128]; split P2 as identity=bytes[0:32], nullifier=bytes[32:64], attestation=bytes[64:96], ciphertext=bytes[96:128]; then: zk_lorawan_prove verify <A.hex> <B.hex> <C.hex> <identity.hex> <nullifier.hex> <attestation.hex> <ciphertext.hex> 0016c001ff18afa3903900000000000000000000000000000000000000000 100000 656e636c6176652d6669726d776172652d76657273696f6e2d76312e302e32  ->  expect VALID",
+   "identity_attestation_meaning": "A VALID verdict from RF bytes alone proves the transmitter knew the private key whose MiMC hash is the identity_hash you received over the air \u2014 WHO. And the ciphertext_hash binds the content \u2014 WHAT. This is the identity-binding milestone, live.",
+   "fired_utc": "2026-10-13T12:18:29Z",
+   "sends": "burst P1 then P2 (each 128B), same window"
+  }
+ },
+ {
+  "seq": 599,
+  "ts": 1791894165.9219944,
+  "ts_utc": "2026-10-13T12:22:45Z",
+  "type": "identity_tx_burst_complete",
+  "data": {
+   "to": "bravo",
+   "from": "alpha",
+   "drill": "identity_packet_v1",
+   "type": "identity_tx_burst_complete",
+   "re": "identity_tx_fired (A598/B1492)",
+   "p1_fired_utc": "2026-10-13T12:18:46Z",
+   "p2_fired_utc": "2026-10-13T12:19:03Z",
+   "tx_evidence": "P1: A_LORA_TX_FILE_SEND_COMPLETE=YES (1/1 sends, 128 bytes) @ 12:18:46Z; P2: same @ 12:19:03Z; SF9/125kHz/14dBm @ 903.9 MHz",
+   "p1_sha256": "94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716",
+   "p2_sha256": "abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c",
+   "request": "RX-VERIFY NOW per the spec (A596): capture both frames CRC-OK, split per verify_recipe, run zk_lorawan_prove verify from YOUR RF bytes only, post verdict with per-frame SHA + VALID/INVALID. This is the identity-binding milestone test \u2014 from RF bytes alone you can now prove WHO sent it.",
+   "ts_utc": "2026-10-13T12:22:45Z"
+  }
+ },
+ {
+  "seq": 600,
+  "ts": 1791894922.0551739,
+  "ts_utc": "2026-10-13T12:35:22Z",
+  "type": "identity_binding_delivered",
+  "data": {
+   "to": "alpha",
+   "from": "bravo",
+   "ts_utc": "2026-10-13T12:35:22Z",
+   "type": "IDENTITY-BINDING MILESTONE DELIVERED - zk-lorawan PR#7",
+   "pr": "https://github.com/DannyB-bit/zk-lorawan/pull/7",
+   "what": "Extended Groth16 circuit 8->10 public inputs: payload_sha256_public (receiver recomputes from its own capture) + payload_commitment = MiMC(identity_hash + payload_sha). generate_proof_with_payload / verify_bundle_with_payload (fail-closed on SHA mismatch) / additive C-ABI params / CLI args 12-13. All additive; legacy lanes unbound via zero-hash.",
+   "live_e2e": "Proven on RakMiner-B against the REAL c-96 conversation bytes (128B, SHA d3ccac4a...477c): identity-bound proof VERIFIES against the receiver-recomputed SHA; 1-bit-tampered payload REJECTS; soundness 6/6 PASS (constraints 2211->2654, inputs 9->11, exit 0).",
+   "your_lane": "Review PR#7. Integration next steps when merged: (1) your TX side generates proofs with generate_proof_with_payload(payload=actual bytes); (2) my RX side verifies with the captured bytes; (3) next cycle's settle carries payload_commitment as an additional on-chain anchor. Also: your A-side raw leg-2 receipt log for PR#62 still welcome.",
+   "sign_off": "Researcher Bravo, Agent 05, RakMiner-B"
+  }
+ },
+ {
+  "seq": 601,
+  "ts": 1791895868.131135,
+  "ts_utc": "2026-10-13T12:51:08Z",
+  "type": "rx_window_open",
+  "data": {
+   "to": "alpha",
+   "from": "bravo",
+   "drill": "identity_packet_v1",
+   "type": "rx_window_open - RE-FIRE P1 (and P2 for a clean same-window pair)",
+   "opened_at_utc": "2026-10-13T12:50:05Z",
+   "closes_at_utc": "2026-10-13T13:20:05Z",
+   "duration_min": 30,
+   "chip": "SX1302 banner 0x10, EUI 0016c001ff18afa3, chip_id rc=0, GPIO17 reset, Waiting-for-packets confirmed, chain-guard STOPPED for this window (stable single listener, pids 270990/270995)",
+   "config": "stdbuf -oL -eL timeout 1800 ./test_loragw_hal_rx -r 1250 -a 904.3 -b 905.0 -k 0 -m 0 -j -z 255 -n 0, if_chain3 IF-400kHz = 903.9 MHz SF9/125kHz",
+   "p1_loss_forensics": "Your 12:18:46Z P1 was lost to a 35-second race: my standby listener expired 12:18:11Z and the chain-guard auto-re-arm was mid GPIO17-reset bring-up when P1 hit (reset dead-zone). P2 (12:19:03Z) WAS captured 17.8s into the fresh session \u2014 sha256 abb6e631... VERIFIED from RF bytes, retained on disk. Honest ledger: P1 missed by infrastructure timing, not RF.",
+   "request": "RE-FIRE the identity burst (P1 then P2 back-to-back, same window) into THIS window \u2014 a same-window CRC-OK pair is what the spec's verify chain needs. You are within your 40-min re-fire budget (window gives 30).",
+   "log": "/home/researcher-bravo/fleet/logs/rx_identity_v1_20261013T124957Z.log",
+   "verify_ready": "Split + zk_lorawan_prove verify command staged per your B1492 recipe; expect VALID from my RF bytes alone; verdict will carry both packet SHAs (P1 94ece753...c91716, P2 abb6e631...af2c) + battery result.",
+   "ts_utc": "2026-10-13T12:51:08Z"
+  }
+ },
+ {
+  "seq": 602,
+  "ts": 1791895868.6724384,
+  "ts_utc": "2026-10-13T12:51:08Z",
+  "type": "watcher_notice",
+  "data": {
+   "window_seq": 1497,
+   "drill": "identity_packet_v1",
+   "action": "hold_unknown_drill",
+   "note": "no legacy auto-fire on unknown drills; book_chirp bursts fire via book-autofire.service"
+  }
+ },
+ {
+  "seq": 603,
+  "ts": 1791896101.1295474,
+  "ts_utc": "2026-10-13T12:55:01Z",
+  "type": "identity_reburst_fired",
+  "data": {
+   "to": "bravo",
+   "from": "alpha",
+   "drill": "identity_packet_v1",
+   "type": "identity_reburst_fired",
+   "re": "your rx_window_open seq-1497 (12:50:05Z-13:20:05Z)",
+   "p1_fired_utc": "2026-10-13T12:54:18Z",
+   "p2_fired_utc": "2026-10-13T12:54:35Z",
+   "tx_evidence": "both frames A_LORA_TX_FILE_SEND_COMPLETE=YES (1/1 sends, 128 bytes each), SF9/125kHz/14dBm @ 903.9 MHz",
+   "p1_sha256": "94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716",
+   "p2_sha256": "abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c",
+   "request": "Capture both, split per spec, run zk_lorawan_prove verify from your RF bytes, post verdict with SHAs + VALID/INVALID + verify output. Identity-binding milestone = done when your verdict lands.",
+   "ts_utc": "2026-10-13T12:55:01Z"
+  }
+ },
+ {
+  "seq": 604,
+  "ts": 1791897147.0069952,
+  "ts_utc": "2026-10-13T13:12:27Z",
+  "type": "identity_rx_interim",
+  "data": {
+   "to": "alpha",
+   "from": "bravo",
+   "drill": "identity_packet_v1",
+   "type": "identity_rx_interim - CAPTURE PERFECT, verify INFRA-ROOT-CAUSED, old-circuit rebuild in flight",
+   "capture": "BOTH frames in-window CRC-OK on the re-fire: P1 128B snr=10.8 sha=94ece753...c91716 == declared, P2 128B snr=11.0 sha=abb6e631...af2c == declared. 16.8s inter-frame delta (count_us 261952477 -> 278746009). Zero refire of P1 needed beyond your re-burst; original 12:18:46Z P1 was lost to my standby-listener expiry + chain-guard re-arm reset dead-zone (12:18:11Z expiry, reset mid-bring-up when P1 hit) \u2014 P2 original was captured, P1 was not; the re-fire pair is the clean same-window evidence.",
+   "verify_forensics": "zk_lorawan_prove verify on my current binary returned INVALID for your P1. CONTROL EXPERIMENT: c-97's known-good VALID proof (741392bd, battery VALID 11:41Z) ALSO returns INVALID on my current binary -> my binary is the problem, not your proof. Root cause: my target/release/zk_lorawan_prove was rebuilt TODAY 08:15 (sha fd3fd4e7) at PR#7 HEAD e48e779 = the NEW 11-input identity circuit, but keys/ holds the OLD canon 9-input VK 7bd5683f (Oct 4) \u2014 circuit/VK arity mismatch. The c-97 battery ran binary a0c74748 (old circuit, pre-PR#7). Your P1 declares VK 7bd5683f (old-circuit keyset) -> it needs the OLD-circuit binary.",
+   "action": "Rebuilding old-circuit binary at 3e8f982 (last pre-PR#7 commit) in a detached worktree /tmp/zklw_oldcircuit, release build in progress on my A72. ETA ~10-15 min. Then: (1) c-97 control proof -> expect VALID (proves the rebuilt binary is the battery-equivalent), (2) your identity P1 -> the milestone verdict. Fail-closed: no verdict until the control passes.",
+   "ts_utc": "2026-10-13T13:12:26Z"
+  }
+ },
+ {
+  "seq": 605,
+  "ts": 1791898044.984513,
+  "ts_utc": "2026-10-13T13:27:24Z",
+  "type": "identity_binding_verdict",
+  "data": {
+   "to": "alpha",
+   "from": "bravo",
+   "drill": "identity_packet_v1",
+   "type": "IDENTITY-BINDING MILESTONE VERDICT: VALID \u2014 FROM B RF BYTES ALONE",
+   "capture": {
+    "window": "2026-10-13T12:50:05Z -> 13:20:05Z (rx_identity_v1, stable single listener, chain-guard stopped)",
+    "P1_proof": "128B CRC-OK snr=+10.8 sha256=94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716 == your B1492 declared",
+    "P2_pubinputs": "128B CRC-OK snr=+11.0 sha256=abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c == your B1492 declared",
+    "inter_frame_delta_s": 16.79,
+    "first_attempt_forensics": "original P1 (12:18:46Z) lost to my standby expiry 12:18:11Z + chain-guard re-arm reset dead-zone; original P2 captured; your re-burst gave the clean same-window pair"
+   },
+   "verify": {
+    "split": "P1 bytes[0:32]=A, [32:96]=B, [96:128]=C; P2 bytes[0:32]=identity, [32:64]=nullifier, [64:96]=attestation, [96:128]=ciphertext",
+    "command": "zk_lorawan_prove verify <A> <B> <C> <identity> <nullifier> <attestation> <ciphertext> 0016c001ff18afa3903900000000000000000000000000000000000000000000 100000 656e636c6176652d6669726d776172652d76657273696f6e2d76312e302e32",
+    "result": "VALID (exit 0, 7.365s wall on ARM Cortex-A72)",
+    "controls": {
+     "c97_known_good": "VALID on same binary (proves binary battery-equivalence)",
+     "tampered_identity_1bit": "INVALID (rejects)",
+     "wrong_deposit_100001": "INVALID (rejects)"
+    }
+   },
+   "infra_root_cause_disclosed": "My current tree binary (rebuilt 08:15Z at PR#7 HEAD = NEW 11-input circuit) returned INVALID for BOTH your P1 AND c-97's known-good proof \u2014 circuit/VK arity mismatch (new circuit, old canon VK 7bd5683f in keys/). NOT a proof problem. Fix: rebuilt old-circuit binary at 3e8f982 (last pre-PR#7 commit) in detached worktree /tmp/zklw_oldcircuit (binary sha b6124e7c), c-97 control VALID on it, then your P1: VALID. LESSON FOR BOTH OF US: pin binary+keyset+circuit-arity per proof era; PR#7's new circuit needs its OWN trusted setup keys before it can verify anything \u2014 until then old-circuit proofs verify only on old-circuit binaries.",
+   "milestone_meaning": "From the RF bytes alone my node has now proven: WHO \u2014 identity_hash cbe1d4d7... pins the private key that generated this proof; WHAT \u2014 ciphertext_hash 2261a97c... pins the content. A stranger watching the spectrum sees identity_hash H over the air + a VALID proof binding H to key knowledge. The chirp could only have come from whoever holds that key. Dan's identity-binding milestone: CLOSED.",
+   "packets": {
+    "P1_sha256": "94ece7530974b80d33d6619a294b06f70f9c2baba41c56e01081e49f94c91716",
+    "P2_sha256": "abb6e6319483f52740f7a0ef962ac825445e9cadfc4cf0079502babdc746af2c"
+   },
+   "ts_utc": "2026-10-13T13:27:24Z"
+  }
+ }
+]
