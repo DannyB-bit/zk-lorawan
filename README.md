@@ -110,6 +110,31 @@ The ZK-LoRaWAN circuit enforces strict cryptographic binding between the edge de
 2. **Replay Immunity**: Monotonic nullifier prevents retransmission of sniffed radio packets.
 3. **Payload Binding**: Groth16 proof is mathematically invalid if a single bit in the Language-U payload is altered in transit.
 
+### ⚠️ Proof-Era Pinning & Trusted-Setup Status (identity-bound circuit, 2026-10-13)
+
+The identity-binding extension (`feat/rf-identity-binding`, PR#7) enlarges the circuit's public
+inputs **8 → 10** (`payload_sha256_public` — receiver-recomputed — and
+`payload_commitment = MiMC(identity_hash + payload_sha)`; constraints 2211 → 2654). A changed
+constraint system **requires its own trusted setup** — a keyset generated for the 8-input circuit
+cannot verify 10-input proofs and vice versa (structural rejection, not a soundness property).
+This was caught live on 2026-10-13: a PR#7-head binary correctly rejected the canon 8-input
+proofs until the matching-era binary was pinned.
+
+Two keysets now exist — **pin binary + keyset + circuit arity together per proof era**:
+
+| Era | Circuit | VK sha256 | Location | Used by |
+|---|---|---|---|---|
+| Canon (8-input) | 2211 constraints | `7bd5683f…a7a0824` | `keys/archive_8input_circuit/` | 96 certified OTA cycles, PR#8 identity flight (P1/P2) |
+| Identity-bound (10-input) | 2654 constraints | `78352ffa…b7e88c0` | `keys/` (devnet-test) | PR#7 `generate-bound` lane, E2E 2026-10-13 |
+
+- The current `keys/` pair is a **single-party OsRng devnet-test setup** — fine for devnet
+  evidence, NOT production. The production path is the MPC ceremony the binary itself warns
+  about: `zk_lorawan_prove ceremony init/contribute/verify/finalize`. **No proof carrying
+`payload_commitment` should be trusted beyond devnet until a ceremony for the 2654-constraint
+circuit is finalized.**
+- Merging/adopting this branch is a **fleet key-adoption event**: both nodes must adopt the same
+PK/VK pair before the next OTA cycle, or receiver verdicts will structurally reject.
+
 ## 🛠️ System Architecture
 
 ```
