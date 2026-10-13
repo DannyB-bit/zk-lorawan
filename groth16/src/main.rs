@@ -603,6 +603,73 @@ fn main() {
         std::process::exit(0);
     }
 
+    // IDENTITY-BOUND GENERATION (Dan's milestone, 2026-10-13):
+    // generate-bound <private_key_hex> <decryption_key_hex> <coordinate_val>
+    //   <firmware_hash_hex> <gateway_address_hex> <deposit_value> <payload_file>
+    // Binds the proof to the SHA-256 of the file's bytes (the exact OTA payload);
+    // prints payload_sha256 + payload_commitment alongside the standard fields.
+    if args.len() > 1 && args[1] == "generate-bound" {
+        if args.len() < 9 {
+            eprintln!("Usage: zk_lorawan_prove generate-bound <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex> <deposit_value> <payload_file>");
+            std::process::exit(2);
+        }
+        let private_key = hex::decode(&args[2]).expect("Invalid private_key hex");
+        let decryption_key = hex::decode(&args[3]).expect("Invalid decryption_key hex");
+        let coordinate_val: u64 = args[4].parse().expect("Invalid coordinate_val");
+        let firmware_hash = hex::decode(&args[5]).expect("Invalid firmware_hash hex");
+        let gateway_address = hex::decode(&args[6]).expect("Invalid gateway_address hex");
+        let deposit_value: u64 = args[7].parse().expect("Invalid deposit_value");
+        let payload = std::fs::read(&args[8]).expect("Cannot read payload file");
+
+        eprintln!("[*] identity-bound proving over {} payload bytes", payload.len());
+        let prover = ZKLoRaWANProver::new();
+        let bundle = prover.generate_proof_with_payload(
+            &private_key,
+            &decryption_key,
+            coordinate_val,
+            &firmware_hash,
+            &gateway_address,
+            deposit_value,
+            Some(&payload),
+        );
+        eprintln!("[*] proof generated; payload identity-bound");
+
+        let proof_a =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed).unwrap();
+        let proof_b =
+            ark_bn254::G2Affine::deserialize_compressed(&*bundle.proof_b_compressed).unwrap();
+        let proof_c =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed).unwrap();
+
+        let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+        let identity_fr = Fr::deserialize_compressed(&bundle.identity_hash[..]).unwrap();
+        let deposit_commitment_fr =
+            circuit::mimc_hash(identity_fr, Some(Fr::from(deposit_value)), &constants);
+        let mut deposit_commitment_buf = Vec::new();
+        use ark_serialize::CanonicalSerialize;
+        deposit_commitment_fr
+            .serialize_compressed(&mut deposit_commitment_buf)
+            .unwrap();
+
+        println!("{{");
+        println!("  \"proof_a_compressed\": \"{}\",", hex::encode(&bundle.proof_a_compressed));
+        println!("  \"proof_b_compressed\": \"{}\",", hex::encode(&bundle.proof_b_compressed));
+        println!("  \"proof_c_compressed\": \"{}\",", hex::encode(&bundle.proof_c_compressed));
+        println!("  \"proof_a\": \"{}\",", hex::encode(to_solana_g1(&proof_a)));
+        println!("  \"proof_b\": \"{}\",", hex::encode(to_solana_g2(&proof_b)));
+        println!("  \"proof_c\": \"{}\",", hex::encode(to_solana_g1(&proof_c)));
+        println!("  \"identity_hash\": \"{}\",", hex::encode(&bundle.identity_hash));
+        println!("  \"nullifier_hash\": \"{}\",", hex::encode(&bundle.nullifier_hash));
+        println!("  \"attestation_hash\": \"{}\",", hex::encode(&bundle.attestation_hash));
+        println!("  \"ciphertext_hash\": \"{}\",", hex::encode(&bundle.ciphertext_hash));
+        println!("  \"payload_sha256\": \"{}\",", hex::encode(&bundle.payload_sha256));
+        println!("  \"payload_commitment\": \"{}\",", hex::encode(&bundle.payload_commitment));
+        println!("  \"deposit_commitment\": \"{}\",", hex::encode(deposit_commitment_buf));
+        println!("  \"firmware_hash\": \"{}\"", hex::encode(&firmware_hash));
+        println!("}}");
+        std::process::exit(0);
+    }
+
     if args.len() > 1 && args[1] == "generate" {
         if args.len() < 8 {
             eprintln!("Usage: zk_lorawan_prove generate <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex> <deposit_value>");
