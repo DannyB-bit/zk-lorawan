@@ -776,18 +776,29 @@ fn main() {
         let firmware_hash = hex::decode(&args[11]).expect("Invalid firmware_hash hex");
 
         // RF identity-binding CLI args (12: payload_sha256 hex, 13: payload_commitment hex).
-        // Optional for legacy compatibility: absent => zero-hash (unbound statement).
+        // Optional for legacy compatibility: absent => the same zero-payload statement
+        // shape generate_proof(…, None) commits to — payload_sha256 = Fr(0) and
+        // payload_commitment = MiMC(identity_hash, Fr(0)). SHE FIX (2026-10-13, fleet
+        // sweep): the old fallback serialized Fr(0) for BOTH fields, which can never
+        // match a generate-side commitment (MiMC output is non-zero) — every unbound
+        // round-trip returned INVALID. Reproducible: generate → verify → INVALID.
         let (payload_sha_bytes, payload_commit_bytes) = if args.len() >= 14 {
             (
                 hex::decode(&args[12]).expect("Invalid payload_sha256 hex"),
                 hex::decode(&args[13]).expect("Invalid payload_commitment hex"),
             )
         } else {
-            let zero = Fr::from(0u64);
+            let identity_fr = Fr::from_le_bytes_mod_order(&identity_bytes);
+            let zero_sha = Fr::from(0u64);
+            let mimc_constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+            let zero_commitment =
+                circuit::mimc_hash(identity_fr, Some(zero_sha), &mimc_constants);
             let mut zb = Vec::new();
             use ark_serialize::CanonicalSerialize;
-            zero.serialize_compressed(&mut zb).unwrap();
-            (zb.clone(), zb)
+            zero_sha.serialize_compressed(&mut zb).unwrap();
+            let mut cb = Vec::new();
+            zero_commitment.serialize_compressed(&mut cb).unwrap();
+            (zb, cb)
         };
 
         let bundle = ZKLoRaWANProofBundle {
