@@ -5,6 +5,7 @@
 pub mod ceremony;
 pub mod circuit;
 
+use sha2::Digest;
 use ark_bn254::{Bn254, Fr};
 use ark_ff::PrimeField;
 use ark_groth16::{PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
@@ -36,6 +37,9 @@ pub struct ZKLoRaWANProofBundle {
     pub nullifier_hash: Vec<u8>,     // Fr element (32 bytes)
     pub attestation_hash: Vec<u8>,   // Fr element (32 bytes)
     pub ciphertext_hash: Vec<u8>,    // Fr element (32 bytes)
+    // RF identity-binding public inputs (Dan's milestone, 2026-10-13):
+    pub payload_sha256: Vec<u8>,     // Fr element (32 bytes) - SHA256(OTA bytes) as Fr
+    pub payload_commitment: Vec<u8>, // Fr element (32 bytes) - MiMC(identity + payload_sha)
     pub total_bytes: usize,
 }
 
@@ -126,6 +130,33 @@ impl ZKLoRaWANProver {
         gateway_address_bytes: &[u8],
         deposit_value: u64,
     ) -> ZKLoRaWANProofBundle {
+        self.generate_proof_with_payload(
+            private_key_bytes,
+            decryption_key_bytes,
+            coordinate_val,
+            firmware_hash_bytes,
+            gateway_address_bytes,
+            deposit_value,
+            None,
+        )
+    }
+
+    /// Identity-bound proof generation (Dan's RF milestone, 2026-10-13):
+    /// when `payload_bytes` is provided, the proof additionally binds the
+    /// sender's identity to the SHA-256 of the EXACT over-the-air bytes.
+    /// payload_sha256 = SHA256(payload_bytes) as Fr (also a PUBLIC input so the
+    /// receiver can independently recompute it from the RF capture);
+    /// payload_commitment = MiMC(identity_hash + payload_sha256).
+    pub fn generate_proof_with_payload(
+        &self,
+        private_key_bytes: &[u8],
+        decryption_key_bytes: &[u8],
+        coordinate_val: u64,
+        firmware_hash_bytes: &[u8],
+        gateway_address_bytes: &[u8],
+        deposit_value: u64,
+        payload_bytes: Option<&[u8]>,
+    ) -> ZKLoRaWANProofBundle {
         let mut rng = rand::thread_rng();
 
         // Convert inputs to field elements
@@ -155,6 +186,22 @@ impl ZKLoRaWANProver {
         let deposit_commitment =
             circuit::mimc_hash(identity_hash, Some(deposit_value_fr), &self.constants);
 
+        // RF payload identity-binding (Dan's milestone, 2026-10-13).
+        // When no payload is provided we bind to the zero hash — the legacy
+        // call sites keep proving the 8-input statement, and the new
+        // 10-input statement is used end-to-end by the identity-bound lane.
+        let payload_sha256_fr = match payload_bytes {
+            Some(bytes) => {
+                let mut h = sha2::Sha256::new();
+                sha2::Digest::update(&mut h, bytes);
+                let digest = sha2::Digest::finalize(h);
+                Fr::from_le_bytes_mod_order(&digest)
+            }
+            None => Fr::from(0u64),
+        };
+        let payload_commitment =
+            circuit::mimc_hash(identity_hash, Some(payload_sha256_fr), &self.constants);
+
         // Generate the real Groth16 proof
         let proof = circuit::generate_proof(
             &self.proving_key,
@@ -171,6 +218,8 @@ impl ZKLoRaWANProver {
             gateway_part2_fr,
             deposit_commitment,
             firmware_hash_fr, // firmware_hash_public == firmware_hash_witness
+            payload_sha256_fr,
+            payload_commitment,
             self.constants.clone(),
             &mut rng,
         )
@@ -206,13 +255,24 @@ impl ZKLoRaWANProver {
             .serialize_compressed(&mut ciphertext_hash_buf)
             .unwrap();
 
+        let mut payload_sha256_buf = Vec::new();
+        payload_sha256_fr
+            .serialize_compressed(&mut payload_sha256_buf)
+            .unwrap();
+        let mut payload_commitment_buf = Vec::new();
+        payload_commitment
+            .serialize_compressed(&mut payload_commitment_buf)
+            .unwrap();
+
         let total = proof_a_buf.len()
             + proof_b_buf.len()
             + proof_c_buf.len()
             + identity_hash_buf.len()
             + nullifier_hash_buf.len()
             + attestation_hash_buf.len()
-            + ciphertext_hash_buf.len();
+            + ciphertext_hash_buf.len()
+            + payload_sha256_buf.len()
+            + payload_commitment_buf.len();
 
         ZKLoRaWANProofBundle {
             proof_a_compressed: proof_a_buf,
@@ -222,6 +282,8 @@ impl ZKLoRaWANProver {
             nullifier_hash: nullifier_hash_buf,
             attestation_hash: attestation_hash_buf,
             ciphertext_hash: ciphertext_hash_buf,
+            payload_sha256: payload_sha256_buf,
+            payload_commitment: payload_commitment_buf,
             total_bytes: total,
         }
     }
@@ -234,6 +296,28 @@ impl ZKLoRaWANProver {
         gateway_address_bytes: &[u8],
         deposit_value: u64,
         firmware_hash_bytes: &[u8],
+    ) -> bool {
+        self.verify_bundle_with_payload(
+            bundle,
+            gateway_address_bytes,
+            deposit_value,
+            firmware_hash_bytes,
+            None,
+        )
+    }
+
+    /// Identity-bound bundle verification (Dan's milestone, 2026-10-13):
+    /// when `expected_payload_bytes` is provided, the receiver independently
+    /// recomputes SHA256(OTA bytes) and the proof only verifies if the
+    /// sender's identity committed to THOSE exact bytes.
+    #[allow(clippy::too_many_arguments)]
+    pub fn verify_bundle_with_payload(
+        &self,
+        bundle: &ZKLoRaWANProofBundle,
+        gateway_address_bytes: &[u8],
+        deposit_value: u64,
+        firmware_hash_bytes: &[u8],
+        expected_payload_bytes: Option<&[u8]>,
     ) -> bool {
         // Deserialize proof points
         let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed)
@@ -291,6 +375,35 @@ impl ZKLoRaWANProver {
             circuit::mimc_hash(identity_hash, Some(deposit_value_fr), &self.constants);
         let firmware_hash_fr = Fr::from_le_bytes_mod_order(firmware_hash_bytes);
 
+        // RF identity-binding (Dan's milestone, 2026-10-13):
+        // deserialize the sender's committed payload SHA from the bundle, and
+        // when the receiver supplies the actual captured OTA bytes, FAIL-CLOSED
+        // unless the independently recomputed SHA matches the committed one.
+        let bundle_payload_sha = match Fr::deserialize_compressed(&*bundle.payload_sha256) {
+            Ok(h) => h,
+            Err(_) => return false,
+        };
+        let bundle_payload_commitment =
+            match Fr::deserialize_compressed(&*bundle.payload_commitment) {
+                Ok(h) => h,
+                Err(_) => return false,
+            };
+        let payload_sha_for_verify = match expected_payload_bytes {
+            Some(bytes) => {
+                let mut h = sha2::Sha256::new();
+                sha2::Digest::update(&mut h, bytes);
+                let digest = sha2::Digest::finalize(h);
+                let recomputed = Fr::from_le_bytes_mod_order(&digest);
+                if recomputed != bundle_payload_sha {
+                    // The chirped bytes do NOT match what the sender's identity
+                    // committed to — reject fail-closed.
+                    return false;
+                }
+                recomputed
+            }
+            None => bundle_payload_sha,
+        };
+
         // Run real Groth16 verification (bilinear pairing check)
         matches!(
             circuit::verify_proof(
@@ -304,6 +417,8 @@ impl ZKLoRaWANProver {
                 gateway_part2_fr,
                 deposit_commitment,
                 firmware_hash_fr,
+                bundle_payload_commitment,
+                payload_sha_for_verify,
             ),
             Ok(true)
         )
@@ -377,6 +492,9 @@ fn main() {
             let part2_bytes = [0u8; 32];
             let gateway_part2_fr = Fr::from_le_bytes_mod_order(&part2_bytes);
 
+            let payload_sha256_fr = Fr::from(0u64);
+            let payload_commitment =
+                circuit::mimc_hash(identity_hash, Some(payload_sha256_fr), &prover.constants);
             let mut rng = rand::thread_rng();
             let proof = circuit::generate_proof(
                 &prover.proving_key,
@@ -393,6 +511,8 @@ fn main() {
                 gateway_part2_fr,
                 deposit_commitment,
                 firmware_hash_fr,
+                payload_sha256_fr,
+                payload_commitment,
                 prover.constants.clone(),
                 &mut rng,
             )
@@ -480,6 +600,73 @@ fn main() {
         for (i, ic) in vk.gamma_abc_g1.iter().enumerate() {
             println!("vk_ic[{}]: {}", i, hex::encode(to_solana_g1(ic)));
         }
+        std::process::exit(0);
+    }
+
+    // IDENTITY-BOUND GENERATION (Dan's milestone, 2026-10-13):
+    // generate-bound <private_key_hex> <decryption_key_hex> <coordinate_val>
+    //   <firmware_hash_hex> <gateway_address_hex> <deposit_value> <payload_file>
+    // Binds the proof to the SHA-256 of the file's bytes (the exact OTA payload);
+    // prints payload_sha256 + payload_commitment alongside the standard fields.
+    if args.len() > 1 && args[1] == "generate-bound" {
+        if args.len() < 9 {
+            eprintln!("Usage: zk_lorawan_prove generate-bound <private_key_hex> <decryption_key_hex> <coordinate_val> <firmware_hash_hex> <gateway_address_hex> <deposit_value> <payload_file>");
+            std::process::exit(2);
+        }
+        let private_key = hex::decode(&args[2]).expect("Invalid private_key hex");
+        let decryption_key = hex::decode(&args[3]).expect("Invalid decryption_key hex");
+        let coordinate_val: u64 = args[4].parse().expect("Invalid coordinate_val");
+        let firmware_hash = hex::decode(&args[5]).expect("Invalid firmware_hash hex");
+        let gateway_address = hex::decode(&args[6]).expect("Invalid gateway_address hex");
+        let deposit_value: u64 = args[7].parse().expect("Invalid deposit_value");
+        let payload = std::fs::read(&args[8]).expect("Cannot read payload file");
+
+        eprintln!("[*] identity-bound proving over {} payload bytes", payload.len());
+        let prover = ZKLoRaWANProver::new();
+        let bundle = prover.generate_proof_with_payload(
+            &private_key,
+            &decryption_key,
+            coordinate_val,
+            &firmware_hash,
+            &gateway_address,
+            deposit_value,
+            Some(&payload),
+        );
+        eprintln!("[*] proof generated; payload identity-bound");
+
+        let proof_a =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_a_compressed).unwrap();
+        let proof_b =
+            ark_bn254::G2Affine::deserialize_compressed(&*bundle.proof_b_compressed).unwrap();
+        let proof_c =
+            ark_bn254::G1Affine::deserialize_compressed(&*bundle.proof_c_compressed).unwrap();
+
+        let constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+        let identity_fr = Fr::deserialize_compressed(&bundle.identity_hash[..]).unwrap();
+        let deposit_commitment_fr =
+            circuit::mimc_hash(identity_fr, Some(Fr::from(deposit_value)), &constants);
+        let mut deposit_commitment_buf = Vec::new();
+        use ark_serialize::CanonicalSerialize;
+        deposit_commitment_fr
+            .serialize_compressed(&mut deposit_commitment_buf)
+            .unwrap();
+
+        println!("{{");
+        println!("  \"proof_a_compressed\": \"{}\",", hex::encode(&bundle.proof_a_compressed));
+        println!("  \"proof_b_compressed\": \"{}\",", hex::encode(&bundle.proof_b_compressed));
+        println!("  \"proof_c_compressed\": \"{}\",", hex::encode(&bundle.proof_c_compressed));
+        println!("  \"proof_a\": \"{}\",", hex::encode(to_solana_g1(&proof_a)));
+        println!("  \"proof_b\": \"{}\",", hex::encode(to_solana_g2(&proof_b)));
+        println!("  \"proof_c\": \"{}\",", hex::encode(to_solana_g1(&proof_c)));
+        println!("  \"identity_hash\": \"{}\",", hex::encode(&bundle.identity_hash));
+        println!("  \"nullifier_hash\": \"{}\",", hex::encode(&bundle.nullifier_hash));
+        println!("  \"attestation_hash\": \"{}\",", hex::encode(&bundle.attestation_hash));
+        println!("  \"ciphertext_hash\": \"{}\",", hex::encode(&bundle.ciphertext_hash));
+        println!("  \"payload_sha256\": \"{}\",", hex::encode(&bundle.payload_sha256));
+        println!("  \"payload_commitment\": \"{}\",", hex::encode(&bundle.payload_commitment));
+        println!("  \"deposit_commitment\": \"{}\",", hex::encode(deposit_commitment_buf));
+        println!("  \"firmware_hash\": \"{}\"", hex::encode(&firmware_hash));
+        println!("}}");
         std::process::exit(0);
     }
 
@@ -588,6 +775,32 @@ fn main() {
         let deposit_value: u64 = args[10].parse().expect("Invalid deposit_value");
         let firmware_hash = hex::decode(&args[11]).expect("Invalid firmware_hash hex");
 
+        // RF identity-binding CLI args (12: payload_sha256 hex, 13: payload_commitment hex).
+        // Optional for legacy compatibility: absent => the same zero-payload statement
+        // shape generate_proof(…, None) commits to — payload_sha256 = Fr(0) and
+        // payload_commitment = MiMC(identity_hash, Fr(0)). SHE FIX (2026-10-13, fleet
+        // sweep): the old fallback serialized Fr(0) for BOTH fields, which can never
+        // match a generate-side commitment (MiMC output is non-zero) — every unbound
+        // round-trip returned INVALID. Reproducible: generate → verify → INVALID.
+        let (payload_sha_bytes, payload_commit_bytes) = if args.len() >= 14 {
+            (
+                hex::decode(&args[12]).expect("Invalid payload_sha256 hex"),
+                hex::decode(&args[13]).expect("Invalid payload_commitment hex"),
+            )
+        } else {
+            let identity_fr = Fr::from_le_bytes_mod_order(&identity_bytes);
+            let zero_sha = Fr::from(0u64);
+            let mimc_constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
+            let zero_commitment =
+                circuit::mimc_hash(identity_fr, Some(zero_sha), &mimc_constants);
+            let mut zb = Vec::new();
+            use ark_serialize::CanonicalSerialize;
+            zero_sha.serialize_compressed(&mut zb).unwrap();
+            let mut cb = Vec::new();
+            zero_commitment.serialize_compressed(&mut cb).unwrap();
+            (zb, cb)
+        };
+
         let bundle = ZKLoRaWANProofBundle {
             proof_a_compressed: proof_a_bytes,
             proof_b_compressed: proof_b_bytes,
@@ -596,6 +809,8 @@ fn main() {
             nullifier_hash: nullifier_bytes,
             attestation_hash: attestation_bytes,
             ciphertext_hash: ciphertext_bytes,
+            payload_sha256: payload_sha_bytes,
+            payload_commitment: payload_commit_bytes,
             total_bytes: 0,
         };
 
@@ -827,6 +1042,8 @@ fn main() {
         identity_hash: bundle.identity_hash.clone(),
         nullifier_hash: bundle.nullifier_hash.clone(),
         attestation_hash: bundle.attestation_hash.clone(),
+        payload_sha256: bundle.payload_sha256.clone(),
+        payload_commitment: bundle.payload_commitment.clone(),
         ciphertext_hash: bundle.ciphertext_hash.clone(),
         total_bytes: bundle.total_bytes,
     };

@@ -1,7 +1,7 @@
 // ============================================================================
 // ZK-LoRaWAN Groth16 Circuit — Hardened Production Circuit
 // ============================================================================
-// Public inputs (8):
+// Public inputs (9):
 //   1. identity_hash        = MiMC(private_key)
 //   2. nullifier_hash       = MiMC(private_key + nonce)
 //   3. attestation_hash     = MiMC(private_key + firmware_hash)
@@ -10,6 +10,12 @@
 //   6. gateway_part2        = upper 16 bytes of gateway Pubkey as Fr
 //   7. deposit_commitment   = MiMC(identity_hash + deposit_value) [pool drain prevention]
 //   8. firmware_hash_public = firmware hash (on-chain whitelist check)
+//   9. payload_commitment   = MiMC(identity_hash + payload_sha256_as_Fr)
+//                            [RF IDENTITY-BINDING, Dan's milestone 2026-10-13:
+//                             proves the holder of THIS private key committed to
+//                             THESE exact over-the-air payload bytes — closes the
+//                             "who delivered the letter" gap: face revealed,
+//                             envelope signed, without revealing the key]
 // ============================================================================
 
 use ark_bn254::{Bn254, Fr};
@@ -45,6 +51,11 @@ pub struct ZKLoRaCircuit<F: PrimeField> {
     pub gateway_part2: Option<F>,
     pub deposit_commitment: Option<F>,
     pub firmware_hash_public: Option<F>,
+    // RF payload identity-binding (public inputs #9 + #10)
+    pub payload_commitment: Option<F>,
+    pub payload_sha256_public: Option<F>,
+    // RF payload identity-binding witness (the SHA-256 of the OTA bytes as Fr)
+    pub payload_sha256_witness: Option<F>,
 
     pub round_constants: Vec<F>,
 }
@@ -214,6 +225,45 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for ZKLoRaCircuit<F> {
             firmware_hash_public_var.into(),
         )?;
 
+        // 8. RF PAYLOAD IDENTITY-BINDING (Dan's milestone, 2026-10-13):
+        //    payload_commitment = MiMC(identity_hash + payload_sha256_as_Fr)
+        //    Binds the holder of the private key to the EXACT over-the-air bytes:
+        //    a stranger verifying this proof learns "whoever generated this proof
+        //    controls the identity AND committed to these payload bytes" — the
+        //    mathematical passport baked into the chirps.
+        let payload_sha256_var = cs.new_witness_variable(|| {
+            self.payload_sha256_witness
+                .ok_or(SynthesisError::AssignmentMissing)
+        })?;
+        let mut initial_lc_6 =
+            ark_relations::r1cs::LinearCombination::from(calculated_identity_var);
+        initial_lc_6 += (F::one(), payload_sha256_var);
+        let val_6 = match (self.identity_hash, self.payload_sha256_witness) {
+            (Some(ih), Some(ps)) => Some(ih + ps),
+            _ => None,
+        };
+        let calculated_payload_commitment_var = mimc_hash_constraints(&cs, initial_lc_6, val_6)?;
+        let payload_commitment_var = cs.new_input_variable(|| {
+            self.payload_commitment
+                .ok_or(SynthesisError::AssignmentMissing)
+        })?;
+        cs.enforce_constraint(
+            calculated_payload_commitment_var.into(),
+            Variable::One.into(),
+            payload_commitment_var.into(),
+        )?;
+        // And bind the witness to the public payload SHA (the receiver independently
+        // computes payload_sha256 from the RF bytes and checks it as a public input):
+        let payload_sha256_public_var = cs.new_input_variable(|| {
+            self.payload_sha256_public
+                .ok_or(SynthesisError::AssignmentMissing)
+        })?;
+        cs.enforce_constraint(
+            payload_sha256_var.into(),
+            Variable::One.into(),
+            payload_sha256_public_var.into(),
+        )?;
+
         Ok(())
     }
 }
@@ -264,6 +314,9 @@ pub fn setup_keys<R: Rng + CryptoRng>(
         gateway_part2: None,
         deposit_commitment: None,
         firmware_hash_public: None,
+        payload_commitment: None,
+        payload_sha256_public: None,
+        payload_sha256_witness: None,
         round_constants: constants,
     };
 
@@ -287,6 +340,8 @@ pub fn generate_proof<R: Rng + CryptoRng>(
     gateway_part2: Fr,
     deposit_commitment: Fr,
     firmware_hash_public: Fr,
+    payload_sha256: Fr,
+    payload_commitment: Fr,
     constants: Vec<Fr>,
     rng: &mut R,
 ) -> Result<Proof<Bn254>, SynthesisError> {
@@ -304,6 +359,9 @@ pub fn generate_proof<R: Rng + CryptoRng>(
         gateway_part2: Some(gateway_part2),
         deposit_commitment: Some(deposit_commitment),
         firmware_hash_public: Some(firmware_hash_public),
+        payload_sha256_witness: Some(payload_sha256),
+        payload_commitment: Some(payload_commitment),
+        payload_sha256_public: Some(payload_sha256),
         round_constants: constants,
     };
 
@@ -323,6 +381,8 @@ pub fn verify_proof(
     gateway_part2: Fr,
     deposit_commitment: Fr,
     firmware_hash_public: Fr,
+    payload_commitment: Fr,
+    payload_sha256_public: Fr,
 ) -> Result<bool, SynthesisError> {
     let public_inputs = vec![
         identity_hash,
@@ -333,6 +393,8 @@ pub fn verify_proof(
         gateway_part2,
         deposit_commitment,
         firmware_hash_public,
+        payload_commitment,
+        payload_sha256_public,
     ];
     Groth16::<Bn254>::verify_with_processed_vk(pvk, &public_inputs, proof)
 }
