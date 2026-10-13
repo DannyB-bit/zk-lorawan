@@ -80,6 +80,10 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
     deposit_value: u64,
     firmware_hash_hex_ptr: *const u8,
     firmware_hash_hex_len: usize,
+    payload_sha256_hex_ptr: *const u8,
+    payload_sha256_hex_len: usize,
+    payload_commitment_hex_ptr: *const u8,
+    payload_commitment_hex_len: usize,
 ) -> u32 {
     let proof_a_bytes_slice =
         unsafe { std::slice::from_raw_parts(proof_a_hex_ptr, proof_a_hex_len) };
@@ -99,6 +103,11 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         unsafe { std::slice::from_raw_parts(gateway_address_hex_ptr, gateway_address_hex_len) };
     let firmware_hash_bytes_slice =
         unsafe { std::slice::from_raw_parts(firmware_hash_hex_ptr, firmware_hash_hex_len) };
+    let payload_sha256_bytes_slice =
+        unsafe { std::slice::from_raw_parts(payload_sha256_hex_ptr, payload_sha256_hex_len) };
+    let payload_commitment_bytes_slice = unsafe {
+        std::slice::from_raw_parts(payload_commitment_hex_ptr, payload_commitment_hex_len)
+    };
 
     let proof_a_str = match std::str::from_utf8(proof_a_bytes_slice) {
         Ok(s) => s,
@@ -181,6 +190,22 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         Ok(b) => b,
         Err(_) => return 0,
     };
+    let payload_sha256_str = match std::str::from_utf8(payload_sha256_bytes_slice) {
+        Ok(s) => s,
+        Err(_) => return 0,
+    };
+    let payload_sha256_bytes = match hex::decode(payload_sha256_str) {
+        Ok(b) => b,
+        Err(_) => return 0,
+    };
+    let payload_commitment_str = match std::str::from_utf8(payload_commitment_bytes_slice) {
+        Ok(s) => s,
+        Err(_) => return 0,
+    };
+    let payload_commitment_bytes = match hex::decode(payload_commitment_str) {
+        Ok(b) => b,
+        Err(_) => return 0,
+    };
 
     let proof_a = match ark_bn254::G1Affine::deserialize_compressed(&*proof_a_bytes) {
         Ok(p) => p,
@@ -239,6 +264,17 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         circuit::mimc_hash(identity_hash_fr, Some(deposit_value_fr), &constants);
     let firmware_hash_fr = ark_bn254::Fr::from_le_bytes_mod_order(&firmware_hash_bytes);
 
+    // RF identity-binding public inputs (Dan's milestone, 2026-10-13)
+    let payload_sha256_fr = match ark_bn254::Fr::deserialize_compressed(&*payload_sha256_bytes) {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
+    let payload_commitment_fr =
+        match ark_bn254::Fr::deserialize_compressed(&*payload_commitment_bytes) {
+            Ok(h) => h,
+            Err(_) => return 0,
+        };
+
     // Load VK from file (OsRng-generated, persisted by main.rs)
     let prepared_vk = PREPARED_VK.get_or_init(load_or_generate_vk);
 
@@ -253,6 +289,8 @@ pub unsafe extern "C" fn verify_zk_proof_raw(
         gateway_part2_fr,
         deposit_commitment,
         firmware_hash_fr,
+        payload_commitment_fr,
+        payload_sha256_fr,
     ) {
         Ok(true) => 1,
         _ => 0,
