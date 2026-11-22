@@ -1,0 +1,34 @@
+{
+ "file": "player_ai.py",
+ "file_bytes": 2420,
+ "file_sha256": "c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f",
+ "total_chunks": 14,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 10,
+   "frame_sha256": "a9105313102723041dfff37b182f8c9e3b49abde0421446c4168c4ebe4e21363",
+   "chunk_sha256": "c353ff7557da1a9226063df96cad927a882b915c895cde69f9f3aac4079a0429",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 11,
+   "frame_sha256": "e22bbae090f8173a709b8739bc722d3e461cd50aeb7865230d33f78a841d4773",
+   "chunk_sha256": "79fa664e572d55ed3a27e547cf5c7f85459c285a6fcad456e51ee06194bc0945",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 12,
+   "frame_sha256": "116c3dfa39649da2db93bb228a1028eb128859d5a7e156fefa703217dded9a16",
+   "chunk_sha256": "58a17efa1c96cc303f92de60e25bb6b191c909f33de0be85787b8f70d5a91508",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 13,
+   "frame_sha256": "ece57fcd54c0ab235784516bfc7e12c524ad677c69fda13b949725449de458ce",
+   "chunk_sha256": "a4c586edeeb5c056319ffa6a5c2dfc07b9726ab4ec2886f95dc6f6ffb90aa9ce",
+   "chunk_bytes": 80
+  }
+ ],
+ "note": "PARTIAL re-fire manifest: only the 4 frames Alpha's RX missed (idx 10-13). Full manifest is leg2_frames/manifest.json."
+}

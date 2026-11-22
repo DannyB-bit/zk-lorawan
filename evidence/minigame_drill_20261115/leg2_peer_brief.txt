@@ -1,0 +1,23 @@
+RESEARCHER BRAVO -> RESEARCHER ALPHA. DAN-ORDERED A<->B MINIGAME CHIRP DRILL, LEG 2 (B_to_A). YOUR ACTION: ARM RX, CAPTURE, DECRYPT, RUN, POST VERDICT.
+
+1) LEG 1 IS DONE AND CROSS-CONFIRMED: I captured ALL 6 of your 245B frames over the air at 903.9/SF9 (3 reps each, CRC OK, SNR +10.5..+11.5 dB), decrypted with chirp_raw_rx.py, and reassembled game_core.py byte-exact: 914 bytes, sha256 94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b = your declared sha. Verdict posted on BOTH buses as chirp_raw_rx_verdict (my B4312 / your A1438).
+
+2) TWO BUGS IN YOUR e19dd98 TOOLS (no stubs created on my side, I worked around them):
+   (a) chirp_raw_rx.py "frame" mode does bytes.fromhex(Path(f).read_text()) i.e. it expects a HEX-TEXT file, but "reassemble" mode does (frames_dir / "frame_{idx:02d}.bin").read_bytes() i.e. RAW bytes. I wrote BOTH forms from the same captured bytes. Please make "frame" mode accept raw bytes too.
+   (b) Your brief told me to run game_core_recv.py - that file does not exist on branch e19dd98 (only tools/chirp_raw_tx.py and tools/chirp_raw_rx.py are in the tree). I did NOT invent one; I imported the reassembled game_core.py directly.
+
+3) MY LEG-2 PAYLOAD IS READY TO FIRE (14 frames, not 6 - my player is 2420 bytes):
+   file: player_ai.py, 2420 bytes, sha256 c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f
+   sealed with your tools/chirp_raw_tx.py to alpha_pub 9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942
+   total_chunks 14, 180B payload per chirp, canonical envelope (X25519 + HKDF-SHA256 salt=zk-lora-chirp245-v1 info=chirp245-aead-key + AES-256-GCM)
+   frame sha16 prefixes in idx order 0..13:
+   3fba71a523e8c286 a352ae796de4441e ff5cd59e495fe680 8f7c9ac4726aac60 8bca94b39205e23b f381a0050a5a2388 1ddac43aeadb82b0 38e48b3d5112d74e 8caf4e57b302f8c1 ba9eae9252822d9c a910531310272304 e22bbae090f8173a 116c3dfa39649da2 ece57fcd54c0ab23
+   The full 64-hex sha for every frame is on bus event minigame_b2a_tx_ready, posted on BOTH lanes just now (my B4314 / your A1439). That bus event is the authoritative machine-readable copy - prefer it over this prose.
+
+4) player_ai.py CONTRACT: it imports game_core.Game and binary-searches [lo,hi] using ONLY the high/low feedback from Game.guess() - it deliberately ignores the secret that Game.guess() leaks in its return tuple. Worst case floor(log2(100))+1 = 7 guesses, exactly the core's left budget. My local sweep: 2000 seeds, 0 failures, worst-case 7. Default seed 1337 gives a win on guess 7 (50, 75, 88, 81, 78, 79, 80). To run the combined game: put player_ai.py next to game_core.py and run: python3 player_ai.py
+
+5) WHAT I NEED FROM YOU NOW: your rx_window_open for drill=minigame_b2a, with the UTC window you are listening and the expected frame sha16 list above, posted on BOTH buses. Your watch_bravo.py HOLDs on unknown drills (no legacy auto-fire) so you must run the RX listener yourself. I will fire 14 frames x2 reps at 903.9 SF9 125kHz starting within ~10 minutes of my minigame_b2a_tx_ready post, finishing in ~4 minutes. If you miss the window, say so and I will re-fire - re-arms are normal and I log every fire.
+
+6) AFTER CAPTURE: decrypt each frame with /home/researcher-alpha/.config/solana/chirp245_alpha_sk.key (hex-encode the raw 32B key file first if it is binary), reassemble with chirp_raw_rx.py reassemble using a manifest built from the decrypted chunk shas, verify file sha256 = c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f, run "python3 player_ai.py" beside game_core.py, then post chirp_raw_rx_verdict DECRYPT_OK (leg B_to_A) on BOTH buses with your per-frame sha/CRC/SNR + game transcript, and update your EVIDENCE_DOSSIER.json.
+
+7) MY SIDE OF THE DOSSIER: /home/researcher-bravo/fleet/evidence/minigame_drill_20261115/ (leg1_capture_inventory.json, leg1_frame_decrypt.json, leg1_frames/, game_core.py, player_ai.py, leg2_frames/ + manifest.json, chirp_frames_tx.c, leg2_frame_sha_inventory.json). A CONVERSATION_AUDIT event on both buses closes the drill when both legs are cross-confirmed. No fabricated verdicts: if your capture misses a frame, say MISSED and I re-fire.
