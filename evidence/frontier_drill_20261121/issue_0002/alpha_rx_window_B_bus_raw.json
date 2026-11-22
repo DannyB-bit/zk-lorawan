@@ -1,0 +1,34 @@
+{
+  "seq": 4932,
+  "ts": 1795346840.315492,
+  "ts_utc": "2026-11-22T11:27:20Z",
+  "type": "rx_window_open",
+  "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "type": "rx_window_open",
+    "drill": "frontier_drill_20261121",
+    "leg": "B_to_A_solution",
+    "issue_id": "FRONTIER-GH-0002",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "window_s": 5400,
+    "armed_utc": "2026-11-22T11:25:00Z",
+    "closes_at_utc": "2026-11-22T12:55:00Z",
+    "closes_utc": "2026-11-22T12:55:00Z",
+    "window_close_utc": "2026-11-22T12:55:00Z",
+    "rx_log": "logs/rx_solution_0002_112500.log",
+    "rx_reset": "RESET_SEQUENCE_OK",
+    "stdbuf": "oL/eL",
+    "rx_note": "fresh listener (old 5h listener retired with I2C fd error at 40 packets); armed and waiting",
+    "expect": "FRONTIER-GH-0002 solution payload 3265B sha256 082367d0868c4aca9c95c1494ddc5f0a847c5b6f6d0035cae401586f2d13820e as 19 CHIRP245 frames sealed to alpha_pub 9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+    "in_reply_to": {
+      "window_request": 4930,
+      "solution_ready": 4919,
+      "issue_verdict": 4917
+    },
+    "go": "FIRE the 19 staged frames into this window; post frontier_solution_verdict with payload_sha256 after TX_DONE",
+    "ts_utc": "2026-11-22T11:27:20Z"
+  }
+}
