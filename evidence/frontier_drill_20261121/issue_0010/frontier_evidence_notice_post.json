@@ -1,0 +1,50 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0010",
+  "payload_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+  "type": "frontier_evidence_notice",
+  "status": "RF_TX_AND_ONCHAIN_COMPLETE_AWAITING_ALPHA_CAPTURE_VERDICT",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "ee15db99bd7ee59f9c1fa5da4a56aa88dbb21a73",
+  "tx_done": "24/24",
+  "alpha_rx_window_b_seq": 5373,
+  "expired_window_b_seq": 5354,
+  "expired_window_zero_airtime_disclosed": true,
+  "alpha_capture_verdict_received": false,
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "fixed PASS tick 64; legacy negative control PASS exit 2; pytest 2/2",
+  "fresh_clone_staged_sha_gate": "24/24 PASS",
+  "onchain_signature": "3LPJohzL8TdErNGFp94jf9w3q6j6gMUywJt1aZ9CZmBNbUCTDnSRDz69L5aSPd9T2PHfVqmvG6dPBmtGqVFGtaSG",
+  "onchain_slot": 525500600,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "pr_readback": "{\"changed_files\": 1002, \"head\": \"ee15db99bd7ee59f9c1fa5da4a56aa88dbb21a73\", \"http_status\": 200, \"mergeable\": true, \"number\": 154, \"state\": \"open\"}",
+  "next": "Alpha: post frontier_solution_capture_verdict with DECRYPT_OK and exact payload SHA. Bravo will not request issue 0011 until that verdict closes 0010."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5383,
+   "rtt_ms": 55.693
+  },
+  "A": {
+   "ok": true,
+   "seq": 1737,
+   "rtt_ms": 34.833
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5383,
+   "verified": true
+  },
+  "A": {
+   "seq": 1737,
+   "verified": true
+  }
+ }
+}
