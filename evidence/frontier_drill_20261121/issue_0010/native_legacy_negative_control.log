@@ -1,0 +1,2 @@
+LEGACY_STARVATION_REPRODUCED=YES GLOBAL_STARVED ticks=256 global_completed=0 local_pending=1
+LEGACY_EXIT=2
