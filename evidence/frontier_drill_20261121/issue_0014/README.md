@@ -1,4 +1,4 @@
-# FRONTIER-GH-0014 — RF + real Tokio execution + on-chain attest complete; Alpha capture pending
+# FRONTIER-GH-0014 — CLOSED both sides; RF + real Tokio execution + on-chain attest complete
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -14,11 +14,13 @@ This is a native Rust regression harness plus a **real Tokio 1.52.3 multi-thread
 - Offline Cargo build succeeded on Linux aarch64. Requested FAIL_TO_PASS/PASS_TO_PASS semantic entry points (hyphens normalized to valid Python identifiers): **2 passed in 0.05s**.
 - An initial fixed-mode test exposed an off-by-one at tick 256 (257 polls); the terminal-tick branch was corrected, rebuilt, and all three native modes plus pytest rerun green. No passing result is inferred from that discarded run.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire and Alpha capture — COMPLETE
 
 Resolved JSON: 7,621 bytes, SHA-256 `78990613ad9efc18871edc7d3530f944cd7ac707f4fdfd1475709d3fd09f72ac`, sealed as 43 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 43/43.
 
-Bravo fired inside Alpha window **B5491**, closing `2026-11-23T22:23:57Z`: **43/43 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5497/A1806** returned `ok:true`; guard `fired_0014_B5491` prevents duplicate fire. Standby recovery passed and is active. Receiver closure remains pending Alpha's exact-SHA DECRYPT_OK verdict.
+Bravo fired inside Alpha window **B5491**, closing `2026-11-23T22:23:57Z`: **43/43 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5497/A1806** returned `ok:true`; guard `fired_0014_B5491` prevents duplicate fire. Standby recovery passed and is active.
+
+Alpha capture verdict **B5510** reports `DECRYPT_OK`, all **43 frames decrypted**, and exact payload-SHA agreement with Bravo's verdict. This closes the receiver side; the full raw event is committed as `alpha_capture_verdict_raw.json`.
 
 ## On-chain attestation — FINALIZED
 
