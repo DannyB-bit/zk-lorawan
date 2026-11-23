@@ -1,4 +1,4 @@
-# FRONTIER-GH-0012 — RF + native tests + on-chain attest complete; Alpha capture pending
+# FRONTIER-GH-0012 — CLOSED both sides; RF + native tests + on-chain attest complete
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -14,12 +14,12 @@ Issue 0012 repeats the issue-0008 EPOLLEXCLUSIVE herd scenario. The metadata rep
 - Requested pytest FAIL_TO_PASS and PASS_TO_PASS entry points: **2 passed in 0.18s** on physical aarch64.
 - An initial shell chaining typo attempted to execute the numeric `PIPESTATUS` value rather than the legacy binary. It was corrected; the standalone legacy run and both pytest entry points then executed successfully. No result is inferred from the discarded shell error.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire and Alpha capture — COMPLETE
 
 Resolved JSON: 6,130 bytes, SHA-256 `fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76`, sealed as 35 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 35/35.
 
 - Bravo fired inside Alpha window **B5435**: **35/35 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5441/A1773** returned `ok:true`; guard `fired_0012_B5435` prevents duplicate fire. Standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha capture verdict **B5450** reports `DECRYPT_OK`, all **35 frames decrypted**, and exact payload-SHA agreement with Bravo's verdict. This closes the receiver side; the full raw event is committed as `alpha_capture_verdict_raw.json`.
 
 ## On-chain attestation — FINALIZED
 
