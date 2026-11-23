@@ -20,9 +20,9 @@ The metadata repo is inconsistent (`python/cpython` vs `lockless_queue.c`). This
 
 Resolved JSON: 12,329 bytes, SHA-256 `5a86bfd4acbcd7f1b5d646f8b1d050155a4ccea9c1898c765d49d3a65f59ca4b`, sealed as 69 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 69/69.
 
-- Fire initiated inside Alpha window **B5331**, nominal close `2026-11-23T15:31:59Z`: **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition.
-- Timing disclosure: the 69-frame, 3-second-gap schedule extended beyond that nominal close. No second fire occurred; guard `fired_0009_B5331` prevents duplication.
-- `frontier_solution_verdict` posts **B5335/A1708** returned `ok:true`. Standby recovery passed and is active.
+- First fire initiated inside Alpha window **B5331**, nominal close `2026-11-23T15:31:59Z`: **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5335/A1708** returned `ok:true`.
+- Timing disclosure: that 69-frame schedule extended beyond B5331's nominal close. Alpha continued awaiting the solution, so the identical payload was retransmitted once under fresh window **B5339**, closing `2026-11-23T16:07:57Z`; this second burst completed inside the window with **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, and all exits 0. Verdict posts **B5343/A1713** returned `ok:true`.
+- Guards `fired_0009_B5331` and `fired_0009_B5339` prevent duplicate fire per window sequence. First-burst logs are archived under `*_B5331*`; standby recovery passed and is active.
 - Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
 
 ## On-chain attestation — FINALIZED
