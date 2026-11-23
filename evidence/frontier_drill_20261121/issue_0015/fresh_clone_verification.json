@@ -1,0 +1,8 @@
+{
+ "head": "d4e9adcfdf2e2a80805cfa373d0fd72b20a6c677",
+ "clone": "sparse depth-1 fresh clone of pushed PR branch",
+ "native_build": "PASS: GCC C11 pthread build on aarch64",
+ "pytest": "2 passed in 0.24s",
+ "staged_sha_gate": "48/48 PASS",
+ "verified_utc": "2026-11-23T23:37:35.082277+00:00"
+}
