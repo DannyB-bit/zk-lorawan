@@ -1,0 +1,93 @@
+{
+ "source_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261123T105342Z.log",
+ "observations_245b": 12,
+ "crc_ok_target_observations": 12,
+ "unique_crc_ok_target_frames": 12,
+ "rejected_245b": [],
+ "frames": [
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "013bf1fe0d582eb9783abde84c4194f8bbb7b3f10a98a99481788ada3345469b"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "7c7c3bfd3a6287cd06dcf7c04e47ee0d81d35bffd7a1ab11df38e550a0d7c146"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "f0bbb124503ae9cfa02277ec802f9a02f655e89d8c78e23961074e3bb845b650"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "e8b41f2013cf33648654ae2cc50321f23ace19f7f5203297aeab6726beaff6e6"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "a1ac586047b7fa17c428207cee7e4c8095bc89575c5cf5f5978bea8fc419c62e"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "1640b89d9f97e01e663474fd293a5d7da527b1d6a9aaf8272f12a97af3eb17e3"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "f31adc56d7906e52cdae62dad9a37c8317a651a450ffb0ab2a11ed4d2dfae2e0"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "58ef2f4ed4e45fbf020afac57379fd7a19827ad064ee5dbd9c5bea5d32cc990b"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "7073cc9ce22ff19cc42d3fc0cbff59316c944f040d5a1c595ef5ec163bc8aa69"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "a3f9ca58fe78b01fe32a99f808482a0f7e2a1ecd1c9b73698c6ef0855c51e339"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "f72104e52ca76133ea738f75c97820b5ec0a35daa6e3f12ff4480c169763bdb5"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "c23211b391bcc44532cf9fa7d2b6a93709747457a0e1d051878406887b64b19b"
+  }
+ ]
+}
