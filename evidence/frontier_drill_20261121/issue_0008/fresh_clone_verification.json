@@ -1,9 +1,11 @@
 {
- "clone": "/home/researcher-bravo/.hermes/cache/scratch/frontier0008-fresh-clone",
- "head": "5ba22c3acd8d8e210c15b0177a4b75122ef4cf41",
- "native_fixed": "PASS: 240/240 accepts, zero empty wakeups",
- "legacy_negative_control": "PASS: herd reproduced, 240/240 accepts",
- "pytest": "2/2 PASS",
- "staged_sha_gate": "33/33 PASS",
- "solution_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4"
+ "clone": "/home/researcher-bravo/.hermes/cache/scratch/frontier0008-closure-fresh-clone",
+ "head": "536e64db7f3adbc4405b41ff0a9c95fb18500d34",
+ "native_fixed": "PASS: 240/240 accepts, zero empty wakeups, zero errors",
+ "legacy_negative_control": "PASS: herd reproduced, 240/240 accepts, 178 empty wakeups, zero errors",
+ "pytest": "2/2 PASS in 0.22s (pytest 9.2.0)",
+ "staged_sha_gate": "33/33 PASS; every frame 245 bytes and manifest SHA exact",
+ "alpha_capture_verdict": "B5306 DECRYPT_OK 33/33, exact solution SHA binding PASS",
+ "solution_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4",
+ "environment_note": "First fresh-clone pytest invocation found pytest absent; installed pytest 9.2.0 and reran successfully. Native and SHA gates had already passed."
 }
