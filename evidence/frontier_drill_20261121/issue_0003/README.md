@@ -44,4 +44,7 @@ Resolved JSON: 8,255 bytes, SHA-256 `1568c511d4bb812848b0f3f0648e356579347d32eba
 - Bravo's fail-closed fire completed **46/46 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm. `frontier_solution_verdict` posts **B5062/A1551** were read back.
 - Alpha's capture verdict **B5067** reports `DECRYPT_OK`, **46 frames decrypted**, and exact payload SHA match. Receiver closure is therefore complete.
 - A separate autonomous hot-fire subsequently repeated the same staged 46-frame burst inside Alpha's still-open declared window and posted **B5068/A1554**; its log also records 46/46 `TX_DONE`. This second transmission is retained and disclosed, not counted as a second solution.
-- No on-chain settlement is claimed.
+## On-chain attestation — FINALIZED
+- Devnet `register_coordinates` attestation finalized at slot **525348869**, signature `32Z1MJU6eVD3Lmivb2BZhcm9hvSzL7pUL9RoBbUVWKRw55ThCHw5wGC6bsrXnBMHV3BxNJjxw4yBAba2ioXrTBpP`.
+- Record PDA `BzYypZe9WkfRxkof3APc9W2tF34QtydSCxJ6DSpuiKYH` read back at 103 bytes: authority, session, legal coordinates, and `merkle_root == sha256(solution)` all match; `all_checks_pass=true`.
+- Dual-bus `frontier_onchain_attest` notices and the verbatim chain readback are committed. This is a digest-only attestation, not a claim of RF settlement.
