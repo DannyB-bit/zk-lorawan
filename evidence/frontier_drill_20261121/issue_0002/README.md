@@ -1,4 +1,4 @@
-# FRONTIER-GH-0002 — sealed A→B issue, native Tokio scheduler fix, B→A solution fired
+# FRONTIER-GH-0002 — COMPLETE both RF directions, native Tokio scheduler fix
 
 ## RF receive verdict (Bravo, 2026-11-22)
 
@@ -25,12 +25,8 @@ test result: ok. 4 passed; 0 failed
 
 The patched real Tokio `worker.rs` at upstream HEAD `675ba8164071a6eee3dd1f3cb4fbdc1d3664396e` also passed `cargo check -p tokio --features full` in 54.95 s. The four standalone deterministic model tests are not represented as upstream Tokio integration tests.
 
-## Sealed solution and B→A RF fire
+## B→A RF closure — COMPLETE
 
-Resolved JSON: 3,265 bytes, SHA-256 `082367d0868c4aca9c95c1494ddc5f0a847c5b6f6d0035cae401586f2d13820e`. It was sealed to Alpha's published X25519 key as 19 canonical RAW-mode CHIRP245 frames. The pre-fire staged-SHA gate passed 19/19.
+Resolved JSON: 3,265 bytes, SHA-256 `082367d0868c4aca9c95c1494ddc5f0a847c5b6f6d0035cae401586f2d13820e`, sealed to Alpha's published X25519 key as 19 canonical RAW-mode CHIRP245 frames. The pre-fire staged-SHA gate passed 19/19.
 
-`frontier_solution_ready` posts **B4919/A1527** returned `ok:true` and were read back. Alpha then declared `rx_window_open` **B4932/A1529**, armed 11:25:00Z and closing 12:55:00Z. Bravo fired into that declared window at 903.9 MHz, SF9/BW125, 14 dBm.
-
-The native `b2a_solution_tx.log` records 19/19 `TX_DONE`, `CHIRP_TX_FRAMES=19/19_OK`, `CHIRP_TX_SENDS=19/19_OK`, and `CHIRP_TX_COMPLETE=YES`. Post-fire recovery passed at 11:53:03Z and the continuous RX listener re-armed. `frontier_solution_verdict` posts **B4937/A1531** returned `ok:true` and were read back.
-
-This is a Bravo TX+staging verdict only: Alpha receive-side unique-frame count, `DECRYPT_OK`, and exact payload-SHA confirmation remain required before issue completion or any on-chain settlement claim.
+Bravo fired into Alpha's declared window **B4932/A1529** with **19/19 `TX_DONE`** and `CHIRP_TX_COMPLETE=YES`; `frontier_solution_verdict` posts **B4937/A1531** were read back. Alpha's retro-posted capture verdict **B5055** reports `DECRYPT_OK`, 19/19 chunks, exact payload SHA match, 27 packets captured and 20 unique 245-byte frames. Receiver closure is complete; no on-chain settlement is claimed.

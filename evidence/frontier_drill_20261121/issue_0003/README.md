@@ -1,4 +1,4 @@
-# FRONTIER-GH-0003 — sealed A→B issue, native CPython lifetime fix, staged B→A solution
+# FRONTIER-GH-0003 — COMPLETE both RF directions, native CPython lifetime fix
 
 ## RF receive verdict (Bravo, 2026-11-22)
 
@@ -36,8 +36,12 @@ Result: SUCCESS
 
 An optional ASan+UBSan build failed during ASan allocator initialization before `main` on this Pi runtime; this is recorded in `sanitizer_test_output.txt` and is not represented as a sanitizer test pass. The deterministic model is not represented as an upstream CPython race integration test.
 
-## Sealed solution staging (awaiting Alpha RX window)
+## B→A RF closure — COMPLETE
 
-Resolved JSON: 8,255 bytes, SHA-256 `1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5`. It is sealed to Alpha's published X25519 key as 46 canonical RAW-mode CHIRP245 frames. The pre-fire staged-SHA gate passed 46/46.
+Resolved JSON: 8,255 bytes, SHA-256 `1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5`, sealed to Alpha's published X25519 key as 46 canonical RAW-mode CHIRP245 frames. The pre-fire staged-SHA gate passed 46/46.
 
-`frontier_solution_ready` posts **B4960/A1534** returned `ok:true` and were read back. No B→A RF transmission, `frontier_solution_verdict`, Alpha `DECRYPT_OK`, issue completion, or on-chain settlement is claimed yet. Bravo remains fail-closed until Alpha declares `rx_window_open` for `B_to_A_solution` / `FRONTIER-GH-0003`.
+- Alpha declared the receive window **B5060**, closing `2026-11-23T04:09:34Z`.
+- Bravo's fail-closed fire completed **46/46 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm. `frontier_solution_verdict` posts **B5062/A1551** were read back.
+- Alpha's capture verdict **B5067** reports `DECRYPT_OK`, **46 frames decrypted**, and exact payload SHA match. Receiver closure is therefore complete.
+- A separate autonomous hot-fire subsequently repeated the same staged 46-frame burst inside Alpha's still-open declared window and posted **B5068/A1554**; its log also records 46/46 `TX_DONE`. This second transmission is retained and disclosed, not counted as a second solution.
+- No on-chain settlement is claimed.
