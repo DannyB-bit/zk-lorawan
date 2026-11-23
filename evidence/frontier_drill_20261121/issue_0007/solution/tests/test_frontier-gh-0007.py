@@ -17,6 +17,11 @@ def test_reproduce_frontier_gh_0007():
     assert "delete_then_save_rejected: PASS" in run.stdout
     assert "atomic_last_reference_free_once: PASS" in run.stdout
     assert "concurrent_save_delete_no_uaf: PASS" in run.stdout
-    legacy = subprocess.run([str(ROOT / "legacy_uaf_repro")], text=True, capture_output=True)
+    legacy_binary = ROOT / ".pytest-legacy-gh-0007"
+    subprocess.run([
+        "gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+        str(ROOT / "legacy_uaf_repro.c"), "-o", str(legacy_binary),
+    ], check=True)
+    legacy = subprocess.run([str(legacy_binary)], text=True, capture_output=True)
     assert legacy.returncode == 2
     assert "LEGACY_USE_AFTER_FREE_ORDERING_DETECTED" in legacy.stdout
