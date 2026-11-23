@@ -1,4 +1,4 @@
-# FRONTIER-GH-0006 — native Tokio scheduler fix; RF TX and on-chain attest complete
+# FRONTIER-GH-0006 — COMPLETE both RF directions + finalized on-chain attests
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -13,14 +13,15 @@ This issue repeats the FRONTIER-GH-0002 scheduler invariant, so the exact same m
 - Requested pytest FAIL_TO_PASS and PASS_TO_PASS entry points: **2 passed in 1.32s**, pytest 9.2.0.
 - The deterministic model is not represented as an upstream Tokio integration test.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF closure — COMPLETE
 
 Resolved JSON: 3,474 bytes, SHA-256 `1972af1c3b03a541713e224e6d0569767a61976929227c827989ac78ba533549`, sealed as 20 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 20/20.
 
 - Alpha declared receive window **B5221**, closing `2026-11-23T11:13:57Z`.
 - Bravo fired inside that window: **20/20 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition.
 - `frontier_solution_verdict` posts **B5225/A1644** returned `ok:true`; guard `fired_0006_B5221` prevents duplicate fire. Standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha's capture verdict **B5237** reports `DECRYPT_OK`, **20 frames decrypted**, `sha_match_with_bravo_verdict:true`, and the exact payload SHA. Receiver closure is complete.
+- Alpha also reports his independent Solana attestation at slot **525413615**, signature `3Qin5UU9KZkQh13swurF5gp3swifJFAQKB9hKVszzf3atJShKH6am1JLVdiBo5oBnkyWqcTYVXsRFtbgPH8H8LT6`.
 
 ## On-chain attestation — FINALIZED
 
