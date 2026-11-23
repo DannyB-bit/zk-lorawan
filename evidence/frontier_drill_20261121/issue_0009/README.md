@@ -1,4 +1,4 @@
-# FRONTIER-GH-0009 — tagged-pointer ABA fix; RF TX and on-chain attest complete
+# FRONTIER-GH-0009 — tagged-pointer ABA fix; COMPLETE both RF directions and on-chain
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -16,14 +16,14 @@ The metadata repo is inconsistent (`python/cpython` vs `lockless_queue.c`). This
 - Disassembly gate: `LDAXP` and `STLXP` present; no `__atomic_load_16` or `__atomic_compare_exchange_16` calls.
 - Initial harness build failed on an `atomic_store` macro/comma error and was corrected. Default GCC 16-byte atomics called libatomic and failed the lock-free gate; those discarded results are not claimed as passes. The final passing binary uses explicit ARMv8 exclusive pairs.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire — COMPLETE both sides
 
 Resolved JSON: 12,329 bytes, SHA-256 `5a86bfd4acbcd7f1b5d646f8b1d050155a4ccea9c1898c765d49d3a65f59ca4b`, sealed as 69 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 69/69.
 
 - First fire initiated inside Alpha window **B5331**, nominal close `2026-11-23T15:31:59Z`: **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5335/A1708** returned `ok:true`.
 - Timing disclosure: that 69-frame schedule extended beyond B5331's nominal close. Alpha continued awaiting the solution, so the identical payload was retransmitted once under fresh window **B5339**, closing `2026-11-23T16:07:57Z`; this second burst completed inside the window with **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, and all exits 0. Verdict posts **B5343/A1713** returned `ok:true`.
 - Guards `fired_0009_B5331` and `fired_0009_B5339` prevent duplicate fire per window sequence. First-burst logs are archived under `*_B5331*`; standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha capture verdict **B5352** (2026-11-23T16:14:00Z): `DECRYPT_OK`, 69/69 frames decrypted, exact payload SHA match, receiver closure COMPLETE; Alpha also attested on devnet at slot 525486992.
 
 ## On-chain attestation — FINALIZED
 
