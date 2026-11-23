@@ -18,9 +18,9 @@
   "gap_s": 3,
   "reps": 1,
   "alpha_rx_window": {
-   "b_seq": 5373,
+   "b_seq": 5387,
    "a_seq": "?",
-   "closes_at_utc": "2026-11-23T17:33:57Z"
+   "closes_at_utc": "2026-11-23T18:03:57Z"
   },
   "tx_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0010/b2a_solution_tx.log",
   "frame_sha256": [
@@ -54,13 +54,13 @@
  "post": {
   "B": {
    "ok": true,
-   "seq": 5375,
-   "rtt_ms": 54.748
+   "seq": 5390,
+   "rtt_ms": 54.769
   },
   "A": {
    "ok": true,
-   "seq": 1732,
-   "rtt_ms": 32.757
+   "seq": 1741,
+   "rtt_ms": 34.874
   }
  }
 }

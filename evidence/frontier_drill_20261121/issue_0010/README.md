@@ -1,4 +1,4 @@
-# FRONTIER-GH-0010 — cooperative budget/global fallback; RF TX and on-chain attest complete
+# FRONTIER-GH-0010 — CLOSED both sides; RF + native tests + on-chain attest complete
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -13,13 +13,14 @@ This is a native Rust scheduler regression model for the declared Tokio worker s
 - Rust unit tests: **2/2 passed**. Requested FAIL_TO_PASS/PASS_TO_PASS pytest entry points: **2 passed in 0.13s** on physical aarch64, rustc 1.98.1.
 - Initial fixed harness ran to the 256-tick bound instead of stopping after global completion; that discarded failure was corrected by breaking on completion before the final passing runs.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire and Alpha capture — COMPLETE
 
 Resolved JSON: 4,171 bytes, SHA-256 `e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60`, sealed as 24 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 24/24.
 
 - First fire attempt failed closed because Alpha window B5354 had closed at `2026-11-23T16:57:57Z`; **zero RF airtime occurred**. Fresh-window request posts **B5372/A1730** disclose this miss.
-- Bravo fired inside fresh Alpha window **B5373**, closing `2026-11-23T17:33:57Z`: **24/24 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5375/A1732** returned `ok:true`; guard `fired_0010_B5373` prevents duplicate fire. Standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Bravo fired inside fresh Alpha window **B5373**, closing `2026-11-23T17:33:57Z`: **24/24 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5375/A1732** returned `ok:true`; guard `fired_0010_B5373` prevents duplicate fire in that window.
+- Alpha's delayed capture verdict **B5389** reports `DECRYPT_OK`, all **24 frames decrypted**, and exact payload-SHA agreement with Bravo's verdict. This closes the receiver side; the full raw event is committed as `alpha_capture_verdict_raw.json`.
+- Before that delayed verdict was observed, Bravo lawfully re-fired the **same SHA-gated frames** into new, unfired Alpha window **B5387** (one fire per window seq): **24/24 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX/recovery exit 0. Verdict posts **B5390/A1741** and guard `fired_0010_B5387` are committed. The current TX log therefore records the B5387 fire; B5373's original verdict JSON preserves its RF evidence.
 
 ## On-chain attestation — FINALIZED
 

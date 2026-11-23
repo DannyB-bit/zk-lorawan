@@ -5,7 +5,7 @@
   version reg 0x0005 x10 : 00 00 00 00 00 00 00 00 00 00
   verdict: 0x00 = MISO stuck low / chip unpowered (Gate 2)
 [holder] June-faithful GPIO17/GPIO22 reset sequence complete
-[rak_gpio] holder on: READY (646030 on READY)
+[rak_gpio] holder on: READY (654610 on READY)
 chirp_frames_tx: dir=/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0010/solution_frames frames=24 freq=903.9MHz SF9 BW125kHz 14dBm reps=1 gap=3s
 Opening SPI communication interface
 Note: chip version is 0x10 (v1.0)
