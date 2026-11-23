@@ -1,0 +1,1 @@
+gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread -march=armv8-a -mno-outline-atomics lockless_queue.c -o lockless_queue
