@@ -1,0 +1,11 @@
+{
+ "head": "eb0cd6fe42d5b713a7fbf5543dc8ae0751b26c28",
+ "native_fixed": "PASS tick 64",
+ "legacy_negative_control": "PASS exit 2 global_completed=0",
+ "pytest": "2/2 PASS",
+ "staged_sha_gate": "24/24 PASS",
+ "solution_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+ "onchain_root_binding": "PASS",
+ "tx_log": "24/24 TX_DONE CHIRP_TX_COMPLETE=YES",
+ "issue_capture": "12/12 DECRYPT_OK exact SHA"
+}
