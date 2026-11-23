@@ -1,4 +1,4 @@
-# FRONTIER-GH-0004 — native Linux epoll fix; RF TX and on-chain attest complete
+# FRONTIER-GH-0004 — COMPLETE both RF directions + finalized on-chain attests
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -23,7 +23,7 @@ Executed on RakMiner-B `aarch64` with GCC 14.2.0:
 - ASan+UBSan did not reach `main`: AddressSanitizer's primary64 allocator CHECK failed on this Pi runtime. This is retained in `solution/sanitizer_test_output.txt` and is **not** represented as an ASan pass.
 - Initial harness RED runs exposed incomplete waiter synchronization and an over-strict exact-baseline-count assumption. The final test gates each worker on its live `/proc/self/task/<tid>/syscall` entry into `epoll_wait` and asserts the valid invariant: baseline >1 wakeup versus exclusive exactly 1.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF closure — COMPLETE
 
 Resolved JSON: 18,039 bytes, SHA-256 `04a8db57bf9ca67a13789f17087110fcb38b9a51c5e740162bb6d76ee3e7c8d1`, sealed to Alpha's published X25519 key as 101 canonical RAW-mode CHIRP245 frames. The pre-fire staged-SHA gate passed 101/101.
 
@@ -31,10 +31,11 @@ Resolved JSON: 18,039 bytes, SHA-256 `04a8db57bf9ca67a13789f17087110fcb38b9a51c5
 - Bravo's one-shot fail-closed watcher fired inside that window: **101/101 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition.
 - `frontier_solution_verdict` posts **B5165/A1607** returned `ok:true`; per-window guard `fired_0004_B5161` prevents a duplicate fire.
 - Standby RX was stopped for TX, recovery passed `LORA_CHIRP_RECOVERY_PASS=YES`, and standby is active again.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha's capture verdict **B5175** reports `DECRYPT_OK`, **101 frames decrypted**, `sha_match_with_bravo_verdict:true`, and the exact payload SHA. Receiver closure is complete; the raw verdict is committed in `alpha_capture_and_window_raw.json`.
+- Alpha also reports his independent Solana attestation at slot **525376668**, signature `4g1yPeMKe8g17LBNsJLLHMYvupUn8SCaTeD1hR2KWNu4u81MxC2PPnJUfbmTVM9nfQDwsxDvw8VMLNjRAinHbzpi`.
 
 ## On-chain attestation — FINALIZED
 
-- Devnet `register_coordinates` attestation finalized at slot **525372041**, signature `3zv9PFNbFdovvVLEqcaGAAVu…` (full signature in `onchain_attest_readback.json`).
+- Devnet `register_coordinates` attestation finalized at slot **525372041**, signature `3zv9PFNbFdovvVLEqcaGAAVuJJcbqo1YLGYPsZPZBnmfDAVDZyH6NQJ31shMQe5bF3d8xkT1ysD6YTBcsxhKkwDd`.
 - Record PDA `BzXwS5cBB4U6eEF6P2Uv9eHvJhE3DpfNv7ybFdHEa6Tz` read back at 103 bytes: authority, session, legal coordinates, signature presence, and `merkle_root == sha256(solution)` all match; `all_checks_pass=true`.
 - Dual-bus `frontier_onchain_attest` notices **B5166/A1608** are committed with the verbatim chain readback. This is a digest-only attestation, not a claim of RF settlement.
