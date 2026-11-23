@@ -1,0 +1,9 @@
+{
+ "clone": "/home/researcher-bravo/.hermes/cache/scratch/frontier0008-fresh-clone",
+ "head": "5ba22c3acd8d8e210c15b0177a4b75122ef4cf41",
+ "native_fixed": "PASS: 240/240 accepts, zero empty wakeups",
+ "legacy_negative_control": "PASS: herd reproduced, 240/240 accepts",
+ "pytest": "2/2 PASS",
+ "staged_sha_gate": "33/33 PASS",
+ "solution_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4"
+}
