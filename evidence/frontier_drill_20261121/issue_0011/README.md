@@ -1,4 +1,4 @@
-# FRONTIER-GH-0011 — RF + native tests + on-chain attest complete; Alpha capture pending
+# FRONTIER-GH-0011 — CLOSED both sides; RF + native tests + on-chain attest complete
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -13,13 +13,14 @@ Issue 0011 repeats the CPython SaveThread/Delete lifetime defect class proven in
 - The real patched CPython binary passed `test__xxsubinterpreters`, `test_embed`, and `test_threading` again in this run: **SUCCESS, 339 tests run, 13 skipped, 41.1s**.
 - This is a deterministic regression model plus real CPython suites, not a claimed deterministic upstream race reproducer. The `file_sha256_of_this_json` field uses a documented zero-field hash convention; `solution_payload_sha256.txt` binds the final transmitted bytes.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire and Alpha capture — COMPLETE
 
 Resolved JSON: 7,779 bytes, SHA-256 `f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276`, sealed as 44 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 44/44.
 
 - Alpha's earlier windows closed before staging completed; **zero issue-0011 RF airtime occurred** before the fresh-window request. This timing miss is disclosed in ready/request posts **B5413/A1754** and **B5414/A1755**.
-- Bravo fired inside Alpha window **B5411**, closing `2026-11-23T19:05:58Z`: **44/44 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5417/A1757** returned `ok:true`; guard `fired_0011_B5411` prevents duplicate fire. Standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Bravo fired inside Alpha window **B5411**, closing `2026-11-23T19:05:58Z`: **44/44 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5417/A1757** returned `ok:true`; guard `fired_0011_B5411` prevents duplicate fire in that window. The first-fire logs and verdict are preserved with `_B5411`/`_B5417` suffixes.
+- Alpha's delayed capture verdict **B5425** reports `DECRYPT_OK`, all **44 frames decrypted**, and exact payload-SHA agreement with Bravo's verdict. This closes the receiver side; the full raw event is committed as `alpha_capture_verdict_raw.json`.
+- Before that delayed verdict was observed, Bravo lawfully re-fired the **same SHA-gated frames** into new, unfired Alpha window **B5423**: **44/44 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX/recovery exit 0. Verdict posts **B5426/A1763**, window/verdict raws, and guard `fired_0011_B5423` are committed. The current TX log records the B5423 fire. Standby recovery passed and is active.
 
 ## On-chain attestation — FINALIZED
 

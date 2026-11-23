@@ -18,7 +18,7 @@
   "gap_s": 3,
   "reps": 1,
   "alpha_rx_window": {
-   "b_seq": 5411,
+   "b_seq": 5423,
    "a_seq": "?",
    "closes_at_utc": "2026-11-23T19:05:58Z"
   },
@@ -74,13 +74,13 @@
  "post": {
   "B": {
    "ok": true,
-   "seq": 5417,
-   "rtt_ms": 55.953
+   "seq": 5426,
+   "rtt_ms": 56.048
   },
   "A": {
    "ok": true,
-   "seq": 1757,
-   "rtt_ms": 28.146
+   "seq": 1763,
+   "rtt_ms": 42.369
   }
  }
 }
