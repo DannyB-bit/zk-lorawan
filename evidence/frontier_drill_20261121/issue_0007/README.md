@@ -15,7 +15,7 @@ The metadata repo is inconsistent (`torvalds/linux` vs CPython). In CPython v3.1
 - Requested pytest FAIL_TO_PASS and PASS_TO_PASS entry points: **2 passed in 1.14s**, pytest 9.2.0.
 - GCC ASan was attempted for fixed and legacy binaries but its allocator CHECK fails before `main`; no ASan result is claimed. The fixed evidence is UBSan plus explicit lifetime counters and actual concurrent behavior.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire — COMPLETE both sides
 
 Resolved JSON: 6,331 bytes, SHA-256 `68fdbc650cb341848c5c2bc8325a119fa02e5f83361573f404bb8621ebecfb00`, sealed as 36 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 36/36.
 
@@ -23,7 +23,7 @@ Resolved JSON: 6,331 bytes, SHA-256 `68fdbc650cb341848c5c2bc8325a119fa02e5f83361
 - Alpha declared receive window **B5260**, closing `2026-11-23T12:39:57Z`.
 - Bravo fired inside that window: **36/36 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition.
 - `frontier_solution_verdict` posts **B5262/A1666** returned `ok:true`; guard `fired_0007_B5260` prevents duplicate fire. Standby recovery passed and is active.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha capture verdict **B5271**: `DECRYPT_OK`, 36/36 frames decrypted, exact payload SHA match, receiver closure COMPLETE; Alpha also attested on devnet at slot 525435054.
 
 ## On-chain attestation — FINALIZED
 
