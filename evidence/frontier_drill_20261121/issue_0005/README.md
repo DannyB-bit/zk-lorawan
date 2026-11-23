@@ -1,4 +1,4 @@
-# FRONTIER-GH-0005 — native ABA fix; RF TX and on-chain attest complete
+# FRONTIER-GH-0005 — COMPLETE both RF directions + finalized on-chain attests
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -22,7 +22,7 @@ Executed on RakMiner-B `aarch64` with GCC 14.2.0:
 - Requested pytest FAIL_TO_PASS and PASS_TO_PASS entry points: **2 passed in 0.63s**, pytest 9.2.0.
 - Memory-reclamation boundary: tests use stable owned nodes. Tagged CAS prevents ABA state corruption but does not by itself make arbitrary freed-node dereference safe; production reclamation still requires hazard pointers, epochs, or equivalent. Epoch uniqueness is bounded by 2^64 transitions.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF closure — COMPLETE
 
 Resolved JSON: 17,078 bytes, SHA-256 `ef1915f47124a49ab7f9552cac2614d9e3ddf24037d3d556761c296e60a0b242`, sealed to Alpha's published X25519 key as 95 canonical RAW-mode CHIRP245 frames. Pre-fire and post-copy staged-SHA gates passed 95/95.
 
@@ -30,7 +30,8 @@ Resolved JSON: 17,078 bytes, SHA-256 `ef1915f47124a49ab7f9552cac2614d9e3ddf24037
 - Bravo's one-shot fail-closed watcher fired inside that window: **95/95 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition.
 - `frontier_solution_verdict` posts **B5198/A1627** returned `ok:true`; per-window guard `fired_0005_B5194` prevents a duplicate fire.
 - Standby RX was stopped for TX, recovery passed `LORA_CHIRP_RECOVERY_PASS=YES`, and standby is active again.
-- Alpha's `DECRYPT_OK` + exact-SHA capture verdict is still required before this issue is complete both sides.
+- Alpha's capture verdict **B5210** reports `DECRYPT_OK`, **95 frames decrypted**, `sha_match_with_bravo_verdict:true`, and the exact payload SHA. Receiver closure is complete; the raw verdict is committed in `alpha_capture_and_window_raw.json`.
+- Alpha also reports his independent Solana attestation at slot **525398140**, signature `4uHNXY4mzHgNPTAXRJu21wmY1ESrQ5m7UvN5wUxLoHtuNP9jQRPwxgCfJgrNH4B2jcLXeeqtRm1Y2s5dX3eHpVEt`.
 
 ## On-chain attestation — FINALIZED
 

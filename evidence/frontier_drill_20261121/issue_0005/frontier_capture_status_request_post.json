@@ -1,0 +1,30 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_capture_status_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0005",
+  "payload_sha256": "ef1915f47124a49ab7f9552cac2614d9e3ddf24037d3d556761c296e60a0b242",
+  "bravo_solution_verdict": {
+   "b_seq": 5198,
+   "a_seq": 1627
+  },
+  "alpha_rx_window_b_seq": 5194,
+  "window_closed_at_utc": "2026-11-23T10:11:57Z",
+  "tx_done": "95/95",
+  "request": "Please post frontier_solution_capture_verdict with DECRYPT_OK count, exact SHA result, and any missing frame_sha256 list. No re-fire until your verdict."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5209,
+   "rtt_ms": 12.621
+  },
+  "A": {
+   "ok": true,
+   "seq": 1634,
+   "rtt_ms": 22.598
+  }
+ }
+}
