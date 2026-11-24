@@ -5,11 +5,11 @@
 pub mod ceremony;
 pub mod circuit;
 
-use sha2::Digest;
 use ark_bn254::{Bn254, Fr};
 use ark_ff::PrimeField;
 use ark_groth16::{PreparedVerifyingKey, Proof, ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
+use sha2::Digest;
 
 use rand::SeedableRng;
 
@@ -38,7 +38,7 @@ pub struct ZKLoRaWANProofBundle {
     pub attestation_hash: Vec<u8>,   // Fr element (32 bytes)
     pub ciphertext_hash: Vec<u8>,    // Fr element (32 bytes)
     // RF identity-binding public inputs (Dan's milestone, 2026-10-13):
-    pub payload_sha256: Vec<u8>,     // Fr element (32 bytes) - SHA256(OTA bytes) as Fr
+    pub payload_sha256: Vec<u8>, // Fr element (32 bytes) - SHA256(OTA bytes) as Fr
     pub payload_commitment: Vec<u8>, // Fr element (32 bytes) - MiMC(identity + payload_sha)
     pub total_bytes: usize,
 }
@@ -621,7 +621,10 @@ fn main() {
         let deposit_value: u64 = args[7].parse().expect("Invalid deposit_value");
         let payload = std::fs::read(&args[8]).expect("Cannot read payload file");
 
-        eprintln!("[*] identity-bound proving over {} payload bytes", payload.len());
+        eprintln!(
+            "[*] identity-bound proving over {} payload bytes",
+            payload.len()
+        );
         let prover = ZKLoRaWANProver::new();
         let bundle = prover.generate_proof_with_payload(
             &private_key,
@@ -652,19 +655,58 @@ fn main() {
             .unwrap();
 
         println!("{{");
-        println!("  \"proof_a_compressed\": \"{}\",", hex::encode(&bundle.proof_a_compressed));
-        println!("  \"proof_b_compressed\": \"{}\",", hex::encode(&bundle.proof_b_compressed));
-        println!("  \"proof_c_compressed\": \"{}\",", hex::encode(&bundle.proof_c_compressed));
-        println!("  \"proof_a\": \"{}\",", hex::encode(to_solana_g1(&proof_a)));
-        println!("  \"proof_b\": \"{}\",", hex::encode(to_solana_g2(&proof_b)));
-        println!("  \"proof_c\": \"{}\",", hex::encode(to_solana_g1(&proof_c)));
-        println!("  \"identity_hash\": \"{}\",", hex::encode(&bundle.identity_hash));
-        println!("  \"nullifier_hash\": \"{}\",", hex::encode(&bundle.nullifier_hash));
-        println!("  \"attestation_hash\": \"{}\",", hex::encode(&bundle.attestation_hash));
-        println!("  \"ciphertext_hash\": \"{}\",", hex::encode(&bundle.ciphertext_hash));
-        println!("  \"payload_sha256\": \"{}\",", hex::encode(&bundle.payload_sha256));
-        println!("  \"payload_commitment\": \"{}\",", hex::encode(&bundle.payload_commitment));
-        println!("  \"deposit_commitment\": \"{}\",", hex::encode(deposit_commitment_buf));
+        println!(
+            "  \"proof_a_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_a_compressed)
+        );
+        println!(
+            "  \"proof_b_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_b_compressed)
+        );
+        println!(
+            "  \"proof_c_compressed\": \"{}\",",
+            hex::encode(&bundle.proof_c_compressed)
+        );
+        println!(
+            "  \"proof_a\": \"{}\",",
+            hex::encode(to_solana_g1(&proof_a))
+        );
+        println!(
+            "  \"proof_b\": \"{}\",",
+            hex::encode(to_solana_g2(&proof_b))
+        );
+        println!(
+            "  \"proof_c\": \"{}\",",
+            hex::encode(to_solana_g1(&proof_c))
+        );
+        println!(
+            "  \"identity_hash\": \"{}\",",
+            hex::encode(&bundle.identity_hash)
+        );
+        println!(
+            "  \"nullifier_hash\": \"{}\",",
+            hex::encode(&bundle.nullifier_hash)
+        );
+        println!(
+            "  \"attestation_hash\": \"{}\",",
+            hex::encode(&bundle.attestation_hash)
+        );
+        println!(
+            "  \"ciphertext_hash\": \"{}\",",
+            hex::encode(&bundle.ciphertext_hash)
+        );
+        println!(
+            "  \"payload_sha256\": \"{}\",",
+            hex::encode(&bundle.payload_sha256)
+        );
+        println!(
+            "  \"payload_commitment\": \"{}\",",
+            hex::encode(&bundle.payload_commitment)
+        );
+        println!(
+            "  \"deposit_commitment\": \"{}\",",
+            hex::encode(deposit_commitment_buf)
+        );
         println!("  \"firmware_hash\": \"{}\"", hex::encode(&firmware_hash));
         println!("}}");
         std::process::exit(0);
@@ -791,8 +833,7 @@ fn main() {
             let identity_fr = Fr::from_le_bytes_mod_order(&identity_bytes);
             let zero_sha = Fr::from(0u64);
             let mimc_constants = circuit::generate_mimc_constants(MIMC_ROUNDS);
-            let zero_commitment =
-                circuit::mimc_hash(identity_fr, Some(zero_sha), &mimc_constants);
+            let zero_commitment = circuit::mimc_hash(identity_fr, Some(zero_sha), &mimc_constants);
             let mut zb = Vec::new();
             use ark_serialize::CanonicalSerialize;
             zero_sha.serialize_compressed(&mut zb).unwrap();
