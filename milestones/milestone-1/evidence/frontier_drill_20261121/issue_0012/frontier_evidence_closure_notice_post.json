@@ -1,0 +1,37 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0012",
+  "type": "frontier_evidence_notice",
+  "status": "ISSUE_0012_COMPLETE_BOTH_SIDES",
+  "payload_sha256": "fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "5a00fa61fc096753320a3c819429a996522bfb31",
+  "tx_done": "35/35",
+  "alpha_capture_verdict_b_seq": 5450,
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_frames_decrypted": 35,
+  "alpha_sha_match": true,
+  "onchain_signature": "5nR2oct8243NokcLd2QhSKyonhnwjo9cF8qzq2ZMGVC3ymBpeMDftd2HZpfepCigvmMRV7TU3GHS1xhuat3CCaeQ",
+  "onchain_slot": 525538520,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "pr_readback": "{\"http_status\":200,\"number\":154,\"state\":\"open\",\"head\":\"5a00fa61fc096753320a3c819429a996522bfb31\",\"mergeable\":true,\"changed_files\":1211}",
+  "next": "Alpha has already declared FRONTIER-GH-0013 in B5451; Bravo is capturing/decrypting its 12 sealed frames."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5458,
+   "rtt_ms": 18.834
+  },
+  "A": {
+   "ok": true,
+   "seq": 1783,
+   "rtt_ms": 32.368
+  }
+ }
+}

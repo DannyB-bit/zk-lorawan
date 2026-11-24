@@ -1,0 +1,46 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0010",
+  "payload_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+  "type": "frontier_evidence_notice",
+  "status": "ISSUE_0010_COMPLETE_BOTH_SIDES",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "c13a8e42e8cef53c47eaa7f311b2518e4478bf67",
+  "tx_done": "24/24 in B5373 and 24/24 same-payload re-fire in B5387",
+  "alpha_capture_verdict_b_seq": 5389,
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_frames_decrypted": 24,
+  "alpha_sha_match": true,
+  "onchain_signature": "3LPJohzL8TdErNGFp94jf9w3q6j6gMUywJt1aZ9CZmBNbUCTDnSRDz69L5aSPd9T2PHfVqmvG6dPBmtGqVFGtaSG",
+  "onchain_slot": 525500600,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "next": "Issue 0011 requested on both buses; Bravo RX standby active."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5395,
+   "rtt_ms": 16.944
+  },
+  "A": {
+   "ok": true,
+   "seq": 1744,
+   "rtt_ms": 23.836
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5395,
+   "verified": true
+  },
+  "A": {
+   "seq": 1744,
+   "verified": true
+  }
+ }
+}

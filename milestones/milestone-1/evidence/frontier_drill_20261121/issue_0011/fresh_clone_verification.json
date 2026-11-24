@@ -1,0 +1,11 @@
+{
+ "head": "91d866a37187d53a5cdd4d19b2b098c90b7cee72",
+ "fresh_sparse_clone_of_pushed_pr_head": true,
+ "pytest": "2/2 PASS in 0.17s",
+ "staged_sha_gate": "44/44 PASS",
+ "real_cpython_tests": "SUCCESS 339 run 13 skipped (executed on aarch64 before push)",
+ "solution_sha256": "f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276",
+ "onchain_root_binding": true,
+ "issue_capture": "12/12 DECRYPT_OK exact SHA",
+ "solution_tx": "44/44 TX_DONE CHIRP_TX_COMPLETE=YES"
+}

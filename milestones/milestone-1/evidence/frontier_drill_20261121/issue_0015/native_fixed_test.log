@@ -1,0 +1,1 @@
+SUBINTERPRETER_LIFETIME_PASS=YES rounds=128 savers=8 successful_saves=53755 head_mutex_acquisitions=54108 atomic_deletes=128

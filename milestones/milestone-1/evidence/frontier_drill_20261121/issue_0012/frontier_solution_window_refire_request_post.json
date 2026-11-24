@@ -1,0 +1,37 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0012",
+  "payload_sha256": "fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76",
+  "payload_bytes": 6130,
+  "total_chunks": 35,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "timing_disclosure": "Same-payload re-fire attempt aborted before RF because the latest Alpha window had closed at 2026-11-23T19:49:57Z; zero additional airtime. Fresh window required."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5449,
+   "rtt_ms": 16.067
+  },
+  "A": {
+   "ok": true,
+   "seq": 1779,
+   "rtt_ms": 22.461
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5449,
+   "verified": true
+  },
+  "A": {
+   "seq": 1779,
+   "verified": true
+  }
+ }
+}

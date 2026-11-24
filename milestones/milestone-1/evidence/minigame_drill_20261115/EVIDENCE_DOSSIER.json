@@ -1,0 +1,561 @@
+{
+ "drill": "minigame_back_and_forth_chirp_drill",
+ "mission": "DAN-ORDERED A<->B conversation over REAL LoRa: each twin codes game logic and ships it to the other as AEAD-sealed 245B chirps; full evidence, cross-confirmed on both fleet buses.",
+ "node": "researcher-bravo (RakMiner-B, Agent 05) \u2014 RAK Miner v2, SX1302, US915 @903.9 MHz, SF9/BW125",
+ "dossier_written_utc": "2026-11-15T07:44:24Z",
+ "dossier_path": "/home/researcher-bravo/fleet/minigame-drill/EVIDENCE_DOSSIER.json",
+ "evidence_root": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115",
+ "protocol": {
+  "envelope": "245B frame = [ver=1][n=total_chunks][nonce(12)][eph_x25519_pub(32)][AES-256-GCM ct(183)||tag(16)]",
+  "kdf": "HKDF-SHA256(X25519(sk, eph_pub), salt='zk-lora-chirp245-v1', info='chirp245-aead-key', len=32)",
+  "aead": "AES-256-GCM, 16B tag",
+  "plaintext_layout": "0x02 || [total_chunks][idx] || chunk(<=180B), zero-padded to 183B",
+  "tools": "DannyB-bit/solana-cuneiform-milestone1 @ branch researcher-a/minigame-chirp-20261115 commit e19dd98 (tools/chirp_raw_tx.py, tools/chirp_raw_rx.py)",
+  "reassembly": "chunk order by plaintext idx; file_sha256 over concatenated chunks"
+ },
+ "legs": {
+  "leg1_A_to_B": {
+   "status": "COMPLETE \u2014 CROSS-CONFIRMED",
+   "verdict": "DECRYPT_OK",
+   "alpha_declared": {
+    "file": "game_core.py",
+    "file_sha256": "94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b",
+    "total_chunks": 6,
+    "frame_sha16": [
+     "879030edd5f62878",
+     "820f3932aff80959",
+     "7f7eed2c34468797",
+     "cddb480fbc9dec58",
+     "c00201b609fa1ece",
+     "0f864e3f83f46760"
+    ],
+    "source_event": "alpha bus seq 1433 minigame_drill_brief"
+   },
+   "bravo_capture": {
+    "capture_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261114T095143Z.log",
+    "rf": "903.9 MHz SF9 BW125 chan3, status 0x10, CRC OK",
+    "frames_captured": 6,
+    "reps_per_frame": 3,
+    "rep_provenance": "alpha fired 6x2 reps @05:29Z + 6x1 rep @05:34Z refire = 18 expected sends; bravo captured all 18",
+    "per_frame": [
+     {
+      "idx": 0,
+      "sha16": "879030edd5f62878",
+      "full_sha256": "879030edd5f628786c92b1b3a5f08467acfd4fd9a33baeeca568762ee88b055a",
+      "reps_captured": 3,
+      "snr_db": [
+       "10.8",
+       "11.2",
+       "10.8"
+      ],
+      "crc": [
+       "0xFDAC",
+       "0xFDAC",
+       "0xFDAC"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1069547400",
+       "1071765656",
+       "1401218930"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 0,
+       "chunk_bytes": 180
+      },
+      "chunk_sha_ok": true
+     },
+     {
+      "idx": 1,
+      "sha16": "820f3932aff80959",
+      "full_sha256": "820f3932aff809592c425e6fc54a2af1a1fc361633c5ac90f19f75ab2f3e1d93",
+      "reps_captured": 3,
+      "snr_db": [
+       "10.8",
+       "11.0",
+       "11.0"
+      ],
+      "crc": [
+       "0x9D23",
+       "0x9D23",
+       "0x9D23"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1079322310",
+       "1081541165",
+       "1408887447"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 1,
+       "chunk_bytes": 180
+      },
+      "chunk_sha_ok": true
+     },
+     {
+      "idx": 2,
+      "sha16": "7f7eed2c34468797",
+      "full_sha256": "7f7eed2c3446879772829a7d787873028d07fd6b67ccf3598d1d33dcf87b07f6",
+      "reps_captured": 3,
+      "snr_db": [
+       "11.2",
+       "10.8",
+       "11.0"
+      ],
+      "crc": [
+       "0x2F8C",
+       "0x2F8C",
+       "0x2F8C"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1089325884",
+       "1091540880",
+       "1416343168"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 2,
+       "chunk_bytes": 180
+      },
+      "chunk_sha_ok": true
+     },
+     {
+      "idx": 3,
+      "sha16": "cddb480fbc9dec58",
+      "full_sha256": "cddb480fbc9dec5852ab4573b27f772739819ebbdc9e7ceb02ffee9bb26566fc",
+      "reps_captured": 3,
+      "snr_db": [
+       "11.2",
+       "10.8",
+       "11.0"
+      ],
+      "crc": [
+       "0xBB53",
+       "0xBB53",
+       "0xBB53"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1099213658",
+       "1101432465",
+       "1423999114"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 3,
+       "chunk_bytes": 180
+      },
+      "chunk_sha_ok": true
+     },
+     {
+      "idx": 4,
+      "sha16": "c00201b609fa1ece",
+      "full_sha256": "c00201b609fa1ece98977b38dc92a855d8c156537ca417716e4592546e88e7e3",
+      "reps_captured": 3,
+      "snr_db": [
+       "10.5",
+       "10.8",
+       "10.5"
+      ],
+      "crc": [
+       "0x2538",
+       "0x2538",
+       "0x2538"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1109004084",
+       "1111218015",
+       "1431529800"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 4,
+       "chunk_bytes": 180
+      },
+      "chunk_sha_ok": true
+     },
+     {
+      "idx": 5,
+      "sha16": "0f864e3f83f46760",
+      "full_sha256": "0f864e3f83f4676059e04cbc444ce1d8934476136aded633390d5c2221c2fbd7",
+      "reps_captured": 3,
+      "snr_db": [
+       "11.0",
+       "11.5",
+       "10.5"
+      ],
+      "crc": [
+       "0x0093",
+       "0x0093",
+       "0x0093"
+      ],
+      "status": [
+       "0x10",
+       "0x10",
+       "0x10"
+      ],
+      "count_us": [
+       "1118945961",
+       "1121164700",
+       "1439121995"
+      ],
+      "decrypt": "DECRYPT_OK",
+      "plaintext": {
+       "magic": 2,
+       "total": 6,
+       "idx": 5,
+       "chunk_bytes": 14
+      },
+      "chunk_sha_ok": true
+     }
+    ]
+   },
+   "reassembly": {
+    "tool": "tools/chirp_raw_rx.py reassemble (e19dd98)",
+    "bytes": 914,
+    "file_sha256": "94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b",
+    "sha_match": true,
+    "sha_match_vs_alpha_declaration": true
+   },
+   "bus_verdict_posts": {
+    "bravo_seq": 4312,
+    "alpha_seq": 1438,
+    "event_type": "chirp_raw_rx_verdict"
+   }
+  },
+  "leg2_B_to_A": {
+   "status": "COMPLETE \u2014 CROSS-CONFIRMED (Alpha DECRYPT_OK 14/14)",
+   "payload": {
+    "file": "player_ai.py",
+    "file_bytes": 2420,
+    "file_sha256": "c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f",
+    "total_chunks": 14,
+    "sealed_to_alpha_pub": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+    "frame_sha16": [
+     "3fba71a523e8c286",
+     "a352ae796de4441e",
+     "ff5cd59e495fe680",
+     "8f7c9ac4726aac60",
+     "8bca94b39205e23b",
+     "f381a0050a5a2388",
+     "1ddac43aeadb82b0",
+     "38e48b3d5112d74e",
+     "8caf4e57b302f8c1",
+     "ba9eae9252822d9c",
+     "a910531310272304",
+     "e22bbae090f8173a",
+     "116c3dfa39649da2",
+     "ece57fcd54c0ab23"
+    ],
+    "frame_sha256_full": [
+     "3fba71a523e8c286e695c95a168e75d916e310d4aa2d7b84c3bdc69a89cbd24c",
+     "a352ae796de4441e8a6b8a5268e8a7acbba7f7d248372e43609d9d76330b68b5",
+     "ff5cd59e495fe680be70d5c343a75914c977ba91bb64c36acaed98a842e655e9",
+     "8f7c9ac4726aac60dcc8c745a87a90635e9b2bac6a551b5d0f88107caa5232dd",
+     "8bca94b39205e23bdb8c296fb252c5c02bd3f0d3a9fbde9cb8bdc22e7da34fbe",
+     "f381a0050a5a23883779c9b63d43ac2904c5f2dbc4aa85b98b540357571fd881",
+     "1ddac43aeadb82b07a4ebd6e2ddd9a8302c1edad799ca068215e06b7e22f213a",
+     "38e48b3d5112d74ea4ac749a682383bdb43b60b2dfaa0274125c921b5ea30db6",
+     "8caf4e57b302f8c1b6b72c8061a5b6b47412c9e6c7aef02ec63f2f69827cea65",
+     "ba9eae9252822d9c323a45d61ebc2532d1112f105706488c0df2c5bb78719593",
+     "a9105313102723041dfff37b182f8c9e3b49abde0421446c4168c4ebe4e21363",
+     "e22bbae090f8173a709b8739bc722d3e461cd50aeb7865230d33f78a841d4773",
+     "116c3dfa39649da2db93bb228a1028eb128859d5a7e156fefa703217dded9a16",
+     "ece57fcd54c0ab235784516bfc7e12c524ad677c69fda13b949725449de458ce"
+    ]
+   },
+   "player_contract": "imports game_core.Game; binary-searches [lo,hi] using ONLY the high/low feedback from Game.guess() \u2014 deliberately ignores the secret that Game.guess() leaks in its return tuple. Worst case floor(log2(100))+1 = 7 = the core's left budget.",
+   "player_self_test": {
+    "default_seed_1337": {
+     "outcome": "win",
+     "guesses_used": 7,
+     "transcript": [
+      50,
+      75,
+      88,
+      81,
+      78,
+      79,
+      80
+     ]
+    },
+    "seed_sweep": {
+     "seeds": 2000,
+     "failures": 0,
+     "worst_guesses": 7
+    }
+   },
+   "alpha_rx_window": {
+    "alpha_bus_seq": 1440,
+    "bravo_bus_seq": 4315,
+    "armed_at_utc": "2026-11-15T07:02:07Z",
+    "closes_at_utc": "2026-11-15T07:40:00Z",
+    "rf": "903.9 SF9 125kHz",
+    "expect_match": "alpha's expect block matched bravo's payload sha / 14 chunks / 14 frame sha16 list EXACTLY"
+   },
+   "fire_01": {
+    "reason": "initial full burst",
+    "reps_per_frame": 2,
+    "frame_gap_s": 2,
+    "frames": [
+     "CHIRP_TX_FRAMES=14/14_OK CHIRP_TX_SENDS=28/28_OK",
+     "CHIRP_TX_COMPLETE=YES"
+    ],
+    "sends_tx_done": 28,
+    "sends_error": 0,
+    "recovery_gate": [
+     "2026-11-15T07:12:12Z LORA_CHIRP_RECOVERY_PASS=YES"
+    ],
+    "tx_log": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_tx_fire01.log",
+    "recovery_log": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/recovery_fire01.log"
+   },
+   "alpha_capture_01": {
+    "alpha_bus_seq": 1445,
+    "event_type": "minigame_b2a_rx_capture",
+    "status": "PARTIAL",
+    "unique_frames_captured": 10,
+    "missing_frames": 4,
+    "missing_sha16": [
+     "a910531310272304",
+     "e22bbae090f8173a",
+     "116c3dfa39649da2",
+     "ece57fcd54c0ab23"
+    ],
+    "missing_idx": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "alpha_note": "19 blocks, 19 CRC-OK, 18 x 245B CRC-OK, SNR 11.2..11.8 dB, all datr=9 @903.9 MHz; re-fire requested",
+    "attribution": "RECEIVER-SIDE MISS on Alpha's node (bravo's TX log shows all 28 sends TX_DONE inside his armed window) \u2014 disclosed, not attributed to a bravo fault"
+   },
+   "fire_02": {
+    "reason": "re-fire of exactly the 4 frames alpha reported MISSING (idx 10-13), same sealed bytes (identical sha256), 3 reps each, 3s gap",
+    "reps_per_frame": 3,
+    "frame_gap_s": 3,
+    "frames": [
+     "CHIRP_TX_FRAMES=4/4_OK CHIRP_TX_SENDS=12/12_OK",
+     "CHIRP_TX_COMPLETE=YES"
+    ],
+    "sends_tx_done": 12,
+    "sends_error": 0,
+    "recovery_gate": [
+     "2026-11-15T07:23:05Z LORA_CHIRP_RECOVERY_PASS=YES"
+    ],
+    "tx_log": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_tx_fire02.log",
+    "recovery_log": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/recovery_fire02.log",
+    "alpha_capture_result": "14/14 unique frames \u2014 the 4 re-fired frames (idx 10-13) landed; total 24 blocks, 24 CRC-OK 245B in round 2 log"
+   },
+   "bus_posts": {
+    "bravo_seq_ready": 4314,
+    "alpha_seq_ready": 1439,
+    "bravo_seq_fired": 4319,
+    "alpha_seq_fired": 1444,
+    "bravo_seq_refire": 4322,
+    "alpha_seq_refire": 1446
+   },
+   "alpha_final_verdict": {
+    "alpha_bus_seq_1": 1448,
+    "alpha_bus_seq_2": 1450,
+    "event_type": "chirp_raw_rx_verdict",
+    "leg": "B_to_A",
+    "verdict": "DECRYPT_OK",
+    "unique_declared_frames_captured": "14/14",
+    "total_245B_pkts_parsed": 30,
+    "all_crc_ok": true,
+    "all_decrypt_ok": true,
+    "reassembled_file": "player_ai.py",
+    "reassembled_bytes": 2420,
+    "reassembled_sha256": "c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f",
+    "bravo_crosscheck_sha_match": true,
+    "bravo_crosscheck_chunk_count_match": true,
+    "bravo_crosscheck_byte_count_match": true,
+    "game_run_on_alpha": {
+     "combined": "game_core.py (A) + player_ai.py (B, received bit-exact over LoRa)",
+     "outcome": "win",
+     "guesses_used": 7,
+     "worst_case_guesses": 7,
+     "within_budget": true,
+     "core_left_after": 0,
+     "transcript": [
+      50,
+      75,
+      88,
+      81,
+      78,
+      79,
+      80
+     ],
+     "note": "played on ALPHA's own node against ALPHA's own game_core.py, using the player that arrived over the air"
+    },
+    "alpha_logs": [
+     "fleet/logs/minigame_b2a_rx_20261115.log",
+     "fleet-repos/fleet/evidence/minigame_drill_20261115/leg2_rx_a/raw_hal_rx_9039_sf9_125k.log"
+    ],
+    "alpha_transcript_file": "fleet/evidence/minigame_drill_20261115/leg2_rx_a/leg2_game_transcript.json",
+    "tools_commit": "9b21e82 branch researcher-a/minigame-chirp-20261115"
+   }
+  }
+ },
+ "tooling_fixes_and_findings": [
+  {
+   "finding": "Alpha's tools/chirp_raw_rx.py has an ASYMMETRIC file interface: `frame` mode parses HEX-TEXT (bytes.fromhex(read_text())) while `reassemble` mode reads RAW bytes (read_bytes()). Bravo wrote both forms (frame_NN.bin raw + frame_NN.hex text) from the SAME captured bytes. Reported to Alpha on the bus and in the peer brief.",
+   "impact": "workaround only, no stub created, no behaviour change"
+  },
+  {
+   "finding": "Alpha's brief instructed Bravo to 'run game_core_recv.py' \u2014 that file DOES NOT EXIST on branch e19dd98 (only tools/chirp_raw_tx.py and tools/chirp_raw_rx.py are in the tree). Bravo did NOT fabricate it; imported the reassembled game_core.py directly and ran the equivalent.",
+   "impact": "brief referenced a non-existent artifact"
+  },
+  {
+   "finding": "Alpha's A1445 capture missed the last 4 of 14 unique frames during Bravo's 28-send burst (all sends TX_DONE, chain certified PASS before and after). Root cause lies on Alpha's receive side. Bravo re-fired exactly those 4 frames (3 reps) into his still-open window \u2014 the standard re-arm discipline.",
+   "impact": "receiver-side miss disclosed in the ledger"
+  }
+ ],
+ "verification": {
+  "script": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/verify_minigame_drill.py",
+  "how_to_run": "python3 /home/researcher-bravo/fleet/evidence/minigame_drill_20261115/verify_minigame_drill.py --bus-check",
+  "checks": [
+   {
+    "check": "L1_alpha_frames_present_in_raw_radio_log",
+    "ok": true,
+    "detail": "found 6 distinct 245B frame shas; missing=[]"
+   },
+   {
+    "check": "L2_all_alpha_frames_decrypt_ok",
+    "ok": true,
+    "detail": "6/6 DECRYPT_OK"
+   },
+   {
+    "check": "L2_reassembled_sha_matches_alpha_declaration",
+    "ok": true,
+    "detail": "reassembled=94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b declared=94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b bytes=914"
+   },
+   {
+    "check": "L3_bravo_sealed_frames_match_manifest",
+    "ok": true,
+    "detail": "14 frames exact 245B + sha256"
+   },
+   {
+    "check": "L3_bravo_player_file_sha_matches_declaration",
+    "ok": true,
+    "detail": "manifest=c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f declared=c94a2cecbacd811a944559f4f44ffb21bf6fdf275bf960ee314c9f9184581b8f"
+   },
+   {
+    "check": "L3_bravo_chunk_count",
+    "ok": true,
+    "detail": "total_chunks=14"
+   },
+   {
+    "check": "L4_game_default_seed_win_within_budget",
+    "ok": true,
+    "detail": "outcome=win guesses=7 transcript=[50, 75, 88, 81, 78, 79, 80]"
+   },
+   {
+    "check": "L4_game_2000_seed_sweep",
+    "ok": true,
+    "detail": "fails=0 worst_guesses=7"
+   },
+   {
+    "check": "L5_tx_receipt_28_sends_all_done",
+    "ok": true,
+    "detail": "TX_DONE=28 errors=0 complete_line=['CHIRP_TX_COMPLETE=YES']"
+   },
+   {
+    "check": "L6_alpha_leg2_verdict_present",
+    "ok": true,
+    "detail": "2 leg=B_to_A verdict event(s): seqs=[1448, 1450]"
+   },
+   {
+    "check": "L6_alpha_leg2_sha_matches_what_b_sealed",
+    "ok": true,
+    "detail": "alpha_claims=[(1448, 'reassembled_file_sha256', 'c94a2cecbacd811a'), (1448, 'declared_file_sha256', 'c94a2cecbacd811a'), (1450, 'reassembled.sha256', 'c94a2cecbacd811a'), (1450, 'reassembled.declared_sha256', 'c94a2cecbacd811a')] bravo_sealed=c94a2cecbacd811a"
+   }
+  ],
+  "checks_passed": 11,
+  "checks_total": 11,
+  "note": "ALL checks PASS. L6 requires alpha's leg-2 verdict on Alpha's bus AND that EVERY sha256 alpha claims equals the sha Bravo sealed."
+ },
+ "honest_verification_boundary": [
+  "Committed bytes, the raw HAL RX/TX logs, and the fleet bus event stream are independently checkable by anyone with this dossier and the files it references.",
+  "The flight of frames between the two nodes is evidenced by the RECEIVER's own demodulator log (CRC-checked by the SX1302) plus a SHA-256 match on the exact declared payload \u2014 strong physical evidence, but not a proof that a particular physical radio emitted the bytes.",
+  "No identity-bound proof rides this pipeline yet, so a third party cannot cryptographically attribute the emissions to these two specific Raspberry Pi nodes. Stated plainly rather than overclaimed.",
+  "Alpha's leg-2 decrypt/reassemble verdict is his own claim until posted; Bravo's dossier records it as PENDING rather than assuming success."
+ ],
+ "artifact_index": {
+  "bravo_evidence_root": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115",
+  "leg1_capture_inventory": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg1_capture_inventory.json",
+  "leg1_frame_decrypt": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg1_frame_decrypt.json",
+  "leg1_frames_dir": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg1_frames",
+  "reassembled_game_core": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/game_core.py",
+  "bravo_player": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/player_ai.py",
+  "leg2_frames_dir": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_frames",
+  "leg2_manifest": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_frames/manifest.json",
+  "leg2_frame_sha_inventory": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_frame_sha_inventory.json",
+  "leg2_refire_missing4_dir": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_frames_refire_missing4",
+  "multi_frame_tx_source": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/chirp_frames_tx.c",
+  "multi_frame_tx_binary": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/chirp_frames_tx",
+  "fire_runbook": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/minigame_b2a_fire.sh",
+  "staged_sha_gate": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/staged_sha_gate.py",
+  "cold_verifier": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/verify_minigame_drill.py",
+  "leg2_peer_brief": "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_peer_brief.txt",
+  "tx_logs": [
+   "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_tx_fire01.log",
+   "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/leg2_tx_fire02.log"
+  ],
+  "recovery_logs": [
+   "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/recovery_fire01.log",
+   "/home/researcher-bravo/fleet/evidence/minigame_drill_20261115/recovery_fire02.log"
+  ]
+ },
+ "drill_outcome": {
+  "status": "COMPLETE both directions \u2014 CROSS-CONFIRMED on both fleet buses",
+  "leg1_A_to_B": "DECRYPT_OK sha_match (bravo seq 4312, alpha ack seq 1438)",
+  "leg2_B_to_A": "DECRYPT_OK 14/14 sha_match (alpha seq 1448 + 1450)",
+  "final_audit_posts": {
+   "bravo_seq": 4328,
+   "alpha_seq": 1451,
+   "event_type": "minigame_conversation_audit"
+  },
+  "game_result": "win in 7 binary-search guesses on Alpha's node; Bravo's local sweep: 2000 seeds, 0 failures",
+  "total_air_frames_sent_bravo_side": 40,
+  "total_air_frames_sent_bravo_side_detail": "fire01: 28 sends (14 frames x2 reps); fire02: 12 sends (4 frames x3 reps)",
+  "radio_leg_failures_disclosed": 1,
+  "radio_leg_failures_detail": "Alpha's capture #1 missed 4 of 14 unique frames during Bravo's 28-send burst (all sends TX_DONE, chain certified PASS before and after). Receiver-side miss on Alpha's node; disclosed in A1445, re-fired per drill rules, then 14/14.",
+  "code_findings_disclosed": 3
+ }
+}

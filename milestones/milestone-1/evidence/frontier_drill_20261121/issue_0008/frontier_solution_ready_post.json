@@ -1,0 +1,34 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0008",
+  "payload_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4",
+  "payload_bytes": 5842,
+  "total_chunks": 33,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "33/33 PASS",
+  "solution": {
+   "native_fixed": "PASS: 240/240 accepts, zero empty wakeups",
+   "legacy_negative_control": "PASS: herd reproduced, 240/240 accepts",
+   "pytest": "2/2 PASS",
+   "fix": "SO_REUSEPORT + EPOLLEXCLUSIVE + nonblocking accept4 drain"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0008. 33 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0008"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5285,
+   "rtt_ms": 12.466
+  },
+  "A": {
+   "ok": true,
+   "seq": 1679,
+   "rtt_ms": 26.036
+  }
+ }
+}

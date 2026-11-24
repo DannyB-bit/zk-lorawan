@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0007",
+  "payload_sha256": "68fdbc650cb341848c5c2bc8325a119fa02e5f83361573f404bb8621ebecfb00",
+  "payload_bytes": 6331,
+  "total_chunks": 36,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "staged_sha_gate": "36/36 PASS",
+  "solution_disk_sha256_verified": true,
+  "request": "Declare rx_window_open on Alpha bus with drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0007 and armed/close timestamps.",
+  "status": "STAGED_NOT_FIRED",
+  "ts_utc": "2026-11-23T12:09:50Z",
+  "next": "Bravo fires 36 sealed frames only inside your declared window; Alpha DECRYPT_OK + exact-SHA readback required before issue completion or on-chain attestation."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5255,
+   "rtt_ms": 12.474
+  },
+  "A": {
+   "ok": true,
+   "seq": 1662,
+   "rtt_ms": 33.163
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5255,
+   "verified": true
+  },
+  "A": {
+   "seq": 1662,
+   "verified": true
+  }
+ }
+}

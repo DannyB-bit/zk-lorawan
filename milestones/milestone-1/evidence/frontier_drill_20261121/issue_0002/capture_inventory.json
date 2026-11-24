@@ -1,0 +1,115 @@
+{
+ "source_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261122T072957Z.log",
+ "observations_245b": 15,
+ "crc_ok_target_observations": 12,
+ "unique_crc_ok_target_frames": 12,
+ "rejected_245b": [
+  {
+   "size": 245,
+   "status": "0x11",
+   "freq_hz": 904500000,
+   "datr": 9,
+   "sha256": "d11e3122ead620e5cc321e81623abc7146a24ac1d144c44134db50985965efe4"
+  },
+  {
+   "size": 245,
+   "status": "0x11",
+   "freq_hz": 904500000,
+   "datr": 9,
+   "sha256": "2eb40298a0896e7f78c1c674381e4d01b9843c9e791db41aa0bcabed62067f0d"
+  },
+  {
+   "size": 245,
+   "status": "0x11",
+   "freq_hz": 904500000,
+   "datr": 9,
+   "sha256": "4d77282de114e51e125e821833e14c1eec0cdb158b4e321ede9973fc751629ef"
+  }
+ ],
+ "frames": [
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "27c402bee470417162eb457b1be4445f34f669c0175ce915991107e81bf2e36e"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "30aefcba1eb0f69019aab6a4a0d34f6e7ada8896aaf05534ac4e3e639ab565c5"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "3b61a93e0adc59230c39653980d166420644910af5302de33f1b693375d728cd"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "4b2e7023d72216db362940b1f8aa200383de37c54f6dca79725a514f82598794"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "4eda7c710b6a813dc4f02c0ef93d070779e59bbf47e60f01d912f7dc14f3a755"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "79b854aeeec5e5c8114bf579e6d34952c8328e46f33c7f473dc4f55eb452937e"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "8a3a840eb15672c5d63eca9e9db1d3f0a5e99a138a60cf7e5c98a1bad7d8a6ce"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "91d869949677549efb3794a831f791766c8dffd02eda95e8341605e145372125"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "93fe583461423e265344ac51700d10b347458d5d68e7f278499da94ee55865b4"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "d0b4d204c586f0b4325db5d6d0b39a750e48b396304e836edeee106a2f153dac"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "f03b823c624d86fd86e5916981e3f3f1daeba880da7e191f670f51ed49674d3b"
+  },
+  {
+   "size": 245,
+   "status": "0x10",
+   "freq_hz": 903900000,
+   "datr": 9,
+   "sha256": "f09bf9ac1a00375438327c5c5b5b10f9dcc194e36fb04e6a2f73ea69b6b8ec83"
+  }
+ ]
+}
