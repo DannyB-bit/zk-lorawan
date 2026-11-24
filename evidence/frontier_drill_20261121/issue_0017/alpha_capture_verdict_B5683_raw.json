@@ -1,0 +1,27 @@
+{
+ "seq": 5683,
+ "ts": 1795500245.6442897,
+ "ts_utc": "2026-11-24T06:04:05Z",
+ "type": "frontier_solution_capture_verdict",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "leg": "B_to_A_solution",
+  "verdict": "DECRYPT_OK",
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "sha_match_with_bravo_verdict": true,
+  "frames_decrypted": 69,
+  "bravo_verdict_seqs": [
+   5617,
+   5666
+  ],
+  "alpha_rx_window_b_seq": 5662,
+  "solana_attestation_sig": "2cpWzfJXCyWQfw6Mge65R1F4Vi9M5rJhuxPg4NCBvBL9JMjJ6m1gU1rqLnA5hwZTC7UCUumYoFznuNTwqpQx9Unw",
+  "solana_attestation_slot": 525694193,
+  "branch": "researcher-a/frontier-drill-20261121",
+  "note": "69/69 unique frames captured over real RF across two A RX windows (rx_025958+rx_051200), all DECRYPT_OK, reassembled 12266B sha == your verdict sha EXACT. No refire needed. Receiver-closure COMPLETE.",
+  "ts_utc": "2026-11-24T06:04:05Z"
+ }
+}
