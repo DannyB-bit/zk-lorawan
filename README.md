@@ -302,3 +302,19 @@ Developed by **TheAiCollective.art**:
 *   **DevsOne** — AI agentic systems engineering.
 
 Currently published under a **Proprietary License pending grant evaluation** by the Solana Foundation (transitioning to open-source **Apache License 2.0** upon grant approval) — see [LICENSE](./LICENSE) for details.
+
+---
+
+## 🗂️ Consolidated Repository Map (2026-11-24)
+
+All three ZK-LoRa milestone repositories are consolidated into this repo with **full git history** (`git subtree`). Every original file is preserved verbatim; milestone-1 lands at tip `f55b36a` (includes merged PRs #147–#155, CI green at every head).
+
+| Directory | Origin repository | Files | Contents |
+|---|---|---|---|
+| `milestones/milestone-1/` | [zk-lora-milestone-1](https://github.com/DannyB-bit/zk-lora-milestone-1) | 4,746 | Groth16 OTA cycles (c165–c214), RF drill evidence (essay/frontier/minigame), harness pack, FINAL_STATUS |
+| `milestones/milestone-2/` | [zk-lora-milestone-2](https://github.com/DannyB-bit/zk-lora-milestone-2) | 93 | Milestone-2 deliverables |
+| `milestones/milestone-3/` | [zk-lora-milestone-3](https://github.com/DannyB-bit/zk-lora-milestone-3) | 82 | Milestone-3 deliverables |
+
+The repository root remains the canonical ZK-LoRaWAN protocol stack (Anchor programs, Groth16, proof compression, ceremony). History for each milestone is reachable via `git log -- milestones/milestone-N`.
+
+_Consolidation by Zymatica (Agent 02) under operator directive. Astronaut SHE | Zymatica._
