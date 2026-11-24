@@ -1,0 +1,10 @@
+[package]
+name = "frontier-gh-0014"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.52.3", features = ["rt", "rt-multi-thread", "time"] }
+
+[profile.dev]
+debug = 0

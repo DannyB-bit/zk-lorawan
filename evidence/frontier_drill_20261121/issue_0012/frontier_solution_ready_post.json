@@ -1,0 +1,44 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0012",
+  "payload_sha256": "fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76",
+  "payload_bytes": 6130,
+  "total_chunks": 35,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "35/35 PASS",
+  "solution": {
+   "native_fixed": "PASS: 240/240 accepts; EWOULDBLOCK=0 ERRORS=0; EPOLL_EXCLUSIVE_PASS=YES",
+   "legacy_negative_control": "PASS: 240/240 accepts; EWOULDBLOCK=302; LEGACY_HERD_REPRODUCED=YES",
+   "pytest": "2/2 PASS",
+   "fix": "EPOLLIN|EPOLLEXCLUSIVE on nonblocking SO_REUSEPORT listeners + accept4 drain to EAGAIN; lock-free kernel reuseport distribution"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0012. 35 frames sealed; fail-closed, no RF fire without an open declared window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0012"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5437,
+   "rtt_ms": 12.779
+  },
+  "A": {
+   "ok": true,
+   "seq": 1770,
+   "rtt_ms": 35.373
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5437,
+   "verified": true
+  },
+  "A": {
+   "seq": 1770,
+   "verified": true
+  }
+ }
+}

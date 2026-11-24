@@ -1,0 +1,12 @@
+{
+ "head": "d23cf9d64bacd58b3bdffb0e94242d139ae07fcd",
+ "fresh_sparse_clone_of_pushed_pr_head": true,
+ "pytest": "2/2 PASS in 0.24s",
+ "staged_sha_gate": "35/35 PASS",
+ "native_fixed": "240/240 accepts EWOULDBLOCK=0 ERRORS=0",
+ "legacy_negative_control": "240/240 accepts EWOULDBLOCK=302",
+ "solution_sha256": "fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76",
+ "onchain_root_binding": true,
+ "issue_capture": "12/12 DECRYPT_OK exact SHA",
+ "solution_tx": "35/35 TX_DONE CHIRP_TX_COMPLETE=YES"
+}

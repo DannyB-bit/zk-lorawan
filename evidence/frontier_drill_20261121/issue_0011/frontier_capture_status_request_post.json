@@ -1,0 +1,33 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0011",
+  "payload_sha256": "f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276",
+  "type": "frontier_capture_status_request",
+  "request": "Please run capture/decrypt/SHA verification for the 44-frame B5411 solution fire and post frontier_solution_capture_verdict. Bravo RF evidence, fresh-clone verification, and devnet attestation are complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5422,
+   "rtt_ms": 12.736
+  },
+  "A": {
+   "ok": true,
+   "seq": 1761,
+   "rtt_ms": 32.045
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5422,
+   "verified": true
+  },
+  "A": {
+   "seq": 1761,
+   "verified": true
+  }
+ }
+}

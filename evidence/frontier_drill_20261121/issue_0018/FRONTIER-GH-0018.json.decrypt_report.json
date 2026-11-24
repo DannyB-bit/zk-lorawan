@@ -1,0 +1,164 @@
+{
+ "frames_dir": "frames_issue",
+ "frames_seen": 12,
+ "decrypt_ok": 12,
+ "decrypt_fail": 0,
+ "groups": {
+  "12": {
+   "total_chunks": 12,
+   "have": 12,
+   "missing": [],
+   "reassembled_bytes": 2019,
+   "reassembled_sha256": "01df968ada3567e1e8e91b9d4cb986f847ad0ec9fceca91c6127774661e73e37",
+   "wrote": "FRONTIER-GH-0018.json",
+   "expect_sha256": "01df968ada3567e1e8e91b9d4cb986f847ad0ec9fceca91c6127774661e73e37",
+   "sha_match": true
+  }
+ },
+ "per_frame": [
+  {
+   "file": "frame_00.bin",
+   "frame_sha256": "84db53dc4ed210898672ecf6259133fa007af3a6b686d04d06cec62e7fe60165",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 0,
+   "chunk_bytes": 180,
+   "chunk_sha256": "5b040a7a0c855d9d7f3df090096994d39a1b8cc8ad108fad632a3f3b2c15fad9"
+  },
+  {
+   "file": "frame_01.bin",
+   "frame_sha256": "f2ffc456ea8cd2c21f09ebff0cb17ac06fdf0083be2c2fd05b827de902208c24",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 1,
+   "chunk_bytes": 180,
+   "chunk_sha256": "cb32bde926ad27efaa43562468e1b2200837fff8797c5289d6dcc4105f845e87"
+  },
+  {
+   "file": "frame_02.bin",
+   "frame_sha256": "8bb8f60fb50f8cd8420cd44fca62541e37be81f5647c6884611ec67558752179",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 2,
+   "chunk_bytes": 180,
+   "chunk_sha256": "75176e7d8b3362a44f41704881b9ea9f8518d6220085b618baca3491a518de2f"
+  },
+  {
+   "file": "frame_03.bin",
+   "frame_sha256": "f24946265270e631dbf943a93bb5b74a64d64e54e6edd2260d269f90e3162d88",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 3,
+   "chunk_bytes": 180,
+   "chunk_sha256": "9fb054484c7ca88b163272523c2999776023215d111c2cc4462ddc908144b4b1"
+  },
+  {
+   "file": "frame_04.bin",
+   "frame_sha256": "a6defbabf9c85005e0a46868ec347a97d102a48d0e320d43085c92d331076582",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 4,
+   "chunk_bytes": 180,
+   "chunk_sha256": "37b95b78263bab28d6b68fe392170836478c27e1bc34a38f4195d46392f4c9fd"
+  },
+  {
+   "file": "frame_05.bin",
+   "frame_sha256": "a25a61523637e4489f44dd3638981dda2846d623c4b5b104d85c0db3dcf0b172",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 5,
+   "chunk_bytes": 180,
+   "chunk_sha256": "2d3c8e86cf0c9c09d3f0d6c3b6103206fad258b068c23ba71ea1d02503be6393"
+  },
+  {
+   "file": "frame_06.bin",
+   "frame_sha256": "5fcd86cf2808d42d324a5abe39c33ef6ffaadebc971d05f05d2a468600a0ae06",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 6,
+   "chunk_bytes": 180,
+   "chunk_sha256": "b0f5a47b572a1f4bfedfd68894ff41e1424901aba938055941fa472f34c3dd13"
+  },
+  {
+   "file": "frame_07.bin",
+   "frame_sha256": "281cc6c2e3db08e95b3bc2c638b35cd17cf67072f5ec014fdc5c561309be207d",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 7,
+   "chunk_bytes": 180,
+   "chunk_sha256": "18ab3f5886550c6b965c8b3962de0b155b412af068f80b1efcc797ce3ca7cb2f"
+  },
+  {
+   "file": "frame_08.bin",
+   "frame_sha256": "acd0db3e108ff124f0816dec81c5f0cae172bbb7c3bcc984aee615a6875f6a68",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 8,
+   "chunk_bytes": 180,
+   "chunk_sha256": "0699f75cdd46f59550665a91f3d997fb5054148fafa3c79e32ea5b5e3f687cdc"
+  },
+  {
+   "file": "frame_09.bin",
+   "frame_sha256": "78c6412156561d4a9dcc8cc6ec730cfdbd5d06cb3241862eec8d657324b482d9",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 9,
+   "chunk_bytes": 180,
+   "chunk_sha256": "46d1895d44f322fff3cdc53e8b9e9959c1cba6dc36459d05193076b204870ac9"
+  },
+  {
+   "file": "frame_10.bin",
+   "frame_sha256": "7f515fdcd865a1489f854420f80b4fb96a3e176428127bbe72030ffbb312c04b",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 10,
+   "chunk_bytes": 180,
+   "chunk_sha256": "3c926fa2bcd9c3ac84f2c50ac541555d96336494205e05ec1add4024044a793e"
+  },
+  {
+   "file": "frame_11.bin",
+   "frame_sha256": "68ed4c6418470f072931869fbbd3a07484ef1ed8dc870649f4ca6939b5225b5a",
+   "bytes": 245,
+   "ok": true,
+   "verdict": "DECRYPT_OK",
+   "magic": 2,
+   "total": 12,
+   "idx": 11,
+   "chunk_bytes": 39,
+   "chunk_sha256": "5763cb90ba335ce5770fc34f9ea285cee402f47dd72003abb051965369a4cacd"
+  }
+ ]
+}

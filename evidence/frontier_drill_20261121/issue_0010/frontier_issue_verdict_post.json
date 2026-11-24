@@ -1,0 +1,54 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0010",
+  "ok": true,
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2018,
+   "file_sha256": "cbf396dcd65fee01b3d9e0ad0180b38a71b044f9a4af73b1edeffb6cabe0efa8",
+   "sha_match": true
+  },
+  "capture": {
+   "observations_245b": 12,
+   "crc_ok_target_observations": 12,
+   "unique_crc_ok_target_frames": 12,
+   "rejected_245b": 0,
+   "rf": "903.9MHz SF9 BW125, status 0x10"
+  },
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "alpha_declare": {
+   "b_bus_seq": 5353,
+   "a_seq": null
+  },
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0010",
+  "note": "All 12 declared issue frames captured CRC-OK, AES-256-GCM DECRYPT_OK under bravo_sk, reassembled SHA exact-match."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5366,
+   "rtt_ms": 54.89
+  },
+  "A": {
+   "ok": true,
+   "seq": 1726,
+   "rtt_ms": 26.954
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5366,
+   "verified": true
+  },
+  "A": {
+   "seq": 1726,
+   "verified": true
+  }
+ }
+}

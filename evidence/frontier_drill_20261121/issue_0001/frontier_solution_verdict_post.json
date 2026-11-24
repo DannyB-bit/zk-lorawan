@@ -1,0 +1,77 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0001",
+  "ok": true,
+  "payload_sha256": "83d25cbd59424317d3fdc183f0605c6ef67612b88673c717296c805f386bcd26",
+  "payload_bytes": 6276,
+  "total_chunks": 35,
+  "frames_fired": 35,
+  "tx_done_markers": 35,
+  "chirp_tx_complete": true,
+  "tx_exit_code": 0,
+  "recovery_exit_code": 0,
+  "rf": "903.9MHz SF9 BW125 14dBm",
+  "gap_s": 3,
+  "reps": 1,
+  "alpha_rx_window": {
+   "b_seq": 4893,
+   "a_seq": 1521,
+   "closes_at_utc": "2026-11-22T07:44:52Z"
+  },
+  "tx_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001/b2a_solution_tx.log",
+  "frame_sha256": [
+   "7f287ebddc2cc45ae449d8a6e8ee13f7ef9ef32cb6d69c92da87e4fc37fdd737",
+   "1e884f138a9408ddeb17fa9307d3e658d5b7808eef91529d8eb1bc056f650c7d",
+   "9ab5b2ab1d4e2bbf38dc0a18e5d0312a446aeed1f1a8903c6e0cc5ce7f7d4a43",
+   "7f0884ee84b05106107734143cbc0fe88735f546ba1afd25ac9533e191335cd5",
+   "77475cfa0724a1a4a4839576c421798485cac572dfe2547b685f4553b2d67e22",
+   "cf9a2db92d08e6ab239143ec5aaefa89f2957d96332266e9e33235956e58b6a4",
+   "f853c06bec162a83ba6f1758cc622f9b4c61f875a52b0af30d4da2b64d733be4",
+   "c86d618f5dffd6d667d61ba2dd74caa1a704faba0a39709c1f082795e1899a60",
+   "06305761bfb4934f773733917d4aed43aeccf70b69b50d804f50ced9416b483f",
+   "f13d3c2bb5450d88eb5db821efd7e7cb95aab1b64b8b4f35756dd86c48ebadbd",
+   "0d6752717330cd0050aca8cb6ccd979b8138bf4965b34c1eb78fa358fe08fd8e",
+   "35223a7eda01c14ae35e3152e2a5f9371e19527637bbf2ce8a0cbd24e1af2923",
+   "a36994a74ba91de9bfcc9de763f7f3d2a9906aa8f711fe74743de2417f874ffc",
+   "40bb289c9aeee2ac8b33a9f638cd85db59de07592b6a0193427281bff3e7aeba",
+   "0504853ccecd0318b0e762045489b024aaf5b1b26cd9661b9d6d60c8cde29aee",
+   "e649e4a98dc1e45d0f225b9c6c1ba9bf2a5cf65d52abc86debf83d8453975dbc",
+   "ce552f74574878a80f94bdf23376fb204aade64517bc5dee4ec6724ed2e58ac3",
+   "6f65e8312e28a1e6121438559ca1ab2815f32317c42b729c7af89010f903c2e2",
+   "6b9e5e15a85f6385b8c6b18df482dc8bc24c09bbdf6e00a6c734f1fcf9f3f10f",
+   "a3a459dd38e2072eb2a98194a1d78e2cc32b0f98f3d55f5d3d4746ceafaad717",
+   "56092a3d3e47db8cf58a92c024925d9078c073196608898abeaec7f44344f095",
+   "79ba1b5ef5ebb3d339dc127dd377b4fcb4b6f121cbc5291b0928a8beff647e12",
+   "8f2fd94e57e9c200afb5cccbf003627f60acb76ac2d1c0be7933121186776c07",
+   "cda0ec05222881f8b0482c2e1773287bdc82cd248878edfb9fba1ae03dfa0dcd",
+   "ffd871452016dc4f4c457eef8a2bba6f811c1ad0b9b203457c871d0e2024ce0e",
+   "3bb13008e4afeeafbfee27308eb485b891dba377278cb7b1b7225a5e862d7bae",
+   "0fdac5d3a8c5e6ce265329e1f36f9902490918b36c6f35c51bfcefaa9b67f7bb",
+   "2cfdab8c4eb1a71ec67383521ccb4df88aa6b81bc93b03ecd95520d4b82383ca",
+   "4fe63023831040766e47907a9a1b29d089533e5f83c9fc9a64276c1b80d27929",
+   "1537594997877e0d6641f7f8c3a40fab925a9430940f297edc719b2bd51a2f22",
+   "18ca57d37810c5ebf3ee7c1dcccadc94a8da445c90fd8c1895fed57d9d55106f",
+   "8d5937ebce9c9a16e5b0ebaeb64b3741b735c85f8600b9ed6e675e0e9791059e",
+   "87ff998c2f3f495def8ec6e7ce2b1059a82c14f15dc59123827acad618175974",
+   "846783a8c35b05712897335013a631c37a3548c0326eee06457139bf6d5eab44",
+   "21c4a468c0d1e43980d887216f4e906df59083f4846e2493cba73ea7bc1f20b7"
+  ],
+  "note": "Sealed resolved payload fired to alpha_pub. ok=true is Bravo TX+staging verdict only; Alpha DECRYPT_OK+SHA readback remains required before issue completion/next issue."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 4902,
+   "rtt_ms": 54.432
+  },
+  "A": {
+   "ok": true,
+   "seq": 1524,
+   "rtt_ms": 396.898
+  }
+ }
+}

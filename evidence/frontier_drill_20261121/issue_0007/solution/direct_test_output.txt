@@ -1,0 +1,21 @@
+aarch64
+gcc (Debian 14.2.0-19) 14.2.0
+GCC ASan unavailable on this host: allocator CHECK fails before main. No ASan result claimed; fixed uses UBSan and allocation/free counters.
+RUN=1
+delete_then_save_rejected: PASS
+atomic_last_reference_free_once: PASS
+concurrent iterations=2000 successful_saves=8 rejected_saves=1992
+concurrent_save_delete_no_uaf: PASS
+RUN=2
+delete_then_save_rejected: PASS
+atomic_last_reference_free_once: PASS
+concurrent iterations=2000 successful_saves=6 rejected_saves=1994
+concurrent_save_delete_no_uaf: PASS
+RUN=3
+delete_then_save_rejected: PASS
+atomic_last_reference_free_once: PASS
+concurrent iterations=2000 successful_saves=6 rejected_saves=1994
+concurrent_save_delete_no_uaf: PASS
+LEGACY_USE_AFTER_FREE_ORDERING_DETECTED: candidate freed before SaveThread dereference
+LEGACY_MODEL_EXIT=2
+LEGACY_NEGATIVE_CONTROL=PASS

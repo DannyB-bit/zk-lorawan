@@ -1,0 +1,6 @@
+[0017] solution 12266B sha 90aacb0cb6e5032d… — sending register_coordinates …
+[0017] sig onjDCPfmxsjHuJqdtUFnxrws… pda 9wQtGSme24V544Vcze4dQ9zCcp3QJboWVfQepP4wL1m4
+[0017] slot 525650182 finalized err=None root_match=True all_checks_pass=True
+[0017] bus posts: {'B': {'ok': True, 'seq': 5618, 'rtt_ms': 14.73}, 'A': {'ok': True, 'seq': 1877, 'rtt_ms': 76.73}}
+
+SUMMARY: {'0017': {'slot': 525650182, 'pass': True}}

@@ -1,0 +1,10 @@
+{
+ "head": "8f7a622c0485aad5f1eec70befa67c94471fb65d",
+ "clone": "sparse depth-1 fresh clone of pushed PR branch",
+ "native_build": "PASS: GCC C11 pthread build on aarch64",
+ "legacy_negative_control": "PASS: 240 accepts, 566 wakeups, 330 EWOULDBLOCK, zero errors",
+ "fixed": "PASS: 240 accepts, 239 wakeups, zero EWOULDBLOCK/errors",
+ "pytest": "2 passed in 0.12s",
+ "staged_sha_gate": "36/36 PASS",
+ "verified_utc": "2026-11-24T00:48:45.307592+00:00"
+}

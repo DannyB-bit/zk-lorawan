@@ -1,0 +1,51 @@
+869020 execve("./lockless_queue", ["./lockless_queue", "fixed"], 0x7fd7cd79d0 /* 121 vars */) = 0
+869020 brk(NULL)                        = 0x55958d4000
+869020 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f95745000
+869020 faccessat(AT_FDCWD, "/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+869020 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+869020 fstat(3, {st_mode=S_IFREG|0644, st_size=73948, ...}) = 0
+869020 mmap(NULL, 73948, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f956fc000
+869020 close(3)                         = 0
+869020 openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+869020 read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0\267\0\1\0\0\0\200$\2\0\0\0\0\0"..., 832) = 832
+869020 fstat(3, {st_mode=S_IFREG|0755, st_size=1716616, ...}) = 0
+869020 mmap(NULL, 1892368, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_DENYWRITE, -1, 0) = 0x7f9552d000
+869020 mmap(0x7f95530000, 1826832, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0) = 0x7f95530000
+869020 munmap(0x7f9552d000, 12288)      = 0
+869020 munmap(0x7f956ef000, 49168)      = 0
+869020 mprotect(0x7f956cc000, 69632, PROT_NONE) = 0
+869020 mmap(0x7f956dd000, 20480, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19d000) = 0x7f956dd000
+869020 mmap(0x7f956e2000, 49168, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f956e2000
+869020 close(3)                         = 0
+869020 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f95743000
+869020 set_tid_address(0x7f957430f0)    = 869020
+869020 set_robust_list(0x7f95743100, 24) = 0
+869020 rseq(0x7f95743800, 0x20, 0, 0xd428bc00) = 0
+869020 mprotect(0x7f956dd000, 12288, PROT_READ) = 0
+869020 mprotect(0x556eabf000, 4096, PROT_READ) = 0
+869020 mprotect(0x7f9574d000, 8192, PROT_READ) = 0
+869020 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+869020 munmap(0x7f956fc000, 73948)      = 0
+869020 rt_sigaction(SIGRT_1, {sa_handler=0x7f955b3680, sa_mask=[], sa_flags=SA_ONSTACK|SA_RESTART|SA_SIGINFO}, NULL, 8) = 0
+869020 rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+869020 mmap(NULL, 8454144, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f94d20000
+869020 mprotect(0x7f94d30000, 8388608, PROT_READ|PROT_WRITE) = 0
+869020 getrandom("\x94\xd7\xd1\x4f\x36\x2f\x6f\x0a", 8, GRND_NONBLOCK) = 8
+869020 brk(NULL)                        = 0x55958d4000
+869020 brk(0x55958f5000)                = 0x55958f5000
+869020 rt_sigprocmask(SIG_BLOCK, ~[], [], 8) = 0
+869020 clone3({flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, child_tid=0x7f9552f230, parent_tid=0x7f9552f230, exit_signal=0, stack=0x7f94d20000, stack_size=0x80ea40, tls=0x7f9552f880} => {parent_tid=[869021]}, 88) = 869021
+869020 rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+869021 rseq(0x7f9552f940, 0x20, 0, 0xd428bc00 <unfinished ...>
+869020 <... rt_sigprocmask resumed>NULL, 8) = 0
+869021 <... rseq resumed>)              = 0
+869020 futex(0x7fc7912450, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 0, NULL, FUTEX_BITSET_MATCH_ANY <unfinished ...>
+869021 set_robust_list(0x7f9552f240, 24) = 0
+869021 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+869021 rt_sigprocmask(SIG_BLOCK, ~[RT_1], NULL, 8) = 0
+869021 madvise(0x7f94d20000, 8314880, MADV_DONTNEED) = 0
+869021 exit(0)                          = ?
+869021 +++ exited with 0 +++
+869020 <... futex resumed>)             = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+869020 --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=869016, si_uid=1000} ---
+869020 +++ killed by SIGTERM +++

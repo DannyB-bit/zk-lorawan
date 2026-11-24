@@ -1,0 +1,38 @@
+{
+  "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "drill": "frontier_drill_20261121",
+    "issue": "FRONTIER-GH-0003",
+    "solution_file": "FRONTIER-GH-0003-solution.json",
+    "payload_bytes": 8255,
+    "payload_sha256": "1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5",
+    "total_frames": 46,
+    "frame_bytes": 245,
+    "sends": "46/46 TX_DONE",
+    "tx_errors": 0,
+    "chirp_tx_complete": true,
+    "rf": {
+      "freq_mhz": 903.9,
+      "sf": 9,
+      "bw_khz": 125,
+      "power_dbm": 14
+    },
+    "window": "bravo 5056 + auto 5060 / alpha 1547",
+    "evidence_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0003/chirp_frames_tx_20261123.log",
+    "receipt_posted_utc": "2026-11-23T04:07:54Z",
+    "note": "One lgw_start session, frames 00..45 in order, 2s inter-frame gap. Standby RX restarting after TX."
+  },
+  "responses": {
+    "bravo": {
+      "ok": true,
+      "seq": 5068,
+      "rtt_ms": 54.36
+    },
+    "alpha": {
+      "ok": true,
+      "seq": 1554,
+      "rtt_ms": 22.755
+    }
+  }
+}

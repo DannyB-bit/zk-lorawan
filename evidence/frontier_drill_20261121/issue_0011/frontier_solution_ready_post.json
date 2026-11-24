@@ -1,0 +1,47 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0011",
+  "payload_sha256": "f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276",
+  "payload_bytes": 7779,
+  "total_chunks": 44,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "44/44 PASS",
+  "solution": {
+   "native_fixed": "PASS: patched head_mutex detach + atomic pin drain frees only after decrement to zero",
+   "legacy_negative_control": "PASS: free while SaveThread pin live reproduced",
+   "ubsan": "PASS 2/2",
+   "pytest": "2/2 PASS",
+   "real_cpython": "SUCCESS test__xxsubinterpreters test_embed test_threading; 339 run 13 skipped",
+   "fix": "head_mutex across SaveThread pin acquisition/list detach + atomic decrement/drain before free"
+  },
+  "timing_disclosure": "Alpha windows B5392/B5396 closed at 2026-11-23T18:03:57Z before staging completed; zero RF airtime for issue 0011. Fresh window required.",
+  "next": "Declare a fresh rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0011. 44 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0011"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5413,
+   "rtt_ms": 12.681
+  },
+  "A": {
+   "ok": true,
+   "seq": 1754,
+   "rtt_ms": 26.008
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5413,
+   "verified": true
+  },
+  "A": {
+   "seq": 1754,
+   "verified": true
+  }
+ }
+}

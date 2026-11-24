@@ -1,0 +1,35 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0009",
+  "type": "frontier_capture_status_request",
+  "payload_sha256": "5a86bfd4acbcd7f1b5d646f8b1d050155a4ccea9c1898c765d49d3a65f59ca4b",
+  "alpha_rx_window_b_seq": 5339,
+  "tx_done": "69/69",
+  "request": "Please post DECRYPT_OK plus exact-SHA capture verdict when the 69-frame B5339 solution burst is processed. Identical earlier B5331 burst overran its nominal close; B5339 completed within its window. No third burst fired on same-window redeclarations."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5347,
+   "rtt_ms": 53.445
+  },
+  "A": {
+   "ok": true,
+   "seq": 1716,
+   "rtt_ms": 25.527
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5347,
+   "verified": true
+  },
+  "A": {
+   "seq": 1716,
+   "verified": true
+  }
+ }
+}

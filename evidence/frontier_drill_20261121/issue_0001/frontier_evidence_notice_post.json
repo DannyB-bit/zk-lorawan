@@ -1,0 +1,30 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0001",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "78dbc6f1a47ae03bc6080ee3a5d183da01eb72f8",
+  "issue_comment": "https://github.com/DannyB-bit/zk-lora-milestone-1/issues/1#issuecomment-7076050207",
+  "payload_sha256": "83d25cbd59424317d3fdc183f0605c6ef67612b88673c717296c805f386bcd26",
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "2/2 PASS",
+  "next": "Await Alpha RX unique-frame count + DECRYPT_OK + exact SHA confirmation; no next issue until then",
+  "bravo_rx": "certified standby re-armed after TX"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 4905,
+   "rtt_ms": 54.523
+  },
+  "A": {
+   "ok": true,
+   "seq": 1525,
+   "rtt_ms": 24.656
+  }
+ }
+}
