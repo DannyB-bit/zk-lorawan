@@ -13,6 +13,16 @@
 
 > *"The impossible is just code waiting to be written, physics waiting to be rewritten, math a work in progress, and truth waiting to be discovered."* — The Universal Truth
 
+---
+
+## 🔗 Project Links
+
+- **Design & specification:** [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) — the stable design + baseline layer (whitepaper, multi-language proof matrix, Zcash grant materials)
+- **Zcash Community Grant:** [forum thread — ZK-LoRa: Zero-Knowledge Privacy Layer for AI-to-AI Mesh Networks](https://forum.zcashcommunity.com/t/grant-application-zk-lora-zero-knowledge-privacy-layer-for-ai-to-ai-mesh-networks/56463)
+- **Video presentation:** [Watch on Objkt (Tezos NFT #110)](https://objkt.com/tokens/KT1PMD1QSurTyVXxcYDUPAjQt8DNShkBiv4m/110) · [Direct MP4 stream](https://assets.objkt.media/file/assets-003/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji/artifact) · [IPFS](https://ipfs.filebase.io/ipfs/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji)
+- **Fleet coordination:** [issue #12 — A↔B research channel](https://github.com/DannyB-bit/zk-lorawan/issues/12)
+- **License:** TheAiCollective.art — see [LICENSE](LICENSE)
+
 
 ---
 
@@ -289,8 +299,8 @@ bash tools/lora_chirp_recovery.sh
 
 *   [zymatica.space](https://github.com/DannyB-bit/zymatica.space) — Core Language-U specifications.
 *   [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) — Native verification engines.
-*   [zk-lora-milestone-1](https://github.com/DannyB-bit/zk-lora-milestone-1) — RF hardware evidence captures.
-*   [zk-lora-milestone-2](https://github.com/DannyB-bit/zk-lora-milestone-2) — Multi-language verification proofs.
+*   [milestones/milestone-1](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-1) — RF hardware evidence captures.
+*   [milestones/milestone-2](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-2) — Multi-language verification proofs.
 
 ---
 
@@ -311,9 +321,11 @@ All three ZK-LoRa milestone repositories are consolidated into this repo with **
 
 | Directory | Origin repository | Files | Contents |
 |---|---|---|---|
-| `milestones/milestone-1/` | [zk-lora-milestone-1](https://github.com/DannyB-bit/zk-lora-milestone-1) | 4,746 | Groth16 OTA cycles (c165–c214), RF drill evidence (essay/frontier/minigame), harness pack, FINAL_STATUS |
-| `milestones/milestone-2/` | [zk-lora-milestone-2](https://github.com/DannyB-bit/zk-lora-milestone-2) | 93 | Milestone-2 deliverables |
-| `milestones/milestone-3/` | [zk-lora-milestone-3](https://github.com/DannyB-bit/zk-lora-milestone-3) | 82 | Milestone-3 deliverables |
+| `milestones/milestone-1/` | zk-lora-milestone-1 (consolidated, repo retired) | 4,760 | Groth16 OTA cycles (c165–c214), RF drill evidence (essay/frontier/minigame + issue-0017 second-fire), harness pack, FINAL_STATUS |
+| `milestones/milestone-2/` | zk-lora-milestone-2 (consolidated, repo retired) | 93 | Milestone-2 deliverables |
+| `milestones/milestone-3/` | zk-lora-milestone-3 (consolidated, repo retired) | 82 | Milestone-3 deliverables |
+
+Every unmerged milestone-1 research branch is preserved under `archive/milestone-1/*` refs. Fleet A↔B coordination continues in [issue #12](https://github.com/DannyB-bit/zk-lorawan/issues/12) (migrated with all 406 comments).
 
 The repository root remains the canonical ZK-LoRaWAN protocol stack (Anchor programs, Groth16, proof compression, ceremony). History for each milestone is reachable via `git log -- milestones/milestone-N`.
 
