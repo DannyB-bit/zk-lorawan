@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STRICT = (ROOT / ".github/workflows/strict-verification.yml").read_text()
 SBF_WORKFLOW = (ROOT / ".github/workflows/sbf-integration.yml").read_text()
 SBF_SCRIPT = (ROOT / "scripts/test-sbf.sh").read_text()
+LOCKFILE = (ROOT / "Cargo.lock").read_text()
 
 
 class CiWorkflowContractTests(unittest.TestCase):
@@ -40,6 +41,11 @@ class CiWorkflowContractTests(unittest.TestCase):
         self.assertIn(downgrade, SBF_SCRIPT)
         self.assertLess(SBF_SCRIPT.index(downgrade), SBF_SCRIPT.index("anchor build"))
         self.assertIn("mv Cargo.lock.bak Cargo.lock", SBF_SCRIPT)
+
+    def test_sbf_lockfile_excludes_edition_2024_getrandom_chain(self):
+        self.assertIn('name = "cc"\nversion = "1.2.16"', LOCKFILE)
+        self.assertIn('name = "jobserver"\nversion = "0.1.32"', LOCKFILE)
+        self.assertNotIn('name = "getrandom"\nversion = "0.4.3"', LOCKFILE)
 
 
 if __name__ == "__main__":
