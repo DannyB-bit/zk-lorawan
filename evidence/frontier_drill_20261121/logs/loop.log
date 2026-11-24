@@ -3612,3 +3612,8 @@
 2026-11-24T16:50:57Z bus bravo event seq=5946 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0025', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
 2026-11-24T16:50:58Z phase=await_solution solved=24/1000 current=FRONTIER-GH-0025 b_alive=True rx_running=True
 2026-11-24T16:51:01Z attest FRONTIER-GH-0025 B_to_A_solution: {"attestation_sha256": "1d6d6fe60c7f49ad5e2beb7ee886a073f80517bedee825a5defb391a673f5e95", "derived_pubkey": "3zyRJaz5h2UfViyfJDMeP2ZzkzPRtG
+2026-11-24T16:51:03Z git commit:  create mode 100644 evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0025_solution.json | push rc=0
+2026-11-24T16:51:03Z SOLVED FRONTIER-GH-0025 sha=5f3cb6835406b209 (25/1000)
+2026-11-24T16:56:57Z bus bravo event seq=5947 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0025', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-24T16:56:58Z phase=send_issue solved=25/1000 current=None b_alive=True rx_running=True
+2026-11-24T16:59:10Z attest FRONTIER-GH-0026 A_to_B_issue: {"attestation_sha256": "ad4fbd6840a4a6d63883b3877ec99df7c19d4b0c070f23a2fa55e1a992471706", "derived_pubkey": "AEDkmdokCUsxEwy6g2Djbv8mrGn85y
