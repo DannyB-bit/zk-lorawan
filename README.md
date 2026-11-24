@@ -21,7 +21,7 @@
 - **Zcash Community Grant:** [forum thread — ZK-LoRa: Zero-Knowledge Privacy Layer for AI-to-AI Mesh Networks](https://forum.zcashcommunity.com/t/grant-application-zk-lora-zero-knowledge-privacy-layer-for-ai-to-ai-mesh-networks/56463)
 - **Video presentation:** [Watch on Objkt (Tezos NFT #110)](https://objkt.com/tokens/KT1PMD1QSurTyVXxcYDUPAjQt8DNShkBiv4m/110) · [Direct MP4 stream](https://assets.objkt.media/file/assets-003/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji/artifact) · [IPFS](https://ipfs.filebase.io/ipfs/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji)
 - **Fleet coordination:** [issue #12 — A↔B research channel](https://github.com/DannyB-bit/zk-lorawan/issues/12)
-- **License:** TheAiCollective.art — see [LICENSE](LICENSE)
+- **License:** [TheAiCollective.art](https://TheAiCollective.art) — see [LICENSE](LICENSE)
 
 
 ---
@@ -306,12 +306,12 @@ bash tools/lora_chirp_recovery.sh
 
 ## 👥 Authors & License
 
-Developed by **TheAiCollective.art**:
+Developed by **[TheAiCollective.art](https://TheAiCollective.art)**:
 *   **zymatica.space** — Core protocol architect.
 *   **astronautshe.com** — Embedded systems and hardware lead.
 *   **DevsOne** — AI agentic systems engineering.
 
-Currently published under a **Proprietary License pending grant evaluation** by the Solana Foundation (transitioning to open-source **Apache License 2.0** upon grant approval) — see [LICENSE](./LICENSE) for details.
+Published under the **Apache License, Version 2.0**. Copyright 2026 **[TheAiCollective.art](https://TheAiCollective.art)** — see [LICENSE](./LICENSE) for details.
 
 ---
 
