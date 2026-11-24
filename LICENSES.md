@@ -4,9 +4,11 @@ This document outlines the intellectual property licensing governing **zk-lorawa
 
 ---
 
-## 1. Proprietary Architecture License
+## 1. Apache License 2.0
 
-* **Governing License:** [zymatica.space License v2.0](LICENSE)
-* **Underlying IP Reference:** *"200 AMSTERDAM: THE VERTICAL CITY"* by Danny Bouldiez
-* **Author:** Devs One & Zymatica
-* **Official Website:** [zymatica.space](https://zymatica.space)
+* **Governing License:** [Apache License, Version 2.0](LICENSE)
+* **Copyright:** Copyright 2026 TheAiCollective.art
+* **SPDX Identifier:** `Apache-2.0`
+* **Official License Text:** [apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+Third-party dependencies remain subject to their respective open-source licenses.

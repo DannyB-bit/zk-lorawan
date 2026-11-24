@@ -311,7 +311,7 @@ Developed by **TheAiCollective.art**:
 *   **astronautshe.com** — Embedded systems and hardware lead.
 *   **DevsOne** — AI agentic systems engineering.
 
-Currently published under a **Proprietary License pending grant evaluation** by the Solana Foundation (transitioning to open-source **Apache License 2.0** upon grant approval) — see [LICENSE](./LICENSE) for details.
+Published under the **Apache License, Version 2.0**. Copyright 2026 **TheAiCollective.art** — see [LICENSE](./LICENSE) for details.
 
 ---
 
