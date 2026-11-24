@@ -52,7 +52,11 @@ fn run_ceremony(args: &[&str], cwd: &Path) -> (bool, String) {
 }
 
 fn tmp_workdir(tag: &str) -> std::path::PathBuf {
-    let d = std::env::temp_dir().join(format!("zklorawan_ceremony_test_{}_{}", tag, std::process::id()));
+    let d = std::env::temp_dir().join(format!(
+        "zklorawan_ceremony_test_{}_{}",
+        tag,
+        std::process::id()
+    ));
     let _ = std::fs::remove_dir_all(&d);
     std::fs::create_dir_all(&d).unwrap();
     d
@@ -61,7 +65,10 @@ fn tmp_workdir(tag: &str) -> std::path::PathBuf {
 #[test]
 fn ceremony_full_lifecycle_proves_and_resists_tampering() {
     // The binary must exist (built via `cargo build --release` before tests)
-    assert!(bin_path().exists(), "zk_lorawan_prove not built; run cargo build --release first");
+    assert!(
+        bin_path().exists(),
+        "zk_lorawan_prove not built; run cargo build --release first"
+    );
 
     let dir = tmp_workdir("lifecycle");
 
@@ -69,28 +76,49 @@ fn ceremony_full_lifecycle_proves_and_resists_tampering() {
 
     // Phase 1: init — real entropy genesis (needs network for public entropy;
     // on an offline runner this test fails closed, by design).
-    let (ok, out) = run_ceremony(&["ceremony", "init", "--output", params0.to_str().unwrap()], &dir);
+    let (ok, out) = run_ceremony(
+        &["ceremony", "init", "--output", params0.to_str().unwrap()],
+        &dir,
+    );
     assert!(ok, "ceremony init failed:\n{}", out);
     assert!(params0.exists(), "init did not write params file");
-    assert!(out.contains("real entropy"), "init should report entropy source:\n{}", out);
+    assert!(
+        out.contains("real entropy"),
+        "init should report entropy source:\n{}",
+        out
+    );
 
     // Phase 2: two contributions (simulating two fleet participants)
     let params1 = dir.join("ceremony_0001.params");
-    let (ok, out) = run_ceremony(&[
-        "ceremony", "contribute",
-        "--input", params0.to_str().unwrap(),
-        "--output", params1.to_str().unwrap(),
-        "--name", "participant-alpha",
-    ], &dir);
+    let (ok, out) = run_ceremony(
+        &[
+            "ceremony",
+            "contribute",
+            "--input",
+            params0.to_str().unwrap(),
+            "--output",
+            params1.to_str().unwrap(),
+            "--name",
+            "participant-alpha",
+        ],
+        &dir,
+    );
     assert!(ok, "contribute #1 failed:\n{}", out);
 
     let params2 = dir.join("ceremony_0002.params");
-    let (ok, out) = run_ceremony(&[
-        "ceremony", "contribute",
-        "--input", params1.to_str().unwrap(),
-        "--output", params2.to_str().unwrap(),
-        "--name", "participant-bravo",
-    ], &dir);
+    let (ok, out) = run_ceremony(
+        &[
+            "ceremony",
+            "contribute",
+            "--input",
+            params1.to_str().unwrap(),
+            "--output",
+            params2.to_str().unwrap(),
+            "--name",
+            "participant-bravo",
+        ],
+        &dir,
+    );
     assert!(ok, "contribute #2 failed:\n{}", out);
 
     // Tamper test: flip ONE byte in the middle of the mid-chain file, then
@@ -100,9 +128,15 @@ fn ceremony_full_lifecycle_proves_and_resists_tampering() {
     tampered[mid] ^= 0x01;
     let tampered_path = dir.join("ceremony_tampered.params");
     std::fs::write(&tampered_path, &tampered).unwrap();
-    let (ok_tamper, out_tamper) = run_ceremony(&[
-        "ceremony", "verify", "--input", tampered_path.to_str().unwrap(),
-    ], &dir);
+    let (ok_tamper, out_tamper) = run_ceremony(
+        &[
+            "ceremony",
+            "verify",
+            "--input",
+            tampered_path.to_str().unwrap(),
+        ],
+        &dir,
+    );
     assert!(
         !ok_tamper,
         "TAMPERED params passed verify — tamper-evidence broken!\n{}",
@@ -110,9 +144,16 @@ fn ceremony_full_lifecycle_proves_and_resists_tampering() {
     );
 
     // Phase 3: verify the honest chain
-    let (ok, out) = run_ceremony(&["ceremony", "verify", "--input", params2.to_str().unwrap()], &dir);
+    let (ok, out) = run_ceremony(
+        &["ceremony", "verify", "--input", params2.to_str().unwrap()],
+        &dir,
+    );
     assert!(ok, "honest ceremony chain failed verify:\n{}", out);
-    assert!(out.contains("CEREMONY VALID"), "verify output missing verdict:\n{}", out);
+    assert!(
+        out.contains("CEREMONY VALID"),
+        "verify output missing verdict:\n{}",
+        out
+    );
     assert!(
         out.contains("keccak256 KAT self-check passed"),
         "verify did not run the keccak KAT:\n{}",
@@ -122,7 +163,10 @@ fn ceremony_full_lifecycle_proves_and_resists_tampering() {
     // Phase 4: finalize → ceremony_keys/ (must NOT touch keys/)
     let keys_before = repo_root().join("keys");
     let keys_existed_before = keys_before.exists();
-    let (ok, out) = run_ceremony(&["ceremony", "finalize", "--input", params2.to_str().unwrap()], &dir);
+    let (ok, out) = run_ceremony(
+        &["ceremony", "finalize", "--input", params2.to_str().unwrap()],
+        &dir,
+    );
     assert!(ok, "finalize failed:\n{}", out);
     assert!(
         dir.join("ceremony_keys/proving_key.bin").exists(),
@@ -135,7 +179,8 @@ fn ceremony_full_lifecycle_proves_and_resists_tampering() {
         out
     );
     // The transcript must record the genesis entropy provenance
-    let transcript = std::fs::read_to_string(dir.join("ceremony_keys/ceremony_transcript.json")).unwrap();
+    let transcript =
+        std::fs::read_to_string(dir.join("ceremony_keys/ceremony_transcript.json")).unwrap();
     assert!(
         transcript.contains("entropy_sources"),
         "transcript missing genesis entropy provenance:\n{}",
@@ -171,11 +216,21 @@ fn ceremony_verify_rejects_genesis_only_chain() {
     let dir = tmp_workdir("genesis_only");
 
     let params0 = dir.join("g0.params");
-    let (ok, out) = run_ceremony(&["ceremony", "init", "--output", params0.to_str().unwrap()], &dir);
+    let (ok, out) = run_ceremony(
+        &["ceremony", "init", "--output", params0.to_str().unwrap()],
+        &dir,
+    );
     assert!(ok, "init failed:\n{}", out);
 
-    let (ok, out) = run_ceremony(&["ceremony", "verify", "--input", params0.to_str().unwrap()], &dir);
-    assert!(!ok, "genesis-only chain passed verify — it must NOT!\n{}", out);
+    let (ok, out) = run_ceremony(
+        &["ceremony", "verify", "--input", params0.to_str().unwrap()],
+        &dir,
+    );
+    assert!(
+        !ok,
+        "genesis-only chain passed verify — it must NOT!\n{}",
+        out
+    );
     assert!(
         out.contains("at least one non-genesis contribution"),
         "verify gave the wrong rejection reason:\n{}",

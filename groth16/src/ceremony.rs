@@ -527,7 +527,9 @@ pub fn verify(input_path: &str) -> Result<(), String> {
 
     // 0. FIX 2026-10-17: keccak256 known-answer self-check (EVM semantics).
     if keccak256(&[]) != KECCAK256_EMPTY {
-        return Err("FAILED: keccak256 self-check does not match EVM constant — hash wiring broken!".into());
+        return Err(
+            "FAILED: keccak256 self-check does not match EVM constant — hash wiring broken!".into(),
+        );
     }
     eprintln!("  ✅ keccak256 KAT self-check passed (EVM-compatible)");
 
@@ -675,9 +677,7 @@ pub fn verify(input_path: &str) -> Result<(), String> {
     // strictly stronger than any per-element spot check.
     eprintln!("  Running end-to-end proof soundness check with final keys...");
     {
-        use crate::circuit::{
-            generate_mimc_constants, generate_proof, mimc_hash, verify_proof,
-        };
+        use crate::circuit::{generate_mimc_constants, generate_proof, mimc_hash, verify_proof};
         use ark_groth16::prepare_verifying_key;
         use rand::rngs::OsRng;
 
@@ -722,7 +722,12 @@ pub fn verify(input_path: &str) -> Result<(), String> {
             constants,
             &mut rng,
         )
-        .map_err(|e| format!("E2E check: proof generation failed — keys inconsistent: {}", e))?;
+        .map_err(|e| {
+            format!(
+                "E2E check: proof generation failed — keys inconsistent: {}",
+                e
+            )
+        })?;
 
         let pvk = prepare_verifying_key(&params.verifying_key);
         let ok = verify_proof(
@@ -793,7 +798,10 @@ pub fn finalize(input_path: &str) -> Result<(), String> {
         .map_err(|e| format!("Failed to serialize pk: {}", e))?;
     std::fs::write("ceremony_keys/proving_key.bin", &pk_buf)
         .map_err(|e| format!("Failed to write ceremony_keys/proving_key.bin: {}", e))?;
-    eprintln!("  ✅ ceremony_keys/proving_key.bin written ({} bytes)", pk_buf.len());
+    eprintln!(
+        "  ✅ ceremony_keys/proving_key.bin written ({} bytes)",
+        pk_buf.len()
+    );
 
     let mut vk_buf = Vec::new();
     params

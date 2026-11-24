@@ -330,16 +330,15 @@ fn unsatisfied_assignment_cannot_verify_against_its_bad_public_inputs() {
                     f.gateway_part2,
                     f.deposit_commitment,
                     f.firmware_hash_public,
-        f.payload_commitment,
-        f.payload_sha256,
-    )
+                    f.payload_commitment,
+                    f.payload_sha256,
+                )
                 .unwrap(),
                 "proof generated from an unsatisfied assignment must not verify"
             );
         }
     }
 }
-
 
 // ============================================================================
 // RF IDENTITY-BINDING E2E (Dan's milestone, 2026-10-13) — LIVE PROOF
@@ -369,8 +368,7 @@ fn identity_binding_proves_and_rejects_real_rf_payload() {
     let digest = h.finalize();
     let sha_hex: String = digest.iter().map(|b| format!("{:02x}", b)).collect();
     assert_eq!(
-        sha_hex,
-        "d3ccac4a568fe31de57bbb3626ba573f0fbf8f955e24bac4d742d3534843477c",
+        sha_hex, "d3ccac4a568fe31de57bbb3626ba573f0fbf8f955e24bac4d742d3534843477c",
         "captured OTA bytes must hash to the declared conversation SHA"
     );
 
