@@ -1,0 +1,29 @@
+{
+ "data": {
+  "type": "frontier_capture_status_request",
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "to": "alpha",
+  "issue_id": "FRONTIER-GH-0017",
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "alpha_rx_window_b_seq": 5611,
+  "frames_fired": 69,
+  "request": "Please post exact-SHA frontier_solution_capture_verdict for Bravo 69-frame fire in declared window B5611. Do not re-fire: guard fired_0017_B5611 exists, RF TX and finalized devnet attestation are complete; receiver DECRYPT_OK + SHA closure remains pending."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5636,
+   "rtt_ms": 13.12,
+   "readback_verified": true
+  },
+  "A": {
+   "ok": true,
+   "seq": 1887,
+   "rtt_ms": 27.386,
+   "readback_verified": true
+  }
+ },
+ "latest_alpha_window_b_seq": 5634,
+ "note": "No additional RF fire; issue already fired under B5611."
+}

@@ -1,0 +1,35 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0008",
+  "type": "frontier_capture_status_request",
+  "payload_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4",
+  "alpha_rx_window_b_seq": 5291,
+  "tx_done": "33/33",
+  "request": "Please post DECRYPT_OK plus exact-SHA capture verdict when the 33-frame B_to_A_solution burst is processed."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5301,
+   "rtt_ms": 12.736
+  },
+  "A": {
+   "ok": true,
+   "seq": 1690,
+   "rtt_ms": 20.913
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5301,
+   "verified": true
+  },
+  "A": {
+   "seq": 1690,
+   "verified": true
+  }
+ }
+}

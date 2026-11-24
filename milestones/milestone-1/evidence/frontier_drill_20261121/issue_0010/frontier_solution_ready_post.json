@@ -1,0 +1,36 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0010",
+  "payload_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+  "payload_bytes": 4171,
+  "total_chunks": 24,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "24/24 PASS",
+  "solution": {
+   "native_fixed": "PASS: global task completed at tick 64; forced fallback every 64 ticks; cooperative budget 128",
+   "legacy_negative_control": "PASS: exit 2; 256 ticks; global_completed=0",
+   "rust_unit_tests": "2/2 PASS",
+   "pytest": "2/2 PASS",
+   "fix": "cooperative budget countdown + forced global queue fallback every 64 ticks"
+  },
+  "timing_disclosure": "First fire attempt aborted after Alpha window B5354 closed at 2026-11-23T16:57:57Z; zero RF airtime. Fresh window required.",
+  "next": "Declare a fresh rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0010. 24 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0010"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5371,
+   "rtt_ms": 56.82
+  },
+  "A": {
+   "ok": true,
+   "seq": 1729,
+   "rtt_ms": 23.931
+  }
+ }
+}

@@ -1,0 +1,72 @@
+aarch64
+gcc (Debian 14.2.0-19) 14.2.0
+RUN=1
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=2 accepted=1 EWOULDBLOCK=1
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=2
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=2 accepted=1 EWOULDBLOCK=1
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=3
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=4
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=5
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=6
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=7
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=8
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=9
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified
+RUN=10
+native epoll regression on aarch64, kernel EPOLLEXCLUSIVE bit=268435456
+registration validation: ONESHOT and unsupported EPOLLPRI rejected EINVAL
+baseline: wakeups=3 accepted=1 EWOULDBLOCK=2
+EPOLLEXCLUSIVE: wakeups=1 accepted=1 EWOULDBLOCK=0
+MPSC queue: 80000/80000 unique ordered transfers, no mutexes
+FRONTIER-GH-0004: PASS baseline reproduced; exclusive single-wakeup + lock-free distribution verified

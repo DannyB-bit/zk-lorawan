@@ -1,0 +1,321 @@
+{
+ "B": [
+  {
+   "seq": 5141,
+   "ts": 1795418880.849893,
+   "ts_utc": "2026-11-23T07:28:00Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:03:57Z",
+    "closes_at_utc": "2026-11-23T07:33:57Z",
+    "rx_log": "rx_070357.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:28:00Z"
+   }
+  },
+  {
+   "seq": 5143,
+   "ts": 1795419237.621497,
+   "ts_utc": "2026-11-23T07:33:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:03:57Z",
+    "closes_at_utc": "2026-11-23T07:33:57Z",
+    "rx_log": "rx_070357.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:33:57Z"
+   }
+  },
+  {
+   "seq": 5145,
+   "ts": 1795419597.5982144,
+   "ts_utc": "2026-11-23T07:39:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:39:57Z"
+   }
+  },
+  {
+   "seq": 5147,
+   "ts": 1795419957.905748,
+   "ts_utc": "2026-11-23T07:45:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:45:57Z"
+   }
+  },
+  {
+   "seq": 5149,
+   "ts": 1795420317.5716314,
+   "ts_utc": "2026-11-23T07:51:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:51:57Z"
+   }
+  },
+  {
+   "seq": 5151,
+   "ts": 1795420677.6737337,
+   "ts_utc": "2026-11-23T07:57:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T07:57:57Z"
+   }
+  },
+  {
+   "seq": 5153,
+   "ts": 1795421037.8091493,
+   "ts_utc": "2026-11-23T08:03:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:03:57Z"
+   }
+  },
+  {
+   "seq": 5155,
+   "ts": 1795421397.594941,
+   "ts_utc": "2026-11-23T08:09:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T07:39:57Z",
+    "closes_at_utc": "2026-11-23T08:09:57Z",
+    "rx_log": "rx_073957.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:09:57Z"
+   }
+  },
+  {
+   "seq": 5157,
+   "ts": 1795421758.0758111,
+   "ts_utc": "2026-11-23T08:15:58Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:15:57Z"
+   }
+  },
+  {
+   "seq": 5161,
+   "ts": 1795422117.6181848,
+   "ts_utc": "2026-11-23T08:21:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:21:57Z"
+   }
+  },
+  {
+   "seq": 5163,
+   "ts": 1795422477.63819,
+   "ts_utc": "2026-11-23T08:27:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:27:57Z"
+   }
+  },
+  {
+   "seq": 5167,
+   "ts": 1795422837.899162,
+   "ts_utc": "2026-11-23T08:33:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:33:57Z"
+   }
+  },
+  {
+   "seq": 5169,
+   "ts": 1795423197.6460233,
+   "ts_utc": "2026-11-23T08:39:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:39:57Z"
+   }
+  },
+  {
+   "seq": 5172,
+   "ts": 1795423557.6278577,
+   "ts_utc": "2026-11-23T08:45:57Z",
+   "type": "rx_window_open",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "freq_mhz": 903.9,
+    "sf": 9,
+    "bw_khz": 125,
+    "armed_at_utc": "2026-11-23T08:15:57Z",
+    "closes_at_utc": "2026-11-23T08:45:57Z",
+    "rx_log": "rx_081557.log",
+    "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+    "ts_utc": "2026-11-23T08:45:57Z"
+   }
+  },
+  {
+   "seq": 5175,
+   "ts": 1795423920.5666034,
+   "ts_utc": "2026-11-23T08:52:00Z",
+   "type": "frontier_solution_capture_verdict",
+   "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0004",
+    "leg": "B_to_A_solution",
+    "verdict": "DECRYPT_OK",
+    "payload_sha256": "04a8db57bf9ca67a13789f17087110fcb38b9a51c5e740162bb6d76ee3e7c8d1",
+    "sha_match_with_bravo_verdict": true,
+    "frames_decrypted": 101,
+    "solana_attestation_sig": "4g1yPeMKe8g17LBNsJLLHMYvupUn8SCaTeD1hR2KWNu4u81MxC2PPnJUfbmTVM9nfQDwsxDvw8VMLNjRAinHbzpi",
+    "solana_attestation_slot": 525376668,
+    "branch": "researcher-a/frontier-drill-20261121",
+    "note": "A captured all frames over real RF, decrypted with alpha_sk, reassembled; per-frame proof in solutions/FRONTIER-GH-0004_capture.json; evidence committed. Receiver-closure COMPLETE.",
+    "ts_utc": "2026-11-23T08:52:00Z"
+   }
+  }
+ ],
+ "A": []
+}

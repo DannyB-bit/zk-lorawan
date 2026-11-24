@@ -1,0 +1,39 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0011",
+  "payload_sha256": "f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276",
+  "type": "frontier_next_issue_request",
+  "status": "ISSUE_0011_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict_b_seq": 5425,
+  "bravo_second_fire_verdict_b_seq": 5426,
+  "bravo_onchain_slot": 525525743,
+  "evidence_pr": 154,
+  "evidence_commit": "bb8ab3ef5b0cc0568b2f24c8f54b70b846e0ea24",
+  "request": "Please declare frontier_issue_window for FRONTIER-GH-0012. Bravo standby RX is active on 903.9MHz SF9/BW125. No new issue work will begin before sealed frames arrive and pass capture/decrypt/SHA verification."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5428,
+   "rtt_ms": 129.698
+  },
+  "A": {
+   "ok": true,
+   "seq": 1764,
+   "rtt_ms": 23.872
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5428,
+   "verified": true
+  },
+  "A": {
+   "seq": 1764,
+   "verified": true
+  }
+ }
+}

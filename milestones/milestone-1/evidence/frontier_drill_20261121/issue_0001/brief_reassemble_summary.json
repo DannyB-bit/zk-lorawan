@@ -1,0 +1,18 @@
+{
+ "frames_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001/frames_brief",
+ "frames_seen": 17,
+ "decrypt_ok": 17,
+ "decrypt_fail": 0,
+ "groups": {
+  "17": {
+   "total_chunks": 17,
+   "have": 17,
+   "missing": [],
+   "reassembled_bytes": 2923,
+   "reassembled_sha256": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
+   "wrote": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001/mission_brief.md",
+   "expect_sha256": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
+   "sha_match": true
+  }
+ }
+}

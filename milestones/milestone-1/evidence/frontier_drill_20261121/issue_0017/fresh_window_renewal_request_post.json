@@ -1,0 +1,41 @@
+{
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "payload_bytes": 12266,
+  "total_chunks": 69,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "note": "B5603/B5605/B5607/B5609 all reference closes_at_utc=2026-11-24T02:53:57Z, now expired. Hot-fire watcher armed; please issue a NEW armed_at/closes_at window with >=900s remaining. Zero frames have fired; no guard exists."
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5613,
+    "rtt_ms": 13.15
+   },
+   "A": {
+    "ok": true,
+    "seq": 1873,
+    "rtt_ms": 33.567
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5614,
+    "rtt_ms": 13.011
+   },
+   "A": {
+    "ok": true,
+    "seq": 1874,
+    "rtt_ms": 15.922
+   }
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0010",
+  "payload_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+  "type": "frontier_capture_status_request",
+  "request": "Please run capture/decrypt/SHA verification for the 24-frame B5373 solution fire and post frontier_solution_capture_verdict. Bravo evidence and devnet attestation are complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5384,
+   "rtt_ms": 12.593
+  },
+  "A": {
+   "ok": true,
+   "seq": 1738,
+   "rtt_ms": 29.276
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5384,
+   "verified": true
+  },
+  "A": {
+   "seq": 1738,
+   "verified": true
+  }
+ }
+}

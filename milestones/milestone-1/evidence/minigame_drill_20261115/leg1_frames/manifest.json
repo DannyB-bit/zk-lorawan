@@ -1,0 +1,45 @@
+{
+ "file": "game_core.py",
+ "file_bytes": 914,
+ "file_sha256": "94c1838794bdec1942674a9300611425c70b7c4a29102fd30cb7c227c173889b",
+ "total_chunks": 6,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 0,
+   "frame_sha256": "879030edd5f628786c92b1b3a5f08467acfd4fd9a33baeeca568762ee88b055a",
+   "chunk_sha256": "86c003c4d6a8769174a0d0a0686bab6d3680f931f903625ec3b37d1684d77468",
+   "bytes": 180
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "820f3932aff809592c425e6fc54a2af1a1fc361633c5ac90f19f75ab2f3e1d93",
+   "chunk_sha256": "503d0a68f4a8e89f0de01cf727e23754fe0921ed182e0776bb81fea27d6f7414",
+   "bytes": 180
+  },
+  {
+   "idx": 2,
+   "frame_sha256": "7f7eed2c3446879772829a7d787873028d07fd6b67ccf3598d1d33dcf87b07f6",
+   "chunk_sha256": "044d3cb58c1fa65d95b70ca498fcac4c0ecc1a683978ed7f8f11c88922674a15",
+   "bytes": 180
+  },
+  {
+   "idx": 3,
+   "frame_sha256": "cddb480fbc9dec5852ab4573b27f772739819ebbdc9e7ceb02ffee9bb26566fc",
+   "chunk_sha256": "da5f1a149efb8b2764dd329da9feff509b20f4d61f2fe76ef1181c082cc6ce26",
+   "bytes": 180
+  },
+  {
+   "idx": 4,
+   "frame_sha256": "c00201b609fa1ece98977b38dc92a855d8c156537ca417716e4592546e88e7e3",
+   "chunk_sha256": "d177b63af40844003d46b9f724a9d46a53370c161892f4eaeb677093489e739b",
+   "bytes": 180
+  },
+  {
+   "idx": 5,
+   "frame_sha256": "0f864e3f83f4676059e04cbc444ce1d8934476136aded633390d5c2221c2fbd7",
+   "chunk_sha256": "aefac9e3c6bcb196a8367a9d055b75ba1bcefc1395f16d28a5443d0ba90cf250",
+   "bytes": 14
+  }
+ ]
+}
