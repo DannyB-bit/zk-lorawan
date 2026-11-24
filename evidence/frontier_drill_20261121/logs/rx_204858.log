@@ -714,4 +714,10 @@ WARNING: no temperature telemetry ... 25C
   rssi_chan:82.0
   rssi_sig :67.0
   crc:      0xE75B
-40 EE ED 01 27 00 09 01 72 A4 5D 7E 67 0B 8F 37 B6 42 0
+40 EE ED 01 27 00 09 01 72 A4 5D 7E 67 0B 8F 37 B6 42 0A 85 A2 99 5B B8 
+Received 1 packets (total:39)
+
+Nb valid packets received: 39 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-24T21:18:58Z

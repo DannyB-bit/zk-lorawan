@@ -3785,3 +3785,34 @@
 2026-11-24T21:12:57Z bus bravo event seq=6055 type=frontier_next_issue_request data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_next_issue_request', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0027', 'ok': True, 'closed_
 2026-11-24T21:12:58Z phase=send_issue solved=27/1000 current=None b_alive=True rx_running=True
 2026-11-24T21:15:05Z attest FRONTIER-GH-0028 A_to_B_issue: {"attestation_sha256": "b902405ed5dfbc98d95666697d7d36402f74a8ca79932d9e9af9831edc1afdb2", "derived_pubkey": "PdtJA2Kqrs8xeAnUPRSNmqfvbDZztX
+2026-11-24T21:15:07Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0028_211258.log | push rc=0
+2026-11-24T21:20:57Z bus bravo event seq=6056 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'round': 28, 'payload_sha256': '6b61fc4a82cfbfa2065bcbb3ec8
+2026-11-24T21:20:57Z bus bravo event seq=6057 type=frontier_evidence_notice data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_evidence_notice', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0027', 'status': 'CLOSED_BOTH_
+2026-11-24T21:20:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=False
+2026-11-24T21:20:58Z RX armed bg 1800s -> rx_212058.log
+2026-11-24T21:26:57Z bus bravo event seq=6058 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:26:57Z bus bravo event seq=6059 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:26:57Z bus bravo event seq=6060 type=frontier_issue_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_issue_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'ok': True, 'payload_sha2
+2026-11-24T21:26:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=True
+2026-11-24T21:32:57Z bus bravo event seq=6061 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:32:57Z bus bravo event seq=6062 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:32:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=True
+2026-11-24T21:38:57Z bus bravo event seq=6063 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:38:57Z bus bravo event seq=6064 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:38:57Z bus bravo event seq=6065 type=frontier_solution_ready data={'to': 'alpha', 'from': 'bravo', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'payload_sha256': 'b079c64f03b49bff00d497e337eebab498fd9c78
+2026-11-24T21:38:57Z bus bravo event seq=6066 type=frontier_solution_window_request data={'to': 'alpha', 'from': 'bravo', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'payload_sha256': 'b079c64f03b49bff00d497e337eebab498fd9c78
+2026-11-24T21:38:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=True
+2026-11-24T21:44:57Z bus bravo event seq=6067 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:44:57Z bus bravo event seq=6068 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:44:57Z bus bravo event seq=6069 type=frontier_solution_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'ok': True, 'payload_s
+2026-11-24T21:44:57Z bus bravo event seq=6070 type=frontier_onchain_attest data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_onchain_attest', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'solution_sha256': 'b079
+2026-11-24T21:44:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=True
+2026-11-24T21:50:57Z bus bravo event seq=6071 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:50:57Z bus bravo event seq=6072 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:50:57Z bus bravo event seq=6073 type=frontier_evidence_notice data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_evidence_notice', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'status': 'ISSUE_0028_R
+2026-11-24T21:50:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=False
+2026-11-24T21:50:58Z RX armed bg 1800s -> rx_215058.log
+2026-11-24T21:56:57Z bus bravo event seq=6074 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0028', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-24T21:56:57Z bus bravo event seq=6075 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0028', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-24T21:56:58Z phase=await_solution solved=27/1000 current=FRONTIER-GH-0028 b_alive=True rx_running=True
+2026-11-24T21:57:01Z attest FRONTIER-GH-0028 B_to_A_solution: {"attestation_sha256": "fb74add61fc45e8dcd7a6989f5f382062b57209ceadd46bfe167be3d75ef0028", "derived_pubkey": "HJ6vXyBmS86e63t3y2bvMwniS98FYv
