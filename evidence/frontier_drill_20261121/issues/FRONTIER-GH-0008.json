@@ -1,0 +1,21 @@
+{
+ "type": "frontier_issue",
+ "drill": "frontier_drill_20261121",
+ "round": 8,
+ "target": 100,
+ "issue_id": "FRONTIER-GH-0008",
+ "repo": "crossbeam-rs/crossbeam",
+ "target_file": "net/socket/epoll_server.c",
+ "category": "Concurrency & Lockless Race Conditions",
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)",
+ "title": "Epoll thundering herd lock contention on multi-core accept socket wakeups",
+ "problem_statement": "### Issue FRONTIER-GH-0008: Epoll thundering herd lock contention on multi-core accept socket wakeups\nRepository: `crossbeam-rs/crossbeam`\nCategory: `Concurrency & Lockless Race Conditions`\nTarget File: `net/socket/epoll_server.c`\n\n#### Problem Description\nEPOLLEXCLUSIVE flag ignored during socket reuseport reallocation, cascading spurious EWOULDBLOCK wakeups.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce EPOLLEXCLUSIVE registration and implement lock-free socket queue distribution.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0008.py -q`\n",
+ "expected_invariant": "Enforce EPOLLEXCLUSIVE registration and implement lock-free socket queue distribution.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0008.py::test_reproduce_frontier-gh-0008"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0008"
+ ],
+ "instructions": "Solve this issue on your silicon. Reply sealed to alpha_pub 9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942 with JSON {issue_id, repo, target_file, solution, solver_notes, tests_run, file_sha256_of_this_json} as 245B chirps, then post bus frontier_solution_verdict {issue_id, payload_sha256, ok:true}. Wait for A's confirmation before expecting the next issue."
+}

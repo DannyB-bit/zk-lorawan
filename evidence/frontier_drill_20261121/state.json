@@ -1,0 +1,167 @@
+{
+ "drill": "frontier_drill_20261121",
+ "phase": "await_solution",
+ "target": 1000,
+ "solved": [
+  "FRONTIER-GH-0001",
+  "FRONTIER-GH-0002",
+  "FRONTIER-GH-0003",
+  "FRONTIER-GH-0004",
+  "FRONTIER-GH-0005",
+  "FRONTIER-GH-0006",
+  "FRONTIER-GH-0007",
+  "FRONTIER-GH-0008",
+  "FRONTIER-GH-0009",
+  "FRONTIER-GH-0010",
+  "FRONTIER-GH-0011",
+  "FRONTIER-GH-0012",
+  "FRONTIER-GH-0013",
+  "FRONTIER-GH-0014",
+  "FRONTIER-GH-0015",
+  "FRONTIER-GH-0016",
+  "FRONTIER-GH-0017"
+ ],
+ "current_issue": "FRONTIER-GH-0018",
+ "bus_seq_last": 5706,
+ "brief_fired": true,
+ "brief_sha": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
+ "brief_frames": 17,
+ "issue_sent": {
+  "FRONTIER-GH-0001": {
+   "file_sha256": "d0bd6720e01c5167c2ae8615d5603de0a3e1d31d332c9dd94ae91ad132be5d6f",
+   "frames": 12,
+   "tx_done": 12,
+   "fire_utc": "2026-11-22T06:04:12Z"
+  },
+  "FRONTIER-GH-0002": {
+   "sha256": "e697ee787a9d3fa6fbf5aad6f1ead18ca02e073c9afe9ecb658a423c24d124f6",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0002_090057.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-22T09:03:01Z"
+  },
+  "FRONTIER-GH-0003": {
+   "sha256": "edb6130d55422084de34b3005dabf71db8384d658cb7d24d6917c6c1fd024cde",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0003_131857.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-22T13:21:01Z"
+  },
+  "FRONTIER-GH-0004": {
+   "sha256": "895463a2c022f09208d5e97964d456aa7ae9b683e77bd4238ba1730e4162007c",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0004_040758.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T04:10:01Z"
+  },
+  "FRONTIER-GH-0005": {
+   "sha256": "c1dc27bdc4c85765ec3e44219e855d315990e618d3ece52b86e9d7f6928f5579",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0005_085757.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T09:00:01Z"
+  },
+  "FRONTIER-GH-0006": {
+   "sha256": "42ec7c2f2a99f207ea0bfd0c4c94b9338e460105f7739fd3499a4ee653e74d2c",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0006_102358.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T10:26:02Z"
+  },
+  "FRONTIER-GH-0007": {
+   "sha256": "802248160b25603e97908c4cc384057219722640845e9cfe672586feaaab4791",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0007_112557.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T11:28:01Z"
+  },
+  "FRONTIER-GH-0008": {
+   "sha256": "1a49ecd3d0f59648b17b84d2de945d385247f8065f7e76bbc60168273fc6e18f",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0008_125158.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T12:54:02Z"
+  },
+  "FRONTIER-GH-0009": {
+   "sha256": "8b72fedcd6c405c4887e4e6878518d48c7e41d4e0d72ad40f91823138a93f339",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0009_141758.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T14:20:01Z"
+  },
+  "FRONTIER-GH-0010": {
+   "sha256": "cbf396dcd65fee01b3d9e0ad0180b38a71b044f9a4af73b1edeffb6cabe0efa8",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0010_161958.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T16:22:01Z"
+  },
+  "FRONTIER-GH-0011": {
+   "sha256": "315658bb513cc1f88af2d25a6ce6c6e7e16130d3e0950c5f13838dd7a3060622",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0011_174558.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T17:48:02Z"
+  },
+  "FRONTIER-GH-0012": {
+   "sha256": "0f4fa240bf7738fd5ce75e5cffb1dd6f44c6a0b38c11751a2872eef6f8fcc02a",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0012_191159.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T19:14:03Z"
+  },
+  "FRONTIER-GH-0013": {
+   "sha256": "da1c9cae3f13808e8e57cff0edfe5baf6af893462c2b59bdb639025980b464c5",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0013_200158.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T20:04:01Z"
+  },
+  "FRONTIER-GH-0014": {
+   "sha256": "e348477f81df6fd22a49dae02124a46245ca0f7b9be4e90e69c579b8ab6419c0",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0014_210958.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T21:12:02Z"
+  },
+  "FRONTIER-GH-0015": {
+   "sha256": "b2cba195dbbd055f60d3bca7b6eb19110dfbdafcc2be11d51318a696e1681756",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0015_223558.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-23T22:38:02Z"
+  },
+  "FRONTIER-GH-0016": {
+   "sha256": "b2eeffd0302439a40c247a1a03537602138b4b546fb0d41878fb2ab589730bab",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0016_000158.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-24T00:04:02Z"
+  },
+  "FRONTIER-GH-0017": {
+   "sha256": "0e7805cc27fe7d9e7141a942268717acc907a4d592371eaa49128bf6684c3789",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0017_005158.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-24T00:54:02Z"
+  },
+  "FRONTIER-GH-0018": {
+   "sha256": "01df968ada3567e1e8e91b9d4cb986f847ad0ec9fceca91c6127774661e73e37",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0018_refire_062011.log",
+   "tx": "fired=12 tx_done=12",
+   "utc": "2026-11-24T06:23:31Z",
+   "note": "clean single re-fire of seal#2; earlier dual-fire discarded"
+  }
+ },
+ "refire_count": 0,
+ "started_utc": "2026-11-21T08:08:08Z",
+ "b_last_seen_ts": 1795502912.229649,
+ "rx_window_open_seq": 5705,
+ "rx_window_closes_ts": 1795520937.0,
+ "sol_rx": {
+  "log": "rx_064858.log",
+  "started_ts": 1795502937.883269,
+  "seconds": 1800
+ }
+}
