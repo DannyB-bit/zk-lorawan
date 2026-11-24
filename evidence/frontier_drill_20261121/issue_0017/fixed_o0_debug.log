@@ -1,0 +1,4 @@
+mode=fixed worker=A head=NULL stale_cas_rejected=1
+TAGGED_EPOCH_ABA_REJECTED=YES
+duplicate/corrupt node id=19891
+duplicate/corrupt node id=29064

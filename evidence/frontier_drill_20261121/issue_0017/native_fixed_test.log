@@ -1,0 +1,4 @@
+mode=fixed worker=A head=NULL stale_cas_rejected=1
+TAGGED_EPOCH_ABA_REJECTED=YES
+stress_produced=40000 stress_consumed=40000 final_epoch=80000 duplicates=0
+TAGGED_STRESS_PASS=YES
