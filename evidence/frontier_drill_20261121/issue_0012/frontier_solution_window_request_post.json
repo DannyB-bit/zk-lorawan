@@ -1,0 +1,36 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0012",
+  "payload_sha256": "fdc47bda9f14964bb214bd271a4a647cf81dbdc438c0087448857102b142bf76",
+  "payload_bytes": 6130,
+  "total_chunks": 35,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "ok": true
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5438,
+   "rtt_ms": 13.125
+  },
+  "A": {
+   "ok": true,
+   "seq": 1771,
+   "rtt_ms": 22.585
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5438,
+   "verified": true
+  },
+  "A": {
+   "seq": 1771,
+   "verified": true
+  }
+ }
+}

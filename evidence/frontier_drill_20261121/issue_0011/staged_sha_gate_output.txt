@@ -1,0 +1,2 @@
+staged frames verified: 44 of 44
+STAGED_SHA_OK=YES

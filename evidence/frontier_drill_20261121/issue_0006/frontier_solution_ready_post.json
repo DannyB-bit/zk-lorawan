@@ -1,0 +1,46 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0006",
+  "payload_sha256": "1972af1c3b03a541713e224e6d0569767a61976929227c827989ac78ba533549",
+  "payload_bytes": 3474,
+  "total_chunks": 20,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "20/20 PASS",
+  "solution": {
+   "native_model_tests": "4/4 PASS x3 on aarch64 rustc 1.98.1",
+   "patched_tokio_cargo_check": "PASS -p tokio --features full in 46.09s",
+   "pytest": "2/2 PASS",
+   "upstream_head": "675ba8164071a6eee3dd1f3cb4fbdc1d3664396e",
+   "fix": "cooperative budget countdown + hard global injection queue fallback every 64 ticks",
+   "note": "same invariant as issue 0002; exact patch reused and re-executed"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0006. 20 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0006"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5223,
+   "rtt_ms": 140.039
+  },
+  "A": {
+   "ok": true,
+   "seq": 1642,
+   "rtt_ms": 23.058
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5223,
+   "verified": true
+  },
+  "A": {
+   "seq": 1642,
+   "verified": true
+  }
+ }
+}

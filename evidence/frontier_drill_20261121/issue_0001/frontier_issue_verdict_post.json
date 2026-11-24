@@ -1,0 +1,57 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0001",
+  "ok": true,
+  "brief": {
+   "declared_frames": 17,
+   "unique_crc_ok_frames": 17,
+   "decrypt_ok": 17,
+   "file_bytes": 2923,
+   "file_sha256": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
+   "sha_match": true
+  },
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2018,
+   "file_sha256": "d0bd6720e01c5167c2ae8615d5603de0a3e1d31d332c9dd94ae91ad132be5d6f",
+   "sha_match": true
+  },
+  "capture": {
+   "total_245b_unique": 29,
+   "rf": "903.9MHz SF9 BW125, status 0x10",
+   "repeat_observations": 12,
+   "total_target_observations": 41,
+   "snr_db_min": 10.5,
+   "snr_db_max": 11.8
+  },
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "rx_window": {
+   "b_seq": 4882,
+   "a_seq": 1516,
+   "alpha_tx_receipt": {
+    "b_seq": 4890,
+    "a_seq": 1520
+   }
+  },
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001",
+  "note": "Both declared files captured COMPLETE, every unique frame AES-256-GCM DECRYPT_OK under bravo_sk, reassembled SHA exact-match. No settlement claim yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 4900,
+   "rtt_ms": 55.825
+  },
+  "A": {
+   "ok": true,
+   "seq": 1523,
+   "rtt_ms": 93.258
+  }
+ }
+}

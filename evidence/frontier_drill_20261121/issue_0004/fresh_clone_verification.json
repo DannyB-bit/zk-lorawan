@@ -1,0 +1,16 @@
+{
+ "verified_at_utc": "2026-11-23T08:43:13Z",
+ "clone_path": "/home/researcher-bravo/.hermes/cache/scratch/frontier0004-fresh-clone",
+ "head": "010246e43e3a67e069ad1725da9ca2fb25ac8b78",
+ "native_runs": "3/3 PASS",
+ "pytest": "2/2 PASS",
+ "staged_sha_gate": "101/101 PASS",
+ "pr_readback": {
+  "http_status": 200,
+  "number": 154,
+  "state": "open",
+  "head": "010246e43e3a67e069ad1725da9ca2fb25ac8b78",
+  "mergeable": true,
+  "changed_files": 417
+ }
+}

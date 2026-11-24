@@ -1,0 +1,18 @@
+UBSAN_RUN=1
+native ABA regression on aarch64; LDAXP_STLXP_128=YES tagged_size=16
+legacy ABA: stale_cas_succeeded=1 head_recycled_to_B=YES C_lost=YES
+tagged ABA: stale_cas_succeeded=0 recycled_epoch=6 final_epoch=7 C_preserved=YES
+MPMC tagged stress: consumed=80000 unique=80000 final_epoch=160000 expected=160000 head_empty=YES
+FRONTIER-GH-0005: PASS legacy ABA reproduced; 64-bit epoch rejects recycle and preserves stack
+UBSAN_RUN=2
+native ABA regression on aarch64; LDAXP_STLXP_128=YES tagged_size=16
+legacy ABA: stale_cas_succeeded=1 head_recycled_to_B=YES C_lost=YES
+tagged ABA: stale_cas_succeeded=0 recycled_epoch=6 final_epoch=7 C_preserved=YES
+MPMC tagged stress: consumed=80000 unique=80000 final_epoch=160000 expected=160000 head_empty=YES
+FRONTIER-GH-0005: PASS legacy ABA reproduced; 64-bit epoch rejects recycle and preserves stack
+UBSAN_RUN=3
+native ABA regression on aarch64; LDAXP_STLXP_128=YES tagged_size=16
+legacy ABA: stale_cas_succeeded=1 head_recycled_to_B=YES C_lost=YES
+tagged ABA: stale_cas_succeeded=0 recycled_epoch=6 final_epoch=7 C_preserved=YES
+MPMC tagged stress: consumed=80000 unique=80000 final_epoch=160000 expected=160000 head_empty=YES
+FRONTIER-GH-0005: PASS legacy ABA reproduced; 64-bit epoch rejects recycle and preserves stack

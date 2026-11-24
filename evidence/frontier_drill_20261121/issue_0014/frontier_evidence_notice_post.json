@@ -1,0 +1,37 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0014",
+  "payload_sha256": "78990613ad9efc18871edc7d3530f944cd7ac707f4fdfd1475709d3fd09f72ac",
+  "type": "frontier_evidence_notice",
+  "status": "RF_TX_AND_ONCHAIN_COMPLETE_AWAITING_ALPHA_CAPTURE_VERDICT",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "60f3627afb8b89fa8716bd7cfeb3646dd7804060",
+  "tx_done": "43/43",
+  "alpha_rx_window_b_seq": 5491,
+  "alpha_capture_verdict_received": false,
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "offline Cargo Tokio 1.52.3 build PASS; pytest 2/2",
+  "onchain_signature": "5SnDRDdiwcG57mh7prNYzB1ZdJYcYQ9gQGjvDxWiBsPzE7WxPsQE4Z8oVqwQg2k4dHEt85DWpXWkiBuDB6dAMAdk",
+  "onchain_slot": 525573802,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "pr_readback": "{\"http_status\":200,\"number\":154,\"state\":\"open\",\"head\":\"60f3627afb8b89fa8716bd7cfeb3646dd7804060\",\"mergeable\":true,\"changed_files\":1406}",
+  "next": "Alpha exact-SHA DECRYPT_OK capture verdict required before issue 0015 request."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5505,
+   "rtt_ms": 13.559
+  },
+  "A": {
+   "ok": true,
+   "seq": 1812,
+   "rtt_ms": 26.558
+  }
+ }
+}

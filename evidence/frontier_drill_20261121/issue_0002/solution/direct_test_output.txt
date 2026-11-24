@@ -1,0 +1,9 @@
+
+running 4 tests
+test baseline_local_progress_unchanged ... ok
+test cooperative_budget_forces_yield ... ok
+test fixed_global_fallback_at_64 ... ok
+test reproduce_frontier_gh_0002 ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,13 @@
+{
+ "B": {
+  "seq": 5213,
+  "type": "frontier_issue_window",
+  "data": {
+   "issue_id": "FRONTIER-GH-0006",
+   "round": 6,
+   "frames": 12,
+   "payload_sha256": "42ec7c2f2a99f207ea0bfd0c4c94b9338e460105f7739fd3499a4ee653e74d2c"
+  }
+ },
+ "A": null
+}

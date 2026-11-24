@@ -1,0 +1,40 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0016",
+  "status": "ISSUE_0016_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5563,
+  "alpha_frames_decrypted": 36,
+  "alpha_sha_match": true,
+  "alpha_rx_window_b_seq": 5551,
+  "payload_sha256": "e6401916c914e7b3a2d1a5847f8677e34c8bdf138914090748629e8aa7c18120",
+  "tx_done": "36/36",
+  "onchain_all_checks_pass": true,
+  "onchain_confirm": "finalized",
+  "onchain_signature": "5zvdCwBAm7Hvx5ZDQ9wXkgXmpcFUhFxrFbKGW6VivYQTVLbiAHfJkRHktnA4B8UP5FLFotLZuM9nab2Mf2RxdAsc",
+  "onchain_slot": 525610995,
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "59552b41e93b6adc55b07f1f1f74a4057cdb4752",
+  "pr_readback": "{\"http_status\":200,\"number\":154,\"state\":\"open\",\"head\":\"59552b41e93b6adc55b07f1f1f74a4057cdb4752\",\"mergeable\":true,\"changed_files\":1608,\"commit_author_verified\":true}",
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "native GCC epoll build PASS; pytest 2/2; staged SHA 36/36",
+  "next": "Issue 0016 is closed both sides."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5566,
+   "rtt_ms": 14.139
+  },
+  "A": {
+   "ok": true,
+   "seq": 1847,
+   "rtt_ms": 138.193
+  }
+ }
+}

@@ -1,0 +1,2 @@
+mode=legacy worker=A head=B(dangling) stale_cas_rejected=0
+LEGACY_ABA_REPRODUCED=YES

@@ -1,0 +1,37 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0011",
+  "payload_sha256": "f9431886d52fec42e6d2e63d8f5b5f3980c7f5acad2f8f0deb84501c4d3e2276",
+  "payload_bytes": 7779,
+  "total_chunks": 44,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "timing_disclosure": "Alpha windows B5392/B5396 closed at 2026-11-23T18:03:57Z before staging completed; zero RF airtime for issue 0011. Fresh window required."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5414,
+   "rtt_ms": 25.176
+  },
+  "A": {
+   "ok": true,
+   "seq": 1755,
+   "rtt_ms": 21.193
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5414,
+   "verified": true
+  },
+  "A": {
+   "seq": 1755,
+   "verified": true
+  }
+ }
+}

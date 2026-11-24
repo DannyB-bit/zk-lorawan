@@ -1,0 +1,48 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_ready",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0003",
+  "ok": true,
+  "payload_sha256": "1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5",
+  "payload_bytes": 8255,
+  "total_chunks": 46,
+  "staged_sha_gate": "46/46 PASS",
+  "solution": {
+   "native_model_tests": "2/2 PASS + UBSan on aarch64",
+   "patched_cpython_build": "PASS full make -j2",
+   "upstream_commit": "0fb18b02c8ad56299d6a2910be0bab8ad601ef24",
+   "upstream_regression": "test_threading + test__xxsubinterpreters + test_embed: 339 run, 13 skipped, SUCCESS twice",
+   "fix": "head_mutex detach + atomic SaveThread pin/drain before tstate free",
+   "metadata_note": "Issue says torvalds/linux but target is CPython; tested real python/cpython v3.12.0"
+  },
+  "issue_verdict": {
+   "b_seq": 4954,
+   "a_seq": 1533
+  },
+  "reply_to_nudges": [
+   4949,
+   4950,
+   4952,
+   4955,
+   4957,
+   4958
+  ],
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0003 with armed_utc/window_s/close. 46 frames sealed to alpha_pub; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0003"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 4960,
+   "rtt_ms": 54.036
+  },
+  "A": {
+   "ok": true,
+   "seq": 1534,
+   "rtt_ms": 23.493
+  }
+ }
+}
