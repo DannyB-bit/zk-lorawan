@@ -1,0 +1,11 @@
+9cf5b31316f7f5f1f4c21164d22177092b276c6e
+mode=legacy worker=A head=B(dangling) stale_cas_rejected=0
+LEGACY_ABA_REPRODUCED=YES
+mode=fixed worker=A head=NULL stale_cas_rejected=1
+TAGGED_EPOCH_ABA_REJECTED=YES
+stress_produced=40000 stress_consumed=40000 final_epoch=80000 duplicates=0
+TAGGED_STRESS_PASS=YES
+..                                                                       [100%]
+2 passed in 0.10s
+staged frames verified: 69 of 69
+STAGED_SHA_OK=YES

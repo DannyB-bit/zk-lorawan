@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0017",
+ "window_b_seq": 5662,
+ "window_closes_at_utc": "2026-11-24T05:41:59Z",
+ "solution_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+ "solution_bytes": 12266,
+ "frames_verified": 69,
+ "frame_bytes_each": 245,
+ "tx_done_markers": 69,
+ "chirp_tx_complete": true,
+ "recovery_pass": true,
+ "solution_verdict_b_seq": 5666,
+ "solution_verdict_a_seq": 1903,
+ "dual_bus_readback_verified": true,
+ "onchain_attestation_reused_from_first_fire": true,
+ "alpha_capture_verdict": "PENDING"
+}
