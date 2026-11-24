@@ -1,0 +1,75 @@
+RX_ARM 2026-11-24T04:41:58Z timeout_s=1800
+RESET_SEQUENCE_OK
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 164856716
+  size:     21
+  chan:     3
+  status:   0x11
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  -11.2
+  rssi_chan:81.0
+  rssi_sig :71.0
+  crc:      0x4063
+40 BB 02 FC 37 D1 A5 0C A2 5F 62 75 B8 A6 CC 52 29 00 EE 86 E2 
+Received 1 packets (total:0)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 843912025
+  size:     24
+  chan:     6
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -16.2
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0x96BE
+40 EE ED 01 27 00 88 00 72 56 1F 05 01 25 01 6C EA D6 FD 86 BD E0 51 E1 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1450072380
+  size:     24
+  chan:     6
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -16.5
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0x5199
+40 EE ED 01 27 00 8A 00 73 3B 87 F6 5F 2D 50 9E 6C BE 55 EA 2C 35 1B BF 
+Received 1 packets (total:2)
+
+Nb valid packets received: 2 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-24T05:11:58Z

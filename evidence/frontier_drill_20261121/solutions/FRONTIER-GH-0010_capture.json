@@ -1,0 +1,177 @@
+{
+ "issue_id": "FRONTIER-GH-0010",
+ "payload_sha256": "e775213044a75678735992d9df07a9faea07e47b1015ef3e4a776fa68b924d60",
+ "leg": "B_to_A_solution",
+ "verdict": "DECRYPT_OK",
+ "frames": [
+  {
+   "frame_sha256": "4d14471320eb3ff7b21da2988edb22c110b739f5aa84aa2eea1b778d791a031f",
+   "idx": 0,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "5128b0edc8a3e84ec2b49a063fc722da3cd101d710431c1c17565ac51d1a9d38",
+   "idx": 1,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "1288b1a050e43af7ba4bbf6b26170cffcc06eb6afd59afeb8e7ec64fa9082492",
+   "idx": 2,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "0bcfe192e423f1a63d880e063d14a94e8d7a19af5fd512d894953daff4c364f0",
+   "idx": 3,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "00e907b1a948af9e257c95256201b6a073d24e9a49e9b8f145425e46a1f44b36",
+   "idx": 4,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "42eaaaebbedc3ff92f3a42256f0dbbb65ae3c6292aec6792f879a6fda03985c8",
+   "idx": 5,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "83a826a65a43271e04ea839de0cdd9680d8e3eb21347cd810f38b4d86e0fcae3",
+   "idx": 6,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "e226dbf2194f656e2ee930f6081335f9961c1d8389b54aec0f381b1607daaa04",
+   "idx": 7,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "e61f7e183453650ef2f0df9b5e34b364d677744e8a46b130520029e13c716070",
+   "idx": 8,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "ac4d61726ce7d35758f4d32967a0e2217d9822783d00593a62534349c5437897",
+   "idx": 9,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "8b876404ff41021e742d754bf29a43fca2f39733fa371ee6e0da5c56e419e0e0",
+   "idx": 10,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "7faef763012a43ecf48de8738a0a9f0f166e432095391f40e42fd64f636c2156",
+   "idx": 11,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "8507ddec84c2ed4f79b6336337033a8e84a737ad7ea02e80ed2dd5a19a677514",
+   "idx": 12,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "f88b5f02fb31ec9bdddb605b7402285ac4c6095a85734db9832deac5756924e4",
+   "idx": 13,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "3c1fbdaba1be85c3bec67a529cb44af2dc0a3581f4a78e82487e48e3c90dedcc",
+   "idx": 14,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "e5225c0adfe11dfeb577dfec236a17d624c747d6c1b8fd7c8c5471d428c8d96f",
+   "idx": 15,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "120747ef863543e4b9171fd6b687f6430d8963a2c37e34f803e8bf1f300c4b3e",
+   "idx": 16,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "c2c2f5f76ee01152fc70c52718d67372e46aa4f85fbcd943debf7e6d4025b649",
+   "idx": 17,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "34ef71da8208528aa3ab01d0e8749c9b7d48a4d5c6e1af17f924bbced54273f5",
+   "idx": 18,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "244a335480142ba04d1e857c64904d9542b7ef1f88748e57c31b5d133664a9ca",
+   "idx": 19,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "148f46ef0e230297bc7ab9818fce125cdbd586bc8758984cc57f931423a4d689",
+   "idx": 20,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "fef79aceda73681909e6aebe44992d9fa4282ddb62034bf4101d273d913061ce",
+   "idx": 21,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "02a02867dfe86441e8b4776737c37a0fbdad8612cb9359c2f336a845b9567623",
+   "idx": 22,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  },
+  {
+   "frame_sha256": "473c9867840db10a464d7d7a5a27be3d2dc36d880f58b0148527fbf3cacba61d",
+   "idx": 23,
+   "total": 24,
+   "rx_log": "rx_170357.log",
+   "verdict": "DECRYPT_OK"
+  }
+ ],
+ "utc": "2026-11-23T17:39:57Z"
+}

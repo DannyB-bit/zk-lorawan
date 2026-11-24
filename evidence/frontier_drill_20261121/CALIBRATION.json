@@ -1,0 +1,195 @@
+{
+ "drill": "frontier_drill_20261121",
+ "issues": {
+  "FRONTIER-GH-0001": {
+   "issue_utc": "2026-11-22T05:54:39Z",
+   "issue_sha": "d0bd6720e01c5167c2ae8615d5603de0a3e1d31d332c9dd94ae91ad132be5d6f",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0001_055259.log",
+   "solution_utc": "2026-11-22T08:44:58Z",
+   "solution_sha": "83d25cbd59424317d3fdc183f0605c6ef67612b88673c717296c805f386bcd26",
+   "solution_frames": null,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 8.35,
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 170.32
+  },
+  "FRONTIER-GH-0002": {
+   "issue_utc": "2026-11-22T09:03:01Z",
+   "issue_sha": "e697ee787a9d3fa6fbf5aad6f1ead18ca02e073c9afe9ecb658a423c24d124f6",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0002_090057.log",
+   "solution_utc": "2026-11-22T13:02:57Z",
+   "solution_sha": "082367d0868c4aca9c95c1494ddc5f0a847c5b6f6d0035cae401586f2d13820e",
+   "solution_frames": null,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.32,
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 239.93
+  },
+  "FRONTIER-GH-0003": {
+   "issue_utc": "2026-11-22T13:21:01Z",
+   "issue_sha": "edb6130d55422084de34b3005dabf71db8384d658cb7d24d6917c6c1fd024cde",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0003_131857.log",
+   "solution_utc": "2026-11-23T04:06:03Z",
+   "solution_sha": "1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5",
+   "solution_frames": 46,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.3,
+   "rx_packets": 102,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_solution_0003_manual_0335.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 885.03
+  },
+  "FRONTIER-GH-0004": {
+   "issue_utc": "2026-11-23T04:10:01Z",
+   "issue_sha": "895463a2c022f09208d5e97964d456aa7ae9b683e77bd4238ba1730e4162007c",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0004_040758.log",
+   "solution_utc": "2026-11-23T08:51:57Z",
+   "solution_sha": "04a8db57bf9ca67a13789f17087110fcb38b9a51c5e740162bb6d76ee3e7c8d1",
+   "solution_frames": 101,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.3,
+   "rx_packets": 117,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_081557.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 281.93
+  },
+  "FRONTIER-GH-0005": {
+   "issue_utc": "2026-11-23T09:00:01Z",
+   "issue_sha": "c1dc27bdc4c85765ec3e44219e855d315990e618d3ece52b86e9d7f6928f5579",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0005_085757.log",
+   "solution_utc": "2026-11-23T10:17:57Z",
+   "solution_sha": "ef1915f47124a49ab7f9552cac2614d9e3ddf24037d3d556761c296e60a0b242",
+   "solution_frames": 95,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.31,
+   "rx_packets": 105,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_094157.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 77.93
+  },
+  "FRONTIER-GH-0006": {
+   "issue_utc": "2026-11-23T10:26:02Z",
+   "issue_sha": "42ec7c2f2a99f207ea0bfd0c4c94b9338e460105f7739fd3499a4ee653e74d2c",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0006_102358.log",
+   "solution_utc": "2026-11-23T11:19:57Z",
+   "solution_sha": "1972af1c3b03a541713e224e6d0569767a61976929227c827989ac78ba533549",
+   "solution_frames": 20,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.33,
+   "rx_packets": 22,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_104357.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 53.92
+  },
+  "FRONTIER-GH-0007": {
+   "issue_utc": "2026-11-23T11:28:01Z",
+   "issue_sha": "802248160b25603e97908c4cc384057219722640845e9cfe672586feaaab4791",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0007_112557.log",
+   "solution_utc": "2026-11-23T12:45:57Z",
+   "solution_sha": "68fdbc650cb341848c5c2bc8325a119fa02e5f83361573f404bb8621ebecfb00",
+   "solution_frames": 36,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.33,
+   "rx_packets": 38,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_120957.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 77.93
+  },
+  "FRONTIER-GH-0008": {
+   "issue_utc": "2026-11-23T12:54:02Z",
+   "issue_sha": "1a49ecd3d0f59648b17b84d2de945d385247f8065f7e76bbc60168273fc6e18f",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0008_125158.log",
+   "solution_utc": "2026-11-23T14:11:58Z",
+   "solution_sha": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4",
+   "solution_frames": 33,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.32,
+   "rx_packets": 34,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_133557.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 77.93
+  },
+  "FRONTIER-GH-0009": {
+   "issue_utc": "2026-11-23T14:20:01Z",
+   "issue_sha": "8b72fedcd6c405c4887e4e6878518d48c7e41d4e0d72ad40f91823138a93f339",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0009_141758.log",
+   "solution_utc": "2026-11-23T16:13:57Z",
+   "solution_sha": "5a86bfd4acbcd7f1b5d646f8b1d050155a4ccea9c1898c765d49d3a65f59ca4b",
+   "solution_frames": 69,
+   "bus_verdict": true,
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.31,
+   "rx_packets": 112,
+   "snr_mean": null,
+   "rx_logs": [
+    "rx_150159.log",
+    "rx_153757.log"
+   ],
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": true,
+   "round_minutes": 113.93
+  },
+  "FRONTIER-GH-0010": {
+   "issue_utc": "2026-11-23T16:22:01Z",
+   "issue_sha": "cbf396dcd65fee01b3d9e0ad0180b38a71b044f9a4af73b1edeffb6cabe0efa8",
+   "issue_frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0010_161958.log",
+   "tx_done": 12,
+   "tx_gap_mean_s": 10.31,
+   "attest_issue_onchain": true,
+   "attest_solution_onchain": false
+  }
+ },
+ "aggregate": {
+  "issues_fired": 10,
+  "issues_solved": 9,
+  "round_minutes_median": 113.93,
+  "round_minutes_min": 53.92,
+  "round_minutes_max": 885.03,
+  "tx_gap_mean_s": 10.12,
+  "attestations_onchain": 19
+ }
+}

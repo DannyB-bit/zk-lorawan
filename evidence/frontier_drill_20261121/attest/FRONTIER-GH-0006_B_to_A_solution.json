@@ -1,0 +1,16 @@
+{
+ "attestation": "zk-lorawan-frontier-drill",
+ "drill": "frontier_drill_20261121",
+ "issue_id": "FRONTIER-GH-0006",
+ "leg": "B_to_A_solution",
+ "payload_sha256": "1972af1c3b03a541713e224e6d0569767a61976929227c827989ac78ba533549",
+ "verdict": "DECRYPT_OK 20 frames sha_match=True",
+ "node": "RakMiner-A",
+ "rf": {
+  "freq_mhz": 903.9,
+  "sf": 9,
+  "bw_khz": 125
+ },
+ "evidence_repo": "DannyB-bit/solana-cuneiform-milestone1@researcher-a/frontier-drill-20261121",
+ "event_utc": "2026-11-23T11:19:57Z"
+}
