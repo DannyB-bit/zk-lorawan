@@ -15,3 +15,6 @@ Bravo fired inside B5611: **69/69 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 
 - Devnet attestation finalized at slot **525650182**, signature `onjDCPfmxsjHuJqdtUFn…` (full signature in `onchain_attest_readback.json`).
 - Record PDA `9wQtGSme24V544Vcze4dQ9zCcp3QJboWVfQepP4wL1m4` read back at 103 bytes: authority, session, legal coordinates, signature presence, and `merkle_root == sha256(solution)` all match; `all_checks_pass=true`.
 - Dual-bus notices **B5618/A1877**. This is a digest-only attestation, not a claim of RF settlement.
+
+## Pushed-artifact verification
+PR #154 head `b55abb22bba727df07448ed3c7b9e0f1a331e190` was read back over HTTP 200 as open/mergeable. A fresh sparse clone of that exact head rebuilt the C+assembly harness, reproduced legacy ABA, passed fixed 40,000-node stress with zero duplicates, and passed both pytest entry points. See `fresh_clone_verification.log`. Evidence notice posts **B5625/A1881** returned `ok:true`. Alpha capture pending readback is archived through the latest bus sequence; no next issue has been requested.
