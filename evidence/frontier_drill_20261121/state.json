@@ -30,7 +30,7 @@
   "FRONTIER-GH-0025"
  ],
  "current_issue": "FRONTIER-GH-0026",
- "bus_seq_last": 5947,
+ "bus_seq_last": 5957,
  "brief_fired": true,
  "brief_sha": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
  "brief_frames": 17,
@@ -220,12 +220,12 @@
  },
  "refire_count": 0,
  "started_utc": "2026-11-21T08:08:08Z",
- "b_last_seen_ts": 1795539061.2528474,
- "rx_window_open_seq": 5945,
- "rx_window_closes_ts": 1795558497.0,
+ "b_last_seen_ts": 1795540765.6170585,
+ "rx_window_open_seq": 5955,
+ "rx_window_closes_ts": 1795560417.0,
  "sol_rx": {
-  "log": "rx_164458.log",
-  "started_ts": 1795538697.4296849,
+  "log": "rx_171658.log",
+  "started_ts": 1795540617.6529388,
   "seconds": 1800
  }
 }
