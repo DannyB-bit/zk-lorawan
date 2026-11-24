@@ -1,0 +1,10 @@
+{
+ "head": "a3b33ea95ef1a1dd46ce7e8da2883b4b9e3eecbc",
+ "fresh_clone_exact_match": true,
+ "json_valid": true,
+ "files": {
+  "frontier_capture_status_request_post.json": "a9392ee9b7c647ec229a932f8cac09d30bf131175fc390d150924169d07317a4",
+  "alpha_capture_pending_readback.json": "3508b9e64846182709143fdd4633fbfc6920aa9cbaa07bc1c321c1881faa2faf",
+  "alpha_solution_window_B5634_raw.json": "2cde3067cf74cf400f6d53c631bcadf98baffc808fad3fb2e579c081869959bd"
+ }
+}
