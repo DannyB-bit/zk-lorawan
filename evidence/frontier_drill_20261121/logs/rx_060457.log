@@ -1,0 +1,11 @@
+RX_ARM 2026-11-22T06:04:57Z timeout_s=900
+RESET_SEQUENCE_OK
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+ERROR: Failed to set SX1250_0 in STANDBY_RC mode
+ERROR: failed to setup radio 0
+ERROR: failed to start the gateway
+RX_EXIT=1 2026-11-22T06:05:03Z

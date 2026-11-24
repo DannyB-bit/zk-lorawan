@@ -1,0 +1,111 @@
+{
+ "file": "/home/researcher-alpha/fleet-repos/solana-cuneiform-milestone1/evidence/frontier_drill_20261121/mission_brief.md",
+ "file_bytes": 2923,
+ "file_sha256": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
+ "total_chunks": 17,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 0,
+   "frame_sha256": "b9022f77d2b9b93df6149f33037a0e9a7dbf9c88723541f9716732056d2d1496",
+   "chunk_sha256": "3f9c52d71a20df088e9490e98458896aea089bd85b69dcb89733f37124f1bd7e",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "80916ee62e572ee1a1ecb2d430cdbab39324c639edb37aeecb3b892cf357d5c3",
+   "chunk_sha256": "a2c882109586a5564714f7e689bf9caf130247d29cab97fab4198f7f94e2dc5d",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 2,
+   "frame_sha256": "3d07561906b78842b7793bd2e8ec9d03658217b7d7aa6bd3117bb8860806bf3a",
+   "chunk_sha256": "40f731302ac028b1c5c5dccaeed16768d8c0a42a705d48c45a9b2600e31312a9",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 3,
+   "frame_sha256": "6282cf801fdf7842eadcecf9ecfdb69a6bc3e7c9c77f4af5b73e646f685c0091",
+   "chunk_sha256": "7f7102bc05e39ec5ea744649dbfeb1b531c05975bdf00c582fbc400e2e3eeb99",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 4,
+   "frame_sha256": "98a2bccdaa8fefabb98cca3bb1ac9da3015f9a209a9717081f9e258011a1f230",
+   "chunk_sha256": "bd82a1922364a6a3cd384a9c206f1df31b62e3d0142b992e738290680003c05b",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 5,
+   "frame_sha256": "c4d779993b42a002c3534820edc82906abaa87f5e5b8310bb49e6dc665dd72d6",
+   "chunk_sha256": "36920df80fa8cfd88d55502db4fa36e403b10cbea3fdbce8f4ec70dc4326bf3e",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 6,
+   "frame_sha256": "7f16692115e96ef7538013f165812a3abc7539705edf4c5858f85d7ef05a903b",
+   "chunk_sha256": "f0087ec68f6bc9a775cbb88ef91013d8815ef79c395fb9af77b3292e4fe408aa",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 7,
+   "frame_sha256": "fafdd34b05e96e7d7b2714399f531531d45b5fef813b774c50c9c6ec584dc3e8",
+   "chunk_sha256": "1ca3688a43cea202a829e0b592a5afeb83aad0e0b18bf95f08f8435cf5ecf279",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 8,
+   "frame_sha256": "b07b29f9f8ab4dc0976fb88f644a3400403f6ff67788c43d357ea163720023bb",
+   "chunk_sha256": "0e6813c29c675b0de2ef6eadf79d246971c3b2dd6a947777cdd9e9bc80374475",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 9,
+   "frame_sha256": "e36ac62169b7cb0fded45fd29c5815464290657fd1aad9791efd64ed900b1625",
+   "chunk_sha256": "6574d634fe8d914a2683a7b56d7c51dc45e803b9284493b2b02ef3be353d47b9",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 10,
+   "frame_sha256": "fd04fdde2174b384d2e528ffbfcaf50a13797b48f028be743b7e6d3dedcc03f2",
+   "chunk_sha256": "d6dd4a8f1d1f284b28ff21381eb19ce62ec0f0ec27219a920849ebfb7c90b7a6",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 11,
+   "frame_sha256": "841b44d057a078f98ebd6e4ea425ecd7f02bb136a03ca87478d22833fa5d59f6",
+   "chunk_sha256": "1f7360574febb7648efec3ffbf2427bf9ad9cb161e665d8db4e284c6f9e003d9",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 12,
+   "frame_sha256": "b7a441cfb6042c500f14323b65663dc243542fb2861541f22cbdf4d3e12ef9bd",
+   "chunk_sha256": "91f90b8216cd5c41a2bef9e2f32c055fbf5f9c722858b1f05299f79b445feb8f",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 13,
+   "frame_sha256": "1ff70638a6536b0bf6acd42a51e819630ae69c22d46fdafab1fbcd91af057d03",
+   "chunk_sha256": "42f09dad73fb258ccfc1d2ad20778e9b084a826fc44aeee38569edf0af037229",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 14,
+   "frame_sha256": "2cc02fd6bc966a0c827c88f52070f6bb68d941d2d2b878ae7962b38d5ba0e817",
+   "chunk_sha256": "0e2c0e0580ce0d797390076ace938ab8122fecdbad9b38a1b3b878d5ad600736",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 15,
+   "frame_sha256": "d253b8f9dd38ca111f5323008f4059a762a948c9057a9307e681b0f6022e127b",
+   "chunk_sha256": "9540e6ac6108ce1ced010e993a3297c878bcca3999e28e546f3316456bbe0197",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 16,
+   "frame_sha256": "d22290757ea0d8cfe78209cd459b36c53e347da6894cb3b421079a9b14f28820",
+   "chunk_sha256": "8f17eb961a294ae8bdf26b8c8d064cf1e4bfbf5483050a450f9019979cb9b332",
+   "chunk_bytes": 43
+  }
+ ]
+}

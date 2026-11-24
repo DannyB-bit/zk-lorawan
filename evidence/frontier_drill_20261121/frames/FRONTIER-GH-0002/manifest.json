@@ -1,0 +1,81 @@
+{
+ "file": "/home/researcher-alpha/fleet-repos/solana-cuneiform-milestone1/evidence/frontier_drill_20261121/issues/FRONTIER-GH-0002.json",
+ "file_bytes": 2017,
+ "file_sha256": "e697ee787a9d3fa6fbf5aad6f1ead18ca02e073c9afe9ecb658a423c24d124f6",
+ "total_chunks": 12,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 0,
+   "frame_sha256": "8a3a840eb15672c5d63eca9e9db1d3f0a5e99a138a60cf7e5c98a1bad7d8a6ce",
+   "chunk_sha256": "fc082851a7a578352dcf46042329b751e02fbb766cbac1a38225fed0eb770fc4",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "91d869949677549efb3794a831f791766c8dffd02eda95e8341605e145372125",
+   "chunk_sha256": "d2759aa7d02c3589cf78e87599cb79eb05df1d1ed2e99553539d9fb4431aad17",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 2,
+   "frame_sha256": "93fe583461423e265344ac51700d10b347458d5d68e7f278499da94ee55865b4",
+   "chunk_sha256": "d914b467727e9019110bce7ccd5c0e1e0bf37f3d44db1ff7e2736bae23f16b97",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 3,
+   "frame_sha256": "d0b4d204c586f0b4325db5d6d0b39a750e48b396304e836edeee106a2f153dac",
+   "chunk_sha256": "43538fac68f82f9feb3ab98d9b4e1c0617d2985e36a870997d15678e23deae9a",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 4,
+   "frame_sha256": "30aefcba1eb0f69019aab6a4a0d34f6e7ada8896aaf05534ac4e3e639ab565c5",
+   "chunk_sha256": "ee789544acb97621c9ced7dedb2c17080dd8f633a4a7465ab41e7d8ae4073c3b",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 5,
+   "frame_sha256": "f09bf9ac1a00375438327c5c5b5b10f9dcc194e36fb04e6a2f73ea69b6b8ec83",
+   "chunk_sha256": "c1cf69df3e02f32cbcfece16ca2edc98421bafab31e0d0bdfdf2604a6b5611d6",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 6,
+   "frame_sha256": "79b854aeeec5e5c8114bf579e6d34952c8328e46f33c7f473dc4f55eb452937e",
+   "chunk_sha256": "3bff9deddfccfcd0c9f9e0eeff59d5c30045c41f64d0608fdd92d1c0c2b46d0a",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 7,
+   "frame_sha256": "4eda7c710b6a813dc4f02c0ef93d070779e59bbf47e60f01d912f7dc14f3a755",
+   "chunk_sha256": "b1c4c254c1cb6d049477529c14e81321c31bf0bd1f79f297f14c4d16c47e0325",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 8,
+   "frame_sha256": "3b61a93e0adc59230c39653980d166420644910af5302de33f1b693375d728cd",
+   "chunk_sha256": "2b09da0e8f01caeffe1b861dc755c2fa7a5f762acc53c664139f2e78f4f288eb",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 9,
+   "frame_sha256": "4b2e7023d72216db362940b1f8aa200383de37c54f6dca79725a514f82598794",
+   "chunk_sha256": "1f490d499d748372ca5aa84ad0e821dfc46bf74a7890ebfb366f883e5495688f",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 10,
+   "frame_sha256": "f03b823c624d86fd86e5916981e3f3f1daeba880da7e191f670f51ed49674d3b",
+   "chunk_sha256": "7b14a9b8eb6f0a276bf8086561e65ad4688c85cbb25961980cc8a23c6a006e6c",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 11,
+   "frame_sha256": "27c402bee470417162eb457b1be4445f34f669c0175ce915991107e81bf2e36e",
+   "chunk_sha256": "f8e5a61c51fea84027348ea77a59cb79613a0b9dd3af21c3ed41355bf0d92ee9",
+   "chunk_bytes": 37
+  }
+ ]
+}

@@ -1,0 +1,93 @@
+RX_ARM 2026-11-24T01:12:04Z timeout_s=1800
+RESET_SEQUENCE_OK
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 844941945
+  size:     24
+  chan:     4
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904100000
+  snr_avg:  -15.2
+  rssi_chan:82.0
+  rssi_sig :68.0
+  crc:      0x533F
+40 EE ED 01 27 00 6C 00 72 06 D4 18 36 55 44 52 A8 5F 28 6A 32 54 04 32 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1444596464
+  size:     24
+  chan:     6
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -14.8
+  rssi_chan:82.0
+  rssi_sig :69.0
+  crc:      0x7A12
+40 EE ED 01 27 00 6D 00 72 A3 AF E5 F4 8B 4C E0 D7 55 29 83 D6 5D 19 73 
+Received 1 packets (total:2)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1451104062
+  size:     24
+  chan:     7
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904700000
+  snr_avg:  -15.5
+  rssi_chan:82.0
+  rssi_sig :68.0
+  crc:      0x9C29
+40 EE ED 01 27 00 6E 00 73 F6 DE AE 2C F6 2E 17 B3 E6 B1 4A 5B 13 56 D2 
+Received 1 packets (total:3)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1727660842
+  size:     22
+  chan:     5
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904300000
+  snr_avg:  -13.5
+  rssi_chan:86.0
+  rssi_sig :74.0
+  crc:      0x9D95
+40 5B 48 00 FE 00 8D 08 2F CB 2F 51 21 11 3C 9B 28 45 D1 50 BF 95 
+Received 1 packets (total:4)
+
+Nb valid packets received: 4 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-24T01:42:04Z
