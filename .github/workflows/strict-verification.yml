@@ -12,15 +12,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
+      - name: Check CI workflow contract
+        run: python -m unittest tests/test_ci_workflows.py -v
+
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20.18.0"
           cache: npm
@@ -33,6 +36,9 @@ jobs:
 
       - name: Run Groth16 circuit soundness tests
         run: cargo test -p zk-lorawan-groth16 --test circuit_soundness
+
+      - name: Build native prover for ceremony integration tests
+        run: cargo build --release -p zk-lorawan-groth16
 
       - name: Compile and test Rust workspace
         run: cargo test --workspace
