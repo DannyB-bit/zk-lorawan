@@ -1,0 +1,13 @@
+0:00:00 load avg: 0.57 Run tests sequentially
+0:00:00 load avg: 0.57 [1/3] test__xxsubinterpreters
+0:00:03 load avg: 0.61 [2/3] test_embed
+0:00:20 load avg: 1.08 [3/3] test_threading
+
+== Tests result: SUCCESS ==
+
+All 3 tests OK.
+
+Total duration: 41.1 sec
+Total tests: run=339 skipped=13
+Total test files: run=3/3
+Result: SUCCESS

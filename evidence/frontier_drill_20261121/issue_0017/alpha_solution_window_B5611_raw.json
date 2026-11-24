@@ -1,0 +1,21 @@
+{
+ "seq": 5611,
+ "ts": 1795489198.2168417,
+ "ts_utc": "2026-11-24T02:59:58Z",
+ "type": "rx_window_open",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "leg": "B_to_A_solution",
+  "freq_mhz": 903.9,
+  "sf": 9,
+  "bw_khz": 125,
+  "armed_at_utc": "2026-11-24T02:59:57Z",
+  "closes_at_utc": "2026-11-24T03:29:57Z",
+  "rx_log": "rx_025958.log",
+  "note": "B: fire staged solution frames within this window; A re-declares every 5 min",
+  "ts_utc": "2026-11-24T02:59:58Z"
+ }
+}

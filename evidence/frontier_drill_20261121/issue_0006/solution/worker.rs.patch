@@ -1,0 +1,30 @@
+diff --git a/tokio/src/runtime/scheduler/multi_thread/worker.rs b/tokio/src/runtime/scheduler/multi_thread/worker.rs
+index 4a65266..1a7d306 100644
+--- a/tokio/src/runtime/scheduler/multi_thread/worker.rs
++++ b/tokio/src/runtime/scheduler/multi_thread/worker.rs
+@@ -271,6 +271,14 @@ type Notified = task::Notified<Arc<Handle>>;
+ /// improvements.
+ const MAX_LIFO_POLLS_PER_TICK: usize = 3;
+ 
++/// Hard upper bound for checking the injection queue while local work remains.
++///
++/// Cooperative budgeting limits nested LIFO polls, but a misbehaving future can
++/// still yield without consuming budget. Keep a scheduler-level fallback so a
++/// continuously non-empty local queue cannot postpone injected work beyond 64
++/// worker ticks. This does not preempt a single `Future::poll` that never returns.
++const GLOBAL_QUEUE_FALLBACK_INTERVAL: u32 = 64;
++
+ #[allow(clippy::too_many_arguments)]
+ pub(super) fn create(
+     size: usize,
+@@ -1076,7 +1084,9 @@ impl Core {
+ 
+     /// Return the next notified task available to this worker.
+     fn next_task(&mut self, worker: &Worker) -> Option<Notified> {
+-        if self.tick % self.global_queue_interval == 0 {
++        if self.tick % GLOBAL_QUEUE_FALLBACK_INTERVAL == 0
++            || self.tick % self.global_queue_interval == 0
++        {
+             // Update the global queue interval, if needed
+             self.tune_global_queue_interval(worker);
+ 

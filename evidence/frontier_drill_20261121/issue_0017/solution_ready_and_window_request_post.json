@@ -1,0 +1,61 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "payload_bytes": 12266,
+  "total_chunks": 69,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "69/69 PASS",
+  "solution": {
+   "fix": "real ARMv8 128-bit LDAXP/STLXP tagged pointer + uint64 epoch CAS; every successful head mutation increments epoch",
+   "legacy_negative_control": "PASS: recycled A leaves dangling B; LEGACY_ABA_REPRODUCED=YES",
+   "fixed_deterministic": "PASS: stale tagged CAS rejected, final head NULL",
+   "fixed_stress": "PASS primary + five repeats: 40000/40000 consumed each, zero duplicates, final epoch 80000",
+   "pytest": "2/2 PASS",
+   "scope": "native aarch64 regression model, not an upstream CPython patch"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0017. 69 frames sealed; prior B5568 expired before native verification completed; NO fire occurred. Fail-closed fresh-window request."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "payload_bytes": 12266,
+  "total_chunks": 69,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5601,
+    "rtt_ms": 13.225
+   },
+   "A": {
+    "ok": true,
+    "seq": 1866,
+    "rtt_ms": 2300.857
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5602,
+    "rtt_ms": 13.27
+   },
+   "A": {
+    "ok": true,
+    "seq": 1867,
+    "rtt_ms": 457.815
+   }
+  }
+ }
+}

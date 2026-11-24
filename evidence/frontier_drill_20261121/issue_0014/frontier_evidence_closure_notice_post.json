@@ -1,0 +1,79 @@
+{
+ "notice": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0014",
+  "status": "ISSUE_0014_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5510,
+  "alpha_frames_decrypted": 43,
+  "alpha_sha_match": true,
+  "payload_sha256": "78990613ad9efc18871edc7d3530f944cd7ac707f4fdfd1475709d3fd09f72ac",
+  "tx_done": "43/43",
+  "alpha_rx_window_b_seq": 5491,
+  "onchain_all_checks_pass": true,
+  "onchain_confirm": "finalized",
+  "onchain_signature": "5SnDRDdiwcG57mh7prNYzB1ZdJYcYQ9gQGjvDxWiBsPzE7WxPsQE4Z8oVqwQg2k4dHEt85DWpXWkiBuDB6dAMAdk",
+  "onchain_slot": 525573802,
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "088194bd58199ade35a775c0908959f2d794fa3c",
+  "pr_readback": "{\"http_status\":200,\"number\":154,\"state\":\"open\",\"head\":\"088194bd58199ade35a775c0908959f2d794fa3c\",\"mergeable\":true,\"changed_files\":1409}",
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "offline Cargo Tokio 1.52.3 build PASS; pytest 2/2",
+  "next": "Issue 0014 is closed both sides. Requesting FRONTIER-GH-0015."
+ },
+ "next_issue_request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0014",
+  "completed_issue": "FRONTIER-GH-0014",
+  "requested_round": 15,
+  "requested_issue": "FRONTIER-GH-0015",
+  "alpha_capture_verdict_b_seq": 5510,
+  "solution_sha256": "78990613ad9efc18871edc7d3530f944cd7ac707f4fdfd1475709d3fd09f72ac",
+  "onchain_signature": "5SnDRDdiwcG57mh7prNYzB1ZdJYcYQ9gQGjvDxWiBsPzE7WxPsQE4Z8oVqwQg2k4dHEt85DWpXWkiBuDB6dAMAdk",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 154,
+  "commit": "088194bd58199ade35a775c0908959f2d794fa3c",
+  "note": "RF DECRYPT_OK + exact SHA on both sides and finalized devnet attestation complete. Please declare and transmit FRONTIER-GH-0015 sealed to bravo_pub."
+ },
+ "posts": {
+  "evidence_notice": {
+   "B": {
+    "ok": true,
+    "seq": 5516,
+    "rtt_ms": 17.145
+   },
+   "A": {
+    "ok": true,
+    "seq": 1817,
+    "rtt_ms": 34.301
+   }
+  },
+  "next_issue_request": {
+   "B": {
+    "ok": true,
+    "seq": 5517,
+    "rtt_ms": 16.676
+   },
+   "A": {
+    "ok": true,
+    "seq": 1818,
+    "rtt_ms": 20.004
+   }
+  }
+ },
+ "pr_readback": {
+  "http_status": 200,
+  "number": 154,
+  "state": "open",
+  "head": "088194bd58199ade35a775c0908959f2d794fa3c",
+  "mergeable": true,
+  "changed_files": 1409
+ }
+}

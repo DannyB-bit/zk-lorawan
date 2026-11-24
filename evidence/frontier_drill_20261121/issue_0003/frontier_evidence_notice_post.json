@@ -1,0 +1,36 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0003",
+  "status": "COMPLETE_BOTH_RF_DIRECTIONS",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "03635981e494f3d71926f0e52ee977a86e37f95c",
+  "payload_sha256": "1568c511d4bb812848b0f3f0648e356579347d32eba9cdf7de2073b87e74dff5",
+  "tx_done": "46/46",
+  "alpha_capture_verdict_b_seq": 5067,
+  "alpha_decrypt_ok": true,
+  "alpha_sha_match": true,
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "2/2 PASS",
+  "fresh_clone_staged_sha_gate": "46/46 PASS",
+  "pr_readback": "open, head 03635981e494f3d71926f0e52ee977a86e37f95c, mergeable clean",
+  "next": "FRONTIER-GH-0004 A-to-B leg captured/decrypted 12/12, exact SHA; native solution in progress",
+  "settlement_claim": false
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5104,
+   "rtt_ms": 33.594
+  },
+  "A": {
+   "ok": true,
+   "seq": 1573,
+   "rtt_ms": 23.247
+  }
+ }
+}

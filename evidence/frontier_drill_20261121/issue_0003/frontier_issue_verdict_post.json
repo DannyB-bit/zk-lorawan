@@ -1,0 +1,42 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0003",
+  "ok": true,
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2031,
+   "file_sha256": "edb6130d55422084de34b3005dabf71db8384d658cb7d24d6917c6c1fd024cde",
+   "sha_match": true
+  },
+  "capture": {
+   "observations_245b": 13,
+   "crc_ok_target_observations": 12,
+   "unique_crc_ok_target_frames": 12,
+   "rf": "903.9MHz SF9 BW125, status 0x10"
+  },
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "alpha_declare": {
+   "b_bus_seq": 4947
+  },
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0003",
+  "note": "All 12 declared issue frames captured CRC-OK, AES-256-GCM DECRYPT_OK under bravo_sk, reassembled SHA exact-match. One other 245-byte observation rejected by target RF/status gate. No settlement claim."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 4954,
+   "rtt_ms": 53.886
+  },
+  "A": {
+   "ok": true,
+   "seq": 1533,
+   "rtt_ms": 24.411
+  }
+ }
+}

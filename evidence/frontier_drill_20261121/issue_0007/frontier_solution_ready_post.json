@@ -1,0 +1,46 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0007",
+  "payload_sha256": "68fdbc650cb341848c5c2bc8325a119fa02e5f83361573f404bb8621ebecfb00",
+  "payload_bytes": 6331,
+  "total_chunks": 36,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "36/36 PASS",
+  "solution": {
+   "native_ubsan_tests": "PASS x3; 6000 pthread races; allocation/free balanced",
+   "legacy_negative_control": "PASS exit 2",
+   "pytest": "2/2 PASS",
+   "fix": "head_mutex lookup/unlink exclusion + atomic ref acquire/release; free only final reference",
+   "target_disclosure": "CPython routines are in pystate.c, not stated pylifecycle.c; native model, not full CPython patch",
+   "asan_disclosure": "GCC ASan allocator CHECK before main; no ASan result claimed"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0007. 36 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0007"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5254,
+   "rtt_ms": 23.778
+  },
+  "A": {
+   "ok": true,
+   "seq": 1661,
+   "rtt_ms": 29.701
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5254,
+   "verified": true
+  },
+  "A": {
+   "seq": 1661,
+   "verified": true
+  }
+ }
+}

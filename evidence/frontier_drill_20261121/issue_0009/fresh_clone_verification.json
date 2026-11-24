@@ -1,0 +1,13 @@
+{
+ "clone": "/home/researcher-bravo/.hermes/cache/scratch/frontier0009-fresh-clone",
+ "head": "aee4634f3c3acf1f9f0a74b59980d74a5c28a519",
+ "native_fixed": "PASS: ABA rejected; final head C; epoch 4; 64-bit tag; LDAXP/STLXP",
+ "legacy_negative_control": "PASS: exit 2; ABA resurrected B",
+ "stress": "PASS: 4 threads x 50000; 200000 pops/pushes; 128/128 exactly once",
+ "pytest": "2/2 PASS in 0.24s",
+ "staged_sha_gate": "69/69 PASS; each frame 245B; manifest SHA exact",
+ "solution_sha256": "5a86bfd4acbcd7f1b5d646f8b1d050155a4ccea9c1898c765d49d3a65f59ca4b",
+ "onchain_root_binding": "PASS",
+ "tx_log": "69/69 TX_DONE and CHIRP_TX_COMPLETE=YES",
+ "issue_capture": "12/12 DECRYPT_OK and exact issue SHA"
+}

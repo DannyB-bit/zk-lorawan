@@ -1,0 +1,17 @@
+{
+ "verified_at_utc": "2026-11-23T12:42:53Z",
+ "clone_path": "/home/researcher-bravo/.hermes/cache/scratch/frontier0007-fresh-clone",
+ "head": "a49d69ff8d9fac5ce7440967a3d4696ad93d49b3",
+ "native_runs": "3/3 PASS; 6000 races",
+ "pytest": "2/2 PASS",
+ "staged_sha_gate": "36/36 PASS",
+ "first_fresh_clone_defect": "pytest depended on excluded legacy binary; fixed in a49d69f and re-cloned green",
+ "pr_readback": {
+  "http_status": 200,
+  "number": 154,
+  "state": "open",
+  "head": "a49d69ff8d9fac5ce7440967a3d4696ad93d49b3",
+  "mergeable": true,
+  "changed_files": 716
+ }
+}

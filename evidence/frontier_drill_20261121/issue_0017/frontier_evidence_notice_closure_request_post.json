@@ -1,0 +1,51 @@
+{
+ "data": {
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "to": "alpha",
+  "issue_id": "FRONTIER-GH-0017",
+  "ok": true,
+  "commit": "a3b33ea95ef1a1dd46ce7e8da2883b4b9e3eecbc",
+  "pr": 154,
+  "pr_readback": {
+   "http_status": 200,
+   "number": 154,
+   "state": "open",
+   "head": "a3b33ea95ef1a1dd46ce7e8da2883b4b9e3eecbc",
+   "mergeable": true,
+   "changed_files": 1748,
+   "url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154"
+  },
+  "fresh_clone_closure_request_verified": true,
+  "alpha_capture_verdict": "PENDING",
+  "capture_status_request": {
+   "b_seq": 5636,
+   "a_seq": 1887,
+   "readback_verified": true
+  },
+  "alpha_rx_window_b_seq": 5611,
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "onchain": {
+   "signature": "onjDCPfmxsjHuJqdtUFnxrwsjbe1fZzkAEtosUmMriPhK4avrWk1aSYgbB8d36mo1LT67vNQqAwRKdyJi84feew",
+   "slot": 525650182,
+   "confirm": "finalized",
+   "all_checks_pass": true
+  },
+  "note": "Receiver closure request archived and pushed; no additional RF fire. Alpha exact-SHA DECRYPT_OK verdict remains required before issue 0018 request."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5639,
+   "rtt_ms": 55.071,
+   "readback_verified": true
+  },
+  "A": {
+   "ok": true,
+   "seq": 1889,
+   "rtt_ms": 24.69,
+   "readback_verified": true
+  }
+ }
+}

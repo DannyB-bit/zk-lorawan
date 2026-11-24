@@ -1,0 +1,7 @@
+{
+ "head": "0aa2b322e04066a242e839db5a77d2052ed5e9f2",
+ "clone": "sparse depth-1 fresh clone of pushed PR branch",
+ "cargo_build_offline": "PASS: Tokio 1.52.3 compiled on aarch64",
+ "pytest": "2 passed in 0.20s",
+ "verified_utc": "2026-11-23T22:14:34.093995+00:00"
+}

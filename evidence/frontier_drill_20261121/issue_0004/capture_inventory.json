@@ -1,0 +1,189 @@
+{
+ "source_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261123T040637Z.log",
+ "packets": 14,
+ "target_observations": 12,
+ "unique_target": 12,
+ "excluded_245b": 0,
+ "frames": [
+  {
+   "sha256": "039eed968b6f02858b7ff000047f18186befe832e77351ac68e5d22bd09db37d",
+   "meta": {
+    "count_us": "108631259",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.5",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0xE489"
+   }
+  },
+  {
+   "sha256": "3b62095af21ad610d8b4f7eb7f32c4c1112263e78383fd547876f372eac37220",
+   "meta": {
+    "count_us": "180860678",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x0B9A"
+   }
+  },
+  {
+   "sha256": "45573c7420ed5eea62556d57a3a5efc4d6dc7cfeb8b4196afdafec6f32d1a5ee",
+   "meta": {
+    "count_us": "160134612",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0xB0FF"
+   }
+  },
+  {
+   "sha256": "5a033c9cf7215521c23293f6f4af17e22c8d6a7bac4bced3dc06c73229adfa06",
+   "meta": {
+    "count_us": "98358353",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x30F6"
+   }
+  },
+  {
+   "sha256": "82473b7cfb6fa172a2895311e8f0c3cb46a4f8030b5ae7a5726150dbe50cd4a2",
+   "meta": {
+    "count_us": "129185761",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x7BC5"
+   }
+  },
+  {
+   "sha256": "8724b63ae97de1bd01648f38a1c3b7453b3e052ca19db93fe263fad6e72c5c64",
+   "meta": {
+    "count_us": "149866009",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x3A0B"
+   }
+  },
+  {
+   "sha256": "d7f17ff8cb0ac5200c3277637c698356219350675220a0142b177bf4de79d866",
+   "meta": {
+    "count_us": "77677923",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x69B4"
+   }
+  },
+  {
+   "sha256": "da731cd41376793522b504af3c7f809bb3075e774116dc88e05f3ae75cf22c89",
+   "meta": {
+    "count_us": "118903689",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0xBBE0"
+   }
+  },
+  {
+   "sha256": "ead3a489645448fb6c1c14943efc9a9bb5e5f6259fa6bdc3a25d37a0e955cb19",
+   "meta": {
+    "count_us": "67342417",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "10.8",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0xF65C"
+   }
+  },
+  {
+   "sha256": "edbad2e3371af6249d0fee91b126678157ab96e8fe115f809bb0e1fae6d9e8f0",
+   "meta": {
+    "count_us": "139490735",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x2630"
+   }
+  },
+  {
+   "sha256": "fb23e515e466b1a89082fa7a31d1105d3d4f98920cc0e82ae60b8ff64d9542c8",
+   "meta": {
+    "count_us": "88028222",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "11.0",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x22CB"
+   }
+  },
+  {
+   "sha256": "fce7d2f35258a450e68ceea1ad8067fd8065eb1b76a2c1cf347ba37ebea360ea",
+   "meta": {
+    "count_us": "170405844",
+    "size": "245",
+    "status": "0x10",
+    "datr": "9",
+    "codr": "1",
+    "freq_hz": "903900000",
+    "snr_avg": "10.8",
+    "rssi_chan": null,
+    "rssi_sig": ":198.0",
+    "crc": "0x516C"
+   }
+  }
+ ]
+}

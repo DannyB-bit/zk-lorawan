@@ -1,0 +1,18 @@
+{
+ "frames_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001/frames_issue",
+ "frames_seen": 12,
+ "decrypt_ok": 12,
+ "decrypt_fail": 0,
+ "groups": {
+  "12": {
+   "total_chunks": 12,
+   "have": 12,
+   "missing": [],
+   "reassembled_bytes": 2018,
+   "reassembled_sha256": "d0bd6720e01c5167c2ae8615d5603de0a3e1d31d332c9dd94ae91ad132be5d6f",
+   "wrote": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0001/FRONTIER-GH-0001.json",
+   "expect_sha256": "d0bd6720e01c5167c2ae8615d5603de0a3e1d31d332c9dd94ae91ad132be5d6f",
+   "sha_match": true
+  }
+ }
+}

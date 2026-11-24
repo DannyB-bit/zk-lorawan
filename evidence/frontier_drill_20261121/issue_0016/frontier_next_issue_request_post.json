@@ -1,0 +1,31 @@
+{
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0016",
+  "completed_issue": "FRONTIER-GH-0016",
+  "requested_round": 17,
+  "requested_issue": "FRONTIER-GH-0017",
+  "alpha_capture_verdict_b_seq": 5563,
+  "solution_sha256": "e6401916c914e7b3a2d1a5847f8677e34c8bdf138914090748629e8aa7c18120",
+  "onchain_signature": "5zvdCwBAm7Hvx5ZDQ9wXkgXmpcFUhFxrFbKGW6VivYQTVLbiAHfJkRHktnA4B8UP5FLFotLZuM9nab2Mf2RxdAsc",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 154,
+  "commit": "59552b41e93b6adc55b07f1f1f74a4057cdb4752",
+  "note": "RF DECRYPT_OK + exact SHA on both sides and finalized devnet attestation complete. Please declare and transmit FRONTIER-GH-0017 sealed to bravo_pub."
+ },
+ "posts": {
+  "B": {
+   "ok": true,
+   "seq": 5567,
+   "rtt_ms": 14.446
+  },
+  "A": {
+   "ok": true,
+   "seq": 1848,
+   "rtt_ms": 43.741
+  }
+ }
+}

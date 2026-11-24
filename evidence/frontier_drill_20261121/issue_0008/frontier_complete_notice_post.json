@@ -1,0 +1,49 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0008",
+  "status": "COMPLETE_BOTH_RF_DIRECTIONS_AND_ONCHAIN",
+  "evidence_pr": 154,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lora-milestone-1/pull/154",
+  "commit": "536e64db7f3adbc4405b41ff0a9c95fb18500d34",
+  "payload_sha256": "9221a3adff14c898927a09b42b92385f7db3469867807fa701b0c4b7dc8af1d4",
+  "tx_done": "33/33",
+  "alpha_capture_verdict_b_seq": 5306,
+  "alpha_decrypt_ok": true,
+  "alpha_frames_decrypted": 33,
+  "alpha_sha_match": true,
+  "bravo_onchain_slot": 525450378,
+  "bravo_onchain_all_checks_pass": true,
+  "alpha_onchain_slot": 525456517,
+  "fresh_clone_verified": true,
+  "fresh_clone_native_tests": "fixed PASS 240/240 zero empty wakeups; legacy negative control PASS 240/240 with 178 empty wakeups",
+  "fresh_clone_pytest": "2/2 PASS",
+  "fresh_clone_staged_sha_gate": "33/33 PASS",
+  "pr_readback": "{\"changed_files\": 799, \"head\": \"536e64db7f3adbc4405b41ff0a9c95fb18500d34\", \"http_status\": 200, \"mergeable\": true, \"number\": 154, \"state\": \"open\"}"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5316,
+   "rtt_ms": 98.94
+  },
+  "A": {
+   "ok": true,
+   "seq": 1697,
+   "rtt_ms": 26.597
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5316,
+   "verified": true
+  },
+  "A": {
+   "seq": 1697,
+   "verified": true
+  }
+ }
+}

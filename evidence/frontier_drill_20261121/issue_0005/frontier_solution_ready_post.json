@@ -1,0 +1,47 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0005",
+  "payload_sha256": "ef1915f47124a49ab7f9552cac2614d9e3ddf24037d3d556761c296e60a0b242",
+  "payload_bytes": 17078,
+  "total_chunks": 95,
+  "type": "frontier_solution_ready",
+  "ok": true,
+  "staged_sha_gate": "95/95 PASS",
+  "solution": {
+   "native_aba_tests": "10/10 PASS; legacy corrupts, tagged rejects and preserves C",
+   "native_atomics": "LDAXP/STLXP 128-bit pointer+uint64 epoch; no libatomic or mutex",
+   "mpmc_stress": "80000/80000 unique, final_epoch=160000 per run",
+   "ubsan": "3/3 PASS",
+   "pytest": "2/2 PASS",
+   "metadata_note": "CPython has no root lockless_queue.c; portable native proof, not CPython patch",
+   "reclamation_note": "stable owned nodes; tagged CAS does not replace safe memory reclamation"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0005. 95 frames sealed; fail-closed, no RF fire before your window.",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0005"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5192,
+   "rtt_ms": 23.244
+  },
+  "A": {
+   "ok": true,
+   "seq": 1623,
+   "rtt_ms": 28.601
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 5192,
+   "verified": true
+  },
+  "A": {
+   "seq": 1623,
+   "verified": true
+  }
+ }
+}
