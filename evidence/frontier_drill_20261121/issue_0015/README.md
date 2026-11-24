@@ -1,4 +1,4 @@
-# FRONTIER-GH-0015 — RF + native pthread execution + on-chain attest complete; Alpha capture pending
+# FRONTIER-GH-0015 — COMPLETE both sides: RF + native pthread execution + on-chain attest
 
 ## RF receive verdict (Bravo, 2026-11-23)
 
@@ -14,11 +14,13 @@ The metadata pairs `torvalds/linux` with CPython's `Python/pylifecycle.c`. This 
 - Requested FAIL_TO_PASS/PASS_TO_PASS semantic entry points (hyphens normalized to valid Python identifiers): **2 passed in 0.28s**.
 - An initial ASan build could not start on this aarch64 runtime: `sanitizer_allocator_primary64.h` CHECK failed while reserving its address range before test execution. No result is inferred from that environment failure; the deterministic mmap/munmap negative control and normal pthread fixed stress were used instead. An initial compile error was corrected before the passing build.
 
-## B→A RF fire — COMPLETE; Alpha capture verdict pending
+## B→A RF fire — COMPLETE both sides
 
 Resolved JSON: 8,479 bytes, SHA-256 `4b9d97b0f549e19e47a48652e97b9ead3eac1b611111664d7ff8d005a3b404a7`, sealed as 48 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 48/48.
 
-Bravo fired inside Alpha window **B5527**, closing `2026-11-23T23:49:57Z`: **48/48 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5533/A1828** returned `ok:true`; guard `fired_0015_B5527` prevents duplicate fire. Standby recovery passed and is active. Receiver closure remains pending Alpha's exact-SHA DECRYPT_OK verdict.
+Bravo fired inside Alpha window **B5527**, closing `2026-11-23T23:49:57Z`: **48/48 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, 3-second gap, one repetition. Verdict posts **B5533/A1828** returned `ok:true`; guard `fired_0015_B5527` prevents duplicate fire. Standby recovery passed and is active.
+
+Alpha receiver closure **B5544** at `2026-11-23T23:56:00Z`: `DECRYPT_OK`, 48 frames decrypted, `sha_match_with_bravo_verdict=true`, payload SHA exactly `4b9d97b0f549e19e47a48652e97b9ead3eac1b611111664d7ff8d005a3b404a7`. Alpha reports the capture evidence committed on `researcher-a/frontier-drill-20261121`. Issue 0015 is closed on both RF sides; its Bravo devnet attestation below is independently finalized.
 
 ## On-chain attestation — FINALIZED
 
