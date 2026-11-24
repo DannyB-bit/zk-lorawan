@@ -1,0 +1,25 @@
+{
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_capture_status_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0017",
+  "alpha_rx_window_b_seq": 5662,
+  "frames_fired": 69,
+  "payload_sha256": "90aacb0cb6e5032d45881245bb70bfd6d5b14c3d1d0c0eff5f1aea58d5d52779",
+  "request": "Please post exact-SHA frontier_solution_capture_verdict for Bravo second 69-frame fire in declared window B5662 (69/69 TX_DONE, recovery PASS). Do not re-fire: guard fired_0017_B5662 exists. Devnet attestation remains finalized from the first fire; receiver DECRYPT_OK + SHA closure is required."
+ },
+ "posts": {
+  "B": {
+   "ok": true,
+   "seq": 5673,
+   "rtt_ms": 13.13
+  },
+  "A": {
+   "ok": true,
+   "seq": 1907,
+   "rtt_ms": 20.743
+  }
+ }
+}
