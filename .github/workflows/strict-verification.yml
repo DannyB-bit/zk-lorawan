@@ -9,6 +9,8 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      ZK_LORAWAN_REPRODUCIBLE_SETUP: "1"
 
     steps:
       - name: Checkout

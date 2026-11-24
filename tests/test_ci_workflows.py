@@ -32,6 +32,15 @@ class CiWorkflowContractTests(unittest.TestCase):
             self.assertIn("uses: actions/setup-node@v5", workflow)
         self.assertIn("uses: actions/setup-python@v6", STRICT)
 
+    def test_verifier_generation_uses_committed_reproducible_setup(self):
+        self.assertRegex(STRICT, r'(?m)^    env:\n      ZK_LORAWAN_REPRODUCIBLE_SETUP: "1"$')
+
+    def test_legacy_sbf_cargo_receives_lockfile_v3_and_original_is_restored(self):
+        downgrade = "sed -i 's/^version = 4$/version = 3/' Cargo.lock"
+        self.assertIn(downgrade, SBF_SCRIPT)
+        self.assertLess(SBF_SCRIPT.index(downgrade), SBF_SCRIPT.index("anchor build"))
+        self.assertIn("mv Cargo.lock.bak Cargo.lock", SBF_SCRIPT)
+
 
 if __name__ == "__main__":
     unittest.main()
