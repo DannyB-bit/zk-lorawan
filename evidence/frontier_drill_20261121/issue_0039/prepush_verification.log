@@ -1,0 +1,11 @@
+staged frames verified: 43 of 43
+STAGED_SHA_OK=YES
+EVIDENCE_CROSS_GATES=PASS 8103c5aea08352c5e516249e0adb7e234f7bd46cf053e79a6e2094223a09194f
+LEGACY_UNLOCKED_SAVE_AFTER_DELETE=REPRODUCED use_after_free_attempts=1
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=1 successful_saves=1 rejected_saves=0 use_after_free_attempts=0 final_refs=0
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=10000 successful_saves=9957 rejected_saves=43 use_after_free_attempts=0 final_refs=0
+LEGACY_UNLOCKED_SAVE_AFTER_DELETE=REPRODUCED use_after_free_attempts=1
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=10000 successful_saves=9931 rejected_saves=69 use_after_free_attempts=0 final_refs=0
+FRONTIER_GH_0039_PASS=YES head_mutex=ENFORCED atomic_refcount=ENFORCED uaf=0
+..                                                                       [100%]
+2 passed in 2.42s

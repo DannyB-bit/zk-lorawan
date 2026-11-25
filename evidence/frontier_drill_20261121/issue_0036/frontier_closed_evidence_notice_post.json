@@ -1,0 +1,32 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0036",
+  "ok": true,
+  "closure": "CLOSED_BOTH_SIDES",
+  "bravo_refire_verdict_b_seq": 6307,
+  "alpha_capture_verdict_b_seq": 6309,
+  "payload_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+  "frames": "57/57 TX_DONE; Alpha 57/57 DECRYPT_OK bound to fresh B6301 rx_0036_062445.log, zero foreign frames",
+  "onchain_attestation": "Bravo 3TvsNeEc\u2026 finalized all_checks_pass=true; Alpha 57T4g5VV\u2026 published",
+  "github_repo": "DannyB-bit/zk-lorawan",
+  "github_pr": 17,
+  "commit": "eeeb1d8a5012a8d3887f5a1d742a4bb5e5d4e7fc",
+  "next": "0037 native solution is already sealed; fresh 0037 window requested B6311/A2294. No 0038 request until 0037 RF + on-chain close."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6312,
+   "rtt_ms": 56.602
+  },
+  "A": {
+   "ok": true,
+   "seq": 2295,
+   "rtt_ms": 31.416
+  }
+ }
+}

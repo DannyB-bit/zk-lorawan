@@ -1,0 +1,10 @@
+{
+ "http_status": 200,
+ "number": 17,
+ "state": "open",
+ "head_sha": "1fc53361ae80b31951a51b76b55354c4fc1592d2",
+ "base_ref": "master",
+ "mergeable": true,
+ "mergeable_state": "unstable",
+ "html_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17"
+}

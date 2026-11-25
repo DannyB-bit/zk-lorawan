@@ -1,0 +1,16 @@
+ITERATION=1 PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=320 empty_wakeups=64 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=256 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+ITERATION=2 PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=76 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=235 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+ITERATION=3 PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=108 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=256 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+ITERATION=4 PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=66 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=248 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+ITERATION=5 PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=85 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=193 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+STRESS_PASS=5/5

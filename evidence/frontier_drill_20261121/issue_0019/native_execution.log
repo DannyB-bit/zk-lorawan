@@ -1,0 +1,7 @@
+NATIVE_UNAME=aarch64
+NATIVE_BUILD_PASS=YES warnings=denied
+LEGACY_TSTATE_RACE_REPRODUCED=YES retired=1 old_refs=0 refs_after_invalid_acquire=1
+FIXED_TSTATE_LIFETIME_PASS=YES iterations=1 acquired=1 rejected=0 freed=1 head_mutex=1 atomic_refcount=1
+FIXED_TSTATE_LIFETIME_PASS=YES iterations=2000 acquired=1999 rejected=1 freed=2000 head_mutex=1 atomic_refcount=1
+..                                                                       [100%]
+2 passed in 0.30s

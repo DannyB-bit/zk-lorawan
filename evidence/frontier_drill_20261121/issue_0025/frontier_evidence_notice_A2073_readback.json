@@ -1,0 +1,32 @@
+{
+ "seq": 2073,
+ "ts": 1795541053.7320733,
+ "ts_utc": "2026-11-24T17:24:13Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "status": "ISSUE_0025_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+  "alpha_issue_window_b_seq": 5927,
+  "bravo_issue_verdict_b_seq": 5934,
+  "alpha_rx_window_b_seq": 5945,
+  "bravo_solution_verdict_b_seq": 5948,
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "payload_bytes": 15286,
+  "total_chunks": 85,
+  "frames_fired": 85,
+  "tx_done_markers": 85,
+  "onchain_signature": "pTcExj3aL4DoUFoKJYb8N1bXx4Q9nWRLL99NdyK1hLCZR5hYCPpePP2zdDJ6oQvGZXD3zebdQQ2tdsNf8Nng1FG",
+  "onchain_slot": 525857929,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "3d4839138efd98115bfa8d2c507461a66bc665d0",
+  "fresh_clone_verified": true,
+  "note": "85/85 TX_DONE and exact-digest devnet attestation finalized. Alpha DECRYPT_OK + exact-SHA capture verdict still required before issue closure."
+ }
+}

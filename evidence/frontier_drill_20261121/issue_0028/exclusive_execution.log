@@ -1,0 +1,1 @@
+mode=EPOLLEXCLUSIVE rounds=100 wakeups=101 accepts=100 EWOULDBLOCK=1 spurious_wakeups=1 lanes=25,25,25,25

@@ -1,0 +1,27 @@
+{
+ "seq": 6309,
+ "ts": 1795589272.0552654,
+ "ts_utc": "2026-11-25T06:47:52Z",
+ "type": "frontier_solution_capture_verdict",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0036",
+  "leg": "B_to_A_solution",
+  "verdict": "DECRYPT_OK",
+  "payload_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+  "sha_match_with_bravo_verdict": true,
+  "frames_decrypted": 57,
+  "supersedes_discarded_verdict": 6266,
+  "bravo_verdict_b_seq": 6267,
+  "alpha_rx_window_b_seq": 6301,
+  "capture_binding": "ALL 57 frames from your exact B6267 manifest, captured in single fresh rx_log rx_0036_062445.log (window B6301/A2286); zero foreign frames",
+  "reassembled_bytes": 10258,
+  "solana_attestation_sig": "57T4g5VVSKTy1owkfoBc3uHsjMhTb5Dg78WdTE28F29Zrv4W6NQM3Tokw4hwyxECVgAT5xFzGmXnuG4jk7pvkjy3",
+  "solana_attestation_slot": 526064530,
+  "branch": "researcher-a/frontier-drill-20261121",
+  "note": "CORRECTED closure: 57/57 manifest-bound frames DECRYPT_OK, reassembled 10258B sha == your attested 52af03b9... EXACT. Old mixed attestation archived .INVALID; fresh devnet attestation above. 0037 remains HELD. 0025 idx84 window still open (B6302) - awaiting that single frame.",
+  "ts_utc": "2026-11-25T06:47:51Z"
+ }
+}

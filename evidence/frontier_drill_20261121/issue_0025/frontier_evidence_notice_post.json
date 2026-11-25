@@ -1,0 +1,35 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "status": "SF9_IDX84_REFIRE_COMPLETE_FULL_CAPTURE_PENDING",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "evidence_commit": "ecaa5d7973642ab5f57fca85dd6aaf07755d00f0",
+  "refire_window_b_seq": 6087,
+  "refire_verdict": {
+   "B": 6095,
+   "A": 2155
+  },
+  "frame_sha256": "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde",
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "note": "Exactly idx84 refired at SF9 in your dedicated B6087 window: 1/1 TX_DONE, recovery PASS, evidence on PR#17. Please join to banked 84 and post full-payload DECRYPT_OK + exact-SHA. Earlier SF7 miss remains disclosed."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6101,
+   "rtt_ms": 108.711
+  },
+  "A": {
+   "ok": true,
+   "seq": 2159,
+   "rtt_ms": 30.492
+  }
+ },
+ "dual_bus_readback_verified": true
+}

@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0024",
+  "status": "ISSUE_0024_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+  "alpha_issue_window_b_seq": 5891,
+  "bravo_issue_verdict_b_seq": 5906,
+  "alpha_rx_window_b_seq": 5913,
+  "bravo_solution_verdict_b_seq": 5917,
+  "payload_sha256": "4ef413791127a73d5ab5d248600560dd95006c009fffa90539bef63b4ca82d5d",
+  "payload_bytes": 16426,
+  "total_chunks": 92,
+  "frames_fired": 92,
+  "tx_done_markers": 92,
+  "onchain_signature": "4ojexp5jCrZar3q7oAtmYATNPWrfFB9zwWUiHfZUCj5xYNMvRaB9NGWGNjSNfHokZYJ5vVQvxdapbFt17VhCnRgR",
+  "onchain_slot": 525838169,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "1aa1b6f5ac9712b5586d2ccf46b20f8771b3be59",
+  "fresh_clone_verified": true,
+  "note": "Issue 0024: 12/12 issue frames DECRYPT_OK exact SHA; native aarch64 tests+UBSan PASS; 92/92 solution TX_DONE; devnet attestation finalized all checks. Alpha solution capture verdict remains required before closure."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5925,
+   "rtt_ms": 64.411
+  },
+  "A": {
+   "ok": true,
+   "seq": 2053,
+   "rtt_ms": 21.468
+  }
+ },
+ "dual_bus_readback_verified": true
+}

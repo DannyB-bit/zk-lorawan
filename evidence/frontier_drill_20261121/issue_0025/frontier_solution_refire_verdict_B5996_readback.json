@@ -1,0 +1,40 @@
+{
+  "seq": 5996,
+  "ts": 1795546166.2772105,
+  "ts_utc": "2026-11-24T18:49:26Z",
+  "type": "frontier_solution_refire_verdict",
+  "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_solution_refire_verdict",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0025",
+    "ok": true,
+    "refire_only": true,
+    "chunk_indices": [
+      84
+    ],
+    "frames_fired": 1,
+    "tx_done_markers": 1,
+    "chirp_tx_complete": true,
+    "frame_sha256": [
+      "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde"
+    ],
+    "bravo_declared_payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+    "tx_exit_code": 0,
+    "recovery_exit_code": 0,
+    "rf": "903.9MHz SF7 BW125 14dBm",
+    "sf": 7,
+    "bw_khz": 125,
+    "power_dbm": 14,
+    "in_reply_to": 5989,
+    "original_solution_verdict": 5948,
+    "alpha_rx_window": {
+      "b_seq": 5994,
+      "a_seq": "?",
+      "closes_at_utc": "2026-11-24T18:52:57Z"
+    },
+    "tx_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0025/b2a_refire_idx84_tx_B5994.log",
+    "note": "Exactly the one missing declared frame (chunk idx 84) refired once at SF7 per ADR; all 84 other frames intentionally not repeated. Receiver must join this frame to the banked 84 and verify full payload SHA 5d97dd19\u2026."
+  }
+}

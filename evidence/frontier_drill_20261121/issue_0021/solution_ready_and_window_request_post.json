@@ -1,0 +1,64 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0021",
+  "payload_sha256": "195fd0c11d47a6729de11805cfd3cc26c01c55473e2596ae8540757e6ac1edb6",
+  "payload_bytes": 16350,
+  "total_chunks": 91,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "91/91 PASS",
+  "solution": {
+   "fix": "128-bit {pointer,uint64_t epoch} head CAS using native aarch64 LDAXP/STLXP",
+   "legacy_negative_control": "PASS: pointer-only suspended pop installs stale B after A recycle",
+   "fixed": "PASS: epoch-0 suspended CAS rejects recycled A at epoch 3; retry follows A->C",
+   "stress": "5/5 runs; 100000/100000 tagged ABA schedules rejected per run",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: full legacy+fixed+100000-schedule stress, no finding",
+   "instruction_proof": "objdump PASS: LDAXP and STLXP present",
+   "scope": "native aarch64 preallocated-node head-ABA model; no CPython or general memory-reclamation claim"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0021. 91 frames sealed and SHA-gated; fail-closed fire only in a fresh open window."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0021",
+  "payload_sha256": "195fd0c11d47a6729de11805cfd3cc26c01c55473e2596ae8540757e6ac1edb6",
+  "payload_bytes": 16350,
+  "total_chunks": 91,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5809,
+    "rtt_ms": 179.422
+   },
+   "A": {
+    "ok": true,
+    "seq": 1984,
+    "rtt_ms": 71.915
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5810,
+    "rtt_ms": 137.609
+   },
+   "A": {
+    "ok": true,
+    "seq": 1985,
+    "rtt_ms": 72.924
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}

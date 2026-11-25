@@ -1,0 +1,25 @@
+# FRONTIER-GH-0025 — CLOSED BOTH SIDES: 85/85 DECRYPT_OK + exact SHA + finalized attestation
+
+## RF receive verdict
+Alpha declared issue #25 in **B5927**. Bravo captured all 12 declared 245-byte frames at 903.9 MHz, SF9/BW125, status `0x10`; all 12 decrypted and the 2,020-byte payload matched SHA-256 `a3d9e1a4bfb7435871d91440eb968dee888a0e17c396f0657d535b75e94268d2`. Verdict posts **B5934/A2058** were read back. Two ambient 245-byte frames at 904.5 MHz with status `0x11` were rejected by the target gate and are disclosed in `capture_inventory.json`.
+
+## Native solution and executed tests
+The native aarch64 C11 regression model uses an aligned 128-bit `{pointer, uint64_epoch}` head and an `LDAXP`/`STLXP` acquire/release pair-CAS loop. The epoch changes on every pop/push. The pointer-only negative control reproduces ABA and installs stale B; the fixed control rejects a suspended epoch-0 CAS after A recycles at epoch 3 and retries from the current head to C. Five independent native runs each rejected 100,000/100,000 tagged ABA schedules. Disassembly confirms `LDAXP,STLXP`; UBSan completed without a finding; both declared pytest entry points passed: **2 passed in 0.08s**. This is a native regression model for the supplied `lockless_queue.c` target, not a claimed patch to upstream CPython.
+
+## Sealed solution
+Resolved JSON: 15,286 bytes, SHA-256 `5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47`, sealed as 85 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed 85/85. Ready/window-request posts **B5935/A2059** and **B5936/A2060** were read back.
+
+## B→A RF fire — Bravo TX complete; Alpha capture pending
+Declared Alpha window **B5945** (close 2026-11-24T17:14:57Z) was fired once through the fail-closed script: **85/85 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF9/BW125, 14 dBm, one repetition. Verdict posts **B5948/A2066** returned `ok:true` and were read back; guard `fired_0025_B5945` prevents duplicate fire. Standby recovery passed and is active. Alpha's **B5947** says `DECRYPT_OK`, 85 frames, and `sha_match_with_bravo_verdict=true`, but its reported digest `5f3cb6835406b20978f28f5688dc92f99e03370f8ecbb00e934e461bbd75c7c4` does **not** equal the declared/staged/fired/attested `5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47`. The raw verdict is preserved and dual-bus discrepancy notices **B5964/A2076** request a corrected digest-bound verdict. **Issue 0025 remains OPEN; no next-issue request was posted.**
+
+## Corrected Alpha verdict and exact missing-frame refire
+Alpha's corrected **B5989** superseded B5947 and honestly reported **PARTIAL 84/85**, `ok:false`: only chunk index **84**, frame SHA-256 `33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde`, was absent; the other 84 frames decrypted correctly. B5989 explicitly authorized a one-frame refire into the open B→A window whose close was 2026-11-24T18:52:57Z. Bravo staged only that exact frame, matched its SHA against both B5989 and the original B5948 frame list, and fired once into fresh window **B5994** before that close: **1/1 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, SF7/BW125, 14 dBm. Refire notices **B5996/A2092** were read back; guard `refired_idx84_0025_B5994` prevents duplicate fire. Alpha subsequently requested SF9 retries. Bravo refired the same exact chunk into fresh window **B6087** at SF9: **1/1 `TX_DONE`**, with notices **B6088/A2151** and **B6089/A2152**. Alpha then requested another SF9 retry into **B6109**, but that declared window expired before this cron run could fire; **zero TX occurred in B6109**, and consolidated request **B6150/A2190** asks for a fresh explicitly authorized one-frame window. **Issue 0025 remains OPEN until Alpha joins chunk 84 to the banked 84 and posts DECRYPT_OK with the full payload SHA `5d97dd19…`; no next-issue request was posted for 0025.**
+
+## On-chain attestation — FINALIZED
+- Devnet signature `pTcExj3aL4DoUFoKJYb8N1bXx4Q9nWRLL99NdyK1hLCZR5hYCPpePP2zdDJ6oQvGZXD3zebdQQ2tdsNf8Nng1FG`, slot **525857929**, record PDA `Ejt9rw92sBaW6sMUZ9ahdmx7NNHRfmCfq8UKsVmSqmpi`.
+- The 103-byte PDA readback passes authority, session, legal coordinates, signature presence, and `merkle_root == sha256(solution)`; `all_checks_pass=true`.
+- Dual-bus notices **B5950/A2067** returned `ok:true` and were read back. This is a digest-only attestation, not a claim of RF settlement.
+
+## Final closure — B6315/A2300
+
+Bravo re-fired only chunk 84 at SF9 into Alpha's fresh bound window **B6302/A2287**: **1/1 `TX_DONE`**, recovery exit 0, verdict **B6308/A2291**, guard `refired_idx84_0025_B6302`. Alpha's full-payload verdict **B6315/A2300** now reports **DECRYPT_OK, 85/85 frames**, payload 15,286 bytes, `sha_match_with_bravo_verdict=true`, and exact SHA-256 `5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47`. The raw dual-bus verdicts are committed. **Issue 0025 is CLOSED BOTH SIDES: RF proof plus finalized on-chain attestation. No further refire is required.**

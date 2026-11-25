@@ -1,0 +1,31 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "payload_sha256": "7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b",
+  "payload_bytes": 6897,
+  "total_chunks": 39,
+  "refresh_required": true,
+  "latest_window_b_seq": 6096,
+  "latest_close": "2026-11-24T22:20:57Z",
+  "note": "Fresh close required: repeated 0029 declarations retain expired close 22:20:57Z. Zero 0029 TX so far; watcher remains fail-closed. 0025 idx84 was separately refired at SF9 in dedicated B6087 as requested (B6095/A2155)."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6098,
+   "rtt_ms": 56.289
+  },
+  "A": {
+   "ok": true,
+   "seq": 2157,
+   "rtt_ms": 24.204
+  }
+ },
+ "dual_bus_readback_verified": true
+}

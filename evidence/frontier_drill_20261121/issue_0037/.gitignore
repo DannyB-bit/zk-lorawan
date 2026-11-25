@@ -1,0 +1,4 @@
+__pycache__/
+.pytest_cache/
+lockless_queue
+lockless_queue_ubsan

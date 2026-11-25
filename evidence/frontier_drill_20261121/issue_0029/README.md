@@ -1,0 +1,18 @@
+# FRONTIER-GH-0029 — CLOSED BOTH SIDES: RF + native aarch64 execution + finalized Devnet attestation
+
+## RF receive verdict
+Alpha declared issue 0029 in **B6077**. Bravo captured **12/12** declared 245-byte issue frames from the real standby HAL log at 903.9 MHz, **SF9/BW125** (`datr=9`), status `0x10`, decrypted every frame under `bravo_sk`, and verified the 2,020-byte issue payload SHA-256 `44bcf8c8556b3c02e18d489d63760cc80d898ce27544aecf89965a0e38d8a536288f4d`. One unrelated 245-byte 904.5 MHz status-`0x11` frame was excluded and disclosed in `capture_inventory.json`. Dual-bus issue verdict posts **B6079/A2143** returned `ok:true` and were read back.
+
+## Native solution and executed tests
+Scope is a self-contained deterministic two-thread C reproduction of the declared ABA hazard, not a claimed patch to upstream CPython's nonexistent `lockless_queue.c`. The legacy pointer-only CAS accepts the recycled A address after A→B→empty→A (`LEGACY_ABA_ACCEPTED=YES head_id=2`). The fixed pointer+64-bit-epoch pair uses real ARMv8 **LDAXP/STLXP** double-width CAS with acquire/release ordering and rejects the stale operation (`FIXED_ABA_REJECTED=YES observed_epoch=3 current_epoch=3 head_id=1`). Native execution on **aarch64** passed; the fixed case also passed 20 regression iterations. External evidence-dir pytest result: **4 passed in 0.17s**; delivery-worktree rerun: **4 passed in 0.58s**. The compiled binary and caches are intentionally excluded; `test_frontier_0029.py` rebuilds from `tagged_queue_aba.c` with `gcc -std=c11 -O2 -g -pthread`.
+
+## Sealed solution
+Resolved JSON: **6,897 bytes**, SHA-256 `7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b`, sealed as **39** canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed **39/39**. Ready/window-request posts **B6085/A2146** and **B6086/A2147** were read back. Repeated stale-close declarations were refused with zero TX; the refresh request **B6098/A2157** explicitly required a viable close.
+
+## B→A RF fire — CLOSED: Alpha DECRYPT_OK + exact SHA
+The fail-closed watcher selected Alpha's freshly declared window **B6108**, closing 2026-11-25T00:28:40Z, after the computed 39-frame airtime/gap + recovery-margin gate passed (`required_s=312`, `remaining_s=5290`). It fired once: **39/39 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, **SF7/BW125**, 14 dBm, one repetition and 3-second gap. Verdict posts **B6112/A2167** returned `ok:true` and were read back; guard `fired_0029_B6108` prevents duplicate fire. Standby recovery passed and is active. Alpha's closure verdict **B6113** reports **DECRYPT_OK**, all **39** frames decrypted, and `sha_match_with_bravo_verdict=true` for the exact solution SHA `7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b`. Alpha also posted his independent Solana attestation signature `qFhtKbcGj1hnRXxbej3KwncrGPrvDwuNaYQy3AjFNmuxTPaKPXTPDiNEnRpnJcsfjuTHoEnnzwTG4QiJEtQnBCF` at slot **525949071**. Issue 0029 is **CLOSED BOTH SIDES**; next-issue request posts **B6120/A2171** were read back.
+
+## On-chain attestation — FINALIZED
+- Devnet signature `3qhPWF3j5MHQq5D4Lvd9eSwb3BNaHpMmhcWb9GRxqUw6d49nbTYmmsHxwnd3Uj7oMbJoMxA5GEEBAmfC1pxKsPDh`, slot **525952000**, record PDA `HahG2rPZYC1psWNRnHBgjiy2PvYZftownJbqQuZF39P1`.
+- The 103-byte PDA readback passes authority, session, legal coordinates, exactly-one matching signature, finalized `err=null`, and `merkle_root == sha256(solution)`; `all_checks_pass=true`.
+- Dual-bus notices **B6115/A2168** returned `ok:true` and were read back. This is a digest-only attestation, not a claim of RF settlement.

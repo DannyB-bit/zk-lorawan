@@ -1,0 +1,43 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "ok": true,
+  "alpha_declare": {
+   "b_bus_seq": 6269
+  },
+  "capture": {
+   "observations_245b": 12,
+   "crc_ok_target_observations": 12,
+   "unique_crc_ok_target_frames": 12,
+   "rejected_245b": 0,
+   "rf": "903.9MHz SF9 BW125, status 0x10"
+  },
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2020,
+   "file_sha256": "029babf33d052de70d0146e115c96163c80642caa7b588a61d2637edfa7e8276",
+   "sha_match": true
+  },
+  "note": "All 12 declared issue frames captured CRC-OK from the real standby HAL log at 903.9MHz SF9/BW125, decrypted under bravo_sk, reassembled SHA exact-match. Independently executing native aarch64 ABA/tagged-CAS regression next. 0036 remains blocked on Alpha payload-SHA reconciliation; no 0037 solution fire until that correction lands.",
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0037"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6283,
+   "rtt_ms": 57.129
+  },
+  "A": {
+   "ok": true,
+   "seq": 2273,
+   "rtt_ms": 70.04
+  }
+ }
+}

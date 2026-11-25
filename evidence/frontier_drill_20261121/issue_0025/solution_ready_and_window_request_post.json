@@ -1,0 +1,64 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "payload_bytes": 15286,
+  "total_chunks": 85,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "85/85 PASS",
+  "solution": {
+   "fix": "aligned native 128-bit {pointer,uint64_epoch} head with LDAXP/STLXP acquire/release pair CAS; epoch increments on every pop/push",
+   "legacy_negative_control": "PASS: pointer-only suspended CAS reproduces ABA and installs stale B",
+   "fixed": "PASS: recycled A at epoch 3 rejects suspended epoch-0 CAS; retry follows A->C",
+   "stress": "100000/100000 tagged ABA schedules rejected; 5/5 repeated native runs PASS",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: full legacy+fixed+stress workload, no finding",
+   "disassembly": "PASS: LDAXP and STLXP present in executed aarch64 binary",
+   "scope": "native head-pointer ABA model using preallocated nodes; general safe memory reclamation is not claimed"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0025. 85 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "payload_bytes": 15286,
+  "total_chunks": 85,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5935,
+    "rtt_ms": 55.671
+   },
+   "A": {
+    "ok": true,
+    "seq": 2059,
+    "rtt_ms": 21.795
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5936,
+    "rtt_ms": 325.093
+   },
+   "A": {
+    "ok": true,
+    "seq": 2060,
+    "rtt_ms": 36.213
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}

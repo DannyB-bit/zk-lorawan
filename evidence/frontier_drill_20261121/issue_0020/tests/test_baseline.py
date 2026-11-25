@@ -1,0 +1,1 @@
+from test_frontier_0020 import test_no_regression_frontier_gh_0020

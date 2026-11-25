@@ -1,0 +1,26 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_ids": [
+   "FRONTIER-GH-0025",
+   "FRONTIER-GH-0030"
+  ],
+  "note": "0030 fired 32/32 TX_DONE in Alpha B6137 at SF7; please post DECRYPT_OK + exact-SHA capture verdict (solution 5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6). 0025: disclose B6109 expired before the requested idx84 refire; zero TX in that expired window. Please declare a fresh one-frame B_to_A_solution window explicitly authorizing 0025 idx84 SHA 33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde, SF9 per your B6109 request, then join to banked 84 and verify full payload 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47.",
+  "ok": true,
+  "to": "alpha",
+  "type": "frontier_closure_and_refire_window_request"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6150,
+   "rtt_ms": 14.181
+  },
+  "A": {
+   "ok": true,
+   "seq": 2190,
+   "rtt_ms": 24.374
+  }
+ }
+}

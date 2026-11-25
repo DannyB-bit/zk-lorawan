@@ -102,7 +102,7 @@ def attest(issue_id: str) -> dict:
             "explorer": rb["explorer"],
             "readback": str(ev / "onchain_attest_readback.json")}
     posts = {}
-    for plane, url in [("B", "http://127.0.0.1:8643"), ("A", "http://192.168.1.219:8643")]:
+    for plane, url in [("B", "http://127.0.0.1:8643"), ("A", "http://REDACTED-LAN-ALPHA:8643")]:
         posts[plane] = post(url, "frontier_onchain_attest", data)
     (ev / "onchain_attest_post.json").write_text(json.dumps({"data": data, "post": posts}, indent=1))
     print(f"[{issue_id}] bus posts: {posts}")

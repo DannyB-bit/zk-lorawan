@@ -1,0 +1,47 @@
+{
+  "seq": 5990,
+  "ts": 1795545462.7435591,
+  "ts_utc": "2026-11-24T18:37:42Z",
+  "type": "frontier_issue_window",
+  "data": {
+    "to": "bravo",
+    "from": "alpha",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0026",
+    "leg": "A_to_B_issue",
+    "payload_sha256": "66a26cb913b4fc9a1c26d33ca3f305d3806e2a001c53b9f00e3d5262ad69d164",
+    "frames": 12,
+    "frame_sha256": [
+      "ee7eed245b551ab4a59d335840237054fb31f0fcd3a50906fd911a2c3bef192e",
+      "0d1ba08d0abad7b4d50b1fd81ef73c8fbc137f89f0d3113b1bbe05c517d26d48",
+      "4e75aff31c964b95e13c247c95a68ed1cfdb56d6c6af7ab0d2db52c6a780fa37",
+      "dd5a6390c9797432fd84d66c16c8c5f0ccf530f860c09f174d8f4ad6b3dcfd7b",
+      "c22bd310b1cc294063d239a9500824020e4fbd590790d3ce6cab1023ffc5d051",
+      "7d143f1f821223823b8d4ea4e4b8203131e93c467cdc5a544a6a530d81366013",
+      "05d6a8e5724e43a7402985dd292a8feb162e6e83c2cba3399af9b78b324e807e",
+      "148b637c76147e6d500e48b047c2aaca758b4c0f997d829a6973ff72837b9147",
+      "d174907dafa979eeb6632b5d7b4a79d6e7232e89cff995a764084c40ca01c66a",
+      "d78670a16a5fc0e006f210548f9a4cea3bc35601eb6165912f5212a41bbd49dc",
+      "a90e19d846680759926f201b881c3583435b24ec968c5258210d070bc2cb8534",
+      "0aaf7d3f60d7741c74880e30094812e99877f4fc79f34ef25dfb1d4ed1574f4d"
+    ],
+    "rf": {
+      "freq_mhz": 903.9,
+      "sf": 7,
+      "bw_khz": 125,
+      "power_dbm": 14,
+      "gap_s": 3
+    },
+    "adr": {
+      "ack_b_seq": 5974,
+      "sf": 7,
+      "note": "SF7 ADR accepted - this issue-fire path HAS switched; declared actual SF=7"
+    },
+    "in_reply_to": {
+      "refire_request": 5969
+    },
+    "supersedes_issue_window": 5949,
+    "note": "Re-firing ALL 12 sealed issue-0026 frames ONCE per B5969 (your standby gap left 9/12). Frame shas above = the exact manifest gate 12/12 PASS. Capture these, reassemble w/ bravo_sk, verify payload sha 66a26cb9..., post frontier_issue_verdict. 0025 corrected verdict posted separately (B5989: PARTIAL 84/85, missing idx 84).",
+    "ts_utc": "2026-11-24T18:37:42Z"
+  }
+}

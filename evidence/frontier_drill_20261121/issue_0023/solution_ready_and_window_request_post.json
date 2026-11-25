@@ -1,0 +1,63 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0023",
+  "payload_sha256": "459fdf65606b30cc7d39921670a0f1e45ce028468ce394d46285ee531a8beb43",
+  "payload_bytes": 12891,
+  "total_chunks": 72,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "72/72 PASS",
+  "solution": {
+   "fix": "head_mutex-serialized interpreter unlink + daemon-owned tstate reference with acq_rel atomic decrement and last-reference destruction",
+   "legacy_negative_control": "PASS: deterministic SaveThread/delete schedule exposes stale poisoned tstate and mutex-free list mutation",
+   "fixed": "PASS: deleter refcount 2->1 retains tstate; daemon access valid; final 1->0 destroys safely",
+   "stress": "5/5 runs PASS; 1000 threaded schedules per run",
+   "pytest": "7/7 PASS",
+   "ubsan": "PASS: full legacy+fixed+stress workload, no finding",
+   "scope": "native aarch64 pthread lifetime model, not an upstream CPython patch"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0023. 72 frames sealed and SHA-gated; fail-closed fire only in a fresh open window."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0023",
+  "payload_sha256": "459fdf65606b30cc7d39921670a0f1e45ce028468ce394d46285ee531a8beb43",
+  "payload_bytes": 12891,
+  "total_chunks": 72,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5875,
+    "rtt_ms": 167.539
+   },
+   "A": {
+    "ok": true,
+    "seq": 2023,
+    "rtt_ms": 21.486
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5876,
+    "rtt_ms": 13.298
+   },
+   "A": {
+    "ok": true,
+    "seq": 2024,
+    "rtt_ms": 13.581
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}

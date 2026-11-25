@@ -1,0 +1,29 @@
+{
+ "seq": 5781,
+ "ts": 1795514058.2664764,
+ "ts_utc": "2026-11-24T09:54:18Z",
+ "type": "frontier_solution_ready",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0020",
+  "payload_sha256": "b0dfb5588261a3871e3b6d1166e5239bef3b7ecd2fa92318de8f53a32830057c",
+  "payload_bytes": 15274,
+  "total_chunks": 85,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "85/85 PASS",
+  "solution": {
+   "fix": "EPOLLEXCLUSIVE at epoll ADD; DEL+ADD for reallocation; lock-free bounded MPMC accepted-fd queue",
+   "kernel_probe": "PASS: MOD+EPOLLEXCLUSIVE rejected EINVAL; DEL+ADD succeeds",
+   "native": "PASS: 4 epoll accept threads + 4 consumers, 256 real loopback clients per mode",
+   "legacy_initial": "237 empty EAGAIN wakeups; fixed initial=1 (measured, not assumed)",
+   "stress": "5/5 independent native repetitions PASS",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: full legacy+fixed workload, no finding",
+   "scope": "native aarch64 Linux epoll regression model, not an upstream crossbeam-rs patch"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0020. 85 frames sealed and SHA-gated; fail-closed fire only in a fresh open window."
+ }
+}

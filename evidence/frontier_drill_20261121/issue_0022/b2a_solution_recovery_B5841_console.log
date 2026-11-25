@@ -1,0 +1,42 @@
+2026-11-24T12:26:29Z LORA_CHIRP_RECOVERY_BEGIN role=unknown-node spi=/dev/spidev0.0
+2026-11-24T12:26:29Z RECOVERY_LOG=/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0022/b2a_solution_recovery_B5841.log
+2026-11-24T12:26:29Z Stopping known gateway services so one process owns the concentrator
+2026-11-24T12:26:29Z RUN: sudo systemctl stop helium-gateway
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop helium-gateway
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active helium-gateway
+2026-11-24T12:26:29Z EXIT[4]: sudo systemctl is-active helium-gateway
+2026-11-24T12:26:29Z RUN: sudo systemctl stop packet-forwarder
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop packet-forwarder
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active packet-forwarder
+2026-11-24T12:26:29Z EXIT[4]: sudo systemctl is-active packet-forwarder
+2026-11-24T12:26:29Z RUN: sudo systemctl stop lora_pkt_fwd
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop lora_pkt_fwd
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active lora_pkt_fwd
+2026-11-24T12:26:29Z EXIT[4]: sudo systemctl is-active lora_pkt_fwd
+2026-11-24T12:26:29Z RUN: sudo systemctl stop lora-packet-forwarder
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop lora-packet-forwarder
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active lora-packet-forwarder
+2026-11-24T12:26:29Z EXIT[4]: sudo systemctl is-active lora-packet-forwarder
+2026-11-24T12:26:29Z RUN: sudo systemctl stop sx1302_hal
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop sx1302_hal
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active sx1302_hal
+2026-11-24T12:26:29Z EXIT[4]: sudo systemctl is-active sx1302_hal
+2026-11-24T12:26:29Z RUN: sudo systemctl stop chirpstack-gateway-bridge
+2026-11-24T12:26:29Z EXIT[5]: sudo systemctl stop chirpstack-gateway-bridge
+2026-11-24T12:26:29Z RUN: sudo systemctl is-active chirpstack-gateway-bridge
+2026-11-24T12:26:30Z EXIT[4]: sudo systemctl is-active chirpstack-gateway-bridge
+2026-11-24T12:26:30Z RUN: sudo systemctl stop miner
+2026-11-24T12:26:30Z EXIT[5]: sudo systemctl stop miner
+2026-11-24T12:26:30Z RUN: sudo systemctl is-active miner
+2026-11-24T12:26:30Z EXIT[4]: sudo systemctl is-active miner
+2026-11-24T12:26:30Z Using reset script: /home/researcher-bravo/sx1302_hal/libloragw/reset_lgw.sh
+2026-11-24T12:26:30Z RUN: sudo ./reset_lgw.sh stop
+2026-11-24T12:26:30Z EXIT[0]: sudo ./reset_lgw.sh stop
+2026-11-24T12:26:31Z RUN: sudo ./reset_lgw.sh start
+2026-11-24T12:26:34Z EXIT[0]: sudo ./reset_lgw.sh start
+2026-11-24T12:26:34Z SPI device exists: /dev/spidev0.0
+2026-11-24T12:26:34Z Trying concentrator verification tool: /home/researcher-bravo/sx1302_hal/util_chip_id/chip_id
+2026-11-24T12:26:34Z RUN: sudo bash -c cd '/home/researcher-bravo/sx1302_hal/util_chip_id' && '/home/researcher-bravo/sx1302_hal/util_chip_id/chip_id' -d '/dev/spidev0.0' -r 1250 -k 0
+2026-11-24T12:26:39Z EXIT[0]: sudo bash -c cd '/home/researcher-bravo/sx1302_hal/util_chip_id' && '/home/researcher-bravo/sx1302_hal/util_chip_id/chip_id' -d '/dev/spidev0.0' -r 1250 -k 0
+2026-11-24T12:26:39Z LORA_CHIRP_RECOVERY_PASS=YES
+2026-11-24T12:26:39Z LORA_CHIRP_RECOVERY_END role=unknown-node

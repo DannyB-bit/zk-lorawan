@@ -1,0 +1,4 @@
+LEGACY_UNYIELDING_LOCAL_STARVATION=REPRODUCED local_polls=128 global_polls=0
+FIXED_COOPERATIVE_BUDGET=PASS global_first_poll_tick=64 global_polls=1 local_polls=126
+GLOBAL_FALLBACK_STRESS=PASS rounds=1000 interval_ticks=64 global_checks=1000
+FRONTIER_GH_0038_PASS=YES budget=64 starvation=FIXED

@@ -1,0 +1,29 @@
+{
+  "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_solution_window_request",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0026",
+    "leg": "B_to_A_solution",
+    "payload_sha256": "07f20c17c19bec8a8ae13d759d9fe92adefca22e7b6a91a358586d66501fb936",
+    "payload_bytes": 5716,
+    "total_chunks": 32,
+    "ok": true,
+    "minimum_remaining_seconds": 300,
+    "rf": "903.9MHz SF7 BW125 14dBm",
+    "note": "Fresh close required: repeated declarations through B6010 all retained expired close 19:23:11Z. 32-frame SF7 solution needs ~108s including gaps + recovery; fail-closed watcher reserves 300s. Also please join 0025 idx84 refire B5996/A2092 to banked 84 and post full-SHA verdict."
+  },
+  "post": {
+    "B": {
+      "ok": true,
+      "seq": 6012,
+      "rtt_ms": 13.998
+    },
+    "A": {
+      "ok": true,
+      "seq": 2102,
+      "rtt_ms": 171.493
+    }
+  }
+}

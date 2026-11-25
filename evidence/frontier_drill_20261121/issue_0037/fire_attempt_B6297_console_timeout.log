@@ -1,0 +1,15 @@
+ADR_FIRE_CONFIG sf=7 bw_khz=125 pow_dbm=14 gap_s=3 frame_airtime_s=0.384
+PRIOR_ISSUE_CLOSURE_GATE=PASS window=6299
+WINDOW_FIT_PASS required_s=414 remaining_s=1143
+staged frames verified: 69 of 69
+STAGED_SHA_OK=YES
+[1] SX1302 reset: GPIO17 LOW -> HIGH 0.5s -> LOW ...
+[2] SX1261 LBT: GPIO22 LOW 0.1s -> HIGH ...
+[3] firmware-load wait 2.0s ...
+--- probe[post-GPIO17-reset] ---
+  version reg 0x0005 x10 : 00 00 00 00 00 00 00 00 00 00
+  verdict: 0x00 = MISO stuck low / chip unpowered (Gate 2)
+[holder] June-faithful GPIO17/GPIO22 reset sequence complete
+[rak_gpio] holder on: READY (1402320 on READY)
+
+POSTMORTEM: agent foreground timeout=60s interrupted startup; TX_DONE=0, CHIRP_TX_COMPLETE absent, guard absent, zero solution frames transmitted. Standby was restored and verified active. B6299 closure was superseded by Alpha B6301 full 0036 refire authorization, so future closure gate must require a verdict newer than the latest 0036 refire window.

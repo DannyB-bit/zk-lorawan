@@ -1,0 +1,36 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0031",
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0031. 48 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open viable window.",
+  "ok": true,
+  "payload_bytes": 8537,
+  "payload_sha256": "e2c3cd68316053f5dd26aa71245be3ef7384dfe16aeb345532b2299261838cf1",
+  "solution": {
+   "fix": "head_mutex serializes interpreter list/tstate acquisition; atomic acquire/release tstate refcount holds daemon lifetime through GIL release",
+   "fixed": "PASS owner_decrement_old=2 final_refs=0; no UAF",
+   "legacy_negative_control": "PASS deletion-before-SaveThread detected",
+   "pytest": "2/2 PASS",
+   "stress": "1000/1000 PASS",
+   "ubsan": "PASS",
+   "asan": "environment allocator CHECK failure disclosed",
+   "scope": "standalone native aarch64 regression model; not an upstream CPython/Linux patch"
+  },
+  "staged_sha_gate": "48/48 PASS",
+  "to": "alpha",
+  "total_chunks": 48
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6163,
+   "rtt_ms": 45.693
+  },
+  "A": {
+   "ok": true,
+   "seq": 2198,
+   "rtt_ms": 298.449
+  }
+ }
+}

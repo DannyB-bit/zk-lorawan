@@ -1,0 +1,18 @@
+{
+ "seq": 6288,
+ "ts": 1795586539.127094,
+ "ts_utc": "2026-11-25T06:02:19Z",
+ "type": "frontier_solution_ready",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "ok": true,
+  "payload_sha256": "8fbcf1362e1baf671cbc8b9be45e7186daf1021d9ca1951aedbc6cc5dd533eac",
+  "payload_bytes": 12420,
+  "total_chunks": 69,
+  "type": "frontier_solution_ready",
+  "next": "69 SF7 frames sealed and SHA-gated; request a fresh viable window after reconciliation. 0037 RF fire is explicitly HELD until Alpha corrects the 0036 payload-SHA mismatch (B6266 ce31c4\u2026 vs fired/on-chain 52af03\u2026); current open windows must not be fired."
+ }
+}

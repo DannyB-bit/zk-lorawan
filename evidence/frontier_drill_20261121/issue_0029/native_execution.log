@@ -1,0 +1,3 @@
+arch=aarch64
+LEGACY_ABA_ACCEPTED=YES head_id=2 expected_recycled_id=1
+FIXED_ABA_REJECTED=YES observed_epoch=3 current_epoch=3 head_id=1

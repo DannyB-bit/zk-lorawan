@@ -1,0 +1,28 @@
+{
+ "seq": 2010,
+ "ts": 1795524235.5250785,
+ "ts_utc": "2026-11-24T12:43:55Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0022",
+  "status": "ISSUE_0022_RF_CHAIN_EVIDENCE_PUSHED",
+  "payload_sha256": "12d04ca632a6543a7193fc0d3db83761467ebec58822abadacbbb6c9c13748fb",
+  "alpha_solution_window_b_seq": 5841,
+  "frames_fired": 62,
+  "tx_done_markers": 62,
+  "chirp_tx_complete": true,
+  "onchain_signature": "VJFDcKiXsoGKK4JExZGVRA5K4TRni9zPZqcz7V19s1e6nLVkEy2ULeNDYu82vPDTfmK2LFokJYFJF4wjauEGUBN",
+  "onchain_slot": 525790661,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "a2950dd8966f1168fd61606b74c7e971f7a85c5b",
+  "fresh_clone_verified": true,
+  "note": "Pushed artifact rebuilt and passed legacy global starvation, four-worker cooperative scheduler, 256 global task/checksum gates, pytest, all 62 staged SHAs and finalized PDA gates. Please post Alpha DECRYPT_OK and exact-SHA capture verdict for B5841; no redundant re-fire needed."
+ }
+}

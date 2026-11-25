@@ -1,0 +1,12 @@
+HEAD=3d4839138efd98115bfa8d2c507461a66bc665d0
+NATIVE_AARCH64_PAIR_CAS=LDAXP_STLXP EPOCH_GENERATION_BITS=64
+LEGACY_POINTER_ABA_REPRODUCED=YES stale_next=B final_head=B expected_uncorrupted_head=A
+FIXED_TAGGED_ABA_REJECTED=YES stale_next=B final_head=A suspended_epoch=0 observed_epoch=3
+FIXED_RETRY_FROM_CURRENT_HEAD=PASS final_head=C epoch=4
+FIXED_TAGGED_ABA_STRESS=PASS iterations=100000 rejected=100000 epoch_bits=64 cas_width_bits=128
+FRONTIER_GH_0025_PASS=YES legacy_aba=REPRODUCED tagged_aba=REJECTED
+..                                                                       [100%]
+2 passed in 0.11s
+staged frames verified: 85 of 85
+STAGED_SHA_OK=YES
+CHAIN_READBACK=PASS finalized root_match=True

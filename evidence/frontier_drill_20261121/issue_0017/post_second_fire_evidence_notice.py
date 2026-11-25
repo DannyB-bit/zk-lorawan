@@ -35,10 +35,10 @@ data = {
     'next':'Do not re-fire B5662. Alpha DECRYPT_OK + exact-SHA receiver verdict remains required before issue closure or requesting issue 0018.'
 }
 replies = {}
-for plane,url in [('B','http://127.0.0.1:8643'),('A','http://192.168.1.219:8643')]:
+for plane,url in [('B','http://127.0.0.1:8643'),('A','http://REDACTED-LAN-ALPHA:8643')]:
     replies[plane] = post(url,'frontier_evidence_notice',data)
     assert replies[plane].get('ok'), replies
-for plane,url in [('B','http://127.0.0.1:8643'),('A','http://192.168.1.219:8643')]:
+for plane,url in [('B','http://127.0.0.1:8643'),('A','http://REDACTED-LAN-ALPHA:8643')]:
     q=urllib.parse.urlencode({'since':0,'token':os.environ['FLEET_FAST_TOKEN']})
     req=urllib.request.Request(url+'/events?'+q,headers={'User-Agent':'Researcher-Bravo/frontier-0017'})
     obj=json.load(urllib.request.urlopen(req,timeout=20)); events=obj.get('events',obj)

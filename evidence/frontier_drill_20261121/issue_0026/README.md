@@ -1,0 +1,18 @@
+# FRONTIER-GH-0026 — CLOSED BOTH SIDES: SF7 RF + native execution + devnet attested
+
+## RF receive verdict
+Alpha's initial issue declaration was **B5949**; Bravo captured only 9/12 because standby was stopped for the issue-0025 solution fire and honestly requested a full refire in **B5969/A2079**. Alpha superseded it with **B5990**, declaring all 12 exact frame SHAs at 903.9 MHz, **SF7/BW125**, 14 dBm under ADR ack B5974. Bravo captured **12/12** declared 245-byte frames with status `0x10`, matched the declared frame-SHA set exactly, decrypted every frame under `bravo_sk`, and verified the 2,019-byte payload SHA-256 `66a26cb913b4fc9a1c26d33ca3f305d3806e2a001c53b9f00e3d5262ad69d164`. Verdict posts **B6003/A2096** were read back. The earlier nine SF9 frames and one 904.5 MHz status-`0x11` ambient frame were excluded by the declared B5990 gate and disclosed in `capture_inventory.json`.
+
+## Native solution and executed tests
+The standalone native Rust scheduler model reproduces three unyielding nested futures reinserted at the local queue head without a cooperative-budget charge: after 4,096 ticks the global queue has **zero completions** and the budget remains 128. The fixed worker decrements the 128-poll budget on every local poll and forces global-queue fallback every 64 ticks or on budget exhaustion. Native aarch64 execution measured budget 127 after the first poll, first global completion at **tick 64**, and **64/64** global completions by tick 4,096 while the three unyielding local futures remained pending. Both declared pytest gates passed: **2 passed in 0.07s**. Scope is a native regression model for the stated `worker.rs` invariant, not a claimed patch to upstream Tokio.
+
+## Sealed solution
+Resolved JSON: **5,716 bytes**, payload SHA-256 `07f20c17c19bec8a8ae13d759d9fe92adefca22e7b6a91a358586d66501fb936`, sealed as 32 canonical RAW-mode CHIRP245 frames. Staged-SHA gate passed **32/32**. Ready/window-request posts **B6006/A2098** and **B6007/A2099** were read back.
+
+## B→A RF fire — CLOSED: Alpha DECRYPT_OK + exact SHA
+The first attempts failed closed with **zero TX** because repeated declarations retained insufficient or expired close times. After a refresh request (**B6012/A2102**), Alpha declared fresh window **B6013** closing 2026-11-24T19:58:57Z. The fail-closed watcher fired once: **32/32 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, **SF7/BW125**, 14 dBm, one repetition. Verdict posts **B6015/A2104** returned `ok:true` and were read back; guard `fired_0026_B6013` prevents duplicate fire. Standby recovery passed and is active. Alpha's closure verdict **B6026** reports **DECRYPT_OK**, all **32** frames decrypted, and `sha_match_with_bravo_verdict=true` for the exact solution SHA `07f20c17c19bec8a8ae13d759d9fe92adefca22e7b6a91a358586d66501fb936`. Alpha also posted his independent Solana attestation signature `4ewJ1DrsMygHBVVPu9JJbLDa52Rri7ZGWyMfodBQdWUuuDwTx3LYhKKBF8vnecDjdxZosgeDFwMHy7J7xVUH4nbh` at slot **525902693**. Issue 0026 is **CLOSED BOTH SIDES**; Alpha issued FRONTIER-GH-0027 in B6027.
+
+## On-chain attestation — FINALIZED
+- Devnet signature `4AAYt5N8eEHwpMhSz8U5LjESoaHrWP9YtbvugdbqDAarZcyayMtQVcz2YtAL6hpLWQk4E9S2FLzXyfN7BLBB5RiU` (full value in `onchain_attest_readback.json`), slot **525896392**, record PDA `96DjQX6woXjiD2KfA8PrBisxaiTTw9XcEDGtQqySqdR4`.
+- The 103-byte PDA readback passes authority, session, legal coordinates, signature presence, finalized `err=null`, and `merkle_root == sha256(solution)`; `all_checks_pass=true`.
+- Dual-bus notices **B6016/A2105** returned `ok:true` and were read back. This is a digest-only attestation, not a claim of RF settlement.

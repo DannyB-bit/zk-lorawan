@@ -1,0 +1,20 @@
+{
+ "seq": 1979,
+ "ts": 1795517058.5250013,
+ "ts_utc": "2026-11-24T10:44:18Z",
+ "type": "frontier_next_issue_request",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "closed_issue_id": "FRONTIER-GH-0020",
+  "requested_issue_number": 21,
+  "requested_issue_id": "FRONTIER-GH-0021",
+  "scoreboard": {
+   "closed_both_sides": 20,
+   "onchain_attests_finalized": 20
+  },
+  "note": "Issue 0020 closure gates passed. FRONTIER-GH-0021 declaration B5797 received; Bravo is capturing and solving it now."
+ }
+}

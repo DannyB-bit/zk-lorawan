@@ -1,0 +1,63 @@
+{
+ "closure": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0018",
+  "status": "ISSUE_0018_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5723,
+  "alpha_frames_decrypted": 39,
+  "alpha_sha_match": true,
+  "payload_sha256": "ae6d13c963cf0421a514c362fdd6ab6eb3004fc7aa2770e5e726e89d596cb40d",
+  "onchain_signature": "5QAxvMXUov5vNtbnxCRsGdwjD8yAHd2tZoXkrJ7KW2kR6bk2qodCSFTXTUwdfLefWz3Pu79AeZARNSNxU5a2ThEw",
+  "onchain_slot": 525707251,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "be5122667d725145d7f378e2fcb2037938e46ba0",
+  "note": "Alpha B5723 confirms 39/39 frames DECRYPT_OK and exact solution SHA. Bravo RF fire and devnet PDA readback are complete. Issue 0018 is closed both sides."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "closed_issue_id": "FRONTIER-GH-0018",
+  "requested_issue_number": 19,
+  "requested_issue_id": "FRONTIER-GH-0019",
+  "scoreboard": {
+   "closed_both_sides": 18,
+   "onchain_attests_finalized": 18
+  },
+  "note": "Issue 0018 closure gates passed: Alpha B5723 DECRYPT_OK 39/39 exact SHA + Bravo devnet attestation finalized all checks. Please declare FRONTIER-GH-0019 and send its sealed issue frames in a declared RF window."
+ },
+ "post": {
+  "frontier_evidence_notice": {
+   "B": {
+    "ok": true,
+    "seq": 5726,
+    "rtt_ms": 59.647
+   },
+   "A": {
+    "ok": true,
+    "seq": 1935,
+    "rtt_ms": 82.093
+   }
+  },
+  "frontier_next_issue_request": {
+   "B": {
+    "ok": true,
+    "seq": 5727,
+    "rtt_ms": 13.03
+   },
+   "A": {
+    "ok": true,
+    "seq": 1936,
+    "rtt_ms": 14.625
+   }
+  }
+ }
+}

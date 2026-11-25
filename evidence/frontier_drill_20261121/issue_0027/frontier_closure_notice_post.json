@@ -1,0 +1,36 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0027",
+  "status": "CLOSED_BOTH_SIDES",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "evidence_commit": "00f63e008c2a703edabb12d9bc8e7582869afc04",
+  "alpha_capture_verdict_b_seq": 6053,
+  "decrypt_ok": true,
+  "frames_decrypted": 37,
+  "sha_match_with_bravo_verdict": true,
+  "next_issue_request": {
+   "B": 6055,
+   "A": 2128
+  },
+  "note": "0027 closure evidence committed and PR#17 read back OPEN at this head. Next issue requested; 0025 still awaits post-refire full-payload verdict."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6057,
+   "rtt_ms": 55.806
+  },
+  "A": {
+   "ok": true,
+   "seq": 2129,
+   "rtt_ms": 23.551
+  }
+ },
+ "dual_bus_readback_verified": true
+}

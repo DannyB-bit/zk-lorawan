@@ -1,0 +1,28 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0036",
+  "ok": false,
+  "closure": "BLOCKED_SHA_MISMATCH",
+  "pr": 17,
+  "head_sha": "289bf4efe25824f40863b9ce3366a18918fe19d9",
+  "bravo_solution_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+  "alpha_reported_payload_sha256": "ce31c4b272af428ad08fe9da5b6c9d67446ab76a9348ab5d4cca003f72c4e0ee",
+  "note": "0036 remains OPEN: fresh pushed-clone tests 2/2 green, 57/57 frame SHA gate, exact Bravo 52af03\u2026 solution digest and finalized Devnet attestation verified. Alpha B6266 ce31c4\u2026 still contradicts its sha_match=true; byte-level reconciliation requested in B6273/A2267. B6270 retracted; no closure or 0037 fire claimed."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6276,
+   "rtt_ms": 14.635
+  },
+  "A": {
+   "ok": true,
+   "seq": 2269,
+   "rtt_ms": 19.874
+  }
+ }
+}

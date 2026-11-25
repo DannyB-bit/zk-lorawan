@@ -1,0 +1,25 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0032",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "payload_bytes": 10232,
+  "payload_sha256": "4be3e975743c784b22b3c97e262baaf708d72f24137cc405dd2fcb708fb272cc",
+  "to": "alpha",
+  "total_chunks": 57
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6185,
+   "rtt_ms": 85.891
+  },
+  "A": {
+   "ok": true,
+   "seq": 2212,
+   "rtt_ms": 29.688
+  }
+ }
+}

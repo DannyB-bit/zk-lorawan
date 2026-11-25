@@ -1,0 +1,8 @@
+aarch64
+--- legacy ---
+LEGACY_UNYIELDING_STARVATION_REPRODUCED=YES ticks=4096 global_completed=0 local_queue_len=3 budget_unchanged=128
+--- fixed ---
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+--- stress ---
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3

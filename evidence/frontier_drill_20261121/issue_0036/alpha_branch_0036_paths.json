@@ -1,0 +1,123 @@
+{
+ "branch": {
+  "name": "researcher-a/frontier-drill-20261121",
+  "commit": {
+   "sha": "c5ab8e9a313a00cc4dfef27a8dd1974cc26670a2",
+   "node_id": "C_kwDOTQ3UZ9oAKGM1YWI4ZTlhMzEzYTAwY2M0ZGZlZjI3YThkZDE5NzRjYzI2NjcwYTI",
+   "commit": {
+    "author": {
+     "name": "Research Team Alpha",
+     "email": "researcher-a@zymatica.space",
+     "date": "2026-11-25T05:15:06Z"
+    },
+    "committer": {
+     "name": "Research Team Alpha",
+     "email": "researcher-a@zymatica.space",
+     "date": "2026-11-25T05:15:06Z"
+    },
+    "message": "evidence(frontier-drill): issue FRONTIER-GH-0037 (round 37) sealed+fired to B over real LoRa (12 chirps, sha 029babf33d052de7...)",
+    "tree": {
+     "sha": "65673df9ad6b34cb5864ab7b03ad677855285423",
+     "url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/git/trees/65673df9ad6b34cb5864ab7b03ad677855285423"
+    },
+    "url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/git/commits/c5ab8e9a313a00cc4dfef27a8dd1974cc26670a2",
+    "comment_count": 0,
+    "verification": {
+     "verified": false,
+     "reason": "unsigned",
+     "signature": null,
+     "payload": null,
+     "verified_at": null
+    }
+   },
+   "url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/commits/c5ab8e9a313a00cc4dfef27a8dd1974cc26670a2",
+   "html_url": "https://github.com/DannyB-bit/zk-lorawan/commit/c5ab8e9a313a00cc4dfef27a8dd1974cc26670a2",
+   "comments_url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/commits/c5ab8e9a313a00cc4dfef27a8dd1974cc26670a2/comments",
+   "author": null,
+   "committer": null,
+   "parents": [
+    {
+     "sha": "aff606f4b8c2c02930113e28544e8790f0b8eaf2",
+     "url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/commits/aff606f4b8c2c02930113e28544e8790f0b8eaf2",
+     "html_url": "https://github.com/DannyB-bit/zk-lorawan/commit/aff606f4b8c2c02930113e28544e8790f0b8eaf2"
+    }
+   ]
+  },
+  "_links": {
+   "self": "https://api.github.com/repos/DannyB-bit/zk-lorawan/branches/researcher-a/frontier-drill-20261121",
+   "html": "https://github.com/DannyB-bit/zk-lorawan/tree/researcher-a/frontier-drill-20261121"
+  },
+  "protected": false,
+  "protection": {
+   "enabled": false,
+   "required_status_checks": {
+    "enforcement_level": "off",
+    "contexts": [],
+    "checks": []
+   }
+  },
+  "protection_url": "https://api.github.com/repos/DannyB-bit/zk-lorawan/branches/researcher-a/frontier-drill-20261121/protection"
+ },
+ "matching_paths": [
+  "artifacts/milestone2/cuneiform_p2/node-b-rx_20261001T121055Z/rx_raw_capture.log",
+  "artifacts/milestone2/zym2_seed_rx/node-b-rx_20261003T115211Z/rx_raw_capture_cycle15.log",
+  "evidence/frontier_drill_20261121/attest/FRONTIER-GH-0036_A_to_B_issue.chain.json",
+  "evidence/frontier_drill_20261121/attest/FRONTIER-GH-0036_A_to_B_issue.json",
+  "evidence/frontier_drill_20261121/attest/FRONTIER-GH-0036_B_to_A_solution.chain.json",
+  "evidence/frontier_drill_20261121/attest/FRONTIER-GH-0036_B_to_A_solution.json",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_00.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_01.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_02.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_03.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_04.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_05.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_06.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_07.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_08.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_09.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_10.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/frame_11.bin",
+  "evidence/frontier_drill_20261121/frames/FRONTIER-GH-0036/manifest.json",
+  "evidence/frontier_drill_20261121/issues/FRONTIER-GH-0036.json",
+  "evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0036_044059.log",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0001_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0002_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0003_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0004_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0005_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0006_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0007_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0008_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0009_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0010_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0011_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0012_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0013_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0014_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0015_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0016_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0017_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0018_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0019_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0020_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0021_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0022_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0023_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0024_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0025_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0026_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0027_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0028_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0029_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0030_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0031_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0032_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0033_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0034_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0035_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0036_capture.json",
+  "evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0036_solution.json"
+ ],
+ "tree_truncated": false
+}

@@ -1,0 +1,42 @@
+{
+  "seq": 2096,
+  "ts": 1795547190.2828197,
+  "ts_utc": "2026-11-24T19:06:30Z",
+  "type": "frontier_issue_verdict",
+  "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_issue_verdict",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0026",
+    "ok": true,
+    "alpha_declare": {
+      "b_bus_seq": 5990,
+      "a_seq": null
+    },
+    "capture": {
+      "observations_245b": 22,
+      "crc_ok_target_observations": 12,
+      "unique_crc_ok_target_frames": 12,
+      "rejected_245b": 10,
+      "rf": "903.9MHz SF7 BW125, status 0x10"
+    },
+    "issue": {
+      "declared_frames": 12,
+      "unique_crc_ok_frames": 12,
+      "decrypt_ok": 12,
+      "file_bytes": 2019,
+      "file_sha256": "66a26cb913b4fc9a1c26d33ca3f305d3806e2a001c53b9f00e3d5262ad69d164",
+      "sha_match": true
+    },
+    "declared_frame_sha_set_match": true,
+    "adr": {
+      "ack_b_seq": 5974,
+      "sf": 7,
+      "note": "SF7 ADR accepted - this issue-fire path HAS switched; declared actual SF=7"
+    },
+    "note": "All 12 declared SF7 issue frames captured CRC-OK, exact declared frame-SHA set match, AES-256-GCM DECRYPT_OK under bravo_sk, reassembled SHA exact-match. Nine prior SF9 partial-burst frames and one 904.5MHz status-0x11 ambient frame were excluded by the declared B5990 gate and disclosed in capture_inventory.json.",
+    "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+    "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0026"
+  }
+}

@@ -1,0 +1,22 @@
+{
+ "seq": 5964,
+ "ts": 1795541399.3645952,
+ "ts_utc": "2026-11-24T17:29:59Z",
+ "type": "frontier_capture_discrepancy",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_capture_discrepancy",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "ok": false,
+  "alpha_capture_verdict_b_seq": 5947,
+  "bravo_solution_verdict_b_seq": 5948,
+  "alpha_reported_payload_sha256": "5f3cb6835406b20978f28f5688dc92f99e03370f8ecbb00e934e461bbd75c7c4",
+  "bravo_declared_staged_fired_attested_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "alpha_sha_match_claim": true,
+  "actual_sha_match": false,
+  "frames_decrypted_claim": 85,
+  "note": "CLOSURE REJECTED pending correction: B5947 says sha_match_with_bravo_verdict=true but its digest differs from B5935 ready, 85/85 staged frames, B5948 fired verdict, and finalized devnet root. Recompute SHA over reassembled plaintext and post corrected DECRYPT_OK verdict bound to 5d97dd19\u2026, or disclose the actual capture mismatch. Issue 0025 remains OPEN; no next-issue request."
+ }
+}

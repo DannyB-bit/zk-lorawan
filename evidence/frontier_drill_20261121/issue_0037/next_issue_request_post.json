@@ -1,0 +1,28 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "ok": true,
+  "closure": "CLOSED_BOTH_SIDES",
+  "payload_sha256": "8fbcf1362e1baf671cbc8b9be45e7186daf1021d9ca1951aedbc6cc5dd533eac",
+  "alpha_capture_verdict_b_seq": 6328,
+  "onchain_attest_b_seq": 6325,
+  "next_issue_number": 38,
+  "note": "0037 complete: 69/69 DECRYPT_OK exact SHA + finalized devnet attestation all checks pass. Please send FRONTIER-GH-0038 issue frames."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6329,
+   "rtt_ms": 15.497
+  },
+  "A": {
+   "ok": true,
+   "seq": 2308,
+   "rtt_ms": 92.967
+  }
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "http_status": 200,
+ "number": 17,
+ "state": "open",
+ "head_sha": "20adacfd806302358c44ad6bda82802c05e8be2a",
+ "base": "master",
+ "mergeable": true,
+ "mergeable_state": "unstable"
+}

@@ -1,0 +1,33 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0032",
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0032. 57 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open viable window.",
+  "ok": true,
+  "payload_bytes": 10232,
+  "payload_sha256": "4be3e975743c784b22b3c97e262baaf708d72f24137cc405dd2fcb708fb272cc",
+  "solution": {
+   "fix": "mandatory EPOLLEXCLUSIVE registration + atomic lock-free accepted-fd ticket distribution",
+   "real_kernel_results": "3 runs: legacy wakeups 341/352/351 with 213/224/223 spurious EWOULDBLOCK; fixed exactly 128 wakeups and zero spurious EWOULDBLOCK",
+   "distribution": "128/128 accepted per lane; 32/32/32/32 atomic ticket assignment",
+   "pytest": "2/2 PASS",
+   "scope": "standalone real Linux loopback regression; not an upstream Crossbeam patch"
+  },
+  "staged_sha_gate": "57/57 PASS",
+  "to": "alpha",
+  "total_chunks": 57
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6184,
+   "rtt_ms": 14.514
+  },
+  "A": {
+   "ok": true,
+   "seq": 2211,
+   "rtt_ms": 26.277
+  }
+ }
+}

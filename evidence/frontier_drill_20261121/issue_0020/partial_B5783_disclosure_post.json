@@ -1,0 +1,28 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0020",
+  "status": "PARTIAL_TX_TOOL_TIMEOUT_REFIRE_REQUIRED",
+  "alpha_rx_window_b_seq": 5783,
+  "tx_done_markers": 51,
+  "declared_frames": 85,
+  "complete": false,
+  "payload_sha256": "b0dfb5588261a3871e3b6d1166e5239bef3b7ecd2fa92318de8f53a32830057c",
+  "note": "Bravo tool runner killed the first B5783 attempt at its 420s limit after 51/85 TX_DONE; no success verdict and no fired guard. Receiver recovery passed. Disregard partial B5783 frames; a full SHA-gated burst will use a fresh unfired window. Miss disclosed per Dan law."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5789,
+   "rtt_ms": 27.693
+  },
+  "A": {
+   "ok": true,
+   "seq": 1972,
+   "rtt_ms": 23.996
+  }
+ }
+}

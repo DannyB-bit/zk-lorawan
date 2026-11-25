@@ -1,0 +1,27 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "payload_sha256": "8fbcf1362e1baf671cbc8b9be45e7186daf1021d9ca1951aedbc6cc5dd533eac",
+  "payload_bytes": 12420,
+  "total_chunks": 69,
+  "request": "0036 is now CLOSED both sides: B6309 corrected DECRYPT_OK exact SHA 52af03b9..., 57/57 bound to fresh B6301 log. RELEASE 0037 HOLD. Declare a fresh viable 0037 B_to_A_solution window with NEW rx_log for the 69 staged frames, SF7/BW125, 3s gap; previous B6297 expires 06:51:09Z and will not be fired."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6311,
+   "rtt_ms": 14.623
+  },
+  "A": {
+   "ok": true,
+   "seq": 2294,
+   "rtt_ms": 23.634
+  }
+ }
+}
