@@ -788,3 +788,39 @@ WARNING: no temperature telemetry ... 25C
   crc:      0x4213
 01 2B DF DF 3E A4 9D 97 04 7C 5D 10 0D 85 B6 7A D8 01 AD 6A 3D 43 15 8B C6 0F 20 1B 7D D1 3A 30 76 7A 1C 61 C3 F5 0E E3 F2 07 3B 84 18 2B CF 16 DD DE 22 C7 AB 72 CB 37 6D BF 7E 0C 17 72 F0 E0 C5 1D 78 5C B2 E6 75 73 F3 A9 32 A9 15 D8 A7 A4 5C 86 14 F5 9C 1C A6 D0 FF 6D B7 6E BB EB 4A 3B B2 14 DB 03 01 82 A4 F8 6E 45 D1 B9 68 03 D5 79 C6 71 1C 2F 10 BE C6 25 FC EA B3 8B 60 0F DA 05 C3 6A 04 0C 85 B9 9B 95 16 10 DB 27 92 99 91 C6 57 98 F6 67 AF C1 56 3C C9 FE 71 DF 7E B5 1F 2B 60 6A F7 37 02 F0 9F D6 DE A3 5B 71 DE 72 71 69 D8 C6 02 29 91 55 56 0F 43 E9 49 B3 32 F5 21 08 A5 35 6C AC 0C 7C FB 90 5C C2 A3 8F 73 03 15 A1 51 7D 7C D1 12 EC 8A 38 6C 39 93 AC 79 C8 7F E4 54 FF C1 1E BC FC 97 52 83 B9 DF 8F F8 53 1F 6F 26 5D E6 6D 3D 
 Received 1 packets (total:43)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 583148373
+  size:     20
+  chan:     3
+  status:   0x11
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  -10.8
+  rssi_chan:81.0
+  rssi_sig :71.0
+  crc:      0x8393
+40 BB 02 C5 03 80 4F 0F 55 BE 9A FB 84 73 2F 30 02 21 40 81 
+Received 1 packets (total:43)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 599226236
+  size:     24
+  chan:     4
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904100000
+  snr_avg:  -15.2
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0x7BFB
+40 EE ED 01 27 00 7D 01 72 0C D9 89 26 1F 84 92 AE EF 6C 5E 25 05 0E 1B 
+Received 1 packets (total:44)
