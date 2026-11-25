@@ -32,7 +32,7 @@ for d in (LOGS, FRAMES, ISSUES, SOLS):
 BRAVO_PUB = "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118"
 ALPHA_PUB = "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942"
 ALPHA_SK = Path("/home/researcher-alpha/.config/solana/chirp245_alpha_sk.key").read_text().strip()
-BUS = "http://lan-6f9297fe:8643"
+BUS = os.environ.get("FRONTIER_BUS", "http://127.0.0.1:8643")  # PII policy: no LAN IPs in public repo (Dan 2026-11-25)
 TOKEN = os.environ["FLEET_FAST_TOKEN"]
 TARGET = 1000         # Dan's order 2026-11-24: the FULL 1000-problem benchmark (was 100)
 DRILL = "frontier_drill_20261121"
@@ -84,8 +84,23 @@ def now():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+import re as _re
+
+def sanitize(text):
+    """PII policy (Dan 2026-11-25): hash LAN IPs / concentrator EUIs out of any
+    text before it reaches committed logs. Payload evidence is hash-locked and
+    never altered; logs and code are always scrubbed."""
+    def ip_sub(m):
+        return "lan-" + hashlib.sha256(m.group(0).encode()).hexdigest()[:8]
+    def eui_sub(m):
+        return "eui-" + hashlib.sha256(m.group(0).encode()).hexdigest()[:8]
+    text = _re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", ip_sub, str(text))
+    text = _re.sub(r"\b0016c001[0-9a-fA-F]{8}\b", eui_sub, text)
+    return text
+
+
 def log(msg):
-    line = f"{now()} {msg}"
+    line = f"{now()} {sanitize(msg)}"
     print(line)
     with open(LOGS / "loop.log", "a") as f:
         f.write(line + "\n")
