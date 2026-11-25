@@ -1,0 +1,16 @@
+{
+ "attestation": "zk-lorawan-frontier-drill",
+ "drill": "frontier_drill_20261121",
+ "issue_id": "FRONTIER-GH-0036",
+ "leg": "A_to_B_issue",
+ "payload_sha256": "a03ff6ce4e2a4f3f76b031b67fd32196d3f75794e1a4e7662f4e17c7c951df37",
+ "verdict": "TX_DONE fired=12 tx_done=12 sf=9 airtime_s=14.51",
+ "node": "RakMiner-A",
+ "rf": {
+  "freq_mhz": 903.9,
+  "sf": 9,
+  "bw_khz": 125
+ },
+ "evidence_repo": "DannyB-bit/zk-lorawan@researcher-a/frontier-drill-20261121",
+ "event_utc": "2026-11-25T04:43:02Z"
+}
