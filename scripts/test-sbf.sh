@@ -37,12 +37,16 @@ cleanup() {
     if [[ "${created_wallet}" -eq 1 ]]; then
         rm -f "${generated_wallet}"
     fi
-    rm -f Cargo.lock.bak
+    if [[ -f Cargo.lock.bak ]]; then
+        mv Cargo.lock.bak Cargo.lock
+    fi
 }
 trap cleanup EXIT
 
 cp Cargo.lock Cargo.lock.bak
-cargo +1.80.0 build -p zk-lorawan-groth16 --release
-cp Cargo.lock.bak Cargo.lock
+cargo +1.83.0 build -p zk-lorawan-groth16 --release
+# Solana 1.17's bundled Cargo predates lockfile v4. The v3 wire format is
+# compatible with these locked entries; restore the original file on exit.
+sed -i 's/^version = 4$/version = 3/' Cargo.lock
 anchor build -- --features integration-test
 anchor test --skip-build --provider.wallet "${ANCHOR_WALLET}"

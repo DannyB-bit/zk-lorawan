@@ -147,6 +147,7 @@ impl ZKLoRaWANProver {
     /// payload_sha256 = SHA256(payload_bytes) as Fr (also a PUBLIC input so the
     /// receiver can independently recompute it from the RF capture);
     /// payload_commitment = MiMC(identity_hash + payload_sha256).
+    #[allow(clippy::too_many_arguments)]
     pub fn generate_proof_with_payload(
         &self,
         private_key_bytes: &[u8],
