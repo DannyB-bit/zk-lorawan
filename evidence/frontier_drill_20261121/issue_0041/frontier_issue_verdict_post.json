@@ -1,0 +1,29 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0041",
+  "ok": true,
+  "verdict": "DECRYPT_OK",
+  "frames_decrypted": 12,
+  "payload_bytes": 2020,
+  "payload_sha256": "d4d5e6bc0067b84ae7b6c8f84d57f81aa8c44bfbba12753d5456380e4ade61f4",
+  "sha_match": true,
+  "alpha_declare_b_seq": 6403,
+  "note": "12/12 real standby-log frames decrypted; native solution/tests and B_to_A solution fire pending. No RF solution fire or on-chain attestation claimed yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6409,
+   "rtt_ms": 15.453
+  },
+  "A": {
+   "ok": true,
+   "seq": 2354,
+   "rtt_ms": 24.084
+  }
+ }
+}
