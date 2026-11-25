@@ -271,6 +271,12 @@ def step():
     payloads = scan_rx_payloads()
     verdict_shas = {e["data"].get("issue_id"): e["data"].get("payload_sha256")
                     for e in br if e["type"] == "frontier_solution_verdict"}
+    # STRICT manifest binding (2026-11-25, after the 0036 mixed-capture incident):
+    # when Bravo declared an exact frame_sha256 list, a capture candidate is valid ONLY if
+    # every captured frame sha is in that list AND the reassembled payload sha matches.
+    verdict_frames = {e["data"].get("issue_id"): set(e["data"].get("frame_sha256") or [])
+                      for e in br if e["type"] == "frontier_solution_verdict"
+                      and e["data"].get("frame_sha256")}
     ack = None
     solutions = {}
     for p in payloads:
@@ -282,6 +288,12 @@ def step():
             ack = j
         if j.get("issue_id"):
             iid = j["issue_id"]
+            declared = verdict_frames.get(iid)
+            if declared:
+                cap_shas = {f.get("frame_sha256") for f in p.get("frames", [])}
+                if not cap_shas or not cap_shas.issubset(declared) or p["sha256"] != verdict_shas.get(iid):
+                    log(f"REJECT mixed/unbound capture for {iid}: {len(cap_shas)} frames, subset_of_manifest={cap_shas.issubset(declared)}, sha_match={p['sha256'] == verdict_shas.get(iid)}")
+                    continue
             entry = {"sha256": p["sha256"], "payload": j, "frames": p.get("frames", [])}
             if iid not in solutions or p["sha256"] == verdict_shas.get(iid):
                 # first candidate wins unless a later one matches bravo's verdict sha
@@ -345,6 +357,9 @@ def step():
         idx = len(s["solved"])
         issue = bench[idx]
         iid = issue["issue_id"]
+        if iid in s.get("held", []):
+            log(f"{iid} is HELD by operator - not firing; waiting")
+            return
         payload = {
             "type": "frontier_issue", "drill": DRILL, "round": idx + 1, "target": s["target"],
             "issue_id": iid, "repo": issue["repo"], "target_file": issue["target_file"],
