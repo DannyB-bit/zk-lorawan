@@ -1,0 +1,4 @@
+LEGACY_POINTER_CAS rounds=2000 ABA_success=2000 corrupted_head_B=2000
+FIXED_TAGGED_CAS rounds=2000 ABA_success=0 stale_CAS_rejected=2000 intact_A_to_C=2000 epoch_bits=64
+ORDERED_PUSH_POP=PASS tagged_16B_always_lockfree=0
+ABA_EPOCH_INVARIANT=PASS

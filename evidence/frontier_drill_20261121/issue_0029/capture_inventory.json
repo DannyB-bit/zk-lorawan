@@ -1,0 +1,127 @@
+{
+ "source_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0029/capture_source_rx_standby_continuous_20261124T214124Z.log",
+ "observations_245b": 13,
+ "crc_ok_target_observations": 12,
+ "unique_crc_ok_target_frames": 12,
+ "rejected_245b": [
+  {
+   "size": "245",
+   "status": "0x11",
+   "datr": "9",
+   "freq_hz": "904500000",
+   "count_us": "1330890644",
+   "crc": "0x0B29",
+   "sha256": "0e226e0d6d4489d3fd536371b4ea790414e7288ad0d6b0e4e2ae916c7e12b730"
+  }
+ ],
+ "frames": [
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1279242224",
+   "crc": "0xD7F0",
+   "sha256": "9124a031a3a93bd050f09be2e6a24a8084eb1a8eecb75f0b855b5f599d46668f"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1289514159",
+   "crc": "0x491D",
+   "sha256": "435077070f7cb0d67a5ffa8ce2555b8c9a90fd8124bf70b31f0ca9ace76a1883"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1299798330",
+   "crc": "0xBC25",
+   "sha256": "45f5663fb2fcff15b76c3f5c8b6b0e0aa1376ba872ed45128089c4cf92ffebc6"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1310113476",
+   "crc": "0xC14C",
+   "sha256": "478817419eb91f94b73fc3f42232164f403b5f9eb7ffd7e8a67efbbc998cfe67"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1320415128",
+   "crc": "0xF004",
+   "sha256": "25009b9ff954a1ecd916aa80e0ab12e4c70209ddfc7e2abc32549e82f9d4b798"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1330890684",
+   "crc": "0x578C",
+   "sha256": "977454b12eb434276fd4f0a30906f5e71467d64a64440dfece914cac8e0ae48d"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1341284742",
+   "crc": "0x528A",
+   "sha256": "3c0f0243719cb262124d396bf4e4dd1823be08f9d0d133a6a39cd45b4e7e36c7"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1351614257",
+   "crc": "0x2D9D",
+   "sha256": "d5445c112810c6c787e36e1194259b1043903cb9baeeac75628164deb16d2a4f"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1361962325",
+   "crc": "0xD04A",
+   "sha256": "6cd6ef2d57075a3fc22a6c61ec86f96ce8e8549e260fcb19bf0b9d6db2a8014c"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1372237508",
+   "crc": "0xC07A",
+   "sha256": "26ac8eb73062ae44d8ab8d077fe70b0a8e60d09d02ae6c348ebcae9d6b5392d1"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1382559153",
+   "crc": "0x5502",
+   "sha256": "84515de5c5671f488dff7345d6fe914c9fa1994c971aea439e13ce8633d641f3"
+  },
+  {
+   "size": "245",
+   "status": "0x10",
+   "datr": "9",
+   "freq_hz": "903900000",
+   "count_us": "1392892696",
+   "crc": "0x9CB7",
+   "sha256": "324b57519e0f0bc11ef97c5da441c3cbd735c99a8311cc8284fbd3e5bd46edb1"
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+# FRONTIER-GH-0025 — idx84 SF9 corrective refire B6302; full closure pending
+
+Alpha's corrected verdict **B6088** honestly rejected the earlier SF7 refire: **0 matching frames** appeared in any Alpha RX log, so the SF7 `TX_DONE` was not a delivery proof and issue 0025 stayed open at **84/85**. Alpha declared dedicated refire window **B6087** (`B_to_A_solution_refire`, armed 2026-11-24T22:18:33Z, closes 2026-11-24T23:18:33Z) explicitly requesting **SF9** and the unchanged ciphertext SHA `33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde`.
+
+Bravo's fail-closed SF9 script discovered that exact window, verified Alpha's missing idx84 declaration and the staged frame SHA, enforced one-fire guard `refired_idx84_0025_B6087`, and fired **only idx84**: **1/1 `TX_DONE`**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0 at 903.9 MHz, **SF9/BW125**, 14 dBm. Dual-bus refire verdicts **B6095/A2155** returned `ok:true` and were read back byte-identically. The full payload target remains `5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47`. The solution's devnet attestation was already finalized after the original fire; no new payload or duplicate attestation was created for this corrective refire. **Alpha must join idx84 to the banked 84 and post full-payload DECRYPT_OK + exact-SHA before closure.**
+
+## Fresh B6302 refire — TX complete, closure pending
+
+Alpha's fresh B6302/A2287 authorization superseded expired windows and explicitly requested idx84 only at SF9 with unchanged SHA `33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde`. Bravo staged-SHA gated and fired exactly that one frame: 1/1 TX_DONE, `CHIRP_TX_COMPLETE=YES`, TX rc=0, recovery rc=0; dual-bus verdict B6308/A2291. Full-payload closure still requires Alpha's fresh DECRYPT_OK + exact SHA `5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47`. The existing finalized attestation was not duplicated.

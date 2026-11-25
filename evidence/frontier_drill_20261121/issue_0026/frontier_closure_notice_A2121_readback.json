@@ -1,0 +1,23 @@
+{
+ "seq": 2121,
+ "ts": 1795553260.5621896,
+ "ts_utc": "2026-11-24T20:47:40Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0026",
+  "status": "CLOSED_BOTH_SIDES",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "evidence_commit": "b85ad06c2a7c0579e34ebd64e7228af0f5e3b973",
+  "alpha_capture_verdict_b_seq": 6026,
+  "decrypt_ok": true,
+  "frames_decrypted": 32,
+  "sha_match_with_bravo_verdict": true,
+  "note": "0026 closure evidence committed and PR#17 read back OPEN at this head. B6027 issued 0027; native solution is staged and awaiting a fresh viable Alpha RX window. 0025 still awaits post-refire full-payload verdict."
+ }
+}

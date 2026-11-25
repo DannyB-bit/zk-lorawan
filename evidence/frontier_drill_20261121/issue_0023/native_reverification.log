@@ -1,0 +1,30 @@
+ITERATION=1
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+FRONTIER_GH_0023_PASS=YES legacy_uaf=REPRODUCED fixed_uaf=REJECTED
+ITERATION=2
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+FRONTIER_GH_0023_PASS=YES legacy_uaf=REPRODUCED fixed_uaf=REJECTED
+ITERATION=3
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+FRONTIER_GH_0023_PASS=YES legacy_uaf=REPRODUCED fixed_uaf=REJECTED
+ITERATION=4
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+FRONTIER_GH_0023_PASS=YES legacy_uaf=REPRODUCED fixed_uaf=REJECTED
+ITERATION=5
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+FRONTIER_GH_0023_PASS=YES legacy_uaf=REPRODUCED fixed_uaf=REJECTED

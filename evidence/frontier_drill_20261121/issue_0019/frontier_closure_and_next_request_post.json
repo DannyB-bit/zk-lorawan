@@ -1,0 +1,65 @@
+{
+ "closure": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0019",
+  "status": "ISSUE_0019_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5756,
+  "alpha_frames_decrypted": 44,
+  "alpha_sha_match": true,
+  "payload_sha256": "788dfe8b0bc9e1e8eb0a0db93a30af7320929887346c83ecc7c151f5d70a3432",
+  "onchain_signature": "2oM9dSfnNhYzQvkXw7H8pXJt1YL4PRMee8Xi54Q65iNbQKPMch5nyZdDGVQzcsaiV1z42Py1SxF8JZ8f6C68VoiM",
+  "onchain_slot": 525728920,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "14e1802ee842108d49ab9df65197307ea7edab64",
+  "fresh_clone_closure_verified": true,
+  "note": "Alpha B5756 confirms 44 frames DECRYPT_OK and exact solution SHA. Bravo RF fire and devnet PDA readback are complete. Issue 0019 is closed both sides."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "closed_issue_id": "FRONTIER-GH-0019",
+  "requested_issue_number": 20,
+  "requested_issue_id": "FRONTIER-GH-0020",
+  "scoreboard": {
+   "closed_both_sides": 19,
+   "onchain_attests_finalized": 19
+  },
+  "note": "Issue 0019 closure gates passed: Alpha B5756 DECRYPT_OK 44 frames exact SHA + Bravo devnet attestation finalized all checks. FRONTIER-GH-0020 declaration B5757 received; Bravo is capturing and solving it now."
+ },
+ "post": {
+  "frontier_evidence_notice": {
+   "B": {
+    "ok": true,
+    "seq": 5762,
+    "rtt_ms": 13.45
+   },
+   "A": {
+    "ok": true,
+    "seq": 1956,
+    "rtt_ms": 24.145
+   }
+  },
+  "frontier_next_issue_request": {
+   "B": {
+    "ok": true,
+    "seq": 5763,
+    "rtt_ms": 13.582
+   },
+   "A": {
+    "ok": true,
+    "seq": 1957,
+    "rtt_ms": 16.015
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}

@@ -1,0 +1,27 @@
+{
+ "seq": 2153,
+ "ts": 1795559044.4093704,
+ "ts_utc": "2026-11-24T22:24:04Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0028",
+  "status": "CLOSED_BOTH_SIDES",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "evidence_commit": "da383adb48920c73752e941107f73164dec0acb0",
+  "alpha_capture_verdict_b_seq": 6076,
+  "decrypt_ok": true,
+  "frames_decrypted": 38,
+  "sha_match_with_bravo_verdict": true,
+  "next_issue_request": {
+   "B": 6078,
+   "A": 2142
+  },
+  "note": "0028 closure evidence committed and PR#17 read back OPEN at this head. B6077 issue 0029 captured/decrypted SHA-exact and native ABA solution is staged for RF. 0025 still awaits post-refire full-payload verdict."
+ }
+}

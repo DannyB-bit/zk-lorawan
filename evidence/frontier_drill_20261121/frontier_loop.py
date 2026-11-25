@@ -32,7 +32,7 @@ for d in (LOGS, FRAMES, ISSUES, SOLS):
 BRAVO_PUB = "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118"
 ALPHA_PUB = "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942"
 ALPHA_SK = Path("/home/researcher-alpha/.config/solana/chirp245_alpha_sk.key").read_text().strip()
-BUS = "http://192.168.1.220:8643"
+BUS = "http://REDACTED-LAN-BRAVO:8643"
 TOKEN = os.environ["FLEET_FAST_TOKEN"]
 TARGET = 1000         # Dan's order 2026-11-24: the FULL 1000-problem benchmark (was 100)
 DRILL = "frontier_drill_20261121"

@@ -1,0 +1,116 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0031",
+  "ok": true,
+  "alpha_declare": {
+   "b_bus_seq": 6156
+  },
+  "capture": {
+   "observations_245b": 13,
+   "crc_ok_target_observations": 12,
+   "unique_crc_ok_target_frames": 12,
+   "rejected_245b": 1,
+   "rf": "903.9MHz SF9 BW125, status 0x10"
+  },
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2033,
+   "file_sha256": "09aa2088bbfcf0393d786f1027e8b843445f687a05c50e4c56ab1cbeef520a1a",
+   "sha_match": true
+  },
+  "note": "All 12 declared issue frames captured CRC-OK from the real standby HAL log at 903.9MHz SF9/BW125, decrypted under bravo_sk, reassembled SHA exact-match. Solving the head_mutex + atomic tstate lifetime invariant natively on aarch64 next.",
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0031"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6158,
+   "rtt_ms": 14.146
+  },
+  "A": {
+   "ok": true,
+   "seq": 2195,
+   "rtt_ms": 38.452
+  }
+ },
+ "dual_bus_readback_verified": true,
+ "readback": {
+  "B": {
+   "seq": 6158,
+   "ts": 1795568204.8803349,
+   "ts_utc": "2026-11-25T00:56:44Z",
+   "type": "frontier_issue_verdict",
+   "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_issue_verdict",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0031",
+    "ok": true,
+    "alpha_declare": {
+     "b_bus_seq": 6156
+    },
+    "capture": {
+     "observations_245b": 13,
+     "crc_ok_target_observations": 12,
+     "unique_crc_ok_target_frames": 12,
+     "rejected_245b": 1,
+     "rf": "903.9MHz SF9 BW125, status 0x10"
+    },
+    "issue": {
+     "declared_frames": 12,
+     "unique_crc_ok_frames": 12,
+     "decrypt_ok": 12,
+     "file_bytes": 2033,
+     "file_sha256": "09aa2088bbfcf0393d786f1027e8b843445f687a05c50e4c56ab1cbeef520a1a",
+     "sha_match": true
+    },
+    "note": "All 12 declared issue frames captured CRC-OK from the real standby HAL log at 903.9MHz SF9/BW125, decrypted under bravo_sk, reassembled SHA exact-match. Solving the head_mutex + atomic tstate lifetime invariant natively on aarch64 next.",
+    "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+    "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0031"
+   }
+  },
+  "A": {
+   "seq": 2195,
+   "ts": 1795568204.924976,
+   "ts_utc": "2026-11-25T00:56:44Z",
+   "type": "frontier_issue_verdict",
+   "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_issue_verdict",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0031",
+    "ok": true,
+    "alpha_declare": {
+     "b_bus_seq": 6156
+    },
+    "capture": {
+     "observations_245b": 13,
+     "crc_ok_target_observations": 12,
+     "unique_crc_ok_target_frames": 12,
+     "rejected_245b": 1,
+     "rf": "903.9MHz SF9 BW125, status 0x10"
+    },
+    "issue": {
+     "declared_frames": 12,
+     "unique_crc_ok_frames": 12,
+     "decrypt_ok": 12,
+     "file_bytes": 2033,
+     "file_sha256": "09aa2088bbfcf0393d786f1027e8b843445f687a05c50e4c56ab1cbeef520a1a",
+     "sha_match": true
+    },
+    "note": "All 12 declared issue frames captured CRC-OK from the real standby HAL log at 903.9MHz SF9/BW125, decrypted under bravo_sk, reassembled SHA exact-match. Solving the head_mutex + atomic tstate lifetime invariant natively on aarch64 next.",
+    "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+    "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0031"
+   }
+  }
+ }
+}

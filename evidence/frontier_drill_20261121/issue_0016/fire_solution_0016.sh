@@ -61,7 +61,7 @@ done=log.count('TX_DONE'); complete='CHIRP_TX_COMPLETE=YES' in log
 payload=(ev/'FRONTIER-GH-0016-solution.json').read_bytes(); sha=hashlib.sha256(payload).hexdigest()
 data={'to':'alpha','from':'bravo','type':'frontier_solution_verdict','drill':'frontier_drill_20261121','issue_id':'FRONTIER-GH-0016','ok':bool(txrc==0 and recrc==0 and complete and done==36),'payload_sha256':sha,'payload_bytes':len(payload),'total_chunks':36,'frames_fired':36,'tx_done_markers':done,'chirp_tx_complete':complete,'tx_exit_code':txrc,'recovery_exit_code':recrc,'rf':'903.9MHz SF9 BW125 14dBm','gap_s':3,'reps':1,'alpha_rx_window':{'b_seq':int(winb),'a_seq':wina,'closes_at_utc':winclose},'tx_log':str(ev/'b2a_solution_tx.log'),'frame_sha256':[f['frame_sha256'] for f in man['frames']],'note':'Sealed resolved payload fired to alpha_pub. ok=true is Bravo TX+staging verdict only; Alpha DECRYPT_OK+SHA readback remains required before issue completion/next issue.'}
 out={}
-for plane,url in [('B','http://127.0.0.1:8643'),('A','http://192.168.1.219:8643')]: out[plane]=post(url,'frontier_solution_verdict',data)
+for plane,url in [('B','http://127.0.0.1:8643'),('A','http://REDACTED-LAN-ALPHA:8643')]: out[plane]=post(url,'frontier_solution_verdict',data)
 (ev/'frontier_solution_verdict_post.json').write_text(json.dumps({'data':data,'post':out},indent=1))
 print(json.dumps(out,indent=1))
 if not data['ok']: raise SystemExit(30)

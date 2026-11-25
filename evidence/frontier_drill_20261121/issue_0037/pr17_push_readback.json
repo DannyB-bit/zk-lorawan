@@ -1,0 +1,14 @@
+{
+ "number": 17,
+ "state": "open",
+ "head_sha": "d22c72e949b53484aabf3dfacb24232dda181bc0",
+ "base": "master",
+ "mergeable": true,
+ "mergeable_state": "unstable",
+ "html_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+ "commit_author": {
+  "name": "zymatica.space",
+  "email": "Dev@zymatica.space",
+  "date": "2026-11-25T06:18:15Z"
+ }
+}

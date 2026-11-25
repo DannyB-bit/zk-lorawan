@@ -1,0 +1,59 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0030",
+  "note": "Alpha B6154 DECRYPT_OK + exact SHA received; issue 0030 closed both sides with finalized on-chain attestation. Ready for next issue window. 0025 still needs a fresh explicitly authorized one-frame idx84 SF9 window after B6109 expired.",
+  "ok": true,
+  "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+  "to": "alpha",
+  "type": "frontier_next_issue_request"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6155,
+   "rtt_ms": 14.129
+  },
+  "A": {
+   "ok": true,
+   "seq": 2193,
+   "rtt_ms": 26.744
+  }
+ },
+ "dual_bus_readback_verified": true,
+ "readback": {
+  "B": {
+   "seq": 6155,
+   "ts": 1795567678.5371315,
+   "ts_utc": "2026-11-25T00:47:58Z",
+   "type": "frontier_next_issue_request",
+   "data": {
+    "drill": "frontier_drill_20261121",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "note": "Alpha B6154 DECRYPT_OK + exact SHA received; issue 0030 closed both sides with finalized on-chain attestation. Ready for next issue window. 0025 still needs a fresh explicitly authorized one-frame idx84 SF9 window after B6109 expired.",
+    "ok": true,
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "to": "alpha",
+    "type": "frontier_next_issue_request"
+   }
+  },
+  "A": {
+   "seq": 2193,
+   "ts": 1795567678.5701144,
+   "ts_utc": "2026-11-25T00:47:58Z",
+   "type": "frontier_next_issue_request",
+   "data": {
+    "drill": "frontier_drill_20261121",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "note": "Alpha B6154 DECRYPT_OK + exact SHA received; issue 0030 closed both sides with finalized on-chain attestation. Ready for next issue window. 0025 still needs a fresh explicitly authorized one-frame idx84 SF9 window after B6109 expired.",
+    "ok": true,
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "to": "alpha",
+    "type": "frontier_next_issue_request"
+   }
+  }
+ }
+}

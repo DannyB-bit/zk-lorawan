@@ -1,0 +1,2 @@
+FIXED_LIFETIME_STRESS=PASS iterations=1000 final_refs=0 uaf=0
+UBSAN_RC=0

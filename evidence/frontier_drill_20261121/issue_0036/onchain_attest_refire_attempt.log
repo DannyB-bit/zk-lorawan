@@ -1,0 +1,10 @@
+[0036] solution 10258B sha 52af03b9d5774293… — sending register_coordinates …
+Traceback (most recent call last):
+  File "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/attest_issue.py", line 114, in <module>
+    results = {i: attest(i) for i in issues}
+                  ~~~~~~^^^
+  File "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/attest_issue.py", line 48, in attest
+    out = canon.attest_chirp_on_solana(payload, KEYFILE)
+  File "/home/researcher-bravo/fleet-repos/solana-cuneiform-milestone1/tools/chirp245.py", line 247, in attest_chirp_on_solana
+    raise RuntimeError(sig["error"])
+RuntimeError: {'code': -32002, 'message': 'Transaction simulation failed: Error processing Instruction 0: custom program error: 0x0', 'data': {'accounts': None, 'err': {'InstructionError': [0, {'Custom': 0}]}, 'fee': 5000, 'innerInstructions': None, 'loadedAccountsDataSize': 234086, 'loadedAddresses': None, 'logs': ['Program 2is5Q4rPBpZa2RUCXP7FFdHJUYSVNcW5iTxNuf5mSccy invoke [1]', 'Program log: Instruction: RegisterCoordinates', 'Program 11111111111111111111111111111111 invoke [2]', 'Allocate: account Address { address: Cew6i223LMWPCyYYHFq7sBumL5mj61cwNXqcuU32SgiY, base: None } already in use', 'Program 11111111111111111111111111111111 failed: custom program error: 0x0', 'Program 2is5Q4rPBpZa2RUCXP7FFdHJUYSVNcW5iTxNuf5mSccy consumed 5719 of 200000 compute units', 'Program 2is5Q4rPBpZa2RUCXP7FFdHJUYSVNcW5iTxNuf5mSccy failed: custom program error: 0x0'], 'postBalances': None, 'postTokenBalances': None, 'preBalances': None, 'preTokenBalances': None, 'replacementBlockhash': None, 'returnData': None, 'unitsConsumed': 5719}}

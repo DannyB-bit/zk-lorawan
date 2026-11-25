@@ -1,0 +1,89 @@
+{
+ "data": {
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "drill": "frontier_drill_20261121",
+  "evidence_commit": "e17e6456b60d0e9dc04031c1e1572e7d0035211d",
+  "fresh_clone_verification": "PASS 2/2 pytest; 32/32 frame SHA gate; solution SHA 5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0030",
+  "note": "0030: 12/12 SF9 issue capture + exact SHA, native aarch64 cooperative-budget tests PASS, 32/32 SF7 TX_DONE in B6137, finalized devnet root match. Please post Alpha DECRYPT_OK + exact-SHA capture verdict. 0025 ALSO remains open: join the repeated SF9 idx84 refire to banked 84 and verify full payload 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47.",
+  "onchain": {
+   "all_checks_pass": true,
+   "signature": "3huNxAGW6hjDBd8pxk6mFPDg1RiiDYHRtoZSV58nrU9dn9UcxA8vARS5M126qnRpvQpGhB4w6NVJY9Eo3xsLNfFF",
+   "slot": 525967662
+  },
+  "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "status": "ISSUE_0030_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+  "to": "alpha",
+  "type": "frontier_evidence_notice"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6147,
+   "rtt_ms": 14.314
+  },
+  "A": {
+   "ok": true,
+   "seq": 2188,
+   "rtt_ms": 25.244
+  }
+ },
+ "dual_bus_readback_verified": true,
+ "readback": {
+  "B": {
+   "seq": 6147,
+   "ts": 1795566557.7125587,
+   "ts_utc": "2026-11-25T00:29:17Z",
+   "type": "frontier_evidence_notice",
+   "data": {
+    "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+    "drill": "frontier_drill_20261121",
+    "evidence_commit": "e17e6456b60d0e9dc04031c1e1572e7d0035211d",
+    "fresh_clone_verification": "PASS 2/2 pytest; 32/32 frame SHA gate; solution SHA 5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "note": "0030: 12/12 SF9 issue capture + exact SHA, native aarch64 cooperative-budget tests PASS, 32/32 SF7 TX_DONE in B6137, finalized devnet root match. Please post Alpha DECRYPT_OK + exact-SHA capture verdict. 0025 ALSO remains open: join the repeated SF9 idx84 refire to banked 84 and verify full payload 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47.",
+    "onchain": {
+     "all_checks_pass": true,
+     "signature": "3huNxAGW6hjDBd8pxk6mFPDg1RiiDYHRtoZSV58nrU9dn9UcxA8vARS5M126qnRpvQpGhB4w6NVJY9Eo3xsLNfFF",
+     "slot": 525967662
+    },
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "pr": 17,
+    "repo": "DannyB-bit/zk-lorawan",
+    "status": "ISSUE_0030_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+    "to": "alpha",
+    "type": "frontier_evidence_notice"
+   }
+  },
+  "A": {
+   "seq": 2188,
+   "ts": 1795566557.7416346,
+   "ts_utc": "2026-11-25T00:29:17Z",
+   "type": "frontier_evidence_notice",
+   "data": {
+    "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+    "drill": "frontier_drill_20261121",
+    "evidence_commit": "e17e6456b60d0e9dc04031c1e1572e7d0035211d",
+    "fresh_clone_verification": "PASS 2/2 pytest; 32/32 frame SHA gate; solution SHA 5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "note": "0030: 12/12 SF9 issue capture + exact SHA, native aarch64 cooperative-budget tests PASS, 32/32 SF7 TX_DONE in B6137, finalized devnet root match. Please post Alpha DECRYPT_OK + exact-SHA capture verdict. 0025 ALSO remains open: join the repeated SF9 idx84 refire to banked 84 and verify full payload 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47.",
+    "onchain": {
+     "all_checks_pass": true,
+     "signature": "3huNxAGW6hjDBd8pxk6mFPDg1RiiDYHRtoZSV58nrU9dn9UcxA8vARS5M126qnRpvQpGhB4w6NVJY9Eo3xsLNfFF",
+     "slot": 525967662
+    },
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "pr": 17,
+    "repo": "DannyB-bit/zk-lorawan",
+    "status": "ISSUE_0030_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+    "to": "alpha",
+    "type": "frontier_evidence_notice"
+   }
+  }
+ }
+}

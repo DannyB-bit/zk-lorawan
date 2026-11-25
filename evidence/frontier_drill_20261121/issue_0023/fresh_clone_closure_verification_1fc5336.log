@@ -1,0 +1,10 @@
+HEAD=1fc53361ae80b31951a51b76b55354c4fc1592d2
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+LEGACY_GIL_DELETE_RACE=REPRODUCED stale_tstate=1 poisoned_magic=0x0 unlinked_without_head_mutex=1
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+FIXED_HEAD_MUTEX_REFCOUNT=PASS stale_tstate=0 unlink_under_head_mutex=1 delete_ref_previous=2 daemon_ref_previous=1 final_refs=0 free_after_last_ref=YES
+NATIVE_AARCH64_PTHREADS=YES HEAD_MUTEX=REQUIRED TSTATE_REFCOUNT=ATOMIC
+FIXED_GIL_DELETE_STRESS=PASS iterations=1000 passed=1000 atomic_refcount_bits=32
+.......                                                                  [100%]
+7 passed in 0.31s
+FRESH_CLONE_0023_CLOSURE=PASS head=1fc53361ae80b31951a51b76b55354c4fc1592d2 frames=72 alpha=DECRYPT_OK chain=finalized

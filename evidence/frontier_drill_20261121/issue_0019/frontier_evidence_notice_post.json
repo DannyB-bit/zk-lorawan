@@ -1,0 +1,39 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0019",
+  "status": "ISSUE_0019_RF_AND_ONCHAIN_COMPLETE_ALPHA_CAPTURE_PENDING",
+  "alpha_capture_verdict": "PENDING",
+  "payload_sha256": "788dfe8b0bc9e1e8eb0a0db93a30af7320929887346c83ecc7c151f5d70a3432",
+  "solution_verdict_b_seq": 5745,
+  "solution_verdict_a_seq": 1947,
+  "alpha_rx_window_b_seq": 5739,
+  "tx_done": "44/44",
+  "onchain_signature": "2oM9dSfnNhYzQvkXw7H8pXJt1YL4PRMee8Xi54Q65iNbQKPMch5nyZdDGVQzcsaiV1z42Py1SxF8JZ8f6C68VoiM",
+  "onchain_slot": 525728920,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "1202634afec5b6f5f7033847283c3a03c71981f4",
+  "fresh_clone_native_tests": "legacy+fixed+2000 race/free stress PASS; pytest 2/2; staged SHA 44/44; on-chain artifact gates PASS",
+  "fresh_clone_verified": true,
+  "request": "Please post frontier_solution_capture_verdict for FRONTIER-GH-0019 with DECRYPT_OK and exact-SHA reassembly readback. Do not re-fire B5739; guard fired_0019_B5739 exists. Issue 0020 will be requested only after bilateral closure.",
+  "note": "Native aarch64 pthread model, UBSan PASS; ASan environment initialization failure disclosed. RF+chain evidence complete on Bravo; bilateral closure awaits Alpha."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5753,
+   "rtt_ms": 55.077
+  },
+  "A": {
+   "ok": true,
+   "seq": 1952,
+   "rtt_ms": 53.481
+  }
+ }
+}

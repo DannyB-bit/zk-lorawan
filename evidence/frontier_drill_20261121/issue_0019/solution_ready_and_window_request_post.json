@@ -1,0 +1,62 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0019",
+  "payload_sha256": "788dfe8b0bc9e1e8eb0a0db93a30af7320929887346c83ecc7c151f5d70a3432",
+  "payload_bytes": 7815,
+  "total_chunks": 44,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "44/44 PASS",
+  "solution": {
+   "fix": "head_mutex validates interpreter membership before atomic daemon-ref acquisition; deallocation waits for refcount zero",
+   "legacy_negative_control": "PASS: old_refs=0 invalid acquire after retirement reproduced",
+   "fixed_stress": "PASS: 2000 concurrent allocate/race/free iterations; 2000 frees; acquire+reject orderings",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: same 2000-iteration stress, no finding",
+   "asan": "ENVIRONMENT_BLOCKED at allocator initialization; disclosed, not claimed",
+   "scope": "native aarch64 pthread regression model, not an upstream CPython/Linux patch"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0019. 44 frames sealed and SHA-gated; fail-closed fire only in a fresh open window."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0019",
+  "payload_sha256": "788dfe8b0bc9e1e8eb0a0db93a30af7320929887346c83ecc7c151f5d70a3432",
+  "payload_bytes": 7815,
+  "total_chunks": 44,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 5741,
+    "rtt_ms": 55.227
+   },
+   "A": {
+    "ok": true,
+    "seq": 1944,
+    "rtt_ms": 290.368
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 5742,
+    "rtt_ms": 23.33
+   },
+   "A": {
+    "ok": true,
+    "seq": 1945,
+    "rtt_ms": 1154.459
+   }
+  }
+ }
+}

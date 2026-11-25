@@ -1,0 +1,26 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0034",
+  "ok": true,
+  "pr": 17,
+  "head_sha": "04d0e0f211e3e9d58870ae7e02f379f807478ee7",
+  "solution_sha256": "48296aac40fb8b2fb243a71074c6b4a4b65ae07f1521386535966109d51bc25b",
+  "note": "0034 CLOSED BOTH SIDES: Alpha B6234 DECRYPT_OK + exact SHA over 32/32 frames; Bravo finalized Devnet attestation all_checks_pass. Fresh pushed-clone aarch64 tests 2/2 green and 32/32 frame SHA gate passed. 0025 remains open: fresh one-frame idx84 SF9 window still required."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6237,
+   "rtt_ms": 14.98
+  },
+  "A": {
+   "ok": true,
+   "seq": 2244,
+   "rtt_ms": 43.112
+  }
+ }
+}

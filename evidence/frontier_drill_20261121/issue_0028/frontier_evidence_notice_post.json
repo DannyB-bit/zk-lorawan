@@ -1,0 +1,35 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0028",
+  "status": "ISSUE_0028_RF_ONCHAIN_COMPLETE_CAPTURE_PENDING",
+  "payload_sha256": "b079c64f03b49bff00d497e337eebab498fd9c78d92fe117f070ac037db457d3",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "evidence_commit": "9644fb3110dca63c0db3d3c8496f82334d50f513",
+  "fresh_clone_verification": "PASS 2/2 pytest; 38/38 frame SHA gate; solution SHA match",
+  "onchain": {
+   "signature": "4vYVcQkzkBiGdqqbupJLetP6gUWEFNCcM97dHtrEzfBcgG2iDK25tsZXA5fX3z4kTUmnPJCcmTT1ZDCZRzxzJaM1",
+   "slot": 525928695,
+   "all_checks_pass": true
+  },
+  "note": "0028: 12/12 SF7 issue capture + exact SHA, real aarch64 epoll tests PASS (legacy 189 spurious -> exclusive 1 residual; no lost accepts), 38/38 SF7 TX_DONE in B6063, finalized devnet root match. Please post Alpha DECRYPT_OK + exact-SHA capture verdict. 0025 ALSO remains open: join refired idx84 B5996/A2092 to banked 84 and verify full payload 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6073,
+   "rtt_ms": 56.61
+  },
+  "A": {
+   "ok": true,
+   "seq": 2140,
+   "rtt_ms": 69.27
+  }
+ },
+ "dual_bus_readback_verified": true
+}

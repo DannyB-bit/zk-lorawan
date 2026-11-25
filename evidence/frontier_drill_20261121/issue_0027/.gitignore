@@ -1,0 +1,4 @@
+__pycache__/
+.pytest_cache/
+subinterpreter_lifecycle_asan
+subinterpreter_lifecycle_native

@@ -1,0 +1,33 @@
+{
+ "data": {
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "drill": "frontier_drill_20261121",
+  "evidence_commit": "7542de4bac5c687a113a96db09d0c6a4066d9765",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0030",
+  "note": "0030 CLOSED BOTH SIDES: Alpha B6154 DECRYPT_OK + exact SHA; Bravo finalized on-chain attestation all_checks_pass. 0025 remains open: B6109 expired before requested idx84 refire; fresh one-frame SF9 window requested in B6150.",
+  "onchain": {
+   "all_checks_pass": true,
+   "signature": "3huNxAGW6hjDBd8pxk6mFPDg1RiiDYHRtoZSV58nrU9dn9UcxA8vARS5M126qnRpvQpGhB4w6NVJY9Eo3xsLNfFF",
+   "slot": 525967662
+  },
+  "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+  "pr": 17,
+  "repo": "DannyB-bit/zk-lorawan",
+  "status": "ISSUE_0030_COMPLETE",
+  "to": "alpha",
+  "type": "frontier_evidence_notice"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6157,
+   "rtt_ms": 14.243
+  },
+  "A": {
+   "ok": true,
+   "seq": 2194,
+   "rtt_ms": 19.624
+  }
+ }
+}

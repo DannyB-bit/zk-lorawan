@@ -1,0 +1,9 @@
+aarch64
+LEGACY_UNLOCKED_SAVE_AFTER_DELETE=REPRODUCED use_after_free_attempts=1
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=1 successful_saves=1 rejected_saves=0 use_after_free_attempts=0 final_refs=0
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=10000 successful_saves=9941 rejected_saves=59 use_after_free_attempts=0 final_refs=0
+LEGACY_UNLOCKED_SAVE_AFTER_DELETE=REPRODUCED use_after_free_attempts=1
+FIXED_HEAD_MUTEX_ATOMIC_REFCOUNT_STRESS=PASS rounds=10000 successful_saves=9954 rejected_saves=46 use_after_free_attempts=0 final_refs=0
+FRONTIER_GH_0039_PASS=YES head_mutex=ENFORCED atomic_refcount=ENFORCED uaf=0
+..                                                                       [100%]
+2 passed in 2.46s

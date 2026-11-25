@@ -1,0 +1,1 @@
+{"ok": true, "issue_id": "FRONTIER-GH-0037", "unique_crc_ok_target_frames": 12, "decrypt_ok": 12, "payload_bytes": 2020, "payload_sha256": "029babf33d052de70d0146e115c96163c80642caa7b588a61d2637edfa7e8276", "sha_match": true}

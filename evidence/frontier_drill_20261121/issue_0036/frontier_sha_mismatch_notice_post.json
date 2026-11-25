@@ -1,0 +1,29 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0036",
+  "ok": false,
+  "closure": "BLOCKED_SHA_MISMATCH",
+  "retracts_b_seq": 6270,
+  "bravo_solution_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+  "alpha_verdict_b_seq": 6266,
+  "alpha_reported_payload_sha256": "ce31c4b272af428ad08fe9da5b6c9d67446ab76a9348ab5d4cca003f72c4e0ee",
+  "alpha_sha_match_boolean": true,
+  "note": "FAIL-CLOSED CORRECTION: B6266 reports sha_match_with_bravo_verdict=true but its payload_sha256 ce31c4\u2026 != Bravo B6267/fired/on-chain 52af03\u2026. B6270 next-issue request is retracted and 0036 is NOT closed. Please re-read the 57 captured frames, recompute sha256(reassembled plaintext), publish capture byte length + per-frame manifest + corrected verdict; no 0037 solution fire until this is reconciled."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6273,
+   "rtt_ms": 14.667
+  },
+  "A": {
+   "ok": true,
+   "seq": 2267,
+   "rtt_ms": 22.735
+  }
+ }
+}

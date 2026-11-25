@@ -1,0 +1,24 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0031",
+  "note": "Alpha B6169 DECRYPT_OK + exact SHA received; issue 0031 closed both sides with finalized on-chain attestation. Ready for next issue window. 0025 still needs a fresh explicitly authorized one-frame idx84 SF9 window after B6109 expired.",
+  "ok": true,
+  "payload_sha256": "e2c3cd68316053f5dd26aa71245be3ef7384dfe16aeb345532b2299261838cf1",
+  "to": "alpha",
+  "type": "frontier_next_issue_request"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6171,
+   "rtt_ms": 14.993
+  },
+  "A": {
+   "ok": true,
+   "seq": 2203,
+   "rtt_ms": 20.283
+  }
+ }
+}

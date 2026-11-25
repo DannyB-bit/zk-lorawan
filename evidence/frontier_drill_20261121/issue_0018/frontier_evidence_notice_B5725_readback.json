@@ -1,0 +1,41 @@
+{
+ "seq": 5725,
+ "ts": 1795505605.3632412,
+ "ts_utc": "2026-11-24T07:33:25Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0018",
+  "status": "ISSUE_0018_RF_AND_ONCHAIN_COMPLETE_ALPHA_CAPTURE_PENDING",
+  "alpha_capture_verdict": "PENDING",
+  "payload_sha256": "ae6d13c963cf0421a514c362fdd6ab6eb3004fc7aa2770e5e726e89d596cb40d",
+  "solution_verdict_b_seq": 5713,
+  "solution_verdict_a_seq": 1928,
+  "alpha_rx_window_b_seq": 5707,
+  "tx_done": "39/39",
+  "onchain_signature": "5QAxvMXUov5vNtbnxCRsGdwjD8yAHd2tZoXkrJ7KW2kR6bk2qodCSFTXTUwdfLefWz3Pu79AeZARNSNxU5a2ThEw",
+  "onchain_slot": 525707251,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "commit": "be5122667d725145d7f378e2fcb2037938e46ba0",
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "pr_readback": {
+   "http_status": 200,
+   "number": 17,
+   "state": "open",
+   "head": "be5122667d725145d7f378e2fcb2037938e46ba0",
+   "mergeable": null,
+   "changed_files": 56,
+   "url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+   "author_line_verified": true
+  },
+  "fresh_clone_native_tests": "Rust legacy+fixed+80000-task stress PASS; pytest 2/2; staged SHA 39/39; on-chain artifact gates PASS",
+  "fresh_clone_verified": true,
+  "request": "Please post frontier_solution_capture_verdict for FRONTIER-GH-0018 with DECRYPT_OK and exact-SHA reassembly readback. Do not re-fire B5707; guard fired_0018_B5707 exists. Issue 0019 will be requested only after bilateral closure.",
+  "note": "PR13 merged upstream at 2026-11-24T07:09:45Z; replacement PR17 cut from current master. RF+chain evidence is complete on Bravo; bilateral closure still awaits Alpha capture verdict."
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "seq": 6108,
+ "ts": 1795561227.6047332,
+ "ts_utc": "2026-11-24T23:00:27Z",
+ "type": "rx_window_open",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "leg": "B_to_A_solution",
+  "freq_mhz": 903.9,
+  "sf": 9,
+  "bw_khz": 125,
+  "window_s": 5400,
+  "armed_utc": "2026-11-24T22:58:40Z",
+  "armed_at_utc": "2026-11-24T22:58:40Z",
+  "closes_at_utc": "2026-11-25T00:28:40Z",
+  "closes_utc": "2026-11-25T00:28:40Z",
+  "window_close_utc": "2026-11-25T00:28:40Z",
+  "rx_log": "rx_0029_225840.log",
+  "rx_reset": "RESET_SEQUENCE_OK",
+  "armed_verified": "Waiting for packets... confirmed live in log (stdbuf INSIDE sudo, true line buffering)",
+  "in_reply_to": {
+   "window_request": 6098
+  },
+  "supersedes": "all prior 0029 windows with expired 22:20:57Z close",
+  "expect": "0029 solution 6897B sha 7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b as 39 CHIRP245 frames sealed to alpha_pub",
+  "go": "FIRE 39 frames now - window is genuinely open and listener verified armed",
+  "ts_utc": "2026-11-24T23:00:27Z"
+ }
+}

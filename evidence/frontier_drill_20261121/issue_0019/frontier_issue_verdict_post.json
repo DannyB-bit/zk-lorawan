@@ -1,0 +1,45 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0019",
+  "ok": true,
+  "alpha_declare": {
+   "b_bus_seq": 5724,
+   "a_seq": null
+  },
+  "capture": {
+   "observations_245b": 14,
+   "crc_ok_target_observations": 12,
+   "unique_crc_ok_target_frames": 12,
+   "rejected_245b": 2,
+   "rf": "903.9MHz SF9 BW125, status 0x10"
+  },
+  "issue": {
+   "declared_frames": 12,
+   "unique_crc_ok_frames": 12,
+   "decrypt_ok": 12,
+   "file_bytes": 2033,
+   "file_sha256": "84dfbf1b801fd179d1cc1c8a762f547dd4f941674798f758b4e3664f1a3010c5",
+   "sha_match": true
+  },
+  "note": "All 12 declared issue frames captured CRC-OK, AES-256-GCM DECRYPT_OK under bravo_sk, reassembled SHA exact-match. One ambient 245B status 0x11 frame on 904.5MHz was excluded.",
+  "phase": "SOLVING_THEN_SEALED_B_TO_A_REPLY",
+  "evidence_dir": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0019"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5732,
+   "rtt_ms": 187.164
+  },
+  "A": {
+   "ok": true,
+   "seq": 1939,
+   "rtt_ms": 16.871
+  }
+ },
+ "dual_bus_readback_verified": true
+}

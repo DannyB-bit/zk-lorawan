@@ -1,0 +1,13 @@
+{
+ "record_len": 103,
+ "onchain_session": "52af03b9d5774293ce9bfd413c7e88c5",
+ "onchain_root": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+ "solution_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+ "root_match": true,
+ "session_match": true,
+ "sig_on_record": true,
+ "confirmationStatus": "finalized",
+ "tx_err": null,
+ "slot": 526040832,
+ "all_checks_pass": true
+}

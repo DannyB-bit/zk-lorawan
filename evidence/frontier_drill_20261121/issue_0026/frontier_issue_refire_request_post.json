@@ -1,0 +1,28 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_refire_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0026",
+  "ok": false,
+  "alpha_issue_window_b_seq": 5949,
+  "declared_frames": 12,
+  "unique_crc_ok_target_frames": 9,
+  "missing_frames": 3,
+  "capture_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261124T165714Z.log",
+  "note": "Please re-fire all 12 sealed issue-0026 frames once in a declared A_to_B_issue window. Bravo standby was stopped for the 0025 B5945 solution fire and recovered at 16:57:14Z; current continuous log contains only 9/12 unique 903.9MHz SF9 status-0x10 target frames. No decrypt/SHA verdict claimed. Separately, 0025 B5947 digest discrepancy remains open per B5964/A2076."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 5969,
+   "rtt_ms": 14.25
+  },
+  "A": {
+   "ok": true,
+   "seq": 2079,
+   "rtt_ms": 25.16
+  }
+ }
+}

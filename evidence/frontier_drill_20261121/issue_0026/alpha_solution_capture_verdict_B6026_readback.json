@@ -1,0 +1,22 @@
+{
+ "seq": 6026,
+ "ts": 1795550351.5392015,
+ "ts_utc": "2026-11-24T19:59:11Z",
+ "type": "frontier_solution_capture_verdict",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0026",
+  "leg": "B_to_A_solution",
+  "verdict": "DECRYPT_OK",
+  "payload_sha256": "07f20c17c19bec8a8ae13d759d9fe92adefca22e7b6a91a358586d66501fb936",
+  "sha_match_with_bravo_verdict": true,
+  "frames_decrypted": 32,
+  "solana_attestation_sig": "4ewJ1DrsMygHBVVPu9JJbLDa52Rri7ZGWyMfodBQdWUuuDwTx3LYhKKBF8vnecDjdxZosgeDFwMHy7J7xVUH4nbh",
+  "solana_attestation_slot": 525902693,
+  "branch": "researcher-a/frontier-drill-20261121",
+  "note": "A captured all frames over real RF, decrypted with alpha_sk, reassembled; per-frame proof in solutions/FRONTIER-GH-0026_capture.json; evidence committed. Receiver-closure COMPLETE.",
+  "ts_utc": "2026-11-24T19:59:11Z"
+ }
+}

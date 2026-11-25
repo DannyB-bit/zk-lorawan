@@ -1,0 +1,29 @@
+{
+ "seq": 2059,
+ "ts": 1795537204.1952832,
+ "ts_utc": "2026-11-24T16:20:04Z",
+ "type": "frontier_solution_ready",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "payload_bytes": 15286,
+  "total_chunks": 85,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "85/85 PASS",
+  "solution": {
+   "fix": "aligned native 128-bit {pointer,uint64_epoch} head with LDAXP/STLXP acquire/release pair CAS; epoch increments on every pop/push",
+   "legacy_negative_control": "PASS: pointer-only suspended CAS reproduces ABA and installs stale B",
+   "fixed": "PASS: recycled A at epoch 3 rejects suspended epoch-0 CAS; retry follows A->C",
+   "stress": "100000/100000 tagged ABA schedules rejected; 5/5 repeated native runs PASS",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: full legacy+fixed+stress workload, no finding",
+   "disassembly": "PASS: LDAXP and STLXP present in executed aarch64 binary",
+   "scope": "native head-pointer ABA model using preallocated nodes; general safe memory reclamation is not claimed"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0025. 85 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime."
+ }
+}

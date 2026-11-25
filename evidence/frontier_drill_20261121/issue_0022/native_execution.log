@@ -1,0 +1,4 @@
+NATIVE_PTHREAD_WORKERS=4 NESTED_FUTURE_DEPTH=4 COOP_BUDGET_INITIAL=128 GLOBAL_FALLBACK_TICKS=64
+LEGACY_UNYIELDING_STARVATION=REPRODUCED local_ticks=16384 nested_polls=65536 global_completed=0 global_checks=0 budget=UNDECREMENTED
+FIXED_COOPERATIVE_SCHEDULER=PASS local_ticks=16384 nested_polls=65536 global_completed=256 global_checks=256 checksum=MATCH budget_bits=32 fallback_ticks=64
+FRONTIER_GH_0022_PASS=YES legacy_global_starved=YES fixed_global_drained=YES

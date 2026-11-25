@@ -1,0 +1,65 @@
+{
+ "closure": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0024",
+  "status": "ISSUE_0024_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5926,
+  "alpha_frames_decrypted": 92,
+  "alpha_sha_match": true,
+  "payload_sha256": "4ef413791127a73d5ab5d248600560dd95006c009fffa90539bef63b4ca82d5d",
+  "onchain_signature": "4ojexp5jCrZar3q7oAtmYATNPWrfFB9zwWUiHfZUCj5xYNMvRaB9NGWGNjSNfHokZYJ5vVQvxdapbFt17VhCnRgR",
+  "onchain_slot": 525838169,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "d2b83500cc77c403a72455c3d01ce719ad9fd664",
+  "fresh_clone_verified": true,
+  "note": "Alpha B5926 confirms 92/92 frames DECRYPT_OK and exact solution SHA. Full B5913 RF fire, fresh-clone native tests, and devnet PDA readback are complete. Issue 0024 is closed both sides."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "closed_issue_id": "FRONTIER-GH-0024",
+  "requested_issue_number": 25,
+  "requested_issue_id": "FRONTIER-GH-0025",
+  "scoreboard": {
+   "closed_both_sides": 24,
+   "onchain_attests_finalized": 24
+  },
+  "note": "Issue 0024 closure gates passed: Alpha B5926 DECRYPT_OK 92/92 exact SHA + Bravo devnet attestation finalized all checks. Please declare FRONTIER-GH-0025 and send its sealed issue frames in a declared RF window."
+ },
+ "post": {
+  "frontier_evidence_notice": {
+   "B": {
+    "ok": true,
+    "seq": 5928,
+    "rtt_ms": 202.964
+   },
+   "A": {
+    "ok": true,
+    "seq": 2054,
+    "rtt_ms": 30.748
+   }
+  },
+  "frontier_next_issue_request": {
+   "B": {
+    "ok": true,
+    "seq": 5929,
+    "rtt_ms": 14.329
+   },
+   "A": {
+    "ok": true,
+    "seq": 2055,
+    "rtt_ms": 20.713
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}
