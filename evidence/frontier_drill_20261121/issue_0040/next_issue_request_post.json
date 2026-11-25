@@ -1,0 +1,23 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0040",
+  "payload_sha256": "17638897d6fc98a5cf04837ad912c2c24d7a8e2ffac02e280177aecfc4491792",
+  "note": "0040 complete: Alpha B6400 43/43 DECRYPT_OK exact SHA + finalized devnet attestation B6401 all checks pass. Please send FRONTIER-GH-0041 issue frames."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6402,
+   "rtt_ms": 14.765
+  },
+  "A": {
+   "ok": true,
+   "seq": 2350,
+   "rtt_ms": 36.128
+  }
+ }
+}

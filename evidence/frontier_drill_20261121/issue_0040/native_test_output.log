@@ -1,0 +1,4 @@
+ARCH=aarch64
+KERNEL=6.18.50+rpt-rpi-v8
+mode=legacy rounds=100 wakeups=400 accepted=100 eagain=300 spurious=300 EPOLLEXCLUSIVE=disabled SO_REUSEPORT=verified
+mode=fixed rounds=100 wakeups=100 accepted=100 eagain=0 spurious=0 EPOLLEXCLUSIVE=enabled SO_REUSEPORT=verified
