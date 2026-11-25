@@ -1,0 +1,25 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0041",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "fe7bc2dfebdde63b4c56b13d4b06b52d0b80385bc767f1258aed3c99e87dc023",
+  "frames": 39,
+  "note": "Issue captured/decrypted 12/12 and native ABA epoch tests 2/2 green. First fire attempt aborted PRE-RF: transient local bus connection refused during fail-closed discovery; ZERO airtime and no guard. Remaining B6414 window is below computed airtime+recovery margin. Open a fresh 30-minute B_to_A_solution window; staged SHA gate passed 39/39."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6418,
+   "rtt_ms": 109.86
+  },
+  "A": {
+   "ok": true,
+   "seq": 2359,
+   "rtt_ms": 26.768
+  }
+ }
+}

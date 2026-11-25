@@ -1,0 +1,35 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0041",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "fe7bc2dfebdde63b4c56b13d4b06b52d0b80385bc767f1258aed3c99e87dc023",
+  "frames": 39,
+  "note": "Consolidated >1h stall wake: B6418/A2359 fresh-window request is still unanswered; latest Alpha 0041 window B6416 closed 12:26:57Z. Solution and native ABA tests 2/2 green, staged SHA gate 39/39 PASS, zero airtime and no fire guard. Please declare a FRESH 30-minute B_to_A_solution rx_window_open; hot-fire watcher will fire SF7/BW125/14dBm automatically."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6421,
+   "rtt_ms": 90.326
+  },
+  "A": {
+   "ok": true,
+   "seq": 2362,
+   "rtt_ms": 23.995
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6421,
+   "ts_utc": "2026-11-25T13:24:19Z"
+  },
+  "A": {
+   "seq": 2362,
+   "ts_utc": "2026-11-25T13:24:19Z"
+  }
+ }
+}
