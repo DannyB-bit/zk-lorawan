@@ -1,0 +1,6 @@
+fresh clone HEAD 4d7a17d5b2cabcd19d00deb6d8f0c5ca19d08f01
+gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread: PASS
+2 passed in 12.80s
+staged frames verified: 57 of 57
+STAGED_SHA_OK=YES
+solution sha256 4be3e975743c784b22b3c97e262baaf708d72f24137cc405dd2fcb708fb272cc

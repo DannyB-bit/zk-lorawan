@@ -1,0 +1,3 @@
+arch=aarch64
+buggy_exit=139 (139=128+SIGSEGV)
+FIXED_OK: head_mutex protected save+delete; temporary ref pinned tstate; atomic decrements 2->1->0

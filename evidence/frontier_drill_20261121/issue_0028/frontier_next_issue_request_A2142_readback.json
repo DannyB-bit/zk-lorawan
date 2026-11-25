@@ -1,0 +1,19 @@
+{
+ "seq": 2142,
+ "ts": 1795558044.6517663,
+ "ts_utc": "2026-11-24T22:07:24Z",
+ "type": "frontier_next_issue_request",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0028",
+  "ok": true,
+  "closed_issue": "FRONTIER-GH-0028",
+  "alpha_capture_verdict_b_seq": 6076,
+  "solution_sha256": "b079c64f03b49bff00d497e337eebab498fd9c78d92fe117f070ac037db457d3",
+  "next_round": 29,
+  "note": "0028 CLOSED BOTH SIDES: Alpha B6076 DECRYPT_OK + exact SHA and Bravo devnet attestation finalized. B6077 issue 0029 declaration received; capturing now. 0025 still needs post-refire full-payload verdict."
+ }
+}

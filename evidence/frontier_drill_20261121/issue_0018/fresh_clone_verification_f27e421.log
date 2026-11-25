@@ -1,0 +1,8 @@
+FRESH_CLONE_HEAD=f27e42135f3813c58cbc8c6bfcfc60c8d1bc24af
+LEGACY_STARVATION_REPRODUCED=YES local_polls=4096 global_completed=0 global_pending=1
+GLOBAL_FALLBACK_PASS=YES local_polls=64 global_completed=1 first_global_tick=64 global_checks=1 budget=128 fallback_interval=64
+FIXED_STRESS_PASS=YES producers=8 produced=80000 consumed=80000 checksum=3199960000 local_polls=5120000 global_checks=80000 max_ticks_between_global_checks=64 budget=128
+..                                                                       [100%]
+2 passed in 0.36s
+FRESH_CLONE_STAGED_SHA_PASS=39/39
+FRESH_CLONE_ONCHAIN_ARTIFACT_PASS=YES

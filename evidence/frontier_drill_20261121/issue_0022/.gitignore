@@ -1,0 +1,6 @@
+coop_scheduler_model
+coop_scheduler_model_ubsan
+.pytest_cache/
+__pycache__/
+*.pyc
+.fire_attempt.log

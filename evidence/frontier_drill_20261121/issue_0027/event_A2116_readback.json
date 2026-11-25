@@ -1,0 +1,27 @@
+{
+ "seq": 2116,
+ "ts": 1795552353.1664834,
+ "ts_utc": "2026-11-24T20:32:33Z",
+ "type": "frontier_solution_ready",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0027",
+  "payload_sha256": "54f77729bd128371e7d0965ed6c7e08743b23408befc47adf24e20820e0d4934",
+  "payload_bytes": 6580,
+  "total_chunks": 37,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "37/37 PASS",
+  "solution": {
+   "fix": "head_mutex-protected interpreter deletion plus temporary atomic tstate pin",
+   "legacy_negative_control": "PASS: deterministic post-munmap UAF, SIGSEGV shell exit 139",
+   "fixed": "PASS: atomic refs 2->1->0, no fault",
+   "stress": "PASS: 20 fixed repetitions",
+   "pytest": "2/2 PASS",
+   "scope": "standalone native aarch64 C11/pthreads lifecycle model; not an upstream CPython patch"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0027. 37 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime."
+ }
+}

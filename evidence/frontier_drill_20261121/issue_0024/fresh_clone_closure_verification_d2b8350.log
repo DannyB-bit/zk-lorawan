@@ -1,0 +1,11 @@
+HEAD=d2b83500cc77c403a72455c3d01ce719ad9fd664
+LOCKFREE_SIZE_T=YES queue=bounded_MPMC_mutex_free
+REALLOC_MOD_EXCLUSIVE_REJECTED=YES errno=EINVAL DELETE_READD_EXCLUSIVE=PASS
+LEGACY_NO_EXCLUSIVE flags=0 clients=256 wakeups=196 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FIXED_EPOLLEXCLUSIVE flags=0x10000000 clients=256 wakeups=252 empty_wakeups=0 accepted=256 consumed=256 errors=0 timeout=0 RESULT=PASS
+FRONTIER_GH_0024_PASS=YES clients_per_mode=256 note=legacy_empty_wakeups_are_measured_not_assumed
+..                                                                       [100%]
+2 passed in 0.21s
+staged frames verified: 92 of 92
+STAGED_SHA_OK=YES
+FRESH_CLONE_0024_CLOSURE=PASS head=d2b83500cc77c403a72455c3d01ce719ad9fd664 frames=92 alpha=DECRYPT_OK chain=finalized

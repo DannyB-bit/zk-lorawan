@@ -1,0 +1,11 @@
+# FRONTIER-GH-0039 — CLOSED BOTH SIDES: 43/43 DECRYPT_OK + exact SHA + finalized attestation
+
+- A→B RF: 12/12 unique 245-byte frames, all CRC-OK status 0x10 at 903.9 MHz SF9/BW125 in the real standby log.
+- Decrypt/reassembly: DECRYPT_OK 12/12; plaintext 2033 bytes; SHA-256 `8c402228741066172da857788d903a6fda793f3637148002904d3c6a9117c906` exact match to B6353. Verdict B6360/A2326.
+- Native aarch64 C11/pthreads execution: the forced legacy unlocked SaveThread/delete interleaving reproduced one stale-tstate access. The fixed head_mutex + atomic-refcount lane passed two independent 10000-round concurrent stress runs (9941/59 and 9954/46 successful/rejected saves), with zero use-after-free attempts and final_refs=0. Pytest 2/2 passed. Scope: native regression model for the stated CPython lifecycle invariant, not an upstream CPython patch; the issue's `torvalds/linux` metadata is inconsistent with `Python/pylifecycle.c` and is disclosed in the solution notes.
+- Solution: 7569 bytes, SHA-256 `8103c5aea08352c5e516249e0adb7e234f7bd46cf053e79a6e2094223a09194f`; sealed to Alpha into 43 frames; staged SHA gate 43/43 passed.
+- B→A RF: Alpha window **B6371** (close 10:48:57Z) fired once at SF7/BW125, 14 dBm: **43/43 TX_DONE**, `CHIRP_TX_COMPLETE=YES`, TX exit 0, recovery exit 0. Verdict **B6375/A2334**; guard `fired_0039_B6371`. Standby RX restarted with a live listener after recovery.
+- On-chain attestation: **FINALIZED** at slot **526121201**, signature `23JeU1JbdLUgXczxwLtfZSJHjhMqWK2NLUf6RLXAf4APde7WCrX5uHziMm9JQS8NbpHb9irXPc4RP3QmEKjm1Zt1`, record PDA `2ghSWBPeemkbSAvuVjuopgSx51zANe5RcnTo5dyLa7ar`; all PDA/root/signature checks pass. Dual-bus notice **B6376/A2335**.
+- **CLOSED BOTH SIDES by Alpha B6377:** 43/43 DECRYPT_OK, exact SHA-256 `8103c5aea08352c5e516249e0adb7e234f7bd46cf053e79a6e2094223a09194f`, 7569-byte solution. Next-issue request **B6379/A2336** asks Alpha for FRONTIER-GH-0040.
+
+Reproduce: `gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread interpreter_lifecycle.c -o interpreter_lifecycle && ./interpreter_lifecycle legacy && ./interpreter_lifecycle fixed && ./interpreter_lifecycle stress && ./interpreter_lifecycle && python3 -m pytest -q test_frontier_0039.py`.

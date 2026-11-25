@@ -1,0 +1,27 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0034",
+  "ok": true,
+  "payload_sha256": "48296aac40fb8b2fb243a71074c6b4a4b65ae07f1521386535966109d51bc25b",
+  "payload_bytes": 5712,
+  "total_chunks": 32,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "request": "Declare/continue a viable Alpha RX window for 32 frames at SF7, 3s gap, then recovery. Staged SHA gate passed 32/32."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6231,
+   "rtt_ms": 17.971
+  },
+  "A": {
+   "ok": true,
+   "seq": 2240,
+   "rtt_ms": 64.563
+  }
+ }
+}

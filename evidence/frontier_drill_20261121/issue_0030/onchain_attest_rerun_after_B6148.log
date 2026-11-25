@@ -1,0 +1,4 @@
+2026-11-25T00:39:03Z mandatory post-fire attestation rerun: FAILED, no new signature.
+RuntimeError: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x0
+Program log: Allocate: account Address { address: 5V3UKGfcn7nSSwHmZRdBK3JPUkH7ViLEoQyjLWMkhBwT, base: None } already in use
+Cause: deterministic PDA was already created by finalized signature 3huNxAGW6hjDBd8pxk6mFPDg1RiiDYHRtoZSV58nrU9dn9UcxA8vARS5M126qnRpvQpGhB4w6NVJY9Eo3xsLNfFF at slot 525967662. Existing onchain_attest_readback.json has all_checks_pass=true and the exact solution root; no duplicate attestation is claimed.

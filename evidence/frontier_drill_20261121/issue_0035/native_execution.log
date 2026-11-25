@@ -1,0 +1,9 @@
+aarch64
+--- legacy ---
+LEGACY_GIL_DELETE_UAF_REPRODUCED=YES owner_refcount=0 daemon_observed_freed=1
+--- fixed ---
+FIXED_HEAD_MUTEX=PASS interpreter_unlink_serialized=1
+FIXED_TSTATE_REFCOUNT=PASS owner_decrement_old=2 final_refs=0
+FIXED_NO_UAF=PASS daemon_gil_release_completed=1 freed_before_daemon=0
+--- stress ---
+FIXED_LIFETIME_STRESS=PASS iterations=1000 final_refs=0 uaf=0

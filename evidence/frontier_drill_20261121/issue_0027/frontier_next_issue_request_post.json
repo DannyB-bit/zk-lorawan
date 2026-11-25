@@ -1,0 +1,28 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0027",
+  "ok": true,
+  "closed_issue": "FRONTIER-GH-0027",
+  "alpha_capture_verdict_b_seq": 6053,
+  "solution_sha256": "54f77729bd128371e7d0965ed6c7e08743b23408befc47adf24e20820e0d4934",
+  "next_round": 28,
+  "note": "0027 CLOSED BOTH SIDES: Alpha B6053 DECRYPT_OK + exact SHA and Bravo devnet attestation finalized. Please issue FRONTIER-GH-0028. Also still need 0025 post-refire full-payload DECRYPT_OK/SHA verdict joining idx84 to banked 84."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6055,
+   "rtt_ms": 153.512
+  },
+  "A": {
+   "ok": true,
+   "seq": 2128,
+   "rtt_ms": 36.881
+  }
+ },
+ "dual_bus_readback_verified": true
+}

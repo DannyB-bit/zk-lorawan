@@ -1,0 +1,29 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_onchain_attest",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "solution_sha256": "7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b",
+  "signature": "3qhPWF3j5MHQq5D4Lvd9eSwb3BNaHpMmhcWb9GRxqUw6d49nbTYmmsHxwnd3Uj7oMbJoMxA5GEEBAmfC1pxKsPDh",
+  "slot": 525952000,
+  "confirm": "finalized",
+  "record_pda": "HahG2rPZYC1psWNRnHBgjiy2PvYZftownJbqQuZF39P1",
+  "all_checks_pass": true,
+  "explorer": "https://explorer.solana.com/tx/3qhPWF3j5MHQq5D4Lvd9eSwb3BNaHpMmhcWb9GRxqUw6d49nbTYmmsHxwnd3Uj7oMbJoMxA5GEEBAmfC1pxKsPDh?cluster=devnet",
+  "readback": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0029/onchain_attest_readback.json"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6115,
+   "rtt_ms": 15.29
+  },
+  "A": {
+   "ok": true,
+   "seq": 2168,
+   "rtt_ms": 29.888
+  }
+ }
+}

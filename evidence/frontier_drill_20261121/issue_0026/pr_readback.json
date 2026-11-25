@@ -1,0 +1,10 @@
+{
+  "http_status": 200,
+  "number": 17,
+  "state": "open",
+  "head_ref": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "head_sha": "aedc4433b1fec906247f22b19392a4b79b8e83a0",
+  "base": "master",
+  "mergeable": true,
+  "mergeable_state": "unstable"
+}

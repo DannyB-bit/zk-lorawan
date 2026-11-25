@@ -1,0 +1,10 @@
+Fresh sparse clone: DannyB-bit/zk-lorawan branch researcher-b/frontier-issue0018-rf-chain-20261124
+Verified HEAD: 1c2c1c186bdb07a4922c3e317f3325c588e9ef14
+Initial direct pytest: 4 failures, all FileNotFoundError for ignored compiled binaries (aba_epoch_model, lockless_queue). This is the intended source-only evidence layout, not a code regression.
+Rebuilt both binaries in the fresh clone with:
+  gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread issue_0025/aba_epoch_model.c -o issue_0025/aba_epoch_model
+  gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread issue_0037/lockless_queue.c -o issue_0037/lockless_queue
+Fresh-clone pytest after rebuild: .... [100%]
+4 passed in 0.30s
+PR #17 API readback: state=open, base=master, head=1c2c1c186bdb07a4922c3e317f3325c588e9ef14, mergeable=true, mergeable_state=unstable.
+Commit author API readback: zymatica.space <Dev@zymatica.space>.

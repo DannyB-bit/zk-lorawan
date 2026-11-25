@@ -1,0 +1,97 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "ok": true,
+  "closure": "PENDING_ALPHA_FULL_PAYLOAD_VERDICT",
+  "github_repo": "DannyB-bit/zk-lorawan",
+  "github_pr": 17,
+  "github_branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "commit": "a60c6c6e659585e24401cc1168a5f83e96ff3144",
+  "refire_tx_verdict_b_seq": 6308,
+  "alpha_rx_window_b_seq": 6302,
+  "chunk_indices": [
+   84
+  ],
+  "frame_sha256": "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde",
+  "bravo_declared_payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "fresh_clone": "a60c6c6 confirmed; gcc native rebuild + pytest 2/2 PASS",
+  "note": "0025 idx84 SF9 refire evidence is pushed and fresh-clone verified. Please join idx84 to the banked 84 and publish full-payload DECRYPT_OK + exact SHA. 0025 remains OPEN until that verdict. 0037 fresh-window request B6311/A2294 remains pending; no 0037 RF fire or on-chain attestation claimed.",
+  "ts_utc": "2026-11-25T07:36:16Z"
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6313,
+   "rtt_ms": 14.761
+  },
+  "A": {
+   "ok": true,
+   "seq": 2296,
+   "rtt_ms": 23.378
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6313,
+   "ts": 1795592176.510836,
+   "ts_utc": "2026-11-25T07:36:16Z",
+   "type": "frontier_evidence_notice",
+   "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_evidence_notice",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0025",
+    "ok": true,
+    "closure": "PENDING_ALPHA_FULL_PAYLOAD_VERDICT",
+    "github_repo": "DannyB-bit/zk-lorawan",
+    "github_pr": 17,
+    "github_branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+    "commit": "a60c6c6e659585e24401cc1168a5f83e96ff3144",
+    "refire_tx_verdict_b_seq": 6308,
+    "alpha_rx_window_b_seq": 6302,
+    "chunk_indices": [
+     84
+    ],
+    "frame_sha256": "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde",
+    "bravo_declared_payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+    "fresh_clone": "a60c6c6 confirmed; gcc native rebuild + pytest 2/2 PASS",
+    "note": "0025 idx84 SF9 refire evidence is pushed and fresh-clone verified. Please join idx84 to the banked 84 and publish full-payload DECRYPT_OK + exact SHA. 0025 remains OPEN until that verdict. 0037 fresh-window request B6311/A2294 remains pending; no 0037 RF fire or on-chain attestation claimed.",
+    "ts_utc": "2026-11-25T07:36:16Z"
+   }
+  },
+  "A": {
+   "seq": 2296,
+   "ts": 1795592176.9124985,
+   "ts_utc": "2026-11-25T07:36:16Z",
+   "type": "frontier_evidence_notice",
+   "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "type": "frontier_evidence_notice",
+    "drill": "frontier_drill_20261121",
+    "issue_id": "FRONTIER-GH-0025",
+    "ok": true,
+    "closure": "PENDING_ALPHA_FULL_PAYLOAD_VERDICT",
+    "github_repo": "DannyB-bit/zk-lorawan",
+    "github_pr": 17,
+    "github_branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+    "commit": "a60c6c6e659585e24401cc1168a5f83e96ff3144",
+    "refire_tx_verdict_b_seq": 6308,
+    "alpha_rx_window_b_seq": 6302,
+    "chunk_indices": [
+     84
+    ],
+    "frame_sha256": "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde",
+    "bravo_declared_payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+    "fresh_clone": "a60c6c6 confirmed; gcc native rebuild + pytest 2/2 PASS",
+    "note": "0025 idx84 SF9 refire evidence is pushed and fresh-clone verified. Please join idx84 to the banked 84 and publish full-payload DECRYPT_OK + exact SHA. 0025 remains OPEN until that verdict. 0037 fresh-window request B6311/A2294 remains pending; no 0037 RF fire or on-chain attestation claimed.",
+    "ts_utc": "2026-11-25T07:36:16Z"
+   }
+  }
+ }
+}

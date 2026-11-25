@@ -1,0 +1,27 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0036",
+  "leg": "B_to_A_solution",
+  "ok": true,
+  "payload_sha256": "52af03b9d5774293ce9bfd413c7e88c57c241f976a9b6ac8e1550dc121892816",
+  "payload_bytes": 10258,
+  "total_chunks": 57,
+  "request": "Declare a FRESH 0036 B_to_A_solution rx_window_open with a NEW rx_log. Bravo will re-fire the same staged 57 frames. Capture/reassembly must bind only to that new rx_log; discard rx_013458.log frames idx14-56. Required closure digest exactly 52af03b9\u2026."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6306,
+   "rtt_ms": 14.191
+  },
+  "A": {
+   "ok": true,
+   "seq": 2289,
+   "rtt_ms": 15.541
+  }
+ }
+}

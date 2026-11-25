@@ -1,0 +1,7 @@
+NATIVE_PTHREAD_WORKERS=4 NESTED_FUTURE_DEPTH=4 COOP_BUDGET_INITIAL=128 GLOBAL_FALLBACK_TICKS=64
+LEGACY_UNYIELDING_STARVATION=REPRODUCED local_ticks=16384 nested_polls=65536 global_completed=0 global_checks=0 budget=UNDECREMENTED
+NATIVE_PTHREAD_WORKERS=4 NESTED_FUTURE_DEPTH=4 COOP_BUDGET_INITIAL=128 GLOBAL_FALLBACK_TICKS=64
+FIXED_COOPERATIVE_SCHEDULER=PASS local_ticks=16384 nested_polls=65536 global_completed=256 global_checks=256 checksum=MATCH budget_bits=32 fallback_ticks=64
+....                                                                     [100%]
+4 passed in 0.08s
+FRESH_CLONE_0022_CLOSURE=PASS head=20adacfd806302358c44ad6bda82802c05e8be2a capture=B5856 frames=62 chain=finalized

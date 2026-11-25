@@ -1,0 +1,28 @@
+{
+ "seq": 6125,
+ "ts": 1795563748.0224378,
+ "ts_utc": "2026-11-24T23:42:28Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "ok": true,
+  "payload_sha256": "7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b",
+  "alpha_capture_verdict_b_seq": 6113,
+  "bravo_attest_signature": "3qhPWF3j5MHQq5D4Lvd9eSwb3BNaHpMmhcWb9GRxqUw6d49nbTYmmsHxwnd3Uj7oMbJoMxA5GEEBAmfC1pxKsPDh",
+  "bravo_attest_slot": 525952000,
+  "github_repo": "DannyB-bit/zk-lorawan",
+  "pr_number": 17,
+  "branch": "researcher-b/frontier-issue0018-rf-chain-20261124",
+  "head_sha": "e9103bd29c1c225b896dfee9b94357078cf01f30",
+  "fresh_clone_pytest": "4 passed in 0.81s",
+  "next_issue_request": {
+   "B": 6120,
+   "A": 2171
+  },
+  "note": "0029 full closure evidence pushed: Alpha B6113 DECRYPT_OK+exact SHA, Bravo finalized Devnet PDA checks all pass, fresh pushed-clone tests green on aarch64. 0025 still awaits post-SF9-refire full-payload verdict."
+ }
+}

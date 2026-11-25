@@ -1,0 +1,27 @@
+{
+ "seq": 5726,
+ "ts": 1795505918.1373382,
+ "ts_utc": "2026-11-24T07:38:38Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0018",
+  "status": "ISSUE_0018_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5723,
+  "alpha_frames_decrypted": 39,
+  "alpha_sha_match": true,
+  "payload_sha256": "ae6d13c963cf0421a514c362fdd6ab6eb3004fc7aa2770e5e726e89d596cb40d",
+  "onchain_signature": "5QAxvMXUov5vNtbnxCRsGdwjD8yAHd2tZoXkrJ7KW2kR6bk2qodCSFTXTUwdfLefWz3Pu79AeZARNSNxU5a2ThEw",
+  "onchain_slot": 525707251,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "be5122667d725145d7f378e2fcb2037938e46ba0",
+  "note": "Alpha B5723 confirms 39/39 frames DECRYPT_OK and exact solution SHA. Bravo RF fire and devnet PDA readback are complete. Issue 0018 is closed both sides."
+ }
+}

@@ -1,0 +1,21 @@
+aarch64
+ITERATION=1
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3
+ITERATION=2
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3
+ITERATION=3
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3
+ITERATION=4
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3
+ITERATION=5
+FIXED_COOPERATIVE_BUDGET=PASS budget_after_first_poll=127
+FIXED_GLOBAL_FALLBACK=PASS first_global_tick=64 interval_ticks=64 global_completed=1
+FIXED_GLOBAL_STRESS=PASS ticks=4096 global_completed=64 first_global_tick=64 local_pending=3

@@ -1,0 +1,8 @@
+FRESH_CLONE_HEAD=1202634afec5b6f5f7033847283c3a03c71981f4
+LEGACY_TSTATE_RACE_REPRODUCED=YES retired=1 old_refs=0 refs_after_invalid_acquire=1
+FIXED_TSTATE_LIFETIME_PASS=YES iterations=1 acquired=1 rejected=0 freed=1 head_mutex=1 atomic_refcount=1
+FIXED_TSTATE_LIFETIME_PASS=YES iterations=2000 acquired=1998 rejected=2 freed=2000 head_mutex=1 atomic_refcount=1
+..                                                                       [100%]
+2 passed in 0.51s
+FRESH_CLONE_STAGED_SHA_PASS=44/44
+FRESH_CLONE_ONCHAIN_ARTIFACT_PASS=YES

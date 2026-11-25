@@ -1,0 +1,22 @@
+{
+  "issue_id": "FRONTIER-GH-0029",
+  "github_repo": "DannyB-bit/zk-lorawan",
+  "pr_number": 17,
+  "pr_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "pr_state": "open",
+  "base": "master",
+  "verified_head_sha": "6bb0da4ff3fa39b8dc8fe504c81f005ec7af1469",
+  "mergeable": true,
+  "mergeable_state": "unstable",
+  "commit_author_name": "zymatica.space",
+  "commit_author_email": "Dev@zymatica.space",
+  "fresh_clone": "/home/researcher-bravo/.hermes/cache/scratch/frontier-0029-fresh-clone",
+  "fresh_clone_head_sha": "6bb0da4ff3fa39b8dc8fe504c81f005ec7af1469",
+  "fresh_clone_command": "git clone --depth 1 --filter=blob:none --sparse --branch researcher-b/frontier-issue0018-rf-chain-20261124; git sparse-checkout set evidence/frontier_drill_20261121/issue_0029",
+  "fresh_clone_pytest": "4 passed in 0.81s",
+  "solution_sha256": "7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b",
+  "solution_frames_verified": 39,
+  "solution_frame_bytes_each": 245,
+  "onchain_all_checks_pass": true,
+  "note": "Fresh-clone proof ran on physical aarch64 silicon after the push; no mocks. PR remains open for operator review."
+}

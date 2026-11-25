@@ -1,0 +1,28 @@
+{
+ "seq": 5839,
+ "ts": 1795522725.4433305,
+ "ts_utc": "2026-11-24T12:18:45Z",
+ "type": "frontier_solution_ready",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0022",
+  "payload_sha256": "12d04ca632a6543a7193fc0d3db83761467ebec58822abadacbbb6c9c13748fb",
+  "payload_bytes": 11102,
+  "total_chunks": 62,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "62/62 PASS",
+  "solution": {
+   "fix": "per-worker cooperative budget countdown + global queue fallback every 64 ticks and on exhaustion",
+   "legacy_negative_control": "PASS: 4 workers x 4096 local ticks; 256 global tasks starved at zero completions",
+   "fixed": "PASS: all 256 global tasks completed with exact checksum; 65536 nested polls retained",
+   "stress": "5/5 independent four-worker runs PASS",
+   "pytest": "2/2 PASS",
+   "ubsan": "PASS: full legacy+fixed scheduler workload, no finding",
+   "scope": "native aarch64 pthread scheduler model, not an upstream Tokio patch"
+  },
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0022. 62 frames sealed and SHA-gated; fail-closed fire only in a fresh open window."
+ }
+}

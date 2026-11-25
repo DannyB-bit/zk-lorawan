@@ -1,0 +1,6 @@
+fresh clone HEAD e17e6456b60d0e9dc04031c1e1572e7d0035211d
+rustc --edition=2021 -O: PASS
+2 passed in 0.08s
+staged frames verified: 32 of 32
+STAGED_SHA_OK=YES
+solution sha256 5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6

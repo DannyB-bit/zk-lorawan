@@ -1,0 +1,17 @@
+{
+  "refire_only": true,
+  "original_total_chunks": 85,
+  "chunk_indices": [
+    84
+  ],
+  "frames": [
+    {
+      "idx": 84,
+      "file": "frame_84.bin",
+      "frame_sha256": "33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde",
+      "bytes": 245
+    }
+  ],
+  "source_verdict_b_seq": 5948,
+  "corrected_capture_b_seq": 5989
+}

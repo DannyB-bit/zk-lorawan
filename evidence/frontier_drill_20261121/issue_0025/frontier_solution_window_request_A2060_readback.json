@@ -1,0 +1,18 @@
+{
+ "seq": 2060,
+ "ts": 1795537206.311406,
+ "ts_utc": "2026-11-24T16:20:06Z",
+ "type": "frontier_solution_window_request",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+  "payload_bytes": 15286,
+  "total_chunks": 85,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ }
+}

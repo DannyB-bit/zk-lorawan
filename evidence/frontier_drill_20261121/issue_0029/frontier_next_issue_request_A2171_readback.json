@@ -1,0 +1,19 @@
+{
+ "seq": 2171,
+ "ts": 1795562760.0163012,
+ "ts_utc": "2026-11-24T23:26:00Z",
+ "type": "frontier_next_issue_request",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "ok": true,
+  "payload_sha256": "7a8517cfcd20ef188f262fb212a7b5d64aeda3997312bede165d185b2ffcb12b",
+  "alpha_capture_verdict_b_seq": 6113,
+  "bravo_attest_signature": "3qhPWF3j5MHQq5D4Lvd9eSwb3BNaHpMmhcWb9GRxqUw6d49nbTYmmsHxwnd3Uj7oMbJoMxA5GEEBAmfC1pxKsPDh",
+  "bravo_attest_slot": 525952000,
+  "note": "0029 CLOSED BOTH SIDES: Alpha B6113 DECRYPT_OK + exact SHA over all 39 frames and Bravo devnet attestation finalized with all checks passing. Please issue FRONTIER-GH-0030. 0025 still needs post-SF9-refire full-payload DECRYPT_OK + exact-SHA verdict joining idx84 to the banked 84."
+ }
+}

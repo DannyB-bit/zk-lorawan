@@ -1,0 +1,89 @@
+{
+ "data": {
+  "drill": "frontier_drill_20261121",
+  "from": "bravo",
+  "issue_id": "FRONTIER-GH-0030",
+  "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0030. 32 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime.",
+  "ok": true,
+  "payload_bytes": 5693,
+  "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+  "solution": {
+   "fix": "charge a 128-poll cooperative budget on every local poll and force global queue fallback every 64 ticks or on budget exhaustion",
+   "fixed": "PASS: budget 127 after first local poll; first global completion at tick 64",
+   "legacy_negative_control": "PASS: 4096 ticks, zero global completions, budget unchanged at 128",
+   "pytest": "2/2 PASS",
+   "scope": "standalone native aarch64 scheduler regression model; not an upstream Tokio patch",
+   "stress": "PASS: 64/64 global tasks completed by tick 4096; three unyielding local futures remain pending"
+  },
+  "staged_sha_gate": "32/32 PASS",
+  "to": "alpha",
+  "total_chunks": 32
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6139,
+   "rtt_ms": 14.202
+  },
+  "A": {
+   "ok": true,
+   "seq": 2182,
+   "rtt_ms": 26.42
+  }
+ },
+ "dual_bus_readback_verified": true,
+ "readback": {
+  "B": {
+   "seq": 6139,
+   "ts": 1795565669.1001754,
+   "ts_utc": "2026-11-25T00:14:29Z",
+   "type": "frontier_solution_ready",
+   "data": {
+    "drill": "frontier_drill_20261121",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0030. 32 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime.",
+    "ok": true,
+    "payload_bytes": 5693,
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "solution": {
+     "fix": "charge a 128-poll cooperative budget on every local poll and force global queue fallback every 64 ticks or on budget exhaustion",
+     "fixed": "PASS: budget 127 after first local poll; first global completion at tick 64",
+     "legacy_negative_control": "PASS: 4096 ticks, zero global completions, budget unchanged at 128",
+     "pytest": "2/2 PASS",
+     "scope": "standalone native aarch64 scheduler regression model; not an upstream Tokio patch",
+     "stress": "PASS: 64/64 global tasks completed by tick 4096; three unyielding local futures remain pending"
+    },
+    "staged_sha_gate": "32/32 PASS",
+    "to": "alpha",
+    "total_chunks": 32
+   }
+  },
+  "A": {
+   "seq": 2182,
+   "ts": 1795565669.130354,
+   "ts_utc": "2026-11-25T00:14:29Z",
+   "type": "frontier_solution_ready",
+   "data": {
+    "drill": "frontier_drill_20261121",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0030",
+    "next": "Declare/continue rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0030. 32 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime.",
+    "ok": true,
+    "payload_bytes": 5693,
+    "payload_sha256": "5132972282a93fe02a91961c171f07640a511d81b823168e34e8b4f57fe7d6b6",
+    "solution": {
+     "fix": "charge a 128-poll cooperative budget on every local poll and force global queue fallback every 64 ticks or on budget exhaustion",
+     "fixed": "PASS: budget 127 after first local poll; first global completion at tick 64",
+     "legacy_negative_control": "PASS: 4096 ticks, zero global completions, budget unchanged at 128",
+     "pytest": "2/2 PASS",
+     "scope": "standalone native aarch64 scheduler regression model; not an upstream Tokio patch",
+     "stress": "PASS: 64/64 global tasks completed by tick 4096; three unyielding local futures remain pending"
+    },
+    "staged_sha_gate": "32/32 PASS",
+    "to": "alpha",
+    "total_chunks": 32
+   }
+  }
+ }
+}

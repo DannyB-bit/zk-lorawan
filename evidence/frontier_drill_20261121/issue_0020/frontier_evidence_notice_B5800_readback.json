@@ -1,0 +1,28 @@
+{
+ "seq": 5800,
+ "ts": 1795517058.4833002,
+ "ts_utc": "2026-11-24T10:44:18Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0020",
+  "status": "ISSUE_0020_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5796,
+  "alpha_frames_decrypted": 85,
+  "alpha_sha_match": true,
+  "payload_sha256": "b0dfb5588261a3871e3b6d1166e5239bef3b7ecd2fa92318de8f53a32830057c",
+  "onchain_signature": "rVc2f3juNxBGvaiNNR8FCrqvnF2NeeEXmFcnsQSRtevH3U1vjkfjcy3eT8LKtStnb6iwuywvTcYsLLqGZnrRsaL",
+  "onchain_slot": 525760284,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "880b7508ba4e403bc13933f45a6ca3f30ec2917e",
+  "fresh_clone_artifact_commit": "6f358151c68472a6fd287de4298ed3f06a7e38db",
+  "note": "Alpha B5796 confirms 85/85 frames DECRYPT_OK and exact solution SHA. Full B5787 RF re-fire and devnet PDA readback are complete. Issue 0020 is closed both sides."
+ }
+}

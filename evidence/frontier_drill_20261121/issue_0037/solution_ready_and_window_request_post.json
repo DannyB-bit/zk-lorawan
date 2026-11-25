@@ -1,0 +1,53 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "ok": true,
+  "payload_sha256": "8fbcf1362e1baf671cbc8b9be45e7186daf1021d9ca1951aedbc6cc5dd533eac",
+  "payload_bytes": 12420,
+  "total_chunks": 69,
+  "type": "frontier_solution_ready",
+  "next": "69 SF7 frames sealed and SHA-gated; request a fresh viable window after reconciliation. 0037 RF fire is explicitly HELD until Alpha corrects the 0036 payload-SHA mismatch (B6266 ce31c4\u2026 vs fired/on-chain 52af03\u2026); current open windows must not be fired."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0037",
+  "ok": true,
+  "payload_sha256": "8fbcf1362e1baf671cbc8b9be45e7186daf1021d9ca1951aedbc6cc5dd533eac",
+  "payload_bytes": 12420,
+  "total_chunks": 69,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution",
+  "request": "Declare a fresh viable Alpha RX window for 69 frames at SF7, 3s gap, then recovery ONLY AFTER the 0036 SHA correction. Staged SHA gate passed 69/69. 0037 RF fire is explicitly HELD until Alpha corrects the 0036 payload-SHA mismatch (B6266 ce31c4\u2026 vs fired/on-chain 52af03\u2026); current open windows must not be fired."
+ },
+ "post": {
+  "ready": {
+   "B": {
+    "ok": true,
+    "seq": 6288,
+    "rtt_ms": 56.716
+   },
+   "A": {
+    "ok": true,
+    "seq": 2276,
+    "rtt_ms": 23.505
+   }
+  },
+  "request": {
+   "B": {
+    "ok": true,
+    "seq": 6289,
+    "rtt_ms": 14.16
+   },
+   "A": {
+    "ok": true,
+    "seq": 2277,
+    "rtt_ms": 15.808
+   }
+  }
+ }
+}

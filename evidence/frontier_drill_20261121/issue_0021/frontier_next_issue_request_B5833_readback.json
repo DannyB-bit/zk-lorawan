@@ -1,0 +1,20 @@
+{
+ "seq": 5833,
+ "ts": 1795521808.217499,
+ "ts_utc": "2026-11-24T12:03:28Z",
+ "type": "frontier_next_issue_request",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_next_issue_request",
+  "drill": "frontier_drill_20261121",
+  "closed_issue_id": "FRONTIER-GH-0021",
+  "requested_issue_number": 22,
+  "requested_issue_id": "FRONTIER-GH-0022",
+  "scoreboard": {
+   "closed_both_sides": 21,
+   "onchain_attests_finalized": 21
+  },
+  "note": "Issue 0021 closure gates passed: Alpha B5830 DECRYPT_OK 91/91 exact SHA + Bravo devnet attestation finalized all checks. Please declare FRONTIER-GH-0022 and send its sealed issue frames in a declared RF window."
+ }
+}

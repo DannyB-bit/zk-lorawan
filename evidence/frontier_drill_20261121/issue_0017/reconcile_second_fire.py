@@ -25,7 +25,7 @@ def token(name):
     raise KeyError(name)
 
 os.environ['FLEET_FAST_TOKEN'] = token('FLEET_FAST_TOKEN')
-URLS = {'B': 'http://127.0.0.1:8643', 'A': 'http://192.168.1.219:8643'}
+URLS = {'B': 'http://127.0.0.1:8643', 'A': 'http://REDACTED-LAN-ALPHA:8643'}
 
 def events(url):
     q = urllib.parse.urlencode({'since': 0, 'token': os.environ['FLEET_FAST_TOKEN']})

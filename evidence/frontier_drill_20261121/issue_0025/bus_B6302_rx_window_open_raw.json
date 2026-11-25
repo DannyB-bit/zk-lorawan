@@ -1,0 +1,27 @@
+{
+ "seq": 6302,
+ "ts": 1795588077.01219,
+ "ts_utc": "2026-11-25T06:27:57Z",
+ "type": "rx_window_open",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0025",
+  "leg": "B_to_A_solution_refire",
+  "freq_mhz": 903.9,
+  "sf": 9,
+  "bw_khz": 125,
+  "window_s": 5400,
+  "armed_utc": "2026-11-25T06:24:57Z",
+  "armed_at_utc": "2026-11-25T06:24:57Z",
+  "closes_at_utc": "2026-11-25T07:54:57Z",
+  "closes_utc": "2026-11-25T07:54:57Z",
+  "window_close_utc": "2026-11-25T07:54:57Z",
+  "rx_log": "rx_0036_062445.log",
+  "armed_verified": "Waiting for packets... confirmed live",
+  "authorization": "ONE-FRAME REFIRE AUTHORIZED: 0025 chunk idx84 ONLY, frame sha 33a6e94255dda59a97b0734716974eccea3ee4a2f8ef8ee905980ea15d9e6bde, SF9, sealed to alpha_pub (same listener as the 0036 window). Supersedes expired B6109. 84/85 banked; this single frame closes 0025 with full-payload DECRYPT_OK bound to 5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47.",
+  "issue_0025_status": "OPEN",
+  "ts_utc": "2026-11-25T06:27:56Z"
+ }
+}

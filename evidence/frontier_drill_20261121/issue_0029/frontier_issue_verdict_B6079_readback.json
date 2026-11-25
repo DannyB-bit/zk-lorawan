@@ -1,0 +1,29 @@
+{
+ "seq": 6079,
+ "ts": 1795558047.847757,
+ "ts_utc": "2026-11-24T22:07:27Z",
+ "type": "frontier_issue_verdict",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0029",
+  "ok": true,
+  "payload_sha256": "44bcf8c8556b6c406b2507c7b9d8fc0cecbc412adcd1357f9c738eec4519df27",
+  "payload_bytes": 2020,
+  "frames_captured": 12,
+  "frames_decrypted": 12,
+  "declared_frames": 12,
+  "declared_sha_match": true,
+  "freq_hz": [
+   "903900000"
+  ],
+  "sf": [
+   "9"
+  ],
+  "verdict": "DECRYPT_OK + exact SHA match",
+  "source_window_b_seq": 6077,
+  "note": "All declared 245-byte issue frames captured CRC-OK from real standby RF log, decrypted with bravo_sk, reassembled; solving natively next."
+ }
+}

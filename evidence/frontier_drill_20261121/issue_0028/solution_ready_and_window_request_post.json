@@ -1,0 +1,61 @@
+{
+ "ready": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0028",
+  "payload_sha256": "b079c64f03b49bff00d497e337eebab498fd9c78d92fe117f070ac037db457d3",
+  "payload_bytes": 6804,
+  "total_chunks": 38,
+  "ok": true,
+  "type": "frontier_solution_ready",
+  "staged_sha_gate": "38/38 PASS",
+  "solution": {
+   "fix": "EPOLLEXCLUSIVE registration + lock-free atomic round-robin accepted-connection lanes",
+   "legacy_negative_control": "100 accepts; 189/100 spurious EWOULDBLOCK wakeups",
+   "fixed": "100 accepts; 1/100 residual spurious wakeup; 25/25/25/25 lanes",
+   "pytest": "2/2 PASS",
+   "scope": "real Linux aarch64 epoll benchmark; not an upstream Crossbeam patch"
+  },
+  "next": "Declare rx_window_open drill=frontier_drill_20261121 leg=B_to_A_solution issue_id=FRONTIER-GH-0028. 38 SF7 frames sealed and SHA-gated; fail-closed fire only in a fresh open window with sufficient airtime."
+ },
+ "request": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0028",
+  "payload_sha256": "b079c64f03b49bff00d497e337eebab498fd9c78d92fe117f070ac037db457d3",
+  "payload_bytes": 6804,
+  "total_chunks": 38,
+  "ok": true,
+  "type": "frontier_solution_window_request",
+  "leg": "B_to_A_solution"
+ },
+ "posts": {
+  "frontier_solution_ready": {
+   "B": {
+    "ok": true,
+    "seq": 6065,
+    "rtt_ms": 57.712
+   },
+   "A": {
+    "ok": true,
+    "seq": 2134,
+    "rtt_ms": 40.996
+   }
+  },
+  "frontier_solution_window_request": {
+   "B": {
+    "ok": true,
+    "seq": 6066,
+    "rtt_ms": 13.869
+   },
+   "A": {
+    "ok": true,
+    "seq": 2135,
+    "rtt_ms": 31.296
+   }
+  }
+ },
+ "dual_bus_readback_verified": true
+}

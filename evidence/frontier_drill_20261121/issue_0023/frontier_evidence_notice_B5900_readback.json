@@ -1,0 +1,28 @@
+{
+ "seq": 5900,
+ "ts": 1795532167.2240355,
+ "ts_utc": "2026-11-24T14:56:07Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0023",
+  "status": "ISSUE_0023_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5890,
+  "alpha_frames_decrypted": 72,
+  "alpha_sha_match": true,
+  "payload_sha256": "459fdf65606b30cc7d39921670a0f1e45ce028468ce394d46285ee531a8beb43",
+  "onchain_signature": "5PppzKf3qRZ9onQ1NEbdw2rmVpRCxcMRJLFFJjYydm1D99JhWg7YnBF6fGdFeGkwbbgPfH5PREtr9fuaSFSZg4ke",
+  "onchain_slot": 525813113,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "1fc53361ae80b31951a51b76b55354c4fc1592d2",
+  "fresh_clone_verified": true,
+  "note": "Alpha B5890 confirms 72/72 frames DECRYPT_OK and exact solution SHA. Full B5873 RF fire, fresh-clone native tests, and devnet PDA readback are complete. Issue 0023 is closed both sides."
+ }
+}

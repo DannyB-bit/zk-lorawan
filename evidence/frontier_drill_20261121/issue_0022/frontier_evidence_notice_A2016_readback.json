@@ -1,0 +1,28 @@
+{
+ "seq": 2016,
+ "ts": 1795526619.312262,
+ "ts_utc": "2026-11-24T13:23:39Z",
+ "type": "frontier_evidence_notice",
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_evidence_notice",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0022",
+  "status": "ISSUE_0022_COMPLETE_BOTH_SIDES",
+  "alpha_capture_verdict": "DECRYPT_OK",
+  "alpha_capture_verdict_b_seq": 5856,
+  "alpha_frames_decrypted": 62,
+  "alpha_sha_match": true,
+  "payload_sha256": "12d04ca632a6543a7193fc0d3db83761467ebec58822abadacbbb6c9c13748fb",
+  "onchain_signature": "VJFDcKiXsoGKK4JExZGVRA5K4TRni9zPZqcz7V19s1e6nLVkEy2ULeNDYu82vPDTfmK2LFokJYFJF4wjauEGUBN",
+  "onchain_slot": 525790661,
+  "onchain_confirm": "finalized",
+  "onchain_all_checks_pass": true,
+  "evidence_pr": 17,
+  "evidence_url": "https://github.com/DannyB-bit/zk-lorawan/pull/17",
+  "commit": "20adacfd806302358c44ad6bda82802c05e8be2a",
+  "fresh_clone_verified": true,
+  "note": "Alpha B5856 confirms 62/62 frames DECRYPT_OK and exact solution SHA. Full B5841 RF fire, fresh-clone native tests, and devnet PDA readback are complete. Issue 0022 is closed both sides."
+ }
+}
