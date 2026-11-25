@@ -3,8 +3,8 @@
  "drill": "frontier_drill_20261121",
  "issue_id": "FRONTIER-GH-0025",
  "leg": "B_to_A_solution",
- "payload_sha256": "5f3cb6835406b20978f28f5688dc92f99e03370f8ecbb00e934e461bbd75c7c4",
- "verdict": "DECRYPT_OK 85 frames sha_match=True",
+ "payload_sha256": "5d97dd19b1f536d677821a6c7b011d2a53f6e93e1fc268f1314751c7c5b08f47",
+ "verdict": "FINAL DECRYPT_OK 85/85 (84 banked + idx84 refire) sha_match=True",
  "node": "RakMiner-A",
  "rf": {
   "freq_mhz": 903.9,
@@ -12,5 +12,5 @@
   "bw_khz": 125
  },
  "evidence_repo": "DannyB-bit/zk-lorawan@researcher-a/frontier-drill-20261121",
- "event_utc": "2026-11-24T16:50:58Z"
+ "event_utc": "2026-11-25T08:06:16Z"
 }
