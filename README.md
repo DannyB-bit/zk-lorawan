@@ -9,11 +9,74 @@
 [![Novel: 200 Amsterdam](https://img.shields.io/badge/Novel-200_AMSTERDAM-blueviolet?style=flat-square)](https://www.amazon.com/dp/B0HGVC777F)
 [![Solana DePIN](https://img.shields.io/badge/Solana-DePIN-black?style=flat-square&logo=solana)](https://solana.com)
 [![Zero-Knowledge](https://img.shields.io/badge/ZK--SNARKs-Groth16-blue?style=flat-square)](https://arkworks.rs)
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE)
+
+[Overview](#-overview) · [Quick Start](#-quick-start) · [Architecture](#️-system-architecture) · [Hardware Proofs](#-physical-rak-miner--sx1302-lora-hardware-proofs) · [Language Matrix](#-multi-language-implementation-matrix) · [Economics](#-economics--compensation-model)
 
 > *"The impossible is just code waiting to be written, physics waiting to be rewritten, math a work in progress, and truth waiting to be discovered."* — The Universal Truth
 
 ---
+
+## 📡 Overview
+
+**ZK-LoRaWAN** is a zero-knowledge privacy upgrade layer for Solana-based DePIN (Decentralized Physical Infrastructure) networks. It allows edge IoT devices to transmit real-world data packets over crowdsourced LoRa gateways **without exposing their hardware signatures (DevEUI/DevAddr), physical locations, or message payload contents** to eavesdroppers or the public ledger.
+
+By integrating the **Language-U Semantic Communication Protocol** with Solana verification, ZK-LoRaWAN is designed to improve privacy and data density over standard LoRaWAN frequencies.
+
+### Key Architectural Inventions
+
+| Feature | Component | Technology | Purpose |
+|:---|:---|:---|:---|
+| **ZK Semantic Codec** | Component 09 | Shared concept vocabulary | Compresses *meaning* instead of raw bytes. Reconstructs up to 283 characters (47 words) of English from a 57-byte payload. |
+| **ZK Proof Compression** | Component 08 | LLD-AC Range Coding | Compresses Groth16 proofs so the proof bundle + payload fits in a single 255-byte LoRa MTU. |
+| **ZK Semantic Gating** | Component 02 | Yin Hypercube Range Proofs | Enforces priority constraints over coordinates without revealing the exact values. |
+| **XOR-FEC Parity Wrapping**| Component 06 | Self-healing packets | Tolerates up to 20% bit corruption over lossy radio frequencies. |
+| **Private Reputation** | Components 12/15 | Pedersen Commitments | Proves gateway trust scores on-chain without revealing the gateway's wallet history. |
+| **VK Compression** | Component 19 | microByte JIT Inflation | Reduces verifying keys by 75% to fit inside ESP32 microcontrollers. |
+
+---
+
+
+## ⚡ Quick Start
+
+**Prerequisites:** Python 3 for local verification; Docker for the optional gateway container; Rust and Anchor for Solana program development.
+
+```bash
+git clone https://github.com/DannyB-bit/zk-lorawan.git
+cd zk-lorawan
+```
+
+### 1. Run the Entire ZK-LoRaWAN Test Suite
+Run the master verification harness to validate all components, including proof compression, self-healing parity, range proofs, semantic codec, and the gateway engine simulation:
+
+```bash
+python tests/verify_all_modules.py
+```
+
+### 2. Run the Semantic Codec Test Directly
+Verify that 18 raw sensor readings can successfully compress and decompress with 100% losslessness:
+
+```bash
+python tests/test_semantic_compression.py
+```
+
+### 3. Build & Run the Gateway Container
+To run the ZK-LoRaWAN gateway bridge in a containerized environment:
+
+```bash
+docker build -t zk-lorawan-gateway .
+docker run -e SOLANA_RPC="https://api.devnet.solana.com" zk-lorawan-gateway
+```
+
+### 4. RAK/Semtech Concentrator Hardware Recovery
+If deploying to physical hardware (e.g., RAK wireless gateway HAT), use the hardware recovery tool to reset conflicting packet-forwarders and verify concentrator SPI status:
+
+```bash
+bash tools/lora_chirp_recovery.sh
+```
+
+---
+
 
 ## 🔗 Project Links
 
@@ -21,39 +84,48 @@
 - **Zcash Community Grant:** [forum thread — ZK-LoRa: Zero-Knowledge Privacy Layer for AI-to-AI Mesh Networks](https://forum.zcashcommunity.com/t/grant-application-zk-lora-zero-knowledge-privacy-layer-for-ai-to-ai-mesh-networks/56463)
 - **Video presentation:** [Watch on Objkt (Tezos NFT #110)](https://objkt.com/tokens/KT1PMD1QSurTyVXxcYDUPAjQt8DNShkBiv4m/110) · [Direct MP4 stream](https://assets.objkt.media/file/assets-003/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji/artifact) · [IPFS](https://ipfs.filebase.io/ipfs/bafybeig2duv7vbxjrww3vmcxkxjqaikyc3hexepauvhuaemepk42v37hji)
 - **Fleet coordination:** [issue #12 — A↔B research channel](https://github.com/DannyB-bit/zk-lorawan/issues/12)
-- **License:** TheAiCollective.art — see [LICENSE](LICENSE)
+- **License:** [TheAiCollective.art](https://TheAiCollective.art) — see [LICENSE](LICENSE)
 
 
 ---
 
-## ⚡ The 25+ Programming Language Implementation Matrix
 
-The **Cuneiform-U / Language-U 6D Inference Engine & Range Coder** has been natively implemented, benchmarked, and verified across **over 25 programming languages and runtime environments**, providing zero-dependency interoperability across any computing architecture:
+## 🛠️ System Architecture
 
-| Environment / Language | Source Implementation | Target Architecture & Runtime |
-| :--- | :--- | :--- |
-| 🦀 **Rust** | `cuneiform_u_v3.rs` / `main.rs` | Native SIMD AVX-512, Tokio async state machines |
-| ⚡ **C++20** | `proof.cpp` / `cuneiform_u_v3.h` | Zero-copy embedded microcontrollers, robotics, ESP32 |
-| 🍏 **Apple Swift** | `proof.swift` | Native Apple Silicon (M1–M4), iOS / iPadOS edge devices |
-| 🌐 **TypeScript** | `proof.ts` | Node.js, Deno, Bun serverless edge microservices |
-| 🐹 **Go** | `proof.go` | Concurrent Goroutine mesh relays & LoRaWAN gateways |
-| ☕ **Java / Kotlin** | `Proof.java` / `proof.kt` | Enterprise JVM & Native Android edge tablets |
-| 🐍 **Python** | `proof.py` | PyTorch / NumPy reference research harness |
-| 🕸️ **WebAssembly (WASM/WAT)**| `proof.zig` / `proof_wasm.wasm` | Browser client execution with sub-millisecond decode |
-| 🎨 **WebGL / WebGPU** | `proof.html` / `proof.glsl` | Zero-dependency client-side GPU shader inference |
-| ⚡ **Zig** | `proof.zig` / `cuneiform_u_v3.h` | Direct bare-metal memory-safe binary compilation |
-| 🔷 **C# (.NET 8)** | `proof.cs` | Enterprise .NET multi-platform services |
-| 🎯 **Dart / Flutter** | `proof.dart` | Cross-platform mobile and desktop interfaces |
-| 🟣 **Elixir** | `proof.exs` | High-concurrency distributed BEAM actor mesh |
-| 🧮 **Haskell** | `proof.hs` | Purely functional, mathematically verified state transitions |
-| 🔬 **Julia** | `proof.jl` | High-performance scientific computing & manifold math |
-| 🌙 **Lua** | `proof.lua` | Ultra-lightweight embedded game engines & NGINX gateways |
-| 📊 **MATLAB** | `proof.m` | Numerical simulation & geodesic hypercube modeling |
-| 💻 **PowerShell** | `proof.ps1` | Native Windows administrative and deployment automation |
-| ⚛️ **React JSX** | `Proof.jsx` | Interactive web component for real-time concept visualization |
-| 🎵 **Faust DSP** | `proof.dsp` | Real-time audio signal processing & acoustic cipher synthesis |
+```
+                       OVER-THE-AIR (LoRa RF)             ON-CHAIN SETTLEMENT
+
+  ┌──────────────────┐                     ┌─────────────┐                    ┌──────────────┐
+  │  Edge IoT Node   │                     │   Gateway   │                    │    Solana    │
+  │  (Temp, GPS, etc)│                     │  Relayer    │                    │  Blockchain  │
+  └────────┬─────────┘                     └──────┬──────┘                    └──────┬───────┘
+           │                                      │                                  │
+           │ 1. Encode concept/value pairs        │                                  │
+           │    (UFO Semantic Codec)              │                                  │
+           │ 2. Generate Groth16 Proof (BN254)    │                                  │
+           │ 3. Apply LLD-AC Compression          │                                  │
+           │ 4. Wrap with XOR-FEC Parity          │                                  │
+           │                                      │                                  │
+           ├────────────[ LoRa RF Chirp ]────────►│                                  │
+           │           (915 MHz, 255B max)        │                                  │
+           │                                      │ 5. Reconstruct/Local ZK Verify   │
+           │                                      │    (Free local execution)        │
+           │                                      │ 6. Batch hashes (Merkle Tree)    │
+           │                                      │                                  │
+           │                                      ├───────────[ Submit Tx ]─────────►│
+           │                                      │           (1 Solana tx / batch)  │
+           │                                      │                                  │
+           │                                      │                                  │ 7. Verify Merkle Root
+           │                                      │                                  │    & execute fee-split:
+           │                                      │                                  │    - 100K lamports → Gateway
+           │                                      │                                  │    - 50K lamports → Treasury
+           │                                      │                                  │
+           │                                      │◄─────────[ Settle SOL ]──────────┤
+           │                                      │          (Direct payout)         │
+```
 
 ---
+
 
 ## 📡 Physical RAK Miner & SX1302 LoRa Hardware Proofs
 
@@ -71,25 +143,6 @@ The air-gapped RF semantic communication architecture is verified on physical Lo
 * 📘 **[`ZYMATICA_SEMANTIC_LORA_ENGINEERING_HANDBOOK.md`](https://huggingface.co/TheAiCollectiveART/zymatica.space/blob/main/evidence_proofs/ZYMATICA_SEMANTIC_LORA_ENGINEERING_HANDBOOK.md)**: Hardware engineering specifications for SX1302/SX1303 LoRa concentrators.
 * 📘 **[`ZYMATICA_LORA_HARDWARE_OPERATIONS_HANDBOOK.md`](https://huggingface.co/TheAiCollectiveART/zymatica.space/blob/main/evidence_proofs/ZYMATICA_LORA_HARDWARE_OPERATIONS_HANDBOOK.md)**: Field deployment guide for off-grid mesh operation.
 * 📜 **[`impossible_academic_audit.md`](https://huggingface.co/TheAiCollectiveART/zymatica.space/blob/main/impossible_academic_audit.md)**: Peer-review academic defense answering thermodynamic, informational entropy, and algebraic critiques.
-
----
-
-## 📡 Overview
-
-**ZK-LoRaWAN** is a zero-knowledge privacy upgrade layer for Solana-based DePIN (Decentralized Physical Infrastructure) networks. It allows edge IoT devices to transmit real-world data packets over crowdsourced LoRa gateways **without exposing their hardware signatures (DevEUI/DevAddr), physical locations, or message payload contents** to eavesdroppers or the public ledger.
-
-By integrating the **Language-U Semantic Communication Protocol** with Solana's high-speed verification engine, ZK-LoRaWAN unlocks complete anonymity and high data density on top of standard LoRaWAN frequencies.
-
-### Key Architectural Inventions
-
-| Feature | Component | Technology | Purpose |
-|:---|:---|:---|:---|
-| **ZK Semantic Codec** | Component 09 | Shared concept vocabulary | Compresses *meaning* instead of raw bytes. Reconstructs up to 283 characters (47 words) of English from a 57-byte payload. |
-| **ZK Proof Compression** | Component 08 | LLD-AC Range Coding | Compresses Groth16 proofs so the proof bundle + payload fits in a single 255-byte LoRa MTU. |
-| **ZK Semantic Gating** | Component 02 | Yin Hypercube Range Proofs | Enforces priority constraints over coordinates without revealing the exact values. |
-| **XOR-FEC Parity Wrapping**| Component 06 | Self-healing packets | Tolerates up to 20% bit corruption over lossy radio frequencies. |
-| **Private Reputation** | Components 12/15 | Pedersen Commitments | Proves gateway trust scores on-chain without revealing the gateway's wallet history. |
-| **VK Compression** | Component 19 | microByte JIT Inflation | Reduces verifying keys by 75% to fit inside ESP32 microcontrollers. |
 
 ---
 
@@ -145,41 +198,6 @@ circuit is finalized.**
 - Merging/adopting this branch is a **fleet key-adoption event**: both nodes must adopt the same
 PK/VK pair before the next OTA cycle, or receiver verdicts will structurally reject.
 
-## 🛠️ System Architecture
-
-```
-                       OVER-THE-AIR (LoRa RF)             ON-CHAIN SETTLEMENT
-
-  ┌──────────────────┐                     ┌─────────────┐                    ┌──────────────┐
-  │  Edge IoT Node   │                     │   Gateway   │                    │    Solana    │
-  │  (Temp, GPS, etc)│                     │  Relayer    │                    │  Blockchain  │
-  └────────┬─────────┘                     └──────┬──────┘                    └──────┬───────┘
-           │                                      │                                  │
-           │ 1. Encode concept/value pairs        │                                  │
-           │    (UFO Semantic Codec)              │                                  │
-           │ 2. Generate Groth16 Proof (BN254)    │                                  │
-           │ 3. Apply LLD-AC Compression          │                                  │
-           │ 4. Wrap with XOR-FEC Parity          │                                  │
-           │                                      │                                  │
-           ├────────────[ LoRa RF Chirp ]────────►│                                  │
-           │           (915 MHz, 255B max)        │                                  │
-           │                                      │ 5. Reconstruct/Local ZK Verify   │
-           │                                      │    (Free local execution)        │
-           │                                      │ 6. Batch hashes (Merkle Tree)    │
-           │                                      │                                  │
-           │                                      ├───────────[ Submit Tx ]─────────►│
-           │                                      │           (1 Solana tx / batch)  │
-           │                                      │                                  │
-           │                                      │                                  │ 7. Verify Merkle Root
-           │                                      │                                  │    & execute fee-split:
-           │                                      │                                  │    - 100K lamports → Gateway
-           │                                      │                                  │    - 50K lamports → Treasury
-           │                                      │                                  │
-           │                                      │◄─────────[ Settle SOL ]──────────┤
-           │                                      │          (Direct payout)         │
-```
-
----
 
 ## 💰 Economics & Compensation Model
 
@@ -203,7 +221,10 @@ Users can select between two settlement modes depending on latency and budget re
     *   *Base Fee Savings:* Saves $(N-1) \times 5,000$ lamports in transaction fees.
     *   *Best for:* Scheduled sensors (weather, soil pH, GPS tracking).
 
-### Cost Comparison (SOL = $80.41)
+<details>
+<summary><strong>Cost comparison (illustrative, SOL = $80.41)</strong></summary>
+
+*These estimates depend on the stated semantic-compression assumptions. Actual cost varies with SOL price, transaction fees, batch size, and readings per chirp; recalculate before deployment.*
 
 | Use Case | Transmission Frequency | Readings/Day | Helium (No Privacy) | ZK-LoRaWAN Batch (Full ZK) | Packet Reduction | Battery Increase |
 |:---|:---|:---|:---|:---|:---:|:---:|
@@ -216,9 +237,43 @@ Users can select between two settlement modes depending on latency and budget re
 
 *Note: ZK-LoRaWAN leverages the **UFO Semantic Codec** to fit up to 18 readings into a single chirp, reducing necessary radio transmissions by up to 89% and dramatically extending battery lifespan.*
 
+</details>
+
 ---
 
-## 📂 Repository Directory Structure
+
+## ⚡ Multi-Language Implementation Matrix
+
+Representative implementations of the **Cuneiform-U / Language-U 6D Inference Engine & Range Coder** across programming languages and runtime environments:
+
+| Environment / Language | Source Implementation | Target Architecture & Runtime |
+| :--- | :--- | :--- |
+| 🦀 **Rust** | `cuneiform_u_v3.rs` / `main.rs` | Native SIMD AVX-512, Tokio async state machines |
+| ⚡ **C++20** | `proof.cpp` / `cuneiform_u_v3.h` | Zero-copy embedded microcontrollers, robotics, ESP32 |
+| 🍏 **Apple Swift** | `proof.swift` | Native Apple Silicon (M1–M4), iOS / iPadOS edge devices |
+| 🌐 **TypeScript** | `proof.ts` | Node.js, Deno, Bun serverless edge microservices |
+| 🐹 **Go** | `proof.go` | Concurrent Goroutine mesh relays & LoRaWAN gateways |
+| ☕ **Java / Kotlin** | `Proof.java` / `proof.kt` | Enterprise JVM & Native Android edge tablets |
+| 🐍 **Python** | `proof.py` | PyTorch / NumPy reference research harness |
+| 🕸️ **WebAssembly (WASM/WAT)**| `proof.zig` / `proof_wasm.wasm` | Browser client execution with sub-millisecond decode |
+| 🎨 **WebGL / WebGPU** | `proof.html` / `proof.glsl` | Zero-dependency client-side GPU shader inference |
+| ⚡ **Zig** | `proof.zig` / `cuneiform_u_v3.h` | Direct bare-metal memory-safe binary compilation |
+| 🔷 **C# (.NET 8)** | `proof.cs` | Enterprise .NET multi-platform services |
+| 🎯 **Dart / Flutter** | `proof.dart` | Cross-platform mobile and desktop interfaces |
+| 🟣 **Elixir** | `proof.exs` | High-concurrency distributed BEAM actor mesh |
+| 🧮 **Haskell** | `proof.hs` | Purely functional, mathematically verified state transitions |
+| 🔬 **Julia** | `proof.jl` | High-performance scientific computing & manifold math |
+| 🌙 **Lua** | `proof.lua` | Ultra-lightweight embedded game engines & NGINX gateways |
+| 📊 **MATLAB** | `proof.m` | Numerical simulation & geodesic hypercube modeling |
+| 💻 **PowerShell** | `proof.ps1` | Native Windows administrative and deployment automation |
+| ⚛️ **React JSX** | `Proof.jsx` | Interactive web component for real-time concept visualization |
+| 🎵 **Faust DSP** | `proof.dsp` | Real-time audio signal processing & acoustic cipher synthesis |
+
+---
+
+
+<details>
+<summary><strong>📂 Repository Directory Structure</strong></summary>
 
 ```
 zk-lorawan/
@@ -262,60 +317,11 @@ zk-lorawan/
 
 ---
 
-## ⚡ Quick Start
+</details>
 
-### 1. Run the Entire ZK-LoRaWAN Test Suite
-Run the master verification harness to validate all components, including proof compression, self-healing parity, range proofs, semantic codec, and the gateway engine simulation:
 
-```bash
-python tests/verify_all_modules.py
-```
-
-### 2. Run the Semantic Codec Test Directly
-Verify that 18 raw sensor readings can successfully compress and decompress with 100% losslessness:
-
-```bash
-python tests/test_semantic_compression.py
-```
-
-### 3. Build & Run the Gateway Container
-To run the ZK-LoRaWAN gateway bridge in a containerized environment:
-
-```bash
-docker build -t zk-lorawan-gateway .
-docker run -e SOLANA_RPC="https://api.devnet.solana.com" zk-lorawan-gateway
-```
-
-### 4. RAK/Semtech Concentrator Hardware Recovery
-If deploying to physical hardware (e.g., RAK wireless gateway HAT), use the hardware recovery tool to reset conflicting packet-forwarders and verify concentrator SPI status:
-
-```bash
-bash tools/lora_chirp_recovery.sh
-```
-
----
-
-## 🌐 Related Ecosystem Repositories
-
-*   [zymatica.space](https://github.com/DannyB-bit/zymatica.space) — Core Language-U specifications.
-*   [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) — Native verification engines.
-*   [milestones/milestone-1](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-1) — RF hardware evidence captures.
-*   [milestones/milestone-2](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-2) — Multi-language verification proofs.
-
----
-
-## 👥 Authors & License
-
-Developed by **TheAiCollective.art**:
-*   **zymatica.space** — Core protocol architect.
-*   **astronautshe.com** — Embedded systems and hardware lead.
-*   **DevsOne** — AI agentic systems engineering.
-
-Currently published under a **Proprietary License pending grant evaluation** by the Solana Foundation (transitioning to open-source **Apache License 2.0** upon grant approval) — see [LICENSE](./LICENSE) for details.
-
----
-
-## 🗂️ Consolidated Repository Map (2026-11-24)
+<details>
+<summary><strong>🗂️ Consolidated Repository Map (2026-11-24)</strong></summary>
 
 All three ZK-LoRa milestone repositories are consolidated into this repo with **full git history** (`git subtree`). Every original file is preserved verbatim; milestone-1 lands at tip `f55b36a` (includes merged PRs #147–#155, CI green at every head).
 
@@ -330,3 +336,27 @@ Every unmerged milestone-1 research branch is preserved under `archive/milestone
 The repository root remains the canonical ZK-LoRaWAN protocol stack (Anchor programs, Groth16, proof compression, ceremony). History for each milestone is reachable via `git log -- milestones/milestone-N`.
 
 _Consolidation by Zymatica (Agent 02) under operator directive. Astronaut SHE | Zymatica._
+
+</details>
+
+
+## 🌐 Related Ecosystem Repositories
+
+*   [zymatica.space](https://github.com/DannyB-bit/zymatica.space) — Core Language-U specifications.
+*   [zk-lora-privacy-layer](https://github.com/DannyB-bit/zk-lora-privacy-layer) — Native verification engines.
+*   [milestones/milestone-1](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-1) — RF hardware evidence captures.
+*   [milestones/milestone-2](https://github.com/DannyB-bit/zk-lorawan/tree/master/milestones/milestone-2) — Multi-language verification proofs.
+
+---
+
+
+## 👥 Authors & License
+
+Developed by **[TheAiCollective.art](https://TheAiCollective.art)**:
+*   **zymatica.space** — Core protocol architect.
+*   **astronautshe.com** — Embedded systems and hardware lead.
+*   **DevsOne** — AI agentic systems engineering.
+
+Published under the **Apache License, Version 2.0**. Copyright 2026 **[TheAiCollective.art](https://TheAiCollective.art)** — see [LICENSE](./LICENSE) for details.
+
+---
