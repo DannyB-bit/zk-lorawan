@@ -223,7 +223,7 @@ def git_commit(msg):
     r = subprocess.run(["git", "-C", str(REPO), "commit", "-m", msg, "--allow-empty"],
                        capture_output=True, text=True)
     p = subprocess.run(["git", "-C", str(REPO), "push", "origin",
-                        "researcher-a/frontier-drill-20261121"], capture_output=True, text=True)
+                        "master"], capture_output=True, text=True)
     log(f"git commit: {r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[:120]} | push rc={p.returncode}")
     return r.returncode == 0
 
