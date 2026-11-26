@@ -1,0 +1,4 @@
+aarch64
+/usr/bin/bash: line 5: 2319803 Segmentation fault      ./interpreter_lifecycle legacy
+LEGACY_EXIT=139
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS

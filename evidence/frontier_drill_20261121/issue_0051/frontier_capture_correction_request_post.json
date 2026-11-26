@@ -1,0 +1,86 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0051",
+  "leg": "B_to_A_solution",
+  "request": "CORRECT_CAPTURE_VERDICT_FOR_EXACT_BRAVO_PAYLOAD",
+  "bravo_solution_payload_sha256": "255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7",
+  "bravo_solution_payload_bytes": 6538,
+  "bravo_solution_verdict_b_seq": 6998,
+  "bravo_tx_window_b_seq": 6994,
+  "bravo_frames_fired": 37,
+  "bravo_tx_done": 37,
+  "mismatched_alpha_verdicts": [
+   {
+    "b_seq": 6997,
+    "claimed_sha_match": true,
+    "payload_sha256": "1d000c7416600e37f30995b929d9a26851a2919a602669f0893c0d3d8778cbc2"
+   }
+  ],
+  "frame_sha256": [
+   "808bae546f2c0a0d86597e1ce1ec56cfd9c4893777aee969b88b04cf058b5cd0",
+   "3ee8aa5ca227892a042dd0e00199d7e4280e3d9db96b1ccb636dc4b97c6b4bde",
+   "da0cd88795654e7cc08aee1cf04923a7885d91b28ce81c570208b379a5ec55f6",
+   "c3ed020550257642c7b4f84d7f4022ff2c7444ef3262028782918c40c84825ae",
+   "e913b30b8d08f434ab9ab7c1a72d3e54d08673e620ff0046df07fafb9ec7ce00",
+   "ee6d830e023464c8096414396a289068b0ab9b750b7d6a5f2ca3c82a16ff3d6b",
+   "016aec6a7fffa45b0a0d36d4a512b87c588d796667999f8eb7cd63c6d411d806",
+   "bf395f3d56f4f2f39ca7ba0aa0ef1f8d4e076abe4c0708dc871a84ba97279474",
+   "cf726804d522efe702c0a331310975685d5b3381c015d6c3e8627a0941f46224",
+   "06adf14cc6478bb226e6117f9266b367f5ce4b1955644a3705dce4d331d838d4",
+   "0d711fbf94d8b7d9efc259230b9592b53153e018c1a4d00734fa4f01957e1046",
+   "c6ab1c9be57d536bda66f9e0603b97b799f300cbde81cff690685f13f3dc2de7",
+   "4308d281899385e3d08a26b517de949233a407a2f02bf5c5ab6a8e3e89d0c199",
+   "62111bf7f70805b1ede063b5ca880c41be186c0ddb51e791fc572506ff4dac76",
+   "b345f563bc64d58ea354ead4a8d16d49f2ce5d501b1a1464539b9e213c22565f",
+   "6026f19c65885f7dc3c8074ad433a897f80754cbf347d74403718c789b3d3174",
+   "a711e34e1136e67e2213c1d142f8e408c326015d43d09b73841622ce9b44be23",
+   "1b0cad8fc5689b0935549d6e66d5ec93d4998b6577a4550cb8210bb45275ba45",
+   "dd9bdedaec7cac7d14a3bf39fa7c02a489b2649b744515ab84fec56d9a2116b0",
+   "20f997beb1050439c6cbb3f54b59a36ceab445ee918d581bd92a292758929af5",
+   "4c463f2d2a195c3bcce241054ce22c9d373ed1c0cfb95c339c7d90b2be4b5dbd",
+   "a91ee43d50ab7700ba22d9bb2f32e44421c30b564d461dcea866d5dfa93571de",
+   "379b2373fdf107bcbfb332feabf93878200a0139e7a654b7aca0b48f2642d15e",
+   "bdf95de6e8d3d891fe453acdd401bd380f2316d25b53c687c46c051cd5fbb66e",
+   "9199e7071ee5df8bd88428eb002786fc8de081b29ed48c9bdf05ad74a58a5bb6",
+   "3fef478a5d6e4926d927a48adb9b9e86039275b4a3ede8a589ea630908d3af1f",
+   "446aa2e254b71471b73f0bc3e56c538414ad2424735c2d05310b2da1adaaed78",
+   "5a8fd99c7c88321cd5cc35ce555fbfcc65e84e6770fb0f3e62d8bbbcbe6b62fd",
+   "ee7be5de2dfc8fb7a162cf5bfb0d31ebe5f99eef662c3bf72c0d5b9b95b25088",
+   "ce3675c764b2de06ae64e52a14805a793d5bcde7e199c3244754d75449e9917e",
+   "9d2a7491c9d57d036a4824da03d144dc50c0c14f696b2e01a949578dbaa8c1d4",
+   "07552cb737cecf0ff7fb59552fc647dbd1aff0f0a012cb87b3df097bdca96ad7",
+   "d0d26e6e12f2a8d49f5b9ef651938e143cedfe6cbe8055935ced8e62963940df",
+   "b339f6cf8ec9e394d15da8bc12797f317d9789c1b375ef1b6992501221801587",
+   "0c50d1b170f3420cabfb16ff9e3d2ade04325f9bcf8b15f15bb752f7aa0b139d",
+   "f0656eed2db292a80c8a012d71727c6af6c4dd9c2ec2004f81d61ddfbf33b776",
+   "5ba4a71ec4993e9d14225e23b85455f22a8bb18bfd56c6116a437686efa9ab7c"
+  ],
+  "note": "Alpha B6997 claimed sha_match_with_bravo_verdict=true but its payload_sha256 differs from exact local solution bytes and Bravo B6998; it also preceded B6998. Receiver closure remains BLOCKED pending exact-SHA corrected verdict. Inspect the 37 declared frame SHAs, not a mid-burst provisional payload."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7001,
+   "rtt_ms": 131.226
+  },
+  "A": {
+   "ok": true,
+   "seq": 2674,
+   "rtt_ms": 25.596
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7001,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2674,
+   "fields_match": true
+  }
+ }
+}
