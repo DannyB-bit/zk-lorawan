@@ -1,0 +1,4 @@
+ARCH=aarch64
+KERNEL=6.18.50+rpt-rpi-v8
+mode=legacy ABA=A->C->A stale_cas_ok=1 final_node=2 expected_node=3 corruption=REPRODUCED
+mode=fixed ABA=A->C->A stale_cas_rejected=1 retry_ok=1 final_node=3 final_epoch=5 epoch_bits=64 tagged_cas_lock_free=0
