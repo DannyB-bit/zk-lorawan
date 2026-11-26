@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0044",
+  "ok": true,
+  "verdict": "DECRYPT_OK",
+  "frames_decrypted": 12,
+  "payload_bytes": 2007,
+  "payload_sha256": "c569b7fbb7e3f68c0b7060ed11161abb8ee58d97ccc6927dc5509506c8bc4a36",
+  "sha_match": true,
+  "alpha_declare_b_seq": 6545,
+  "note": "Two distinct 12-frame re-sealed bursts captured; selected latest complete contiguous burst, all 12 CRC-OK 903.9MHz SF9 DECRYPT_OK and payload SHA exact. Earlier burst retained in source log/burst_extract.json. Native solution/tests and B_to_A solution fire pending; no on-chain attestation claimed yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6563,
+   "rtt_ms": 56.941
+  },
+  "A": {
+   "ok": true,
+   "seq": 2442,
+   "rtt_ms": 223.054
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6563,
+   "ts_utc": "2026-11-26T13:21:34Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2442,
+   "ts_utc": "2026-11-26T13:21:35Z",
+   "fields_match": true
+  }
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0044",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "602665245511b20abcb296643f2122ea4af571fbba36ef84d57f2d7549bd1256",
+  "payload_bytes": 7866,
+  "frames": 44,
+  "note": "0044 captured/decrypted 12/12 and native epoll tests 2/2 green. Staged SHA gate 44/44 PASS. Fire selects newest declared B_to_A_solution window with sufficient airtime; no fire outside an open window."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6568,
+   "rtt_ms": 57.393
+  },
+  "A": {
+   "ok": true,
+   "seq": 2445,
+   "rtt_ms": 25.741
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6568,
+   "ts_utc": "2026-11-26T13:26:53Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2445,
+   "ts_utc": "2026-11-26T13:26:53Z",
+   "fields_match": true
+  }
+ }
+}
