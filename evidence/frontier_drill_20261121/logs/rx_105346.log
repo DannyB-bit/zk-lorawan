@@ -32,3 +32,4 @@ WARNING: no temperature telemetry ... 25C
   crc:      0xD203
 40 EE ED 01 27 00 38 02 72 10 E3 02 4D 37 99 10 37 EF CD D7 64 E2 7D 16 
 Received 1 packets (total:1)
+RX_EXIT=124 2026-11-26T11:08:46Z
