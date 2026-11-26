@@ -1,0 +1,20 @@
+{
+ "drill": "frontier_drill_20261121",
+ "as_of_utc": "2026-11-26T11:14:43Z",
+ "mission_scope": 1000,
+ "issues_closed": 41,
+ "current_issue": "FRONTIER-GH-0042",
+ "phase": "await_solution",
+ "latest": {
+  "issue": "FRONTIER-GH-0042",
+  "event": "issue fired 12/12 TX_DONE SF9, frontier_issue_window B6442/A2376"
+ },
+ "integrity_rules": [
+  "strict manifest binding: capture frames must be a subset of Bravo's declared frame_sha256 list and reassembled sha must equal his verdict sha",
+  "single-rx_log capture binding for refires",
+  "no completion on mismatched digest (0025/0036 precedents)",
+  "per-issue devnet attestation both legs",
+  "stdbuf INSIDE sudo for HAL RX line buffering"
+ ],
+ "operator_notes": "Evidence flows to master via the loop's signed commits; PII (LAN IPs, Telegram IDs) redacted before public push."
+}
