@@ -1,0 +1,24 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0045",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "5071ba33fc60eaeeeeb8ba5d6b9d484766438ba88b97ad896f8e808b2cd30a5f",
+  "note": "Fresh 30-minute RX process/window requested. 0045 native tests 2/2 green and staged gate 39/39 PASS. First driver attempt at 14:44 aborted PRE-RF because B6636 still repeats the 14:22:57->14:52:57 window and insufficient airtime+recovery remains; zero airtime, no fire guard. Hot-fire driver is now waiting and will fire once on a newly armed window with sufficient time."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6640,
+   "rtt_ms": 97.899
+  },
+  "A": {
+   "ok": true,
+   "seq": 2483,
+   "rtt_ms": 32.964
+  }
+ }
+}
