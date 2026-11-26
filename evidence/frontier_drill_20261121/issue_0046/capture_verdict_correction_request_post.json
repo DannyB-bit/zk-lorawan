@@ -1,0 +1,87 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0046",
+  "leg": "B_to_A_solution",
+  "request": "CORRECT_CAPTURE_VERDICT_FOR_EXACT_BRAVO_PAYLOAD",
+  "bravo_solution_verdict_b_seq": 6737,
+  "bravo_solution_payload_sha256": "de3932beef1b3e88ffab17b5b6eebc443385f33e2efa67631d999b38423b839a",
+  "bravo_solution_payload_bytes": 5892,
+  "bravo_frames_fired": 33,
+  "bravo_tx_done": 33,
+  "bravo_tx_window_b_seq": 6732,
+  "mismatched_alpha_verdicts": [
+   {
+    "b_seq": 6735,
+    "payload_sha256": "509367667d047822600ae217a98489a651f9f99143777a2c40c5689b98c8105c",
+    "claimed_sha_match": true
+   },
+   {
+    "b_seq": 6736,
+    "payload_sha256": "ad23c846a6e825f88350cf8c7f44c5dc6db462dd4d1c2ae3090ea064611aaae7",
+    "claimed_sha_match": true
+   }
+  ],
+  "frame_sha256": [
+   "47329144ab5ad1ec4a71cb5dacd5cd1da6e9227f1ce2806ff48276315774cc9c",
+   "4c8adec25f59221d1c626cda01ec725d06ca031a330ce10ff4e89cb98c4f7280",
+   "8df3d437f55421dbbdd2ac8eb513ef9179809b9a5b228af2d04722cd29cb1d58",
+   "6dabf6478bb5c2d5fa05d56421f96451b5cdeb7594056d8ee35c22ce1cc43b60",
+   "26961f5c933d428847cb67b1912fcffb9e4cc642755bf3f59810b1340cc4bd2a",
+   "61d1fa7f2ab9e12d8dd8e929f86d6bebd39347c2b2e1f0c7bfb55ef7b9875676",
+   "062fcc8962b6f7957e0d97f8b95a6897c9c5e031b47e6b4870208fd15eb6eefd",
+   "63893ed3265e7e77d5d560cdeefb60051d2975c1a1ef48a87005dc4f5ccdc57b",
+   "7fce2065e64236c2015fc3c21c60031caa58e0d5e4c61d1854d03c5b74aa49b7",
+   "0d699c2b24b8930d9fbba203e5086d45860034ce8fcb33ed8f916c13b4ac2652",
+   "e625fc9896c7a57875baa67688bfdcf1e7593f20d907bbd0a29500de4b9eea64",
+   "394e8fc799520dee91b9fe252cb7c212a4edc27bc5ebd18211a327ded5b6a3d8",
+   "71bba2a3b643dec1c7e3a0eb168c74f2892a4222987edae3e5cb94ba63d1424e",
+   "5370af4cde20a0efdf353a043cf1fa24af2b3499a122be968966084c556e19de",
+   "be59fc2b822a0151b53d39977df94559863453d672a2b8f9ae7e9aeaf7d0e356",
+   "5555c66e8d03579e56102e97f987aa049d520f853b14d681974d804529313aed",
+   "64fdb8291d3d8495d4d2dbc1f1f4b11a5bb2a958ff6ba83c3933250f687af0fb",
+   "c9112df0c18df15ddcd41ecc3189072943640667522f68dd20ec78b6a44196db",
+   "4582e5dcbcf632dd28ec0f155e1861c200c406ca8a704faabf30d4430652dd90",
+   "0ebe916ffd9a42f8f3cf5b9224aa4162ade1edd6a9a3489d4d6282f80d2df481",
+   "2b4141333fa872b5c903c151e0af09bb5389ee7e77520a24a61e31ef490d9e1f",
+   "d4419a78cb0be895513f48dba10f9fd978ec9d9ec4b97d9c4bcaed4d31a0187e",
+   "e106e4fa8273e1e004a7649b6d3d6ca043138f6a2f887100f23d84ec88397606",
+   "4804fa429adf2c49b106c6a5404dc78ab6bcf04b893b2d8423c01517d358c2ba",
+   "4495a6727a92f2631236e88aec74a134f3b2f846774202688dee90703f8f131d",
+   "79c0d13e8acc40f8847af9cc222a0bd2111770a1bd4761cb5448366f80331fe7",
+   "26ea0cfd44dd7e2eb7a1623adba1f08e753a1d02c7fdbaf908f489ca594fc7f3",
+   "017f403be47d6057add2f2bc0b19b74998f1348451dcca182c0b448572896a2d",
+   "d115235e60564431be5d1baaf261a2019505ab6d97e917b7e8622ff37e3fc60c",
+   "e7807430a80f1d3cb21435ef4774804ccc5c0bcf2796a0a1edb01cb7004059e0",
+   "3fe0d26e1d936cf292d06fa038930ca0f80143090f52a07daf0dc173e00e249b",
+   "0a21935843eda8ca29c6da704a0d9c966dc27ac45af70b6127dde9c5d352fab8",
+   "e30a8ff8d6339dabaaa4a4068c410d40ddb4c05d2713eee5ac0678c5a7d52550"
+  ],
+  "note": "Do not close 0046 on B6735/B6736: both carry payload SHAs different from Bravo actual B6737 de3932\u2026, despite sha_match_with_bravo_verdict=true. Bravo TX was 16:35-16:37 UTC; B6735/B6736 were emitted during that burst and cannot be treated as matching the final declared payload. Please inspect rx_162959.log for the exact 33 frame SHAs in this request and post a corrected DECRYPT_OK verdict whose payload_sha256 == B6737. 0047 processing can proceed, but 0046 is NOT closed both sides until this exact-SHA readback."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6743,
+   "rtt_ms": 15.359
+  },
+  "A": {
+   "ok": true,
+   "seq": 2537,
+   "rtt_ms": 245.603
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6743,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2537,
+   "fields_match": true
+  }
+ }
+}

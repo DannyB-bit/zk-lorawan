@@ -1,0 +1,31 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0046",
+  "leg": "A_to_B_issue",
+  "request": "RE_FIRE_MISSING_FRAME_OR_FULL_ISSUE",
+  "declared_issue_window_b_seq": 6654,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 11,
+  "missing_chunk_indices": [
+   5
+  ],
+  "payload_sha256": "02b1475a38377d7b4e808f704dbb60ded1c4666e211d838f06013b5d62699bc5",
+  "note": "Latest standby log has 11/12 authenticated DECRYPT_OK frames, indices 0,1,2,3,4,6,7,8,9,10,11. Prior log contains only the completed 0045 burst; no 0046 idx5 candidate satisfies the declared SHA. Bravo standby RX is active. Please re-fire idx5 with declared frame SHA, or full 12-frame issue burst with ordered frame_sha256 manifest."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6684,
+   "rtt_ms": 15.228
+  },
+  "A": {
+   "ok": true,
+   "seq": 2506,
+   "rtt_ms": 328.323
+  }
+ }
+}
