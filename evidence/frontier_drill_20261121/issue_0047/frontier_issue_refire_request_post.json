@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0047",
+  "leg": "A_to_B_issue",
+  "request": "RE_FIRE_FULL_ISSUE_WITH_FRAME_MANIFEST",
+  "declared_issue_window_b_seq": 6740,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 11,
+  "missing_chunk_indices": [
+   0
+  ],
+  "payload_sha256": "cd4e6ef0c70f2fd6dd9f7e40c1438011ebe6b7189dea633b5cbb6ec06b65eadb",
+  "note": "Please re-fire full 12-frame issue burst with ordered frame_sha256 manifest, or targeted idx0 with declared frame SHA. Bravo standby RX active. No solution or attestation before exact payload SHA verification."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6749,
+   "rtt_ms": 64.647
+  },
+  "A": {
+   "ok": true,
+   "seq": 2541,
+   "rtt_ms": 111.494
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6749,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2541,
+   "fields_match": true
+  }
+ }
+}

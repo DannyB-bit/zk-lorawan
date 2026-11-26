@@ -1,0 +1,42 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0047",
+  "leg": "A_to_B_issue",
+  "ok": false,
+  "payload_sha256": "cd4e6ef0c70f2fd6dd9f7e40c1438011ebe6b7189dea633b5cbb6ec06b65eadb",
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 11,
+  "unique_crc_ok_target_frames": 11,
+  "missing_chunk_indices": [
+   0
+  ],
+  "declared_issue_window_b_seq": 6740,
+  "note": "11/12 contiguous issue frames idx1..11 captured CRC-OK 0x10 at 903.9MHz SF9/BW125 and DECRYPT_OK. idx0 absent; exact payload cannot yet be reassembled or SHA-verified. No solving or attestation before complete capture."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6748,
+   "rtt_ms": 57.417
+  },
+  "A": {
+   "ok": true,
+   "seq": 2540,
+   "rtt_ms": 79.558
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6748,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2540,
+   "fields_match": true
+  }
+ }
+}
