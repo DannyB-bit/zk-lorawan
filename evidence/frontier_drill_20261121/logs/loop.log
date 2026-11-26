@@ -5475,3 +5475,4 @@
 2026-11-26T20:28:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
 2026-11-26T20:28:03Z phase=send_issue solved=50/1000 current=None b_alive=True rx_running=True
 2026-11-26T20:28:06Z attest FRONTIER-GH-0051 A_to_B_issue: {"attestation_sha256": "58cb9a3437b1047de56929d4f7095b642507e3eb5e4be3b4aaa7097c85872fe9", "derived_pubkey": "4DetGiznzzaoR5we81chtgnpqNzU8H
+2026-11-26T20:28:09Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0051_202804.log | push rc=0
