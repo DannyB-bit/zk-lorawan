@@ -1,6 +1,6 @@
 {
  "issue_id": "FRONTIER-GH-0046",
- "payload_sha256": "509367667d047822600ae217a98489a651f9f99143777a2c40c5689b98c8105c",
+ "payload_sha256": "ad23c846a6e825f88350cf8c7f44c5dc6db462dd4d1c2ae3090ea064611aaae7",
  "leg": "B_to_A_solution",
  "verdict": "DECRYPT_OK",
  "frames": [
@@ -75,10 +75,10 @@
    "verdict": "DECRYPT_OK"
   },
   {
-   "frame_sha256": "62bc92700bdee03fca8d7e76403d588b2c7edda20f4562beaed6d409c37c2477",
+   "frame_sha256": "e625fc9896c7a57875baa67688bfdcf1e7593f20d907bbd0a29500de4b9eea64",
    "idx": 10,
    "total": 33,
-   "rx_log": "rx_133557.log",
+   "rx_log": "rx_162959.log",
    "verdict": "DECRYPT_OK"
   },
   {
@@ -236,5 +236,5 @@
    "verdict": "DECRYPT_OK"
   }
  ],
- "utc": "2026-11-26T16:35:59Z"
+ "utc": "2026-11-26T16:36:04Z"
 }
