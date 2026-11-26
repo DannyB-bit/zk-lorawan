@@ -626,3 +626,8 @@ WARNING: no temperature telemetry ... 25C
   crc:      0x7FBB
 40 EE ED 01 27 00 40 02 72 D0 63 86 13 EE 90 2E 8D 88 3F A3 CC 7E 8A B5 
 Received 1 packets (total:34)
+
+Nb valid packets received: 34 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-26T12:10:03Z
