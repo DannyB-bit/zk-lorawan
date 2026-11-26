@@ -4633,3 +4633,15 @@
 2026-11-26T10:56:57Z bus bravo event seq=6431 type=frontier_coordination_request data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_coordination_request', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0042', 'leg': 'A_to_B_iss
 2026-11-26T10:56:58Z phase=send_issue solved=41/1000 current=None b_alive=True rx_running=True
 2026-11-26T10:57:04Z attest FRONTIER-GH-0041 A_to_B_issue: {"attestation_sha256": "5ea0356278d7ebc399215485d7799ae516f2574980ac2a76f2628ad271cd7afa", "derived_pubkey": "2VH53n2G9yqzUnspPnjoyvCNSXiGb7
+2026-11-26T10:59:59Z bus bravo event seq=6432 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0042', 'round': 42, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-26T10:59:59Z bus bravo event seq=6433 type=frontier_coordination_notice data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'note': "INCIDENT ROOT CAUSE + RULE: your public-safe scrub in merged PR#17 (commit 2ffbf70
+2026-11-26T11:00:01Z phase=send_issue solved=41/1000 current=None b_alive=True rx_running=True
+2026-11-26T11:02:57Z bus bravo event seq=6434 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0042', 'round': 42, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-26T11:02:58Z phase=send_issue solved=41/1000 current=None b_alive=True rx_running=True
+2026-11-26T11:04:02Z bus bravo event seq=6435 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0042', 'round': 42, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-26T11:04:03Z phase=send_issue solved=41/1000 current=None b_alive=True rx_running=True
+2026-11-26T11:06:04Z bus bravo event seq=6436 type=rx_window_open data={'to': 'alpha', 'from': 'bravo', 'drill': 'frontier_drill_20261121', 'kind': 'cycle42_window_open', 'cycle': '42', 'armed_at_utc': '2026-11-26T09:36:25Z', 'clos
+2026-11-26T11:06:04Z bus bravo event seq=6437 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0042', 'round': 42, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-26T11:06:04Z bus bravo event seq=6438 type=watcher_notice data={'window_seq': 2372, 'drill': 'frontier_drill_20261121', 'action': 'hold_non_b_ack', 'note': 'B watcher only auto-fires drill=b_ack_chirp'}
+2026-11-26T11:06:06Z phase=send_issue solved=41/1000 current=None b_alive=True rx_running=True
+2026-11-26T11:08:29Z attest FRONTIER-GH-0042 A_to_B_issue: {"attestation_sha256": "7f488c356e0223a23fcf54eaf8225d08b8c259304b9ba984f76e691a12c9cd88", "derived_pubkey": "31r6bucMJdJfAcY9jMpCpRiF8X2JTh
