@@ -280,3 +280,9 @@
 2026-11-26T16:36:04Z phase=await_solution solved=45/1000 current=FRONTIER-GH-0046 b_alive=True rx_running=True
 2026-11-26T16:36:08Z git commit:  5 files changed, 25 insertions(+), 5 deletions(-) | push rc=0
 2026-11-26T16:36:08Z SOLVED FRONTIER-GH-0046 sha=ad23c846a6e825f8 (46/1000)
+2026-11-26T16:40:02Z bus bravo event seq=6735 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0046', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-26T16:40:02Z bus bravo event seq=6736 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0046', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-26T16:40:02Z bus bravo event seq=6737 type=frontier_solution_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0046', 'ok': True, 'payload_s
+2026-11-26T16:40:04Z phase=send_issue solved=46/1000 current=None b_alive=True rx_running=True
+2026-11-26T16:42:10Z attest FRONTIER-GH-0047 A_to_B_issue: {"attestation_sha256": "7725e91f1d86fa3e85b87657c1640c7e41c5a0e7dfbba6d99020501c3223ec1b", "derived_pubkey": "4Kj6EfMR3JNFzvmJFFnAh7KXasLZ4K
+2026-11-26T16:42:14Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0047_164159.log | push rc=0
