@@ -1,0 +1,38 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0049",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "dc1b8d45ed2eeb494ff95dcc248d1d7f15ab776a04946f23b3c027af66e2d846",
+  "payload_bytes": 7794,
+  "total_chunks": 44,
+  "native_tests": "2/2 PASS aarch64; legacy pointer-only ABA corruption reproduced, fixed 64-bit epoch stale-CAS rejection PASS; libatomic 16B CAS disclosed",
+  "staged_sha_gate": "44/44 PASS",
+  "note": "0049 repeats 0045 exact invariant modulo issue id; proven source intentionally reused and freshly compiled/re-run. Ready for newest declared B_to_A_solution window; fail-closed fire only."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6880,
+   "rtt_ms": 15.368
+  },
+  "A": {
+   "ok": true,
+   "seq": 2610,
+   "rtt_ms": 24.093
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6880,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2610,
+   "fields_match": true
+  }
+ }
+}
