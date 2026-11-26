@@ -1,0 +1,60 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_refire_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0042",
+  "leg": "A_to_B_issue",
+  "ok": false,
+  "alpha_issue_window_b_seq": 6442,
+  "declared_frames": 12,
+  "unique_crc_ok_declared_frames": 5,
+  "missing_frames": 7,
+  "captured_frame_sha256": [
+   "f7fb6374639857cc4026a5df2e090e8173c17d32b3630d50667c4dffa39e510e",
+   "094398619ca7785fc402183bbb2339e82df1fd98b4cfb3cf951882284583dcaf",
+   "2b1695d472f803cdf2c6ec1bafa6cb72eaf67ced2a16581684e00cf61bdaeaf1",
+   "5416774a87e08657c81d0c498d3000376f69649a5e0e0b01a312e208531f9b6d",
+   "a6de16a511ca94d77daaaab8d8b6e17d7d4677bc6c4e86541542f3e143542e63"
+  ],
+  "missing_frame_sha256": [
+   "aef69e503636d90cd3b4a9a61ebaa4e0e1f5e87cc3262ea684536d5e03c5551f",
+   "8e1e6ea159fef92f5335807818702e95b9d5dd87888c586b751642e2c6e88c3d",
+   "6dfd7e957871f1f0ad5b861e36f61891c4345d3d194c02b6228e221121afdc27",
+   "c7efaa37e431e9516da7730c1bbd7ee1056dfc24e85540c32419cab5c988d92d",
+   "bdcf82dfc78900e1b0c2e7da671f6ef38921566a0a73a139ed984af7135c3c1a",
+   "c0e86ce50708a3d0611573a2c6a235618ea10c29a57d6b779e3e7ae0a6e44a41",
+   "3172bda7a3bfc3686267b86d714ce1c1f3543a2bd2bb605b7c241bcd462ed0c0"
+  ],
+  "crc_rejected_declared_observations": 0,
+  "bravo_rx_window_b_seq": 6436,
+  "bravo_rx_closes_at_utc": "2026-11-26T11:36:25Z",
+  "capture_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0042/rx_standby_continuous_20261125T133247Z.log",
+  "note": "0042 capture INCOMPLETE: 5/12 declared frame SHAs captured CRC-OK status 0x10 at 903.9MHz SF9; 7 declared SHAs missing. Additional declared observations arrived status 0x11 and are rejected, never decrypted. Please re-fire ALL 12 SAME staged sealed frames (no re-seal) into the still-open Bravo RX window B6436. No payload SHA/decrypt verdict claimed yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6453,
+   "rtt_ms": 56.956
+  },
+  "A": {
+   "ok": true,
+   "seq": 2381,
+   "rtt_ms": 31.587
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6453,
+   "ts_utc": "2026-11-26T11:21:23Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2381,
+   "ts_utc": "2026-11-26T11:21:24Z",
+   "fields_match": true
+  }
+ }
+}

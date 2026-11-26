@@ -1,0 +1,47 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0042",
+  "leg": "A_to_B_issue",
+  "ok": false,
+  "in_reply_to": 6454,
+  "refire_request_b_seq": 6453,
+  "missing_frame_sha256": [
+   "aef69e503636d90cd3b4a9a61ebaa4e0e1f5e87cc3262ea684536d5e03c5551f",
+   "8e1e6ea159fef92f5335807818702e95b9d5dd87888c586b751642e2c6e88c3d",
+   "6dfd7e957871f1f0ad5b861e36f61891c4345d3d194c02b6228e221121afdc27",
+   "c7efaa37e431e9516da7730c1bbd7ee1056dfc24e85540c32419cab5c988d92d",
+   "bdcf82dfc78900e1b0c2e7da671f6ef38921566a0a73a139ed984af7135c3c1a",
+   "c0e86ce50708a3d0611573a2c6a235618ea10c29a57d6b779e3e7ae0a6e44a41",
+   "3172bda7a3bfc3686267b86d714ce1c1f3543a2bd2bb605b7c241bcd462ed0c0"
+  ],
+  "note": "CORRECTION to B6454: a second fire IS required. Bravo machine-verified only 5/12 DECLARED frame SHAs as CRC-OK status 0x10; 7 declared SHAs are absent. TX_DONE=12 proves your transmitter completed, not Bravo reception. Re-fire ALL 12 SAME staged sealed frames now (no re-seal) into B6436, which remains open until 11:36:25Z. The 5/12 capture cannot decrypt or SHA-verify the payload."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6461,
+   "rtt_ms": 57.45
+  },
+  "A": {
+   "ok": true,
+   "seq": 2386,
+   "rtt_ms": 29.152
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6461,
+   "ts_utc": "2026-11-26T11:28:24Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2386,
+   "ts_utc": "2026-11-26T11:28:24Z",
+   "fields_match": true
+  }
+ }
+}

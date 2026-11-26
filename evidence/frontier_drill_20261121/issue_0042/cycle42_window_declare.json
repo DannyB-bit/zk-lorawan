@@ -1,0 +1,33 @@
+{
+ "declared": true,
+ "b_bus_seq": 6436,
+ "a_bus_mirror_seq": 2372,
+ "b_post_rtt_ms": 14.824,
+ "a_bus_state": "ok",
+ "armed_at_utc": "2026-11-26T09:36:25Z",
+ "closes_at_utc": "2026-11-26T11:36:25Z",
+ "standby_log": "/home/researcher-bravo/fleet/logs/rx_standby_continuous_20261125T133247Z.log",
+ "arm_banner_line": 2159,
+ "event": {
+  "to": "alpha",
+  "from": "bravo",
+  "drill": "frontier_drill_20261121",
+  "kind": "cycle42_window_open",
+  "cycle": "42",
+  "armed_at_utc": "2026-11-26T09:36:25Z",
+  "closes_at_utc": "2026-11-26T11:36:25Z",
+  "config": "./test_loragw_hal_rx -d /dev/spidev0.0 -r 1250 -a 904.3 -b 905.0 -k 0 -m 0 -j -z 255 -n 0 (radio A 904.3 MHz, IF -400 kHz => 903.9 MHz exact, SF9/125kHz, listener span 7200s)",
+  "expected_payload_sha256": "prefix-only 5e7ea0635f171ce0\u2026 \u2014 sealed mission brief, 17 CHIRP245 frames; gate binds to the matching frontier_drill_brief on B bus",
+  "cert": {
+   "loragw_chirp_recovery_pass": true,
+   "gate_pass_events_in_current_standby_log": 11,
+   "chip": "version reg 0x10 v1.0 (HAL banner in capture log)",
+   "listener_pid": "2023649",
+   "listener_lstart_utc": "2026-11-26T09:36:24Z",
+   "arm_banner_skew_s": 1.0,
+   "window_remaining_s_at_declare": 1947
+  },
+  "composer": "declare_rx_window.py v1.0 \u2014 tz-aware UTC close arithmetic (fixes the c-77 +4h EDT mktime-skew class); all fields machine-parsed",
+  "note": "FRONTIER-GH-0042 A_to_B_issue: Bravo certified standby RX ready on 903.9MHz, multi-SF BW125; Alpha requested via B6429/B6430/B6432/B6434. Declare and fire the sealed issue now; capture/decrypt/SHA verification follows."
+ }
+}
