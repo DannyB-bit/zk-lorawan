@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0051",
+  "leg": "A_to_B_issue",
+  "ok": true,
+  "payload_sha256": "cb0a52b8932fdcf42dded7503352176ccc5650fba0161d765d6bb017e41f5567",
+  "declared_issue_window_b_seq": 6938,
+  "declared_frames": 12,
+  "selected_frames": 12,
+  "unique_authenticated_ciphertexts": 20,
+  "authenticated_decrypt_ok": 20,
+  "refire_duplicate_ciphertexts": 8,
+  "note": "Real standby HAL log: 20 authenticated ciphertexts across contiguous idx0..11, identical plaintext per duplicate index. Selected 12/12 reassemble 2033 bytes exact declared SHA. Native head_mutex/atomic-refcount solve/tests starting."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6985,
+   "rtt_ms": 112.924
+  },
+  "A": {
+   "ok": true,
+   "seq": 2665,
+   "rtt_ms": 25.35
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6985,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2665,
+   "fields_match": true
+  }
+ }
+}
