@@ -1,0 +1,88 @@
+RX_ARM 2026-11-26T20:12:03Z timeout_s=1800
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+RESET_SEQUENCE_OK
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 702634824
+  size:     245
+  chan:     3
+  status:   0x10
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  10.2
+  rssi_chan:197.0
+  rssi_sig :197.0
+  crc:      0x1C8E
+01 21 E5 38 E1 9F 1F 73 B5 99 C9 A6 EB EE 3D 4C C6 A8 68 48 9F C3 04 E5 F7 7A 67 55 3E BA DB 7D B0 05 CD D1 97 91 D4 80 29 FD 95 DF BF 32 26 0F FF 65 1B 63 A3 F7 5B B4 10 3E 3E 08 FD E4 51 6A 47 B1 47 86 72 D5 4B B6 15 8B 04 8F D3 21 50 73 0B 1B 14 7E 17 BF C8 03 E9 C3 37 0D 8F 3C C9 54 A1 03 19 5A 47 4B 33 2C FD C6 C6 8B AC A8 5B 91 ED 20 7D 7B 0C 82 1D 41 2C 43 D9 5B 6D 03 87 42 6D 04 3B C1 A9 8D 67 1B 15 7D 7D B4 C4 28 6D DB 63 1F B9 98 57 33 60 CC B3 06 5D A8 80 8F 4B 05 4C DF 4C 46 5A DC AB D9 AC D0 83 05 6D 8D F7 18 A0 5F 03 8E 9F 9D 58 9F 2A 54 E2 5C CD 0D 81 B2 E5 88 58 8C 32 8E 4F 98 53 C2 4E 45 21 B5 26 E8 CD A6 48 9C AA A7 3C E9 1E 9E 12 10 13 9B C5 AB 38 3C BF 28 C7 51 39 C1 75 ED 08 5C 8E B0 EB 88 13 01 1F E5 8B 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 707024401
+  size:     245
+  chan:     3
+  status:   0x10
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  10.0
+  rssi_chan:197.0
+  rssi_sig :197.0
+  crc:      0x6AF5
+01 21 1C B2 54 64 2D 45 DB 59 BB 2F 3E 32 DA 4C E7 1F C5 19 E8 74 B9 D9 C9 2C E8 FA 53 F1 1A 8B 31 FB E3 DD 2C 28 DB 01 A5 A0 90 AA 92 7A 38 1C 66 56 4A E6 6B E7 AE 7D 66 6B EA E0 2A 39 B8 35 39 B7 BA CD AB EF 73 F2 7A 84 3F 3C B2 6B AF 8F A4 CF E4 DB 22 47 A3 93 25 0A 6F C8 BF 5A 4E 1B 21 45 F1 D3 7A 2A 32 B4 5F 00 ED 05 EC 8D D3 E3 59 44 B7 1D 46 9B C5 2E 02 77 89 FB 15 7C 03 7C 76 FB D7 05 DA A7 97 97 CE D5 56 5E 17 9F 26 93 E1 2F 92 53 4A C7 10 4A 46 45 1F FF F8 0C 58 FE 9E 96 D7 BB E4 EC 6A B4 08 E9 B9 0E 3D 48 5B BF 2B C2 B5 76 04 F2 A6 33 CB 0D E5 5B 25 60 B8 F0 F8 1C F1 B9 51 CD 6A A3 5C 4F 08 23 C6 82 60 E0 DC 71 97 81 14 BD A7 3B 62 67 75 F8 4F 44 75 29 66 BB 3C D4 E9 CC 85 9F 7F DE C0 64 FE B4 95 A2 FB 27 E3 D7 EE 
+Received 1 packets (total:2)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 711417917
+  size:     245
+  chan:     3
+  status:   0x10
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  10.0
+  rssi_chan:197.0
+  rssi_sig :197.0
+  crc:      0xDAF4
+01 21 2B 4B 7E 2D B0 A1 7A 5A CE 84 45 B5 84 30 79 5F 89 BB 2E 4E DE 57 5C E1 B1 F6 7F 0F C3 60 BC E9 EE 9A 6B 4F A5 F2 A2 B1 B9 58 7C 56 5C 02 7E 01 F0 3A 1D 6D D7 D0 4B 1F AC 17 4B 26 BD DF F2 5B 41 2A 14 76 BF 61 0B 7C A4 90 1A FF 1C 03 BE 2B 44 3D F0 87 B3 DF 60 EF DC E0 4F 28 74 DF 1F 09 AA 07 78 97 40 C4 D3 0D 8B CF 38 C1 E2 EB E6 80 56 5C 8D 24 07 5C 26 F9 CD B2 97 1E 9C 69 1F 93 12 B7 5B 3A 0E 19 0E 81 23 98 B3 89 C6 DB 7F 70 8D 93 6A 08 68 DE 39 28 2C 22 CB 43 56 E0 C8 5B B5 F6 6A 7E 32 4A D2 9D F3 46 10 B3 82 3E 3E CA FE 06 C4 18 74 C1 77 C9 60 59 06 87 7C 81 1F 64 0F 28 6E 40 26 1D 31 AE B3 49 74 1E 2F DC 2C 85 B8 80 67 65 78 85 FB 35 8F 66 BE 79 A2 89 3A CC 24 D0 ED 4B D5 92 8E 2E 57 02 18 DA 1F 7E EF 7D AE 5B 77 
+Received 1 packets (total:3)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 715811897
+  size:     245
+  chan:     3
+  status:   0x10
+  datr:     7
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  9.8
+  rssi_chan:197.0
+  rssi_sig :197.0
+  crc:      0x5739
+01 21 F3 11 EF 9C 9C 60 F6 A6 13 73 0E 54 E4 2A 27 72 30 E8 FF 90 C6 FE A9 E9 5E 4E 83 DC 55 79 C8 D8 B1 6E C7 10 23 80 67 7C F6 04 E8 59 31 01 FD FA D9 0E 90 4D 6D C4 B0 62 D5 5C A2 E4 56 95 06 56 B0 EC 77 EC AE 40 DF 40 4C 9D 24 2C DE 0B E5 BE 3B 2C 41 9B 48 51 5D 83 51 A5 9A 64 18 8F 68 C9 15 F5 5D 1F EF 6B F1 26 55 80 0E 5C 4F 90 AE 9E EC AE 04 1E 5A 35 81 DF 7D AB 56 EC 84 9D AB 49 73 E5 6F 1C F3 38 76 13 AC ED 33 FD 59 6E 7C D6 46 F9 22 A3 6A 78 E4 D2 68 94 9E 06 7A D8 10 F9 D7 2B 47 A3 A6 00 D7 F3 30 88 A7 87 0B ED 46 1F 80 9F CF 8F 78 40 9A D3 C7 16 7B 08 8F 18 35 67 F2 C4 CD 1B 94 D2 30 6F 4A 88 44 E2 3B AE DB 3E D2 D6 0A C0 90 6C 23 6B 2B 77 B0 A5 9B 35 F4 35 34 B8 E9 20 C0 6F 3B FB 48 FA 54 36 BF 4A A9 D7 E9 FF CD 
+Received 1 packets (total:4)
