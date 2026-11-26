@@ -5257,3 +5257,11 @@
 2026-11-26T18:08:01Z bus bravo event seq=6814 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0047', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
 2026-11-26T18:08:01Z bus bravo event seq=6815 type=frontier_solution_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0047', 'ok': True, 'payload_s
 2026-11-26T18:08:01Z attest FRONTIER-GH-0047 B_to_A_solution: {"attestation_sha256": "1c2954681e1405b73bdcf5e9d56fa3b83d68dded775f64ee4e76301e6250bf34", "derived_pubkey": "DepWDuHo9duKG8Ra67xRXDG4hmHcGG
+2026-11-26T18:08:03Z phase=await_solution solved=46/1000 current=FRONTIER-GH-0047 b_alive=True rx_running=True
+2026-11-26T18:08:05Z git commit:  create mode 100644 evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0047_solution.json | push rc=0
+2026-11-26T18:08:05Z SOLVED FRONTIER-GH-0047 sha=1f7097b8c637023d (47/1000)
+2026-11-26T18:12:02Z bus bravo event seq=6816 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0047', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-26T18:12:02Z bus bravo event seq=6817 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0047', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T18:12:02Z bus bravo event seq=6818 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0047', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T18:12:02Z bus bravo event seq=6819 type=frontier_onchain_attest data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_onchain_attest', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0047', 'solution_sha256': '1f70
+2026-11-26T18:12:03Z phase=await_solution solved=46/1000 current=FRONTIER-GH-0047 b_alive=True rx_running=True
