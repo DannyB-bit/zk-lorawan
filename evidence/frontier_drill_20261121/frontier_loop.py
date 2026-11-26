@@ -237,6 +237,9 @@ def git_commit(msg):
                    capture_output=True)
     r = subprocess.run(["git", "-C", str(REPO), "commit", "-m", msg, "--allow-empty"],
                        capture_output=True, text=True)
+    # self-heal against concurrent fleet commits to master (B/docs/CI), then push
+    subprocess.run(["git", "-C", str(REPO), "pull", "--rebase", "origin", "master"],
+                   capture_output=True, text=True)
     p = subprocess.run(["git", "-C", str(REPO), "push", "origin",
                         "master"], capture_output=True, text=True)
     log(f"git commit: {r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[:120]} | push rc={p.returncode}")
