@@ -14,3 +14,8 @@ WARNING: no temperature sensor found on port 0x3B
 WARNING: no temperature sensor found on port 0x38
 WARNING: no temperature telemetry ... 25C
 Waiting for packets...
+
+Nb valid packets received: 0 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-26T11:38:59Z
