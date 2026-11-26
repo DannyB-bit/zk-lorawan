@@ -32,7 +32,7 @@ for d in (LOGS, FRAMES, ISSUES, SOLS):
 BRAVO_PUB = "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118"
 ALPHA_PUB = "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942"
 ALPHA_SK = Path("/home/researcher-alpha/.config/solana/chirp245_alpha_sk.key").read_text().strip()
-BUS = "http://REDACTED-LAN-BRAVO:8643"
+BUS = os.environ.get("FRONTIER_BUS", "http://127.0.0.1:8643")  # PII policy: no LAN IPs in public repo (Dan 2026-11-25)
 TOKEN = os.environ["FLEET_FAST_TOKEN"]
 TARGET = 1000         # Dan's order 2026-11-24: the FULL 1000-problem benchmark (was 100)
 DRILL = "frontier_drill_20261121"
@@ -84,8 +84,23 @@ def now():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+import re as _re
+
+def sanitize(text):
+    """PII policy (Dan 2026-11-25): hash LAN IPs / concentrator EUIs out of any
+    text before it reaches committed logs. Payload evidence is hash-locked and
+    never altered; logs and code are always scrubbed."""
+    def ip_sub(m):
+        return "lan-" + hashlib.sha256(m.group(0).encode()).hexdigest()[:8]
+    def eui_sub(m):
+        return "eui-" + hashlib.sha256(m.group(0).encode()).hexdigest()[:8]
+    text = _re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", ip_sub, str(text))
+    text = _re.sub(r"\b0016c001[0-9a-fA-F]{8}\b", eui_sub, text)
+    return text
+
+
 def log(msg):
-    line = f"{now()} {msg}"
+    line = f"{now()} {sanitize(msg)}"
     print(line)
     with open(LOGS / "loop.log", "a") as f:
         f.write(line + "\n")
@@ -271,6 +286,12 @@ def step():
     payloads = scan_rx_payloads()
     verdict_shas = {e["data"].get("issue_id"): e["data"].get("payload_sha256")
                     for e in br if e["type"] == "frontier_solution_verdict"}
+    # STRICT manifest binding (2026-11-25, after the 0036 mixed-capture incident):
+    # when Bravo declared an exact frame_sha256 list, a capture candidate is valid ONLY if
+    # every captured frame sha is in that list AND the reassembled payload sha matches.
+    verdict_frames = {e["data"].get("issue_id"): set(e["data"].get("frame_sha256") or [])
+                      for e in br if e["type"] == "frontier_solution_verdict"
+                      and e["data"].get("frame_sha256")}
     ack = None
     solutions = {}
     for p in payloads:
@@ -282,6 +303,12 @@ def step():
             ack = j
         if j.get("issue_id"):
             iid = j["issue_id"]
+            declared = verdict_frames.get(iid)
+            if declared:
+                cap_shas = {f.get("frame_sha256") for f in p.get("frames", [])}
+                if not cap_shas or not cap_shas.issubset(declared) or p["sha256"] != verdict_shas.get(iid):
+                    log(f"REJECT mixed/unbound capture for {iid}: {len(cap_shas)} frames, subset_of_manifest={cap_shas.issubset(declared)}, sha_match={p['sha256'] == verdict_shas.get(iid)}")
+                    continue
             entry = {"sha256": p["sha256"], "payload": j, "frames": p.get("frames", [])}
             if iid not in solutions or p["sha256"] == verdict_shas.get(iid):
                 # first candidate wins unless a later one matches bravo's verdict sha
@@ -345,6 +372,9 @@ def step():
         idx = len(s["solved"])
         issue = bench[idx]
         iid = issue["issue_id"]
+        if iid in s.get("held", []):
+            log(f"{iid} is HELD by operator - not firing; waiting")
+            return
         payload = {
             "type": "frontier_issue", "drill": DRILL, "round": idx + 1, "target": s["target"],
             "issue_id": iid, "repo": issue["repo"], "target_file": issue["target_file"],

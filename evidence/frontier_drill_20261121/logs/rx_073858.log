@@ -1,0 +1,57 @@
+RX_ARM 2026-11-24T07:38:58Z timeout_s=1800
+RESET_SEQUENCE_OK
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1017597193
+  size:     24
+  chan:     4
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904100000
+  snr_avg:  -15.8
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0xFFB9
+40 EE ED 01 27 00 A0 00 72 28 91 F5 4E D9 03 3E E0 D2 E2 C1 E0 DC 55 09 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1623760253
+  size:     24
+  chan:     6
+  status:   0x11
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -19.8
+  rssi_chan:82.0
+  rssi_sig :63.0
+  crc:      0x2E84
+40 EE ED 01 27 00 62 C9 2F 3F 13 AE 35 87 0B F8 D2 11 F9 84 4A 07 B8 13 
+Received 1 packets (total:1)
+
+Nb valid packets received: 1 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-24T08:08:58Z

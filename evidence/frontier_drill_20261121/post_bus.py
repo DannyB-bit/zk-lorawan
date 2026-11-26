@@ -5,7 +5,7 @@ Usage: post_bus.py <type> <json_data_file_or_inline_json>
 """
 import json, os, sys, urllib.request
 
-url = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].startswith("http") else "http://REDACTED-LAN-BRAVO:8643"
+url = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].startswith("http") else os.environ.get("FRONTIER_BUS", "http://127.0.0.1:8643")
 # allow: post_bus.py <type> <json> [url]
 args = sys.argv[1:]
 if args and args[0].startswith("http"):

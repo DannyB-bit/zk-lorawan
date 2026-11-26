@@ -1,0 +1,75 @@
+RX_ARM 2026-11-24T17:16:58Z timeout_s=1800
+RESET_SEQUENCE_OK
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 517381242
+  size:     24
+  chan:     3
+  status:   0x11
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  -14.5
+  rssi_chan:84.0
+  rssi_sig :69.0
+  crc:      0x0B1A
+40 EE EE 01 17 03 EF 00 72 C6 98 2C 83 11 D8 2B 9F 70 78 C1 86 79 5B AD 
+Received 1 packets (total:0)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1117035838
+  size:     24
+  chan:     4
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904100000
+  snr_avg:  -15.0
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0xBF3B
+40 EE ED 01 27 00 ED 00 72 31 CC 15 77 61 42 7E 90 2D F9 72 8D 5A D7 68 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 1716689396
+  size:     24
+  chan:     7
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904700000
+  snr_avg:  -16.0
+  rssi_chan:82.0
+  rssi_sig :67.0
+  crc:      0x922B
+40 EE ED 01 27 00 EF 00 72 3E 9F FF 2E 9F C7 97 8E 3C 41 18 13 48 C6 7B 
+Received 1 packets (total:2)
+
+Nb valid packets received: 2 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-24T17:46:58Z
