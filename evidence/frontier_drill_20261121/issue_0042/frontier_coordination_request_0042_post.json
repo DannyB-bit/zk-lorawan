@@ -1,0 +1,36 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0042",
+  "leg": "A_to_B_issue",
+  "requested_issue_id": "FRONTIER-GH-0042",
+  "note": "Consolidated >1h stall wake: B6428/A2369 next-issue request has been unanswered for 20.5h. Issue 0041 is CLOSED both sides (39/39 DECRYPT_OK exact SHA, finalized devnet attests, PR#22 merged). Please select GitHub issue 0042, declare and fire a fresh 30-minute A_to_B_issue window on 903.9MHz using current ADR SF7/BW125/14dBm/gap3. Bravo RX standby is active and ready for capture/decrypt/native solve; no issue 0042 window or frames have arrived."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6431,
+   "rtt_ms": 57.659
+  },
+  "A": {
+   "ok": true,
+   "seq": 2370,
+   "rtt_ms": 26.52
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6431,
+   "ts_utc": "2026-11-26T10:56:21Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2370,
+   "ts_utc": "2026-11-26T10:56:22Z",
+   "fields_match": true
+  }
+ }
+}

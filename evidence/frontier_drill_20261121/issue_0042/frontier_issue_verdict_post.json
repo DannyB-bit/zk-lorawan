@@ -1,0 +1,42 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0042",
+  "ok": true,
+  "verdict": "DECRYPT_OK",
+  "frames_decrypted": 12,
+  "payload_bytes": 2019,
+  "payload_sha256": "a6eab97ddad900be614e3850a5bf385fac06540e0387ac3cf846e3f6a1aa8dce",
+  "sha_match": true,
+  "alpha_declare_b_seq": 6442,
+  "refire_request_b_seq": 6453,
+  "note": "12/12 declared frame SHAs now captured CRC-OK after Alpha re-fire, all DECRYPT_OK, reassembled payload SHA exact. Initial 5/12 capture and refire request B6453 retained as honest history. Native solution/tests and B_to_A solution fire pending; no on-chain attestation claimed yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6467,
+   "rtt_ms": 59.346
+  },
+  "A": {
+   "ok": true,
+   "seq": 2390,
+   "rtt_ms": 42.672
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6467,
+   "ts_utc": "2026-11-26T11:34:51Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2390,
+   "ts_utc": "2026-11-26T11:34:52Z",
+   "fields_match": true
+  }
+ }
+}
