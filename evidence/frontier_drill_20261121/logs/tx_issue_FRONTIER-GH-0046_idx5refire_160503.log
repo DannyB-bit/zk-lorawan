@@ -1,0 +1,3 @@
+FIRE_START 2026-11-26T16:05:03Z label=issue_0046_idx5 frames=/tmp/0046_idx5_refire sf=9 pow_dbm=14 bw_khz=125 freq_mhz=903.9
+2026-11-26T16:05:10Z frame_05 sha=4b89c642a1ea8595 t=1795709103.532155961->1795709110.791197833 A_LORA_TX_FILE_SEND_COMPLETE=YES
+FIRE_DONE 2026-11-26T16:05:13Z label=issue_0046_idx5 frames_fired=1 tx_done=1 sf=9 pow_dbm=14 burst_airtime_s=1.21 hourly_duty_pct_if_one_burst=0.0336
