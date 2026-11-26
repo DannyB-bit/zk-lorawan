@@ -5476,3 +5476,123 @@
 2026-11-26T20:28:03Z phase=send_issue solved=50/1000 current=None b_alive=True rx_running=True
 2026-11-26T20:28:06Z attest FRONTIER-GH-0051 A_to_B_issue: {"attestation_sha256": "58cb9a3437b1047de56929d4f7095b642507e3eb5e4be3b4aaa7097c85872fe9", "derived_pubkey": "4DetGiznzzaoR5we81chtgnpqNzU8H
 2026-11-26T20:28:09Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0051_202804.log | push rc=0
+2026-11-26T20:30:10Z git commit:  4 files changed, 19 insertions(+), 4 deletions(-) | push rc=0
+2026-11-26T20:32:02Z bus bravo event seq=6937 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'round': 51, 'payload_sha256': 'cb0a52b8932fdcf42dded750335
+2026-11-26T20:32:02Z bus bravo event seq=6938 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'round': 51, 'payload_sha256': 'cb0a52b8932fdcf42dded750335
+2026-11-26T20:32:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:32:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:33:57Z bus bravo event seq=6939 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:33:57Z bus bravo event seq=6940 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:33:57Z bus bravo event seq=6941 type=frontier_coordination_request data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_coordination_request', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0050', 'leg': 'B_to_A_sol
+2026-11-26T20:33:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:33:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:36:01Z bus bravo event seq=6942 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:36:01Z bus bravo event seq=6943 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:36:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:36:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:39:57Z bus bravo event seq=6944 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:39:57Z bus bravo event seq=6945 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:39:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:39:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:40:02Z bus bravo event seq=6946 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:40:02Z bus bravo event seq=6947 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:40:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:40:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:44:01Z bus bravo event seq=6948 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:44:01Z bus bravo event seq=6949 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:44:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:44:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=False
+2026-11-26T20:44:03Z RX armed bg 1800s -> rx_204403.log
+2026-11-26T20:45:57Z bus bravo event seq=6950 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:45:57Z bus bravo event seq=6951 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:45:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:45:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:48:02Z bus bravo event seq=6952 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:48:02Z bus bravo event seq=6953 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:48:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:48:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:51:57Z bus bravo event seq=6954 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:51:57Z bus bravo event seq=6955 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:51:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:51:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:52:02Z bus bravo event seq=6956 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:52:02Z bus bravo event seq=6957 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:52:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:52:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:56:01Z bus bravo event seq=6958 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:56:01Z bus bravo event seq=6959 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:56:01Z bus bravo event seq=6960 type=frontier_evidence_notice data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_evidence_notice', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0050', 'github_repo': 'DannyB-
+2026-11-26T20:56:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:56:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T20:57:57Z bus bravo event seq=6961 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T20:57:57Z bus bravo event seq=6962 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T20:57:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T20:57:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:00:02Z bus bravo event seq=6963 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:00:02Z bus bravo event seq=6964 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:00:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:00:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:03:57Z bus bravo event seq=6965 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:03:57Z bus bravo event seq=6966 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:03:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:03:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:04:01Z bus bravo event seq=6967 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:04:01Z bus bravo event seq=6968 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:04:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:04:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:08:02Z bus bravo event seq=6969 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:08:02Z bus bravo event seq=6970 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:08:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:08:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:09:57Z bus bravo event seq=6971 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:09:57Z bus bravo event seq=6972 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:09:58Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:09:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:12:02Z bus bravo event seq=6973 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:12:02Z bus bravo event seq=6974 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:12:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:12:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:15:57Z bus bravo event seq=6975 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:15:57Z bus bravo event seq=6976 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:15:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:15:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=False
+2026-11-26T21:15:59Z RX armed bg 1800s -> rx_211559.log
+2026-11-26T21:16:02Z bus bravo event seq=6977 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:16:02Z bus bravo event seq=6978 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:16:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:16:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:20:02Z bus bravo event seq=6979 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:20:02Z bus bravo event seq=6980 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:20:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:20:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:21:58Z bus bravo event seq=6981 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:21:58Z bus bravo event seq=6982 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:21:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:22:00Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:24:02Z bus bravo event seq=6983 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:24:02Z bus bravo event seq=6984 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:24:02Z bus bravo event seq=6985 type=frontier_issue_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_issue_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'A_to_B_issue', 'o
+2026-11-26T21:24:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:24:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:27:57Z bus bravo event seq=6986 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:27:57Z bus bravo event seq=6987 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:27:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:27:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:28:01Z bus bravo event seq=6988 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:28:01Z bus bravo event seq=6989 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:28:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:28:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:32:02Z bus bravo event seq=6990 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:32:02Z bus bravo event seq=6991 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:32:04Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:32:04Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:33:57Z bus bravo event seq=6992 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:33:57Z bus bravo event seq=6993 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:33:59Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:33:59Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:36:01Z bus bravo event seq=6994 type=rx_window_open data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_solution', 'freq_mhz': 903.9, 'sf': 9, 'bw_k
+2026-11-26T21:36:01Z bus bravo event seq=6995 type=frontier_drill_nudge data={'drill': 'frontier_drill_20261121', 'phase': 'await_solution', 'issue_id': 'FRONTIER-GH-0051', 'note': 'B: return resolved payload sealed to alpha_pub 9af36ea2
+2026-11-26T21:36:01Z bus bravo event seq=6996 type=frontier_solution_window_request data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_window_request', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'leg': 'B_to_A_
+2026-11-26T21:36:03Z REJECT mixed/unbound capture for FRONTIER-GH-0050: 33 frames, subset_of_manifest=False, sha_match=False
+2026-11-26T21:36:03Z phase=await_solution solved=50/1000 current=FRONTIER-GH-0051 b_alive=True rx_running=True
+2026-11-26T21:36:06Z attest FRONTIER-GH-0051 B_to_A_solution: {"attestation_sha256": "96f3cc5500e37b782158f174cd989c6c8e9f1eb700521dbd3848c92985bebd01", "derived_pubkey": "Ck74wNJnJDspQMtakPV7wSQq69upp9
