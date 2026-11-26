@@ -5340,3 +5340,4 @@
 2026-11-26T18:57:57Z bus bravo event seq=6856 type=frontier_onchain_attest data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_onchain_attest', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0048', 'solution_sha256': '1b4e
 2026-11-26T18:57:59Z phase=send_issue solved=48/1000 current=None b_alive=True rx_running=True
 2026-11-26T18:58:11Z attest FRONTIER-GH-0049 A_to_B_issue: {"attestation_sha256": "35040f01e67f1d961523528c3fa3171c2ca91b8510ddf136a05a5fa3f815cb97", "derived_pubkey": "D8cGm3UMZcf6s2m3HpLJbM9UforVBx
+2026-11-26T18:58:13Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0049_185759.log | push rc=0
