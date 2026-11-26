@@ -14,3 +14,4 @@ WARNING: no temperature sensor found on port 0x3B
 WARNING: no temperature sensor found on port 0x38
 WARNING: no temperature telemetry ... 25C
 Waiting for packets...
+RX_EXIT=137 2026-11-26T23:38:38Z
