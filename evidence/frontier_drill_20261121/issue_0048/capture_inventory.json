@@ -1,0 +1,180 @@
+{
+ "source_log": "/home/researcher-bravo/fleet/evidence/frontier_drill_20261121/issue_0048/live_rx_standby_20261126T183733Z.log",
+ "observations_245b": 29,
+ "crc_ok_target_observations": 24,
+ "unique_crc_ok_target_ciphertexts": 24,
+ "authenticated_issue_ciphertexts": 24,
+ "selected_frames": 12,
+ "refire_duplicate_ciphertexts": 12,
+ "decrypt_fail_or_other_issue": 0,
+ "all_decrypted": [
+  {
+   "idx": 0,
+   "frame_sha256": "df26296311197f95fa6bfda6af1aa755c7f1e4642b792af260a2fb17e37aca42",
+   "count_us": "403163733",
+   "chunk_sha256": "e9c99adc7ed859be063fd20de9dcdc74915d3de1811618fe5e5290d40d776a35",
+   "selected": true
+  },
+  {
+   "idx": 0,
+   "frame_sha256": "4c8803dbebca8cbcda88a07442751d338a491c04affda05e0b67af9dc66c1566",
+   "count_us": "528581041",
+   "chunk_sha256": "e9c99adc7ed859be063fd20de9dcdc74915d3de1811618fe5e5290d40d776a35",
+   "selected": false
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "895e0464c9b054527f4416b49b39453b1a43f6018910b8561df1e6a3bec4a674",
+   "count_us": "413511820",
+   "chunk_sha256": "4ff85f98cb1cbc10e48cd46505c22666bd2a3124904b5d02ab2317dc56c75f57",
+   "selected": true
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "fa09460f48c89bd91008ac0d2c6b170a190b183d40012ae246d93536e5278da2",
+   "count_us": "538914835",
+   "chunk_sha256": "4ff85f98cb1cbc10e48cd46505c22666bd2a3124904b5d02ab2317dc56c75f57",
+   "selected": false
+  },
+  {
+   "idx": 2,
+   "frame_sha256": "73a065328a1f29091d4cfe3b4d0c21f2c326910ce42334e51f5dea996f5df8e0",
+   "count_us": "423779333",
+   "chunk_sha256": "604e2bac291c0fe0d827832453f9bbec124cb04b333f3f1df99624dab1b811b9",
+   "selected": true
+  },
+  {
+   "idx": 2,
+   "frame_sha256": "cb09155a5c7cc9425abd9c38f349f1c36b7f28d4290b02ed34ec7ad2519001f4",
+   "count_us": "549261811",
+   "chunk_sha256": "604e2bac291c0fe0d827832453f9bbec124cb04b333f3f1df99624dab1b811b9",
+   "selected": false
+  },
+  {
+   "idx": 3,
+   "frame_sha256": "dc76bea8acf59297f64c9f3361e492ca6ea57a5ce8b69584773a7bcc0983ebe7",
+   "count_us": "434078787",
+   "chunk_sha256": "0f8d15b7aab9d24c4179b5a2a58de3ca1ef8fa81cc8e0200887e334e0ccb43fd",
+   "selected": true
+  },
+  {
+   "idx": 3,
+   "frame_sha256": "809001b2d5887f5a329c6b6f015fc2e6c3606f33cb8fb27e98aea92fe21765d5",
+   "count_us": "559538802",
+   "chunk_sha256": "0f8d15b7aab9d24c4179b5a2a58de3ca1ef8fa81cc8e0200887e334e0ccb43fd",
+   "selected": false
+  },
+  {
+   "idx": 4,
+   "frame_sha256": "194f42cd92814bd11edc4758dcc2a7d5344a43d4d7bcb7c260b72597c7eab056",
+   "count_us": "444383794",
+   "chunk_sha256": "90a929d3079a5dd45cbbd9857f6b1b536daeb032893bae3af9f6674d8abc7f7e",
+   "selected": true
+  },
+  {
+   "idx": 4,
+   "frame_sha256": "0d388dc2c88dd742dd8f30fcf0e8086ab40bc13415c338f2d11d2e01357ac783",
+   "count_us": "569982249",
+   "chunk_sha256": "90a929d3079a5dd45cbbd9857f6b1b536daeb032893bae3af9f6674d8abc7f7e",
+   "selected": false
+  },
+  {
+   "idx": 5,
+   "frame_sha256": "8a9cd7ffd5a7cb75b52cebef0290ba4c081b2e05f7375d337bfea54eda47d6a1",
+   "count_us": "454824982",
+   "chunk_sha256": "c2c4241fac576dc9442962eba615442bdafe878dba52b4c2fab411dfe8492d02",
+   "selected": true
+  },
+  {
+   "idx": 5,
+   "frame_sha256": "1a02bf1d998518ad5427486111bd1c199a039be8740ffb1462733870887c5d3c",
+   "count_us": "580305292",
+   "chunk_sha256": "c2c4241fac576dc9442962eba615442bdafe878dba52b4c2fab411dfe8492d02",
+   "selected": false
+  },
+  {
+   "idx": 6,
+   "frame_sha256": "1c3a13efd1329928a3601eabf57d9550ec732d3510046c1c1b79df201fc2e6ff",
+   "count_us": "465158850",
+   "chunk_sha256": "5ac24ed0d3eddc372cfdd9a854fab187b3bd6cfb1c038834fed28add87e37991",
+   "selected": true
+  },
+  {
+   "idx": 6,
+   "frame_sha256": "832c756e129e6df9889afcfb32d4a5479f0895b45673d734272157219a3517c4",
+   "count_us": "590573127",
+   "chunk_sha256": "5ac24ed0d3eddc372cfdd9a854fab187b3bd6cfb1c038834fed28add87e37991",
+   "selected": false
+  },
+  {
+   "idx": 7,
+   "frame_sha256": "7f94b0320371c80eb99eb82f19b4b81710bfa813c2ae4c4b443c04466350bda9",
+   "count_us": "475481923",
+   "chunk_sha256": "d4193fa8a344a004b7cbeba2263d3c6150c69de720e604415db128399e07e37c",
+   "selected": true
+  },
+  {
+   "idx": 7,
+   "frame_sha256": "a002cacf5f5bce33e5ab22449ce564a943eed5efcb2d791ac2a56edb6321d133",
+   "count_us": "600871904",
+   "chunk_sha256": "d4193fa8a344a004b7cbeba2263d3c6150c69de720e604415db128399e07e37c",
+   "selected": false
+  },
+  {
+   "idx": 8,
+   "frame_sha256": "f17ddc918fe2439193322be6ee0c7113dfb2d03778b3a88dd38c5e1481a34d9a",
+   "count_us": "485826006",
+   "chunk_sha256": "d7aa9acf08e53ccf51a72be2b91c0ce6ae99dca4a5110700f6bc8fe4f1cbe803",
+   "selected": true
+  },
+  {
+   "idx": 8,
+   "frame_sha256": "ffbda126965001a1f37c9a202927a50309c39b576de2ce929d259520a59775b4",
+   "count_us": "611305430",
+   "chunk_sha256": "d7aa9acf08e53ccf51a72be2b91c0ce6ae99dca4a5110700f6bc8fe4f1cbe803",
+   "selected": false
+  },
+  {
+   "idx": 9,
+   "frame_sha256": "c9a7d1a00336433b2d103b289df9b104edd5ff67bd8ee58aba01ca162cecdeea",
+   "count_us": "496108110",
+   "chunk_sha256": "d01676e8e321cb1da890f6a24972da34f1a6071a5103757f5c86e3cceedc785f",
+   "selected": true
+  },
+  {
+   "idx": 9,
+   "frame_sha256": "370ab82af0ca612aff98519f27980a9b8d061b5c44d61a581642f0fb2093bb2a",
+   "count_us": "621573963",
+   "chunk_sha256": "d01676e8e321cb1da890f6a24972da34f1a6071a5103757f5c86e3cceedc785f",
+   "selected": false
+  },
+  {
+   "idx": 10,
+   "frame_sha256": "792d7fff12af4e780961511bcf0e45ce33e0b09193444115afb76be670160e45",
+   "count_us": "506398254",
+   "chunk_sha256": "a58538965739858c56133628c50fd0c713feb2f7b198e501ae991d2d1f7ac422",
+   "selected": true
+  },
+  {
+   "idx": 10,
+   "frame_sha256": "b9358f056fe82df0f808e0c64a0940b8939118c433dfa7d7f51dfa8806486718",
+   "count_us": "631890951",
+   "chunk_sha256": "a58538965739858c56133628c50fd0c713feb2f7b198e501ae991d2d1f7ac422",
+   "selected": false
+  },
+  {
+   "idx": 11,
+   "frame_sha256": "3742713cd70c7142229a63d4d300076af0a1db29f1ac81522065c91bbdddebd3",
+   "count_us": "516759206",
+   "chunk_sha256": "1de6aab48868cd0a36546b82b79ea197e144d3beefb7b3b071096b74c7c506f4",
+   "selected": true
+  },
+  {
+   "idx": 11,
+   "frame_sha256": "d3c4d43b4c01b20cb71a1b42d12cdbf777a838c50d9853c96aedc4a7dd5cf901",
+   "count_us": "642222396",
+   "chunk_sha256": "1de6aab48868cd0a36546b82b79ea197e144d3beefb7b3b071096b74c7c506f4",
+   "selected": false
+  }
+ ]
+}
