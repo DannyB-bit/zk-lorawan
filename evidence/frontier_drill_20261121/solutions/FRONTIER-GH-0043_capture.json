@@ -3,6 +3,12 @@
  "payload_sha256": "33cfea40267f681869805e5bace80aa2022c15338994d64ba4cf649e63edc7ac",
  "leg": "B_to_A_solution",
  "verdict": "DECRYPT_OK",
+ "capture_binding": {
+  "rx_log": "rx_0043_124806.log",
+  "window_b_seq": 6534,
+  "all_39_frames_single_log": true,
+  "manifest_subset": true
+ },
  "frames": [
   {
    "frame_sha256": "fa1170f42e9a27c1cf2716df98ddbdcbef23a0e0f44c6cc691b39aeec2fdcbd3",
@@ -278,5 +284,6 @@
    "verdict": "DECRYPT_OK"
   }
  ],
- "utc": "2026-11-26T12:52:59Z"
+ "bravo_verdict_b_seq": 6538,
+ "utc": "2026-11-26T12:59:50Z"
 }
