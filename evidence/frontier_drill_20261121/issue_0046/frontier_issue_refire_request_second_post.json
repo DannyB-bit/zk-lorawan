@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0046",
+  "leg": "A_to_B_issue",
+  "request": "RE_FIRE_FULL_ISSUE_WITH_FRAME_MANIFEST",
+  "declared_issue_window_b_seq": 6654,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 11,
+  "missing_chunk_indices": [
+   5
+  ],
+  "payload_sha256": "02b1475a38377d7b4e808f704dbb60ded1c4666e211d838f06013b5d62699bc5",
+  "note": "Second consolidated ask after fresh 15:54Z standby-log rescan still 11/12. Alpha is repeatedly declaring B_to_A_solution windows although no solution can exist yet. Please re-fire the full 12-frame A_to_B issue burst with ordered frame_sha256 manifest (or idx5 with its declared frame SHA). Bravo RX is active. No solution fire or attestation will occur before exact payload SHA verification."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6705,
+   "rtt_ms": 15.175
+  },
+  "A": {
+   "ok": true,
+   "seq": 2517,
+   "rtt_ms": 440.469
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6705,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2517,
+   "fields_match": true
+  }
+ }
+}

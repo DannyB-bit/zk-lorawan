@@ -1,0 +1,50 @@
+{
+ "repair_declare_b_seq": 6710,
+ "targeted_idx": 5,
+ "targeted_sha_match": true,
+ "ordered_captured_frame_sha256": [
+  "d1f81c2fd1b771223a2729efdebb6a448bf63d948cf62c0fa58468b40437c7be",
+  "99fc497aaa7704b23b9ffb8746c86d9d98084bce27c176524f15e52428da8079",
+  "d347107062f0e81e168bb24b10db5a2f1a4e558bc432093d07e0950fefc93316",
+  "7237d2f9f4373bb984c1f309fcdbd1f402cb6255c9505bf1768a60fbf8f72389",
+  "5d1344f8c2f613304b022b56cc1fc34d0c6f14685007fbdc70d369d3745ea6f2",
+  "4b89c642a1ea8595979f1b0252e8960776ac103ff0ef482e5b467b860dfc4b63",
+  "e2e71c6713fea37b25438d571503f59127d3e71a2c593b8672cb9f8c6cb33ce4",
+  "aa9d6e1bed13a8911513fee92c750a54cce28f3c61813269fdee32e9f45b7bbd",
+  "66b2201d0591daf5484b4b1777483b6d1386e734551702c06b8328e439213628",
+  "a3a511d9ef333589dd33343394c930d2a33ba0033d87c2e1803ffee2212e97f4",
+  "982253533244bbcde25020184d68e9de1f72edd540e53fff70d2cd50c48d4b49",
+  "a2a553daf0470066072d63cc7b8a08d1eaa33cac45dd44d253e5e234096b47dc"
+ ],
+ "repair_declared_frame_sha256": [
+  "f089c683b69f80892dca584f4fa64aaa0b9402d556537d4934b81c8673e39bfb",
+  "59ba71e0c59c3f8cb39aea0f913ae2d73f55e24ef4efc858366e1fd41fcefe1f",
+  "cd6072a64d7a772706fa600a5ee55edce7924b5a76c1b20a90395fcbd49e8d58",
+  "49b33db453d6c4790954b1d92f2464614af1922c36d34430fecf20e27d65a769",
+  "d3be825cc329595a960606a7c0a59be7c1458975bac42f07286e661073b5feef",
+  "4b89c642a1ea8595979f1b0252e8960776ac103ff0ef482e5b467b860dfc4b63",
+  "e2e71c6713fea37b25438d571503f59127d3e71a2c593b8672cb9f8c6cb33ce4",
+  "aa9d6e1bed13a8911513fee92c750a54cce28f3c61813269fdee32e9f45b7bbd",
+  "66b2201d0591daf5484b4b1777483b6d1386e734551702c06b8328e439213628",
+  "a3a511d9ef333589dd33343394c930d2a33ba0033d87c2e1803ffee2212e97f4",
+  "982253533244bbcde25020184d68e9de1f72edd540e53fff70d2cd50c48d4b49",
+  "a2a553daf0470066072d63cc7b8a08d1eaa33cac45dd44d253e5e234096b47dc"
+ ],
+ "per_index_match": [
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "payload_sha256": "02b1475a38377d7b4e808f704dbb60ded1c4666e211d838f06013b5d62699bc5",
+ "payload_sha_match": true,
+ "note": "All 12 captured frames decrypt to contiguous indices and exact original B6654 payload SHA. B6710 supplied SHA list differs at indices 0-4 from the already-banked original ciphertexts; targeted idx5 and indices 6-11 match. Original declare carried no frame list, so payload hash + decrypt + contiguous index gates are authoritative."
+}

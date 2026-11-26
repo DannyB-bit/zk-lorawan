@@ -1,0 +1,8 @@
+{
+ "run_id": "run_32d60379782443f68c1290f4bdab9f65",
+ "session_id": "local-c06df1e32ae51b4d9d175c17d5f1e9ce8d590fbe5b7efa0d8272eeac3e285f1d",
+ "idempotency_key": "frontier-0046-refire-20261126T160301Z",
+ "submission": "started",
+ "purpose": "re-fire full 12-frame issue burst or missing idx5; exact declared payload SHA required",
+ "recorded_utc": "2026-11-26T16:06:17.568729+00:00"
+}

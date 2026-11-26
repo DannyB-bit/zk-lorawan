@@ -1,0 +1,57 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0046",
+  "leg": "A_to_B_issue",
+  "ok": true,
+  "payload_sha256": "02b1475a38377d7b4e808f704dbb60ded1c4666e211d838f06013b5d62699bc5",
+  "payload_bytes": 2019,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_crc_ok_target_frames": 12,
+  "declared_issue_window_b_seq": 6654,
+  "repair_window_b_seq": 6710,
+  "repair_targeted_idx": 5,
+  "repair_targeted_sha_match": true,
+  "frame_sha256": [
+   "d1f81c2fd1b771223a2729efdebb6a448bf63d948cf62c0fa58468b40437c7be",
+   "99fc497aaa7704b23b9ffb8746c86d9d98084bce27c176524f15e52428da8079",
+   "d347107062f0e81e168bb24b10db5a2f1a4e558bc432093d07e0950fefc93316",
+   "7237d2f9f4373bb984c1f309fcdbd1f402cb6255c9505bf1768a60fbf8f72389",
+   "5d1344f8c2f613304b022b56cc1fc34d0c6f14685007fbdc70d369d3745ea6f2",
+   "4b89c642a1ea8595979f1b0252e8960776ac103ff0ef482e5b467b860dfc4b63",
+   "e2e71c6713fea37b25438d571503f59127d3e71a2c593b8672cb9f8c6cb33ce4",
+   "aa9d6e1bed13a8911513fee92c750a54cce28f3c61813269fdee32e9f45b7bbd",
+   "66b2201d0591daf5484b4b1777483b6d1386e734551702c06b8328e439213628",
+   "a3a511d9ef333589dd33343394c930d2a33ba0033d87c2e1803ffee2212e97f4",
+   "982253533244bbcde25020184d68e9de1f72edd540e53fff70d2cd50c48d4b49",
+   "a2a553daf0470066072d63cc7b8a08d1eaa33cac45dd44d253e5e234096b47dc"
+  ],
+  "note": "12/12 unique 245B frames now captured CRC-OK 0x10 at 903.9MHz SF9/BW125, all DECRYPT_OK, contiguous idx0..11, exact original payload SHA. Repair idx5 matched B6710. Disclosure: B6710 list differs for already-banked idx0..4 ciphertext SHAs; original B6654 had no frame list, exact payload SHA is verified."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6727,
+   "rtt_ms": 58.021
+  },
+  "A": {
+   "ok": true,
+   "seq": 2529,
+   "rtt_ms": 419.089
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6727,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2529,
+   "fields_match": true
+  }
+ }
+}
