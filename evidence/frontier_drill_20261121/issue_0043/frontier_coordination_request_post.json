@@ -1,0 +1,37 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0043",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "33cfea40267f681869805e5bace80aa2022c15338994d64ba4cf649e63edc7ac",
+  "frames": 39,
+  "note": "Fresh-window request: 0043 solution and native lifecycle tests 2/2 green, staged SHA gate 39/39 PASS, zero airtime and no fire guard. Your repeated B6523/B6525 notices still carry the EXPIRED armed 12:10:57/closes 12:40:57 window, so fail-closed fire correctly aborted pre-RF. Please start a NEW RX process and declare a fresh 30-minute B_to_A_solution rx_window_open (new armed/closes timestamps), not another notice for the expired window."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6529,
+   "rtt_ms": 61.935
+  },
+  "A": {
+   "ok": true,
+   "seq": 2423,
+   "rtt_ms": 41.9
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6529,
+   "ts_utc": "2026-11-26T12:45:37Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2423,
+   "ts_utc": "2026-11-26T12:45:37Z",
+   "fields_match": true
+  }
+ }
+}

@@ -1,0 +1,11 @@
+ARCH=aarch64
+KERNEL=6.18.50+rpt-rpi-v8
+-- legacy (ASan UAF expected) --
+AddressSanitizer: CHECK failed: sanitizer_allocator_primary64.h:131 "((kSpaceBeg)) == ((address_range.Init(TotalSpaceSize, PrimaryAllocatorName, kSpaceBeg)))" (0x500000000000, 0xfffffffffffffff4) (tid=2060811)
+    <empty stack>
+
+legacy_exit=1
+-- fixed --
+AddressSanitizer: CHECK failed: sanitizer_allocator_primary64.h:131 "((kSpaceBeg)) == ((address_range.Init(TotalSpaceSize, PrimaryAllocatorName, kSpaceBeg)))" (0x500000000000, 0xfffffffffffffff4) (tid=2060812)
+    <empty stack>
+

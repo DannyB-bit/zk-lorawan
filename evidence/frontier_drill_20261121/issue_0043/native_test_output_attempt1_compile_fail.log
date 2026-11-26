@@ -1,0 +1,24 @@
+ARCH=aarch64
+KERNEL=6.18.50+rpt-rpi-v8
+interpreter_lifecycle.c:19:8: error: unknown type name ‘pthread_barrier_t’; did you mean ‘pthread_attr_t’?
+   19 | static pthread_barrier_t observed;
+      |        ^~~~~~~~~~~~~~~~~
+      |        pthread_attr_t
+interpreter_lifecycle.c:20:8: error: unknown type name ‘pthread_barrier_t’; did you mean ‘pthread_attr_t’?
+   20 | static pthread_barrier_t deletion_released;
+      |        ^~~~~~~~~~~~~~~~~
+      |        pthread_attr_t
+interpreter_lifecycle.c: In function ‘daemon_save_thread’:
+interpreter_lifecycle.c:49:5: error: implicit declaration of function ‘pthread_barrier_wait’; did you mean ‘pthread_cond_wait’? [-Wimplicit-function-declaration]
+   49 |     pthread_barrier_wait(&observed);
+      |     ^~~~~~~~~~~~~~~~~~~~
+      |     pthread_cond_wait
+interpreter_lifecycle.c: In function ‘main’:
+interpreter_lifecycle.c:120:9: error: implicit declaration of function ‘pthread_barrier_init’; did you mean ‘pthread_attr_init’? [-Wimplicit-function-declaration]
+  120 |     if (pthread_barrier_init(&observed, NULL, 2) ||
+      |         ^~~~~~~~~~~~~~~~~~~~
+      |         pthread_attr_init
+interpreter_lifecycle.c:123:5: error: implicit declaration of function ‘pthread_barrier_destroy’; did you mean ‘pthread_attr_destroy’? [-Wimplicit-function-declaration]
+  123 |     pthread_barrier_destroy(&observed);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+      |     pthread_attr_destroy

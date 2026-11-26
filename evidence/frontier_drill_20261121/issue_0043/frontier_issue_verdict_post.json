@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0043",
+  "ok": true,
+  "verdict": "DECRYPT_OK",
+  "frames_decrypted": 12,
+  "payload_bytes": 2033,
+  "payload_sha256": "31e01ef1c6164d0722ff4256c570c1ac608f4db821f4518e36e47c974eacbf8a",
+  "sha_match": true,
+  "alpha_declare_b_seq": 6487,
+  "note": "12/12 real standby-log frames at 903.9MHz SF9 status 0x10 decrypted; one foreign 904.5MHz status-0x11 observation rejected. Reassembled SHA exact. Native solution/tests and B_to_A solution fire pending; no on-chain attestation claimed yet."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6507,
+   "rtt_ms": 57.119
+  },
+  "A": {
+   "ok": true,
+   "seq": 2411,
+   "rtt_ms": 169.56
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6507,
+   "ts_utc": "2026-11-26T12:20:23Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2411,
+   "ts_utc": "2026-11-26T12:20:23Z",
+   "fields_match": true
+  }
+ }
+}
