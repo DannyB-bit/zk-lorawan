@@ -1,0 +1,38 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0043",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "33cfea40267f681869805e5bace80aa2022c15338994d64ba4cf649e63edc7ac",
+  "payload_bytes": 6926,
+  "frames": 39,
+  "note": "0043 captured/decrypted 12/12 and native lifecycle tests 2/2 green (legacy real SIGSEGV, fixed head_mutex+atomic refs PASS). Staged SHA gate 39/39 PASS. Existing Alpha windows are open/refreshing; fire will select the newest fail-closed window with sufficient airtime."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 6522,
+   "rtt_ms": 56.93
+  },
+  "A": {
+   "ok": true,
+   "seq": 2419,
+   "rtt_ms": 435.999
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 6522,
+   "ts_utc": "2026-11-26T12:37:33Z",
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2419,
+   "ts_utc": "2026-11-26T12:37:33Z",
+   "fields_match": true
+  }
+ }
+}

@@ -1,0 +1,7 @@
+ARCH=aarch64
+KERNEL=6.18.50+rpt-rpi-v8
+-- legacy (real unmapped-tstate SIGSEGV expected) --
+/usr/bin/bash: line 14: 2061948 Segmentation fault      ./interpreter_lifecycle legacy
+legacy_exit=139 (139=SIGSEGV)
+-- fixed --
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
