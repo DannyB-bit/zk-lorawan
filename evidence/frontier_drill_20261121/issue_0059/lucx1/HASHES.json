@@ -1,0 +1,12 @@
+{
+ "issue": "FRONTIER-GH-0059",
+ "pr": 42,
+ "pr_head": "1fa05bde504135a3485cbc6d0495c13f510e15dc",
+ "transport_sha256": "09abe2a19831cc760cbca76d796235e1c08bb3b39d3a4c6bebc083c43904bda6",
+ "zkdp_proof_packet_sha256": "ef329e63948761981b5e2d2d77a7da60bed71b3ac74cccb616127ec252396745",
+ "original_issue_json_sha256": "54b54b60dd7a879d078113be848d9ef5b88b97fe1e74a49f1be0d36fd081d99e",
+ "transport_bytes": 1237,
+ "zkdp_packet_bytes": 326,
+ "note": "transport_sha256 == frames/manifest.json transport_sha256 == issue59_proof.json payload_sha256 (09abe2a1...); inner proof.payload_sha256 06abe2d1... is the BN254 field-encoded binding of the same transport bytes",
+ "generated_utc": "2026-11-27T11:51:54Z"
+}
