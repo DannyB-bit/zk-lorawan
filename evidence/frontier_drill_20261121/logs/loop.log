@@ -6102,3 +6102,12 @@
 2026-11-27T02:32:02Z bus bravo event seq=7260 type=frontier_solution_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0055', 'ok': True, 'payload_s
 2026-11-27T02:32:04Z phase=await_solution solved=54/1000 current=FRONTIER-GH-0055 b_alive=True rx_running=True
 2026-11-27T02:32:07Z attest FRONTIER-GH-0055 B_to_A_solution: {"attestation_sha256": "4aa800a299580c588e5108f96671726fd48e3a9273d37709a6ede482ca852197", "derived_pubkey": "6gwZkKGMZsGzSVbCXKKKRFW7ePA5Nn
+2026-11-27T02:32:10Z git commit:  create mode 100644 evidence/frontier_drill_20261121/solutions/FRONTIER-GH-0055_solution.json | push rc=0
+2026-11-27T02:32:10Z SOLVED FRONTIER-GH-0055 sha=b4abf7848ce0c01a (55/1000)
+2026-11-27T02:35:57Z bus bravo event seq=7261 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0055', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-27T02:35:57Z bus bravo event seq=7262 type=frontier_onchain_attest data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_onchain_attest', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0055', 'solution_sha256': 'b4ab
+2026-11-27T02:35:59Z phase=send_issue solved=55/1000 current=None b_alive=True rx_running=True
+2026-11-27T02:36:02Z bus bravo event seq=7261 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0055', 'leg': 'B_to_A_solution', 'verdict': 'DECRYPT_OK', 'payload
+2026-11-27T02:36:02Z bus bravo event seq=7262 type=frontier_onchain_attest data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_onchain_attest', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0055', 'solution_sha256': 'b4ab
+2026-11-27T02:36:05Z phase=send_issue solved=55/1000 current=None b_alive=True rx_running=True
+2026-11-27T02:38:19Z attest FRONTIER-GH-0056 A_to_B_issue: {"attestation_sha256": "57d59caafd2bd7dea988bc637acdd8b959193aa0baba76fe2c4a8d37123b98e8", "derived_pubkey": "2fgPNU76LmC6Ha6YU9tTUZAyVnGWpe
