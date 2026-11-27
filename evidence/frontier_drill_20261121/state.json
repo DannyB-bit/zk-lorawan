@@ -472,9 +472,9 @@
   "FRONTIER-GH-0058": {
    "sha256": "75375088eab0f35d7a670d28638ed4f5f182cc0106439e080e26f3b5079abb91",
    "frames": 12,
-   "tx_log": "tx_issue_FRONTIER-GH-0058_055759.log",
+   "tx_log": "tx_issue_FRONTIER-GH-0058_060006.log",
    "tx": "fired=12 tx_done=12 sf=9 airtime_s=14.51",
-   "utc": "2026-11-27T06:00:03Z"
+   "utc": "2026-11-27T06:02:09Z"
   }
  },
  "refire_count": 0,
