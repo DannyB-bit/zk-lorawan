@@ -152,6 +152,10 @@ def test_payload_roundtrip(payload: bytes, use_fec: bool, fec_block_size: int = 
     }
 
 
+# This is a parameterized helper called by main(), not a pytest test case.
+test_payload_roundtrip.__test__ = False
+
+
 # ============================================================================
 # Main Test
 # ============================================================================

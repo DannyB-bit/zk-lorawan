@@ -1,0 +1,23 @@
+{
+  "issue_number": 59,
+  "packet_bytes": 326,
+  "payload_bytes": 4398,
+  "payload_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+  "firmware_sha256": "e331e46346ed08c71ca37297bfde5555432922c4cfffe07af6e26a445c8f7902",
+  "gateway_address": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+  "deposit_value": 100000,
+  "proof": {
+    "proof_a_compressed": "71eed57f35c21ee5a98da5475c5783c1f7d7558534331da7dc2fd36706c6b3af",
+    "proof_b_compressed": "b4a4e469ba30fc300dcf4c092ddb602db29ebc03abcb6e2730608be30d49db1f458976c9217ad285b18a63ffcb9d97a02582fc62e565e962a2fcf14cd6099685",
+    "proof_c_compressed": "db09554590478072e914d8cb37907a47f9f5ee142278877900519fc883d1bb2b",
+    "identity_hash": "7418a249278e58d71efb04d785e115bf16af07547e0491ef2d85c627543ab613",
+    "nullifier_hash": "b77d076079f07a83ec38331653ecc5c03bbd8fbaf58e99175ba6708c8a9cd60e",
+    "attestation_hash": "a0ae379453cf23e636e7b86ca5a8ff1e2eaac2de86694df38648781e35b99525",
+    "ciphertext_hash": "3dbd95118b8ab69bea900bbe142bb9fd2bf8dae4ff5d6feb415c490c4c7f3528",
+    "payload_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+    "payload_commitment": "bce7c284c064cf5aeaabb74a7de0d601232384cf3686f34388b2c60ab4aba724"
+  },
+  "verifying_key_path": "evidence/frontier_drill_20261121/issue_0059/lucx1/verifying_key.bin",
+  "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+  "cross_node_verification": "Bravo identity; ALPHA gateway; verify with committed public VK + declared firmware + recomputed transport SHA256"
+}
