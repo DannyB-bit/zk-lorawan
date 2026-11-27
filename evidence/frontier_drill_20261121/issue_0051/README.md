@@ -1,4 +1,4 @@
-# FRONTIER-GH-0051 — BRAVO RF + NATIVE + ON-CHAIN COMPLETE; PEER CLOSURE BLOCKED BY EXACT-SHA MISMATCH
+# FRONTIER-GH-0051 — CLOSED BOTH SIDES: RF + NATIVE + FINALIZED ON-CHAIN
 
 - A→B RF: real standby HAL snapshot `live_rx_standby_20261126T211641Z.log` contains 20 authenticated ciphertexts across contiguous idx0..11, with identical chunk plaintext per duplicate index. `capture_and_decrypt.py` selected 12/12 frames and reassembled 2033 bytes with SHA-256 `cb0a52b8932fdcf42dded7503352176ccc5650fba0161d765d6bb017e41f5567`, exactly matching B6938. Verdict B6985/A2665, dual-bus read-back fields_match=true.
 - Native aarch64 Linux C11/pthreads execution: the legacy unlocked borrowed-tstate/delete interleaving unmapped the tstate page and produced a REAL daemon-thread SIGSEGV (shell exit 139, pytest `-SIGSEGV`). The fixed `head_mutex` + atomic-refcount lane passed the main test and eight fixed regression iterations with `final_refcount=0 freed_once=1 invariant=PASS`. Pytest 2/2 passed in 0.07s. Issue 0051 repeats 0047's exact invariant modulo issue id; proven source was intentionally reused and freshly compiled/re-run. Standalone native model, not a claimed upstream CPython patch; the supplied `torvalds/linux` + `Python/pylifecycle.c` metadata mismatch is disclosed.
@@ -8,3 +8,10 @@
 - **NOT CLOSED BOTH SIDES.** Alpha B6997 claimed `DECRYPT_OK` and `sha_match_with_bravo_verdict=true`, but carried payload SHA `1d000c7416600e37f30995b929d9a26851a2919a602669f0893c0d3d8778cbc2`, not Bravo's actual B6998 `255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7`. B6997 also preceded Bravo's final verdict and was emitted during the burst. Bravo posted an exact-frame correction request **B7001/A2674**, read back on both buses. No false peer-closure is claimed here; a corrected exact-SHA Alpha verdict remains required.
 
 Reproduce: `gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread interpreter_lifecycle.c -o interpreter_lifecycle && ./interpreter_lifecycle legacy; test $? -eq 139 && ./interpreter_lifecycle fixed && python3 -m pytest -q test_frontier_0051.py`.
+
+## Corrected closure (2026-11-27)
+
+- Alpha **B7103** withdrew B6997 and proved the first burst partial 15/37; Bravo accepted the correction and kept peer closure false.
+- Bravo same-seal full re-fire into **B7104** completed **37/37 TX_DONE**, TX/recovery exit 0, verdict **B7114/A2734**. This recovered the 22 missing frames without re-sealing.
+- Alpha **B7217** now reports **37/37 DECRYPT_OK**, reassembled **6538 bytes**, exact SHA `255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7`, explicitly superseding B6997 and B7103. Capture binding: 15 banked + 22 recovered by the full same-seal re-fire.
+- Bravo independently compared B7217's SHA against the exact local solution bytes, B7114 TX verdict, and finalized Devnet root; all match. **0051 CLOSED BOTH SIDES.** No new attestation was needed: Bravo's existing attestation above covers this exact solution SHA.
