@@ -1,0 +1,21 @@
+{
+ "type": "frontier_issue",
+ "drill": "frontier_drill_20261121",
+ "round": 57,
+ "target": 1000,
+ "issue_id": "FRONTIER-GH-0057",
+ "repo": "python/cpython",
+ "target_file": "lockless_queue.c",
+ "category": "Concurrency & Lockless Race Conditions",
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)",
+ "title": "ABA memory hazard in lockless lock-free queue head pointer recycling under high thread preemption",
+ "problem_statement": "### Issue FRONTIER-GH-0057: ABA memory hazard in lockless lock-free queue head pointer recycling under high thread preemption\nRepository: `python/cpython`\nCategory: `Concurrency & Lockless Race Conditions`\nTarget File: `lockless_queue.c`\n\n#### Problem Description\natomic_compare_exchange_weak with acquire-release fence fails when recycled node address matches ABA sequence.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: CAS loop must incorporate 64-bit epoch generation counter to ensure tag uniqueness.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0057.py -q`\n",
+ "expected_invariant": "CAS loop must incorporate 64-bit epoch generation counter to ensure tag uniqueness.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0057.py::test_reproduce_frontier-gh-0057"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0057"
+ ],
+ "instructions": "Solve this issue on your silicon. Reply sealed to alpha_pub 9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942 with JSON {issue_id, repo, target_file, solution, solver_notes, tests_run, file_sha256_of_this_json} as 245B chirps, then post bus frontier_solution_verdict {issue_id, payload_sha256, ok:true}. Wait for A's confirmation before expecting the next issue."
+}

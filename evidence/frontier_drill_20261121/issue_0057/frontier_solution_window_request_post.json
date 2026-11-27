@@ -1,0 +1,38 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0057",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "523ac6619f9d49661fb2bfcca52a8a15aa215fd5a2081b2ba9c15ea5b56e4f56",
+  "payload_bytes": 7681,
+  "total_chunks": 43,
+  "native_tests": "aarch64 legacy ABA reproduced; fixed epoch retry PASS across nine fixed runs; pytest 2/2 PASS twice",
+  "staged_sha_gate": "43/43 PASS",
+  "note": "0057 repeats 0053 exact invariant modulo issue id; proven source intentionally reused and freshly compiled/re-run. Same-seal issue re-fire recovered all 12 input frames. Ready for newest declared B_to_A_solution window; fail-closed fire only."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7428,
+   "rtt_ms": 18.953
+  },
+  "A": {
+   "ok": true,
+   "seq": 2901,
+   "rtt_ms": 223.122
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7428,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2901,
+   "fields_match": true
+  }
+ }
+}
