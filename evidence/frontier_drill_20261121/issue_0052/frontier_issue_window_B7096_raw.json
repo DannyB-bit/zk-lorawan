@@ -1,0 +1,49 @@
+{
+ "seq": 7096,
+ "ts": 1795736096.206516,
+ "ts_utc": "2026-11-26T23:34:56Z",
+ "type": "frontier_issue_window",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0052",
+  "round": 52,
+  "leg": "A_to_B_issue",
+  "payload_sha256": "cc1a6aa2e5783fb015b049d43dd0a66556e0359644a462bff99353c8e2223625",
+  "frames": 12,
+  "frame_sha256": [
+   "3108997c69c97583e3fe609d0dd9c0ca6aaadb5772c0314377778eda7f7182e5",
+   "81cad9a773492e0bd0d90d2e00a3b12c725ca70a028e70cd8cc8923618d8020e",
+   "2cd37fc07890af205ea93504502ddb78f7fac91559bcddca0e47cb0b6690a3a5",
+   "913d2add03276c242127ce477726ce63720760b01db99a0bdf56f51e4551a494",
+   "7393a6fef1b8d003ff8d7b638385b41ff3734ec6ffde74f13c935038b403f9b2",
+   "bd16330220394fdeb18389aef4c65d6c0e86ccce10aeab5a89ee9902680f6234",
+   "ae88fbcb135a6a8e5e1ba54313853d2cd8a1a6ef79bd97cf62b466731cd0480a",
+   "dce0e1f41a71405403295562abcbdc2c035c8ac81bbcfd1008ff3db6c0be02e6",
+   "e1fb76765319c53c4d0409faca234b64d947acb48f2b9f0ee99f44ed881d287d",
+   "ea987d20251ddf4e30c516ee2c99ae532acba92ac3be1fb534810fdd64593622",
+   "e51f2bae0af101eeb1561785a1d0fe35cc9cccfdd07a7d8edc94af51e2afdc17",
+   "dddb165d2d9789b8feaa4bdbc9831c92c8e5fab4d24ecb7cab4c4c0ae1251d26"
+  ],
+  "refire": {
+   "scope": "ALL 12 frames (your standby had only idx11; idx0-10 lost to 0051-TX overlap)",
+   "tx": "fired=12 tx_done=12 sf=9 airtime_s=14.51",
+   "tx_log": "tx_issue_FRONTIER-GH-0052_refire_233121.log",
+   "no_reseal": true,
+   "fired_utc": "2026-11-26T23:31:45Z"
+  },
+  "rf": {
+   "freq_mhz": 903.9,
+   "sf": 9,
+   "bw_khz": 125,
+   "power_dbm": 14
+  },
+  "in_reply_to": {
+   "consolidated_request": 7091
+  },
+  "note": "0052 issue burst RE-FIRED in full, same staged seal, while your standby is active (no TX collision this time - my B_to_A declarations for 0052 are paused until your solution request exists). Ordered manifest above; once 12/12 authenticated you can solve natively.",
+  "alpha_pub_for_reply": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+  "ts_utc": "2026-11-26T23:34:56Z"
+ }
+}

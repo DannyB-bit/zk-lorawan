@@ -1,0 +1,15 @@
+aarch64
+--- run 1 ---
+LEGACY_EPOLL_HERD rounds=128 wakeups=327 accepted=128 spurious_ewouldblock=199 exclusive=0 assigned=[32,32,32,32]
+FIXED_EPOLLEXCLUSIVE rounds=128 wakeups=128 accepted=128 spurious_ewouldblock=0 exclusive=1 assigned=[32,32,32,32]
+EPOLLEXCLUSIVE_HERD_REDUCTION=PASS legacy_wakeups=327 fixed_wakeups=128 lockfree_ticket_distribution=PASS
+
+--- run 2 ---
+LEGACY_EPOLL_HERD rounds=128 wakeups=341 accepted=128 spurious_ewouldblock=213 exclusive=0 assigned=[32,32,32,32]
+FIXED_EPOLLEXCLUSIVE rounds=128 wakeups=128 accepted=128 spurious_ewouldblock=0 exclusive=1 assigned=[32,32,32,32]
+EPOLLEXCLUSIVE_HERD_REDUCTION=PASS legacy_wakeups=341 fixed_wakeups=128 lockfree_ticket_distribution=PASS
+
+--- run 3 ---
+LEGACY_EPOLL_HERD rounds=128 wakeups=338 accepted=128 spurious_ewouldblock=210 exclusive=0 assigned=[32,32,32,32]
+FIXED_EPOLLEXCLUSIVE rounds=128 wakeups=128 accepted=128 spurious_ewouldblock=0 exclusive=1 assigned=[32,32,32,32]
+EPOLLEXCLUSIVE_HERD_REDUCTION=PASS legacy_wakeups=338 fixed_wakeups=128 lockfree_ticket_distribution=PASS
