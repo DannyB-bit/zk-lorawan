@@ -1,0 +1,2 @@
+FIRE_START 2026-11-27T04:25:59Z label=issue_FRONTIER-GH-0057 frames=/home/researcher-alpha/fleet-repos/zk-lorawan/evidence/frontier_drill_20261121/frames/FRONTIER-GH-0057 sf=9 pow_dbm=14 bw_khz=125 freq_mhz=903.9
+2026-11-27T04:25:59Z frame_00 sha=44acfdf56fa0b301 t=1795753559.748741834->1795753559.947452908 
