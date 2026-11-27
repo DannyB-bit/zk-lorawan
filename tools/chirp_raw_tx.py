@@ -51,17 +51,30 @@ def seal_frame(plaintext: bytes, recipient_pub_hex: str, n_field: int, rng=os.ur
 
 
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) not in (4, 6):
         print(__doc__); sys.exit(2)
-    src = Path(sys.argv[1]).read_bytes()
+    original = Path(sys.argv[1]).read_bytes()
     recipient_pub_hex = sys.argv[2].strip()
     out_dir = Path(sys.argv[3]); out_dir.mkdir(parents=True, exist_ok=True)
+    codec = "raw"
+    if len(sys.argv) == 6:
+        if sys.argv[4] != "--codec" or sys.argv[5] not in ("raw", "language-u-exact"):
+            raise SystemExit("usage: chirp_raw_tx.py FILE RECIPIENT OUT [--codec raw|language-u-exact]")
+        codec = sys.argv[5]
+    if codec == "language-u-exact":
+        from language_u_exact_codec import encode_payload
+        src = encode_payload(original)
+    else:
+        src = original
+    (out_dir / "transport.bin").write_bytes(src)
 
     chunks = [src[i:i + CHUNK_MAX] for i in range(0, len(src), CHUNK_MAX)] or [b""]
     total = len(chunks)
     assert total <= 255
-    manifest = {"file": str(sys.argv[1]), "file_bytes": len(src),
-                "file_sha256": hashlib.sha256(src).hexdigest(),
+    manifest = {"file": str(sys.argv[1]), "file_bytes": len(original),
+                "file_sha256": hashlib.sha256(original).hexdigest(),
+                "transport_codec": codec, "transport_bytes": len(src),
+                "transport_sha256": hashlib.sha256(src).hexdigest(),
                 "total_chunks": total, "chunk_max": CHUNK_MAX, "frames": []}
     for idx, ch in enumerate(chunks):
         plaintext = b"\x02" + bytes([total, idx]) + ch

@@ -1,0 +1,8 @@
+frame_00.bin 245B sha256=3d7977894291b00e... chunk=180B
+frame_01.bin 245B sha256=8f4958cbec4f5c6e... chunk=180B
+frame_02.bin 245B sha256=91bfc363a227afa3... chunk=180B
+frame_03.bin 245B sha256=1947d859a8c085bb... chunk=180B
+frame_04.bin 245B sha256=11240d1cf6f98767... chunk=180B
+frame_05.bin 245B sha256=01e0ffd4eb029feb... chunk=180B
+frame_06.bin 245B sha256=751510ba3c40381e... chunk=157B
+{"ok": true, "file_sha256": "54b54b60dd7a879d078113be848d9ef5b88b97fe1e74a49f1be0d36fd081d99e", "total_chunks": 7, "out_dir": "/home/researcher-alpha/.hermes/cache/scratch/lucx_frame_e2e/frames"}

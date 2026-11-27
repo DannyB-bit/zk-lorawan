@@ -44,6 +44,18 @@ def decrypt_frame(frame: bytes, sk_hex: str) -> bytes:
     return AESGCM(key).decrypt(nonce, ct_tag, None)   # raises on tamper
 
 
+def extract_declared_chunk(plaintext: bytes, declared: int) -> bytes:
+    """Remove only padding, preserving every manifest-declared payload byte."""
+    if declared < 0 or declared > 180:
+        raise ValueError("chunk_bytes outside payload range")
+    if len(plaintext) != 183:
+        raise ValueError("bad decrypted payload length")
+    chunk = plaintext[3:3 + declared]
+    if any(plaintext[3 + declared:]):
+        raise ValueError("invalid chunk length or nonzero padding")
+    return chunk
+
+
 def load_frame(path) -> bytes:
     """Accept a RAW 245-byte frame file or a HEX-TEXT file (490 hex chars).
 
@@ -96,8 +108,15 @@ def main():
                                 "frame_sha256": fsha})
                 continue
             total, fidx = pt[1], pt[2]
-            chunk = pt[3:].rstrip(b"\x00")
-            # chunk length must match manifest unless it's the last chunk
+            try:
+                if fidx != idx or total != manifest["total_chunks"]:
+                    raise ValueError("frame index or total mismatch")
+                chunk = extract_declared_chunk(pt, int(fr["chunk_bytes"]))
+            except Exception as exc:
+                results.append({"idx": idx, "ok": False,
+                                "error": f"{type(exc).__name__}: {exc}",
+                                "frame_sha256": fsha})
+                continue
             ok_sha = hashlib.sha256(chunk).hexdigest() == fr["chunk_sha256"]
             chunks[fidx] = chunk
             results.append({"idx": idx, "ok": True, "verdict": "DECRYPT_OK",
@@ -108,14 +127,33 @@ def main():
                               "have": len(chunks), "want": manifest["total_chunks"],
                               "results": results}))
             sys.exit(1)
-        data = b"".join(chunks[i] for i in range(manifest["total_chunks"]))
+        transport = b"".join(chunks[i] for i in range(manifest["total_chunks"]))
+        transport_sha = hashlib.sha256(transport).hexdigest()
+        transport_ok = transport_sha == manifest.get("transport_sha256", transport_sha)
+        codec = manifest.get("transport_codec", "raw")
+        try:
+            if codec == "language-u-exact":
+                from language_u_exact_codec import decode_payload
+                data = decode_payload(transport)
+            elif codec == "raw":
+                data = transport
+            else:
+                raise ValueError("unsupported transport codec")
+        except Exception as exc:
+            print(json.dumps({"ok": False, "verdict": "CODEC_DECODE_FAIL",
+                              "error": f"{type(exc).__name__}: {exc}", "transport_sha256": transport_sha,
+                              "expected_transport_sha256": manifest.get("transport_sha256"),
+                              "transport_bytes": len(transport), "frames": results}, indent=1))
+            sys.exit(1)
         fsha = hashlib.sha256(data).hexdigest()
-        match = fsha == manifest["file_sha256"]
+        match = transport_ok and fsha == manifest["file_sha256"]
         out_file.write_bytes(data)
         all_ok = all(r.get("ok") and r.get("chunk_sha_ok", True) for r in results)
         print(json.dumps({"ok": match and all_ok,
                           "verdict": "DECRYPT_OK" if (match and all_ok) else "SHA_MISMATCH",
                           "file_sha256": fsha, "expected": manifest["file_sha256"],
+                          "transport_codec": codec, "transport_sha256": transport_sha,
+                          "transport_sha_match": transport_ok,
                           "sha_match": match, "out_file": str(out_file),
                           "frames": results}, indent=1))
         sys.exit(0 if (match and all_ok) else 1)

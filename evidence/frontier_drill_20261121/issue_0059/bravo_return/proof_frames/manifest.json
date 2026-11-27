@@ -1,0 +1,24 @@
+{
+ "file": "evidence/frontier_drill_20261121/issue_0059/bravo_return/solution.zkdp",
+ "file_bytes": 326,
+ "file_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+ "transport_codec": "raw",
+ "transport_bytes": 326,
+ "transport_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+ "total_chunks": 2,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 0,
+   "frame_sha256": "40157fd95c3d025a52ca4ffffe3e580caca068610d853e892678b534a1625367",
+   "chunk_sha256": "b361cc87b55f9bf7866058e00f112df7c7b48313b23a3a2e359de4ebf28cda42",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "8c7bdb591150e86d66ab18e884f17ce813f3a65b66a7d52e9853161d980e8874",
+   "chunk_sha256": "4235ab939ee9bc17a7d936bbecab4ea93461a5c934f5bc4a99e1e159e07aefcb",
+   "chunk_bytes": 146
+  }
+ ]
+}

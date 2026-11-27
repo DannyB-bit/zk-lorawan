@@ -1,0 +1,3 @@
+frame_00.bin 245B sha256=40157fd95c3d025a... chunk=180B
+frame_01.bin 245B sha256=8c7bdb591150e86d... chunk=146B
+{"ok": true, "file_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5", "total_chunks": 2, "out_dir": "evidence/frontier_drill_20261121/issue_0059/bravo_return/proof_frames"}

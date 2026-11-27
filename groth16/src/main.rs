@@ -802,9 +802,14 @@ fn main() {
         std::process::exit(0);
     }
 
-    if args.len() > 1 && args[1] == "verify" {
-        if args.len() < 12 {
-            eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex> <deposit_value> <firmware_hash_hex>");
+    if args.len() > 1 && (args[1] == "verify" || args[1] == "verify-bound") {
+        let verify_bound = args[1] == "verify-bound";
+        if args.len() < 12 || (verify_bound && args.len() != 15) {
+            if verify_bound {
+                eprintln!("Usage: zk_lorawan_prove verify-bound <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex> <deposit_value> <firmware_hash_hex> <payload_sha256> <payload_commitment> <expected_payload_file>");
+            } else {
+                eprintln!("Usage: zk_lorawan_prove verify <proof_a> <proof_b> <proof_c> <identity_hash> <nullifier_hash> <attestation_hash> <ciphertext_hash> <gateway_address_hex> <deposit_value> <firmware_hash_hex>");
+            }
             std::process::exit(2);
         }
         let proof_a_bytes = hex::decode(&args[2]).expect("Invalid proof_a hex");
@@ -825,7 +830,7 @@ fn main() {
         // sweep): the old fallback serialized Fr(0) for BOTH fields, which can never
         // match a generate-side commitment (MiMC output is non-zero) — every unbound
         // round-trip returned INVALID. Reproducible: generate → verify → INVALID.
-        let (payload_sha_bytes, payload_commit_bytes) = if args.len() >= 14 {
+        let (payload_sha_bytes, payload_commit_bytes) = if verify_bound || args.len() >= 14 {
             (
                 hex::decode(&args[12]).expect("Invalid payload_sha256 hex"),
                 hex::decode(&args[13]).expect("Invalid payload_commitment hex"),
@@ -856,8 +861,22 @@ fn main() {
             total_bytes: 0,
         };
 
+        let expected_payload = if verify_bound {
+            Some(std::fs::read(&args[14]).expect("Cannot read expected payload file"))
+        } else {
+            None
+        };
         let prover = ZKLoRaWANProver::new();
-        let is_valid = prover.verify_bundle(&bundle, &gateway_bytes, deposit_value, &firmware_hash);
+        let is_valid = match expected_payload {
+            Some(payload) => prover.verify_bundle_with_payload(
+                &bundle,
+                &gateway_bytes,
+                deposit_value,
+                &firmware_hash,
+                Some(&payload),
+            ),
+            None => prover.verify_bundle(&bundle, &gateway_bytes, deposit_value, &firmware_hash),
+        };
         if is_valid {
             println!("VALID");
             std::process::exit(0);

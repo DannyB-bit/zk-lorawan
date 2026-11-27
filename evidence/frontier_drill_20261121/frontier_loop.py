@@ -41,6 +41,12 @@ EVID = HERE / "EVIDENCE.jsonl"
 
 sys.path.insert(0, str(TOOLS))
 from chirp_raw_rx import decrypt_frame  # canonical AEAD open
+from zk_drill_proof import generate_proof_packet, verify_proof_packet, MAGIC as ZK_MAGIC
+from language_u_exact_codec import decode_payload as decode_language_u, MAGIC as LU_MAGIC
+
+FRONTIER_PYTHON = Path(os.environ.get("FRONTIER_PYTHON", str(Path.home() / "llm-venv/bin/python")))
+VERIFY = HERE / "verify"
+VERIFY.mkdir(exist_ok=True)
 
 
 ATTEST = HERE / "attest"
@@ -141,11 +147,13 @@ def evid(entry):
         f.write(json.dumps(entry) + "\n")
 
 
-def seal(src: Path, recipient_pub: str, out_dir: Path):
+def seal(src: Path, recipient_pub: str, out_dir: Path, codec="language-u-exact"):
     out_dir.mkdir(parents=True, exist_ok=True)
-    r = subprocess.run([sys.executable, str(TOOLS / "chirp_raw_tx.py"),
-                        str(src), recipient_pub, str(out_dir)],
-                       capture_output=True, text=True, timeout=120)
+    r = subprocess.run([str(FRONTIER_PYTHON), str(TOOLS / "chirp_raw_tx.py"),
+                        str(src), recipient_pub, str(out_dir), "--codec", codec],
+                       capture_output=True, text=True, timeout=180)
+    if r.returncode:
+        raise RuntimeError(f"seal failed ({codec}): {r.stderr[-300:]}")
     man = json.loads((out_dir / "manifest.json").read_text())
     return man
 
@@ -209,8 +217,24 @@ def scan_rx_payloads():
     # mix their frames and corrupt the payload. Return ALL complete candidates
     # (deduped by sha) so the solver can select by bravo's verdict sha.
     def reassemble(chunks):
-        data = b"".join(chunks[i]["chunk"] for i in range(len(chunks)))
+        transport = b"".join(chunks[i]["chunk"] for i in range(len(chunks)))
+        transport_sha = hashlib.sha256(transport).hexdigest()
+        if transport.startswith(LU_MAGIC):
+            try:
+                data = decode_language_u(transport)  # strict UTF-8 SHA-256 parity
+                kind = "data"
+            except Exception:
+                return {"kind": "invalid", "sha256": transport_sha,
+                        "transport_sha256": transport_sha, "bytes": b"", "frames": []}
+        elif transport.startswith(ZK_MAGIC):
+            data = transport
+            kind = "zk_proof"
+        else:
+            data = transport  # legacy raw lane, accepted only for pre-upgrade evidence
+            kind = "legacy_raw"
         return {"sha256": hashlib.sha256(data).hexdigest(), "bytes": data,
+                "transport_bytes": transport, "transport_sha256": transport_sha,
+                "kind": kind,
                 "frames": [{"frame_sha256": chunks[i]["frame_sha"], "idx": i,
                             "total": chunks[i]["total"], "rx_log": chunks[i]["log"],
                             "verdict": "DECRYPT_OK"} for i in sorted(chunks)]}
@@ -285,8 +309,24 @@ def step():
         if e.get("data", {}).get("node") == "bravo" or e.get("type", "") != "heartbeat_alpha":
             log(f"bus bravo event seq={e['seq']} type={e['type']} data={str(e.get('data', {}))[:160]}")
 
-    # scan RF for B->A sealed payloads (ack or solutions)
+    # scan RF for B->A sealed payloads (ack, solutions, and ZK proof packets)
     payloads = scan_rx_payloads()
+    proof_payloads = [p for p in payloads if p.get("kind") == "zk_proof"]
+    for p in payloads:
+        if p.get("kind") != "data":
+            continue
+        transport_path = VERIFY / (p["transport_sha256"] + ".lucx")
+        transport_path.write_bytes(p["transport_bytes"])
+        for proof in proof_payloads:
+            proof_path = VERIFY / (proof["sha256"] + ".zkdp")
+            proof_path.write_bytes(proof["bytes"])
+            if verify_proof_packet(proof_path, transport_path, gateway_address=ALPHA_PUB):
+                p["zk_valid"] = True
+                p["zk_proof_sha256"] = proof["sha256"]
+                p["zk_proof_frames"] = len(proof["frames"])
+                break
+        if not p.get("zk_valid"):
+            p["zk_valid"] = False
     verdict_shas = {e["data"].get("issue_id"): e["data"].get("payload_sha256")
                     for e in br if e["type"] == "frontier_solution_verdict"}
     # STRICT manifest binding (2026-11-25, after the 0036 mixed-capture incident):
@@ -312,7 +352,12 @@ def step():
                 if not cap_shas or not cap_shas.issubset(declared) or p["sha256"] != verdict_shas.get(iid):
                     log(f"REJECT mixed/unbound capture for {iid}: {len(cap_shas)} frames, subset_of_manifest={cap_shas.issubset(declared)}, sha_match={p['sha256'] == verdict_shas.get(iid)}")
                     continue
-            entry = {"sha256": p["sha256"], "payload": j, "frames": p.get("frames", [])}
+            if not p.get("zk_valid"):
+                log(f"REJECT {iid}: ZK_PROOF_REQUIRED_OR_INVALID")
+                continue
+            entry = {"sha256": p["sha256"], "payload": j, "frames": p.get("frames", []),
+                     "zk_valid": True, "zk_proof_sha256": p["zk_proof_sha256"],
+                     "transport_sha256": p["transport_sha256"]}
             if iid not in solutions or p["sha256"] == verdict_shas.get(iid):
                 # first candidate wins unless a later one matches bravo's verdict sha
                 solutions[iid] = entry
@@ -394,18 +439,41 @@ def step():
         # fire only when B has declared an open RX window (LoRa is not store-and-forward)
         if window_open:
             fdir = FRAMES / iid
-            man = seal(src, BRAVO_PUB, fdir)
-            logf, tail = fire(fdir, f"issue_{iid}")
+            man = seal(src, BRAVO_PUB, fdir, codec="language-u-exact")
+            transport_path = fdir / "transport.bin"
+            proof_packet = FRAMES / f"{iid}_proof_packet.zkdp"
+            proof_public = ATTEST / f"{iid}_A_to_B_groth16.json"
+            ATTEST.mkdir(exist_ok=True)
+            proof = generate_proof_packet(transport_path, idx + 1, proof_packet, proof_public)
+            pdir = FRAMES / f"{iid}_proof"
+            pman = seal(proof_packet, BRAVO_PUB, pdir, codec="raw")
+            logf, tail = fire(fdir, f"issue_{iid}_lucx")
+            plogf, ptail = fire(pdir, f"issue_{iid}_groth16")
             s["issue_sent"][iid] = {"sha256": sha, "frames": man["total_chunks"],
-                                     "tx_log": logf.name, "tx": tail, "utc": now()}
+                                     "transport_sha256": man["transport_sha256"],
+                                     "transport_bytes": man["transport_bytes"],
+                                     "codec": "language-u-exact", "zk_valid_required": True,
+                                     "zk_proof_sha256": hashlib.sha256(proof_packet.read_bytes()).hexdigest(),
+                                     "zk_proof_frames": pman["total_chunks"],
+                                     "tx_log": logf.name, "tx": tail,
+                                     "zk_tx_log": plogf.name, "zk_tx": ptail, "utc": now()}
             s["current_issue"] = iid
             s["phase"] = "await_solution"
             evid({"event": "issue_sent", "issue_id": iid, "round": idx + 1,
-                  "payload_sha256": sha, "frames": man["total_chunks"], "tx_log": logf.name, "tx": tail})
+                  "payload_sha256": sha, "frames": man["total_chunks"],
+                  "codec": "language-u-exact", "transport_sha256": man["transport_sha256"],
+                  "transport_bytes": man["transport_bytes"], "groth16": "BN254 payload-bound",
+                  "zk_proof_sha256": hashlib.sha256(proof_packet.read_bytes()).hexdigest(),
+                  "zk_proof_frames": pman["total_chunks"], "tx_log": logf.name, "tx": tail,
+                  "zk_tx_log": plogf.name, "zk_tx": ptail})
             bus_post("frontier_issue_window", {
                 "to": "bravo", "from": "alpha", "drill": DRILL, "issue_id": iid,
                 "round": idx + 1, "payload_sha256": sha, "frames": man["total_chunks"],
-                "note": "issue content is ONLY in the sealed chirps on 903.9MHz; capture all frames, reassemble w/ bravo_sk, verify sha, post frontier_issue_verdict, solve, return resolved payload sealed to alpha_pub",
+                "transport_codec": "language-u-exact", "transport_sha256": man["transport_sha256"],
+                "transport_bytes": man["transport_bytes"], "zk_required": True,
+                "zk_proof_sha256": hashlib.sha256(proof_packet.read_bytes()).hexdigest(),
+                "zk_proof_frames": pman["total_chunks"],
+                "note": "capture LUCX1 data + ZKDP proof chirps; decode exact UTF-8, verify Groth16 against transport.bin, solve; return LUCX1 solution plus separate ZKDP proof bound to its compressed transport",
                 "alpha_pub_for_reply": ALPHA_PUB})
             ensure_attest(iid, "A_to_B_issue", sha, f"TX_DONE {tail}"[:110])
             save_state(s)
@@ -442,12 +510,18 @@ def step():
             entry = {"event": "solution_received", "issue_id": cur,
                      "payload_sha256": psha, "bus_verdict": verdict is not None,
                      "sha_match_with_bus_verdict": sha_match,
+                     "transport_codec": "language-u-exact",
+                     "transport_sha256": sol["transport_sha256"],
+                     "groth16_valid": sol["zk_valid"],
+                     "zk_proof_sha256": sol["zk_proof_sha256"],
                      "solution": sol["payload"], "utc": now()}
             evid(entry)
             (SOLS / f"{cur}_solution.json").write_text(json.dumps(sol["payload"], indent=1))
             (SOLS / f"{cur}_capture.json").write_text(json.dumps({
                 "issue_id": cur, "payload_sha256": psha,
-                "leg": "B_to_A_solution", "verdict": "DECRYPT_OK",
+                "leg": "B_to_A_solution", "verdict": "DECRYPT_OK_GROTH16_VALID",
+                "transport_codec": "language-u-exact", "transport_sha256": sol["transport_sha256"],
+                "groth16_valid": True, "zk_proof_sha256": sol["zk_proof_sha256"],
                 "frames": sol["frames"], "utc": now()}, indent=1))
             chain = ensure_attest(cur, "B_to_A_solution", psha,
                                   f"DECRYPT_OK {len(sol['frames'])} frames sha_match={bool(sha_match)}")
