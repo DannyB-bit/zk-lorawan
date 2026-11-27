@@ -108,14 +108,31 @@ def main():
                               "have": len(chunks), "want": manifest["total_chunks"],
                               "results": results}))
             sys.exit(1)
-        data = b"".join(chunks[i] for i in range(manifest["total_chunks"]))
+        transport = b"".join(chunks[i] for i in range(manifest["total_chunks"]))
+        transport_sha = hashlib.sha256(transport).hexdigest()
+        transport_ok = transport_sha == manifest.get("transport_sha256", transport_sha)
+        codec = manifest.get("transport_codec", "raw")
+        try:
+            if codec == "language-u-exact":
+                from language_u_exact_codec import decode_payload
+                data = decode_payload(transport)
+            elif codec == "raw":
+                data = transport
+            else:
+                raise ValueError("unsupported transport codec")
+        except Exception as exc:
+            print(json.dumps({"ok": False, "verdict": "CODEC_DECODE_FAIL",
+                              "error": type(exc).__name__, "frames": results}, indent=1))
+            sys.exit(1)
         fsha = hashlib.sha256(data).hexdigest()
-        match = fsha == manifest["file_sha256"]
+        match = transport_ok and fsha == manifest["file_sha256"]
         out_file.write_bytes(data)
         all_ok = all(r.get("ok") and r.get("chunk_sha_ok", True) for r in results)
         print(json.dumps({"ok": match and all_ok,
                           "verdict": "DECRYPT_OK" if (match and all_ok) else "SHA_MISMATCH",
                           "file_sha256": fsha, "expected": manifest["file_sha256"],
+                          "transport_codec": codec, "transport_sha256": transport_sha,
+                          "transport_sha_match": transport_ok,
                           "sha_match": match, "out_file": str(out_file),
                           "frames": results}, indent=1))
         sys.exit(0 if (match and all_ok) else 1)
