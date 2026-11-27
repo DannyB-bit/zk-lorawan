@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0054",
+  "leg": "A_to_B_issue",
+  "declared_issue_window_b_seq": 7189,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_authenticated_ciphertexts": 24,
+  "selected_frames": 12,
+  "refire_duplicate_ciphertexts": 12,
+  "payload_sha256": "d6aa30e312973e20775e2c736cd721c3f0d048d11fef627ac4a6dad8629982fa",
+  "ok": true,
+  "note": "Two complete 12-frame bursts visible in real standby HAL log: 24 authenticated ciphertexts, identical plaintext per duplicate index, contiguous idx0..11. Exact declared SHA. Native real-silicon solve/tests complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7207,
+   "rtt_ms": 17.795
+  },
+  "A": {
+   "ok": true,
+   "seq": 2784,
+   "rtt_ms": 18.235
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7207,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2784,
+   "fields_match": true
+  }
+ }
+}
