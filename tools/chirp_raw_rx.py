@@ -44,6 +44,18 @@ def decrypt_frame(frame: bytes, sk_hex: str) -> bytes:
     return AESGCM(key).decrypt(nonce, ct_tag, None)   # raises on tamper
 
 
+def extract_declared_chunk(plaintext: bytes, declared: int) -> bytes:
+    """Remove only padding, preserving every manifest-declared payload byte."""
+    if declared < 0 or declared > 180:
+        raise ValueError("chunk_bytes outside payload range")
+    if len(plaintext) != 183:
+        raise ValueError("bad decrypted payload length")
+    chunk = plaintext[3:3 + declared]
+    if any(plaintext[3 + declared:]):
+        raise ValueError("invalid chunk length or nonzero padding")
+    return chunk
+
+
 def load_frame(path) -> bytes:
     """Accept a RAW 245-byte frame file or a HEX-TEXT file (490 hex chars).
 
@@ -96,8 +108,15 @@ def main():
                                 "frame_sha256": fsha})
                 continue
             total, fidx = pt[1], pt[2]
-            chunk = pt[3:].rstrip(b"\x00")
-            # chunk length must match manifest unless it's the last chunk
+            try:
+                if fidx != idx or total != manifest["total_chunks"]:
+                    raise ValueError("frame index or total mismatch")
+                chunk = extract_declared_chunk(pt, int(fr["chunk_bytes"]))
+            except Exception as exc:
+                results.append({"idx": idx, "ok": False,
+                                "error": f"{type(exc).__name__}: {exc}",
+                                "frame_sha256": fsha})
+                continue
             ok_sha = hashlib.sha256(chunk).hexdigest() == fr["chunk_sha256"]
             chunks[fidx] = chunk
             results.append({"idx": idx, "ok": True, "verdict": "DECRYPT_OK",
