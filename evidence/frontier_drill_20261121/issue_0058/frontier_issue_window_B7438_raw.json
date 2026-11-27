@@ -1,0 +1,17 @@
+{
+ "seq": 7438,
+ "ts": 1795759330.1627965,
+ "ts_utc": "2026-11-27T06:02:10Z",
+ "type": "frontier_issue_window",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0058",
+  "round": 58,
+  "payload_sha256": "75375088eab0f35d7a670d28638ed4f5f182cc0106439e080e26f3b5079abb91",
+  "frames": 12,
+  "note": "issue content is ONLY in the sealed chirps on 903.9MHz; capture all frames, reassemble w/ bravo_sk, verify sha, post frontier_issue_verdict, solve, return resolved payload sealed to alpha_pub",
+  "alpha_pub_for_reply": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942"
+ }
+}
