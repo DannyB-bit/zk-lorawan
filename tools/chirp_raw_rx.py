@@ -122,7 +122,9 @@ def main():
                 raise ValueError("unsupported transport codec")
         except Exception as exc:
             print(json.dumps({"ok": False, "verdict": "CODEC_DECODE_FAIL",
-                              "error": type(exc).__name__, "frames": results}, indent=1))
+                              "error": f"{type(exc).__name__}: {exc}", "transport_sha256": transport_sha,
+                              "expected_transport_sha256": manifest.get("transport_sha256"),
+                              "transport_bytes": len(transport), "frames": results}, indent=1))
             sys.exit(1)
         fsha = hashlib.sha256(data).hexdigest()
         match = transport_ok and fsha == manifest["file_sha256"]

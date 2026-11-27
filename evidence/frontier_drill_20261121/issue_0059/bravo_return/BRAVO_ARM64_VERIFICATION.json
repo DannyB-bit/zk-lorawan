@@ -1,0 +1,44 @@
+{
+  "protocol_pr": 42,
+  "reviewed_alpha_head": "69ee9cc9121ed8746cdba091cb2163589c0bf673",
+  "node": "RakMiner-B ARM Cortex-A72 aarch64",
+  "rf_transmitted": false,
+  "a_receive": {
+    "decrypt_ok": true,
+    "frames_decrypted": 7,
+    "sha_match": true,
+    "exact_decode": true,
+    "original_sha256": "54b54b60dd7a879d078113be848d9ef5b88b97fe1e74a49f1be0d36fd081d99e",
+    "recipient_pub": "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+    "token_ids_exact": true,
+    "token_count": 633
+  },
+  "a_zkdp": {
+    "a_proof_valid": true,
+    "tampered_transport_valid": false,
+    "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+    "firmware_sha256": "2f8dc2a68d8eba47e1b43d3d94b91ea818f9b2b236fda43e9c73ad5b7073adad",
+    "transport_sha256": "09abe2a19831cc760cbca76d796235e1c08bb3b39d3a4c6bebc083c43904bda6"
+  },
+  "b_return": {
+    "solution_json_sha256": "3d46c3556ef603fc1cfe5ff69961334abec4f719ce83f24a64c3f065226eb7e6",
+    "solution_transport_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+    "solution_frames": 25,
+    "zkdp_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+    "proof_frames": 2,
+    "identity_hash": "7418a249278e58d71efb04d785e115bf16af07547e0491ef2d85c627543ab613",
+    "gateway_address": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+    "firmware_sha256": "e331e46346ed08c71ca37297bfde5555432922c4cfffe07af6e26a445c8f7902",
+    "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+    "local_proof_valid": true,
+    "tampered_transport_valid": false
+  },
+  "tests": {
+    "pytest": "29 passed, 12 subtests passed in 143.78s; exit 0",
+    "mandatory_e2e": "included in tests/ run: passed on ARM64",
+    "cargo_test": "5 passed; 0 failed",
+    "compileall": "PASS",
+    "native_cpython_model_replay": "PASS 2/2"
+  }
+}

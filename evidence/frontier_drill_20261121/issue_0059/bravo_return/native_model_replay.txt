@@ -1,0 +1,5 @@
+PASS: legacy ordering reproduced free while SaveThread pin was live
+PASS: patched ordering frees only after atomic pin drains
+PASS: no-pin baseline and head_mutex detach boundary
+test result: ok. 2 passed; 0 failed
+DIRECT_ARM64_REPLAY_RC=0
