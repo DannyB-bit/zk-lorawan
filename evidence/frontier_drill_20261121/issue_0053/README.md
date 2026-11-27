@@ -1,0 +1,13 @@
+# FRONTIER-GH-0053 — CLOSED BOTH SIDES: RF + NATIVE + FINALIZED ON-CHAIN
+
+- A→B RF: real standby HAL capture contains **24 authenticated ciphertexts across contiguous idx0..11**, identical plaintext per duplicate index. Selected **12/12 DECRYPT_OK** frames reassembled **2020 bytes**, SHA-256 `28679e1f0c0e521b7aea0f9ea615fb07224ed40500a86757e28b56f0308382c8` exactly matching B7150. Verdict **B7180/A2769**, dual-bus read-back fields_match=true.
+- Native aarch64 Linux C11/pthreads: legacy pointer-only CAS reproduced ABA (`stale_cas_ok=1 final_node=2 expected_node=3`); fixed {pointer,64-bit epoch} rejected stale CAS, retried, and installed node3 with `final_epoch=5`. Main + eight fixed iterations passed; independent pytest runs each **2/2 PASS**. `__atomic_is_lock_free(16)=0` on Cortex-A72 is disclosed: tagged CAS uses libatomic and is not claimed lock-free. Standalone model, not a claimed CPython patch. Repeats 0049 modulo issue id; source freshly compiled/re-run.
+- Solution: **7775 bytes**, SHA-256 `0be11594a5aad19aa7f04bcdc233ffd477723b28b3d23a388b10ba9702b4364d`; sealed into **44 frames**, staged SHA gate **44/44 PASS**.
+- B→A RF: Alpha window **B7178** fired exactly once at 903.9MHz SF7 BW125 14dBm: **44/44 TX_DONE**, `CHIRP_TX_COMPLETE=YES`, TX/recovery exit 0. Verdict **B7186/A2773**; guard `fired_0053_B7178`.
+- Alpha receiver closure: **B7187** reports **44/44 DECRYPT_OK** and exact SHA `0be11594a5aad19aa7f04bcdc233ffd477723b28b3d23a388b10ba9702b4364d`; locally byte-compared against Bravo's solution, TX verdict, and on-chain root.
+- On-chain attestation: **FINALIZED** slot **526699129**, signature `4vjJhNyNav64UZKLPaxq44m5CKuge1TsfgBeDqsvbtqUXpLt7c7ET2ksbAfefAt1dvXxmi3AQKh7MwLDpzKwr2J9`, record PDA `B5j1p3ruC2adWNSfmSV28hpBUybb6cwcamFn5Q4G6UA5`; session/root/authority/coords/signature checks all pass, `sigs_on_record=1`. Dual-bus notice **B7188/A2774**. Explorer: https://explorer.solana.com/tx/4vjJhNyNav64UZKLPaxq44m5CKuge1TsfgBeDqsvbtqUXpLt7c7ET2ksbAfefAt1dvXxmi3AQKh7MwLDpzKwr2J9?cluster=devnet
+- **CLOSED BOTH SIDES.** No completion is based on a `sha_match` label alone: all three SHA planes were independently compared to the exact local solution bytes.
+
+Reproduce: `gcc -std=c11 -O2 -Wall -Wextra -Werror -pthread aba_epoch_queue.c -latomic -o aba_epoch_queue && ./aba_epoch_queue legacy && ./aba_epoch_queue fixed && /usr/bin/python3 -m pytest -q test_frontier_0053.py`.
+
+Evidence-bundle note: live fire orchestrator omitted by public-safety law (hard-coded peer bus); local byte SHA-256 `3c0f8e693cba46b02106b5f6290575228aac55bd76e391b27534057f699daea1`. TX/recovery logs and dual-bus verdicts are committed; executable redaction placeholders are forbidden.
