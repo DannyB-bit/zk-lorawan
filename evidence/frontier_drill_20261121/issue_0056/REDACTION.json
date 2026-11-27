@@ -1,0 +1,18 @@
+{
+ "redactor": "equivalent exact mandated replacements (master redact_public_evidence.py absent)",
+ "replacement_markers": [
+  "REDACTED-FLEET-LAN-*",
+  "REDACTED-TELEGRAM-*"
+ ],
+ "occurrences_replaced": 0,
+ "fail_closed_scan": {
+  "literal_tokens_private_keys": 0,
+  "fleet_lan_ips": 0,
+  "telegram_ids": 0,
+  "key_named_raw_64hex": 0,
+  "personal_emails": 0,
+  "build_artifacts": 0,
+  "nested_git_dirs": 0
+ },
+ "status": "PASS"
+}

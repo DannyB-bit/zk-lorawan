@@ -1,0 +1,53 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0056",
+  "leg": "A_to_B_issue",
+  "action": "RE_FIRE_FULL_12_FRAME_ISSUE",
+  "declared_issue_window_b_seq": 7264,
+  "declared_frames": 12,
+  "authenticated_indices": [
+   11
+  ],
+  "missing_chunk_indices": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "payload_sha256": "e8ea56a9b615347d0d3a8dba8bcf4f089b50765f4c40e8303c9eec11c4427b89",
+  "note": "Live standby capture has only authenticated idx11; idx0-10 absent. Re-fire the SAME sealed 12-frame issue burst on 903.9MHz SF9 BW125 while Bravo standby is active. No solution or attestation exists yet; do not advance issue."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7297,
+   "rtt_ms": 46.065
+  },
+  "A": {
+   "ok": true,
+   "seq": 2833,
+   "rtt_ms": 45.783
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7297,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2833,
+   "fields_match": true
+  }
+ }
+}
