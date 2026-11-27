@@ -1,6 +1,6 @@
 {
  "drill": "frontier_drill_20261121",
- "phase": "send_issue",
+ "phase": "await_solution",
  "target": 1000,
  "solved": [
   "FRONTIER-GH-0001",
@@ -56,8 +56,8 @@
   "FRONTIER-GH-0051",
   "FRONTIER-GH-0052"
  ],
- "current_issue": null,
- "bus_seq_last": 7147,
+ "current_issue": "FRONTIER-GH-0053",
+ "bus_seq_last": 7148,
  "brief_fired": true,
  "brief_sha": "5e7ea0635f171ce089c27cb005253cc0bc04ba7cd8719d57dcb8d61c9f558c75",
  "brief_frames": 17,
@@ -428,11 +428,18 @@
    "tx_log": "tx_issue_FRONTIER-GH-0052_refire_233121.log",
    "tx": "REFIRE full 12 fired=12 tx_done=12 sf=9",
    "utc": "2026-11-26T23:34:56Z"
+  },
+  "FRONTIER-GH-0053": {
+   "sha256": "28679e1f0c0e521b7aea0f9ea615fb07224ed40500a86757e28b56f0308382c8",
+   "frames": 12,
+   "tx_log": "tx_issue_FRONTIER-GH-0053_002959.log",
+   "tx": "fired=12 tx_done=12 sf=9 airtime_s=14.51",
+   "utc": "2026-11-27T00:32:03Z"
   }
  },
  "refire_count": 0,
  "started_utc": "2026-11-21T08:08:08Z",
- "b_last_seen_ts": 1795739278.9948628,
+ "b_last_seen_ts": 1795739286.6648045,
  "rx_window_open_seq": 7145,
  "rx_window_closes_ts": 1795758117.0,
  "sol_rx": {
