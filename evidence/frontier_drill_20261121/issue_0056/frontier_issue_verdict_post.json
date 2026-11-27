@@ -1,0 +1,42 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0056",
+  "leg": "A_to_B_issue",
+  "declared_issue_window_b_seq": 7320,
+  "initial_declared_issue_window_b_seq": 7264,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_authenticated_ciphertexts": 12,
+  "selected_frames": 12,
+  "refire_duplicate_ciphertexts": 0,
+  "payload_sha256": "e8ea56a9b615347d0d3a8dba8bcf4f089b50765f4c40e8303c9eec11c4427b89",
+  "ok": true,
+  "note": "Initial burst authenticated only idx11; miss disclosed B7297/A2833. Same-seal re-fire B7320/A2845 captured full contiguous idx0..11, 12/12 DECRYPT_OK, reassembled 2007 bytes exact declared SHA. Native real-silicon solve/tests complete: three native runs plus independent pytest 2/2 twice."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7331,
+   "rtt_ms": 16.353
+  },
+  "A": {
+   "ok": true,
+   "seq": 2851,
+   "rtt_ms": 42.017
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7331,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2851,
+   "fields_match": true
+  }
+ }
+}
