@@ -1,268 +1,56 @@
 {
  "issue_id": "FRONTIER-GH-0051",
- "payload_sha256": "1d000c7416600e37f30995b929d9a26851a2919a602669f0893c0d3d8778cbc2",
+ "payload_sha256": "255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7",
  "leg": "B_to_A_solution",
  "verdict": "DECRYPT_OK",
- "frames": [
-  {
-   "frame_sha256": "808bae546f2c0a0d86597e1ce1ec56cfd9c4893777aee969b88b04cf058b5cd0",
-   "idx": 0,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "3ee8aa5ca227892a042dd0e00199d7e4280e3d9db96b1ccb636dc4b97c6b4bde",
-   "idx": 1,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "da0cd88795654e7cc08aee1cf04923a7885d91b28ce81c570208b379a5ec55f6",
-   "idx": 2,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "c3ed020550257642c7b4f84d7f4022ff2c7444ef3262028782918c40c84825ae",
-   "idx": 3,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "e913b30b8d08f434ab9ab7c1a72d3e54d08673e620ff0046df07fafb9ec7ce00",
-   "idx": 4,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "ee6d830e023464c8096414396a289068b0ab9b750b7d6a5f2ca3c82a16ff3d6b",
-   "idx": 5,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "016aec6a7fffa45b0a0d36d4a512b87c588d796667999f8eb7cd63c6d411d806",
-   "idx": 6,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "bf395f3d56f4f2f39ca7ba0aa0ef1f8d4e076abe4c0708dc871a84ba97279474",
-   "idx": 7,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "cf726804d522efe702c0a331310975685d5b3381c015d6c3e8627a0941f46224",
-   "idx": 8,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "06adf14cc6478bb226e6117f9266b367f5ce4b1955644a3705dce4d331d838d4",
-   "idx": 9,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "0d711fbf94d8b7d9efc259230b9592b53153e018c1a4d00734fa4f01957e1046",
-   "idx": 10,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "c6ab1c9be57d536bda66f9e0603b97b799f300cbde81cff690685f13f3dc2de7",
-   "idx": 11,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "4308d281899385e3d08a26b517de949233a407a2f02bf5c5ab6a8e3e89d0c199",
-   "idx": 12,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "62111bf7f70805b1ede063b5ca880c41be186c0ddb51e791fc572506ff4dac76",
-   "idx": 13,
-   "total": 37,
-   "rx_log": "rx_211559.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "9d84eb774f171a9377d7680e6d7de7c46c9410b74a83eef12e41fdec01527f95",
-   "idx": 14,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "ad7b3a791d639360fd6e4723e191467d7a257ac9c95dac5d9409fa10e0a65ba6",
-   "idx": 15,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "09fc755712cc18b23e249e23ec7597289a14070b2a323ad5bb7d27052f25829a",
-   "idx": 16,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "b8eec4c0a81003c2e5b72c5ad9056f26344e9c6506fd99a7b97081b449249563",
-   "idx": 17,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "63e5a339a0a639129c55bc7531d378f95f0f4a536918130a99916d3dc0c0eb06",
-   "idx": 18,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "49a2d411a32da8a8f8256141cce346eb399ae247857bad0a89cf3773b3c43699",
-   "idx": 19,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "24af6ea7ef93a19d43f4b3a486052c42ff90068e2fd92e1530a979955f5cd27e",
-   "idx": 20,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "77ff84156add37311649ba2e8482c4ca0982231b8deaed4a0db9ea3b18a20a8a",
-   "idx": 21,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "95b7a2fa8de8bfe76eda01edd3303dc0a44d0409541f56d20a655f948d5bbe78",
-   "idx": 22,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "92d5cba275c26b38a83f6865ec15584d28563dde8e2c2383438dbc3ea38292ad",
-   "idx": 23,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "236beae5101f1262cbeb308ba9e5cb48b8ec1dbb6d644e3c31d79fd39542d2fd",
-   "idx": 24,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "6c40faf3d6c675e67a0440252593c7d03c7f93cadeec0f0211ea58aa45b8cd19",
-   "idx": 25,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "9e9bebd8196a4a38f6ddc168f1ef424875b85c71fa8d1b72eb7a5b25ee6f457b",
-   "idx": 26,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "832b07ba631d3b0a88f3bb19f0cf5f31ade4fe03486d8e56260dc9c1ad37a661",
-   "idx": 27,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "599c5b00da32bb946ab5c838caa2ae702423105decc13dbb703e6077c12b80a4",
-   "idx": 28,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "c45c92216876e2d116c506ddb28791f56f2cf53f56ff1948c4d9def9718c0e40",
-   "idx": 29,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "133c12ec9674cbb23c9c088f7af73b03482c216d98ce06628268cf8486df49ed",
-   "idx": 30,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "ac12e09b629b6140afc48601661e87e057a7af559b8126f863cd9443df52c594",
-   "idx": 31,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "478f6baeb0017d127eb1b42d41913d6a4168fea906fab373c6c9cec3d8b906e0",
-   "idx": 32,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "31d4a8369cd196e6fdd8a09a531793b1a6d6d2d5cfa941b30ec655bfd3f9a104",
-   "idx": 33,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "fab918e8bbedf938045408eab49600b84532872bd149670b0d2bc74cbc3e3455",
-   "idx": 34,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "8c67af24d5a52c27e07a29d8fa007e2f01bb215723e2a91d9f900d298170c37e",
-   "idx": 35,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  },
-  {
-   "frame_sha256": "e8f30af3dc1eba51a86b90c560c8ef0e72ad46b039d1aad57a6423a90fe1903c",
-   "idx": 36,
-   "total": 37,
-   "rx_log": "rx_204858.log",
-   "verdict": "DECRYPT_OK"
-  }
+ "supersedes": [
+  "B6997 withdrawn (invalid)",
+  "B7103 PARTIAL 15/37"
  ],
- "utc": "2026-11-26T21:36:03Z"
+ "capture_binding": {
+  "declared_manifest_b_seq": 6998,
+  "all_37_frames_in_declared_manifest": true,
+  "refire_b_seq": 7114
+ },
+ "frame_meta": {
+  "808bae546f2c0a0d86597e1ce1ec56cfd9c4893777aee969b88b04cf058b5cd0": 0,
+  "3ee8aa5ca227892a042dd0e00199d7e4280e3d9db96b1ccb636dc4b97c6b4bde": 1,
+  "da0cd88795654e7cc08aee1cf04923a7885d91b28ce81c570208b379a5ec55f6": 2,
+  "c3ed020550257642c7b4f84d7f4022ff2c7444ef3262028782918c40c84825ae": 3,
+  "e913b30b8d08f434ab9ab7c1a72d3e54d08673e620ff0046df07fafb9ec7ce00": 4,
+  "ee6d830e023464c8096414396a289068b0ab9b750b7d6a5f2ca3c82a16ff3d6b": 5,
+  "016aec6a7fffa45b0a0d36d4a512b87c588d796667999f8eb7cd63c6d411d806": 6,
+  "bf395f3d56f4f2f39ca7ba0aa0ef1f8d4e076abe4c0708dc871a84ba97279474": 7,
+  "cf726804d522efe702c0a331310975685d5b3381c015d6c3e8627a0941f46224": 8,
+  "06adf14cc6478bb226e6117f9266b367f5ce4b1955644a3705dce4d331d838d4": 9,
+  "0d711fbf94d8b7d9efc259230b9592b53153e018c1a4d00734fa4f01957e1046": 10,
+  "c6ab1c9be57d536bda66f9e0603b97b799f300cbde81cff690685f13f3dc2de7": 11,
+  "4308d281899385e3d08a26b517de949233a407a2f02bf5c5ab6a8e3e89d0c199": 12,
+  "62111bf7f70805b1ede063b5ca880c41be186c0ddb51e791fc572506ff4dac76": 13,
+  "b345f563bc64d58ea354ead4a8d16d49f2ce5d501b1a1464539b9e213c22565f": 14,
+  "6026f19c65885f7dc3c8074ad433a897f80754cbf347d74403718c789b3d3174": 15,
+  "a711e34e1136e67e2213c1d142f8e408c326015d43d09b73841622ce9b44be23": 16,
+  "1b0cad8fc5689b0935549d6e66d5ec93d4998b6577a4550cb8210bb45275ba45": 17,
+  "dd9bdedaec7cac7d14a3bf39fa7c02a489b2649b744515ab84fec56d9a2116b0": 18,
+  "20f997beb1050439c6cbb3f54b59a36ceab445ee918d581bd92a292758929af5": 19,
+  "4c463f2d2a195c3bcce241054ce22c9d373ed1c0cfb95c339c7d90b2be4b5dbd": 20,
+  "a91ee43d50ab7700ba22d9bb2f32e44421c30b564d461dcea866d5dfa93571de": 21,
+  "379b2373fdf107bcbfb332feabf93878200a0139e7a654b7aca0b48f2642d15e": 22,
+  "bdf95de6e8d3d891fe453acdd401bd380f2316d25b53c687c46c051cd5fbb66e": 23,
+  "9199e7071ee5df8bd88428eb002786fc8de081b29ed48c9bdf05ad74a58a5bb6": 24,
+  "3fef478a5d6e4926d927a48adb9b9e86039275b4a3ede8a589ea630908d3af1f": 25,
+  "446aa2e254b71471b73f0bc3e56c538414ad2424735c2d05310b2da1adaaed78": 26,
+  "5a8fd99c7c88321cd5cc35ce555fbfcc65e84e6770fb0f3e62d8bbbcbe6b62fd": 27,
+  "ee7be5de2dfc8fb7a162cf5bfb0d31ebe5f99eef662c3bf72c0d5b9b95b25088": 28,
+  "ce3675c764b2de06ae64e52a14805a793d5bcde7e199c3244754d75449e9917e": 29,
+  "9d2a7491c9d57d036a4824da03d144dc50c0c14f696b2e01a949578dbaa8c1d4": 30,
+  "07552cb737cecf0ff7fb59552fc647dbd1aff0f0a012cb87b3df097bdca96ad7": 31,
+  "d0d26e6e12f2a8d49f5b9ef651938e143cedfe6cbe8055935ced8e62963940df": 32,
+  "b339f6cf8ec9e394d15da8bc12797f317d9789c1b375ef1b6992501221801587": 33,
+  "0c50d1b170f3420cabfb16ff9e3d2ade04325f9bcf8b15f15bb752f7aa0b139d": 34,
+  "f0656eed2db292a80c8a012d71727c6af6c4dd9c2ec2004f81d61ddfbf33b776": 35,
+  "5ba4a71ec4993e9d14225e23b85455f22a8bb18bfd56c6116a437686efa9ab7c": 36
+ },
+ "bravo_verdict_b_seq": 6998,
+ "utc": "2026-11-27T01:46:16Z"
 }
