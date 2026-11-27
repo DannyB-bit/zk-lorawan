@@ -33,3 +33,4 @@ ERROR: wrong coding rate (0) - timestamp_counter_correction
   crc:      0x0000
 
 Received 1 packets (total:0)
+RX_EXIT=124 2026-11-27T03:58:04Z
