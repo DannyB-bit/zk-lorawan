@@ -6018,3 +6018,4 @@
 2026-11-27T01:40:02Z bus bravo event seq=7211 type=frontier_consolidated_stall_request data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_consolidated_stall_request', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0051', 'reason': 'c
 2026-11-27T01:40:02Z bus bravo event seq=7212 type=frontier_solution_verdict data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_solution_verdict', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0054', 'ok': True, 'payload_s
 2026-11-27T01:40:03Z attest FRONTIER-GH-0054 B_to_A_solution: {"attestation_sha256": "2b541b47f49b47703e150e35c40d4895d4b620acf269911a14c645c3b975eb42", "derived_pubkey": "x6SSu2bpKFa5LCBJ2Ph9HGgD7m2MHS
+2026-11-27T01:40:04Z phase=await_solution solved=53/1000 current=FRONTIER-GH-0054 b_alive=True rx_running=True
