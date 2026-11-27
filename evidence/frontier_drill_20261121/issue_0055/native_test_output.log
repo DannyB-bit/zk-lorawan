@@ -1,0 +1,11 @@
+aarch64
+legacy_shell_exit=139 (SIGSEGV reproduced)
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS
+mode=fixed detach=head_mutex initial_refs=2 daemon_lease=1 final_refcount=0 freed_once=1 invariant=PASS

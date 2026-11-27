@@ -1,0 +1,2 @@
+ADR_FIRE_CONFIG sf=7 bw_khz=125 pow_dbm=14 gap_s=3 frame_airtime_s=0.384
+ABORT: Alpha window closed at 2026-11-27T02:22:01Z
