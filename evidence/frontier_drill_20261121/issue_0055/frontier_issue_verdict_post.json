@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0055",
+  "leg": "A_to_B_issue",
+  "declared_issue_window_b_seq": 7216,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_authenticated_ciphertexts": 22,
+  "selected_frames": 12,
+  "refire_duplicate_ciphertexts": 10,
+  "payload_sha256": "c994c364d52257417ff338c92cf87eede8cec46540d090849d4d982610992adc",
+  "ok": true,
+  "note": "22 authenticated ciphertexts across contiguous idx0..11, identical plaintext per duplicate index. Selected 12/12 reassemble 2033 bytes exact declared SHA. Native real-silicon solve/tests complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7250,
+   "rtt_ms": 16.274
+  },
+  "A": {
+   "ok": true,
+   "seq": 2808,
+   "rtt_ms": 38.761
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7250,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2808,
+   "fields_match": true
+  }
+ }
+}
