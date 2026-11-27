@@ -35,10 +35,11 @@
     "tampered_transport_valid": false
   },
   "tests": {
-    "pytest": "29 passed, 12 subtests passed in 143.78s; exit 0",
+    "pytest": "33 passed, 12 subtests passed in 152.30s; exit 0",
     "mandatory_e2e": "included in tests/ run: passed on ARM64",
     "cargo_test": "5 passed; 0 failed",
     "compileall": "PASS",
     "native_cpython_model_replay": "PASS 2/2"
-  }
+  },
+  "trailing_zero_padding_regression": "4 passed; manifest chunk_bytes preserved and nonzero padding rejected"
 }
