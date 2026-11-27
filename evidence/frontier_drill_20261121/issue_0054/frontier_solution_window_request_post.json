@@ -1,0 +1,38 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_solution_window_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0054",
+  "leg": "B_to_A_solution",
+  "payload_sha256": "3ddeb63f772079ff1f6e16eb194e88e63860ba10f7e0dc9cc99f6572316e946e",
+  "payload_bytes": 5965,
+  "total_chunks": 34,
+  "native_tests": "2/2 PASS aarch64 twice; legacy 256-tick global starvation reproduced; fixed 64-tick budget fallback PASS",
+  "staged_sha_gate": "34/34 PASS",
+  "note": "0054 repeats 0050 exact invariant modulo issue id; proven source intentionally reused and freshly compiled/re-run. Ready for newest declared B_to_A_solution window; fail-closed fire only."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7208,
+   "rtt_ms": 16.13
+  },
+  "A": {
+   "ok": true,
+   "seq": 2785,
+   "rtt_ms": 35.63
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7208,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2785,
+   "fields_match": true
+  }
+ }
+}
