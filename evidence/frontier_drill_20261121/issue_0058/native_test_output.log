@@ -1,0 +1,2 @@
+mode=legacy ticks=256 local_polls=256 global_completed=0 global_starved=1 fallback_checks=0 max_global_wait_ticks=256 budget=64 invariant=STARVATION_REPRODUCED
+mode=fixed ticks=256 local_polls=252 global_completed=4 global_starved=0 fallback_checks=4 max_global_wait_ticks=64 budget=64 invariant=PASS

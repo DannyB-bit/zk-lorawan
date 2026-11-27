@@ -1,0 +1,13 @@
+{
+ "issue_id": "FRONTIER-GH-0058",
+ "local_solution_bytes": 5699,
+ "local_solution_sha256": "30c100f04e9deb1e06e22661f72f32fc057087665d476046e52ed0b0b2ab5f6b",
+ "alpha_capture_b_seq": 7510,
+ "alpha_verdict": "DECRYPT_OK",
+ "alpha_frames_decrypted": 32,
+ "alpha_sha_match_with_bravo_verdict": true,
+ "tx_verdict_sha256": "30c100f04e9deb1e06e22661f72f32fc057087665d476046e52ed0b0b2ab5f6b",
+ "onchain_root": "30c100f04e9deb1e06e22661f72f32fc057087665d476046e52ed0b0b2ab5f6b",
+ "three_plane_byte_identity": true,
+ "closed_both_sides": true
+}

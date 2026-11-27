@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0058",
+  "leg": "A_to_B_issue",
+  "declared_issue_window_b_seq": 7438,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_authenticated_ciphertexts": 24,
+  "selected_frames": 12,
+  "refire_duplicate_ciphertexts": 12,
+  "payload_sha256": "75375088eab0f35d7a670d28638ed4f5f182cc0106439e080e26f3b5079abb91",
+  "ok": true,
+  "note": "Across same-seal re-fire, 24 distinct authenticated ciphertexts deduplicate to contiguous idx0..11; 12/12 selected DECRYPT_OK, reassembled 2019 bytes exact declared SHA. Native real-silicon solve/tests starting now."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7492,
+   "rtt_ms": 406.853
+  },
+  "A": {
+   "ok": true,
+   "seq": 2934,
+   "rtt_ms": 19.179
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7492,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2934,
+   "fields_match": true
+  }
+ }
+}
