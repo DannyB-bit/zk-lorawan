@@ -1,0 +1,41 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_issue_verdict",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0052",
+  "leg": "A_to_B_issue",
+  "declared_issue_window_b_seq": 7096,
+  "declared_frames": 12,
+  "authenticated_decrypt_ok": 12,
+  "unique_authenticated_ciphertexts": 12,
+  "selected_frames": 12,
+  "refire_duplicate_ciphertexts": 0,
+  "payload_sha256": "cc1a6aa2e5783fb015b049d43dd0a66556e0359644a462bff99353c8e2223625",
+  "ok": true,
+  "note": "Full same-seal re-fire captured in real standby HAL log: 12 authenticated contiguous idx0..11, exact declared SHA. Initial burst had only idx11 due to Bravo 0051 TX overlap; re-fire recovered all frames. Native solve/tests now running."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7127,
+   "rtt_ms": 15.969
+  },
+  "A": {
+   "ok": true,
+   "seq": 2741,
+   "rtt_ms": 25.371
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7127,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2741,
+   "fields_match": true
+  }
+ }
+}

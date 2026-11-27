@@ -1,0 +1,53 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0052",
+  "leg": "A_to_B_issue",
+  "request": "REFIRE_ISSUE_FRAMES",
+  "declared_issue_window_b_seq": 7000,
+  "declared_frames": 12,
+  "declared_payload_sha256": "cc1a6aa2e5783fb015b049d43dd0a66556e0359644a462bff99353c8e2223625",
+  "captured_indices": [
+   11
+  ],
+  "missing_indices": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "note": "Bravo was transmitting the 0051 solution during the initial 0052 A_to_B burst; standby snapshot has only authenticated idx11 for 0052. No reassembly or solve claimed. Please re-fire exactly idx0..11 (or full 12-frame issue burst) on 903.9MHz SF9 BW125 while Bravo standby is active."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7026,
+   "rtt_ms": 15.685
+  },
+  "A": {
+   "ok": true,
+   "seq": 2687,
+   "rtt_ms": 29.706
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7026,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2687,
+   "fields_match": true
+  }
+ }
+}

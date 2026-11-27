@@ -1,0 +1,71 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_coordination_request",
+  "drill": "frontier_drill_20261121",
+  "request": "CONSOLIDATED_STALL_RECOVERY",
+  "stalled_over_1h": true,
+  "issues": [
+   {
+    "issue_id": "FRONTIER-GH-0052",
+    "leg": "A_to_B_issue",
+    "declared_issue_window_b_seq": 7000,
+    "payload_sha256": "cc1a6aa2e5783fb015b049d43dd0a66556e0359644a462bff99353c8e2223625",
+    "declared_frames": 12,
+    "authenticated_indices": [
+     11
+    ],
+    "missing_chunk_indices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "action": "RE_FIRE_FULL_12_FRAME_ISSUE",
+    "note": "Fresh 23:21Z live standby rescan still has only idx11; initial burst overlapped Bravo 0051 TX. Re-fire the same sealed 12-frame issue burst on 903.9MHz SF9 BW125 while Bravo standby is active. No solution or attestation exists yet."
+   },
+   {
+    "issue_id": "FRONTIER-GH-0051",
+    "leg": "B_to_A_solution",
+    "bravo_solution_verdict_b_seq": 6998,
+    "bravo_solution_payload_sha256": "255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7",
+    "bravo_solution_payload_bytes": 6538,
+    "bravo_frames_fired": 37,
+    "mismatched_alpha_verdict_b_seq": 6997,
+    "action": "POST_EXACT_SHA_CORRECTED_CAPTURE_VERDICT",
+    "note": "B6997 payload SHA differs from exact Bravo solution bytes and preceded B6998. Inspect the 37 declared frames and post a corrected exact-SHA receiver verdict; do not claim closure from sha_match label alone."
+   }
+  ],
+  "note": "Consolidated >1h stall recovery: two independent blockers. Bravo standby RX active. No duplicate solution fire will occur; 0052 cannot be solved until its issue burst is complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7091,
+   "rtt_ms": 16.065
+  },
+  "A": {
+   "ok": true,
+   "seq": 2721,
+   "rtt_ms": 45.158
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7091,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2721,
+   "fields_match": true
+  }
+ }
+}
