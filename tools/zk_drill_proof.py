@@ -177,12 +177,21 @@ def verify_proof_packet(
     prover_binary: str | Path = DEFAULT_PROVER_BINARY,
     gateway_address: str = GATEWAY_PUBLIC_KEY,
     deposit_value: int = DEFAULT_DEPOSIT,
+    firmware_sha256: str | None = None,
 ) -> bool:
-    """Return true only for a canonical packet cryptographically bound to payload_file."""
+    """Return true only for a canonical packet cryptographically bound to payload_file.
+
+    Cross-node rule (PR42, issue-0059): the verifier MUST use the
+    prover-declared firmware_sha256 from the public proof JSON, not the hash
+    of the verifier's own binary — each node builds a different binary.
+    The payload hash is still always recomputed from payload_file.
+    The prover's PUBLIC verifying_key.bin must be present at keys/; VKs are
+    node-specific and never interchangeable.
+    """
     try:
         fields = unpack_proof_packet(Path(packet_file).read_bytes())
         binary = Path(prover_binary)
-        firmware_hash = hashlib.sha256(binary.read_bytes()).hexdigest()
+        firmware_hash = firmware_sha256 or hashlib.sha256(binary.read_bytes()).hexdigest()
         command = [str(binary), "verify-bound"]
         command.extend(fields[name].hex() for name, _ in FIELD_SIZES[:7])
         command.extend([gateway_address, str(deposit_value), firmware_hash])

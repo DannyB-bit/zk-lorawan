@@ -13,5 +13,8 @@
  "tokenizer_class": "GemmaTokenizer",
  "frames_recipient_pub": "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118",
  "frames_note": "frames/ now sealed to REAL Bravo production X25519 pub (raw-codec CHIRP245 around the LUCX1 capsule). The earlier 7 frames were sealed to a THROWAWAY LOCAL TEST X25519 key for the loopback E2E - that is why real-bravo-key open gave InvalidTag and why no recipient_pub was declared. Replaced, transport bytes unchanged.",
- "updated_utc": "2026-11-27T12:42:20Z"
+ "updated_utc": "2026-11-27T12:42:20Z",
+ "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+ "verifying_key_bytes": 584,
+ "verifying_key_note": "PUBLIC VK only; proving_key.bin never committed. Alpha locally re-verified issue59.zkdp VALID with this exact VK + declared firmware before pushing."
 }

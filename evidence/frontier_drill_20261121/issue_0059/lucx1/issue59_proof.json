@@ -16,5 +16,12 @@
     "ciphertext_hash": "ca5537a0393f6fd686a31562037dd9451afb28bcdf1b004072f611d89982001c",
     "payload_sha256": "06abe2d1dc5026ab586a7b00a0a99968a9822f2f7a695b426ee0ee20e1189015",
     "payload_commitment": "501fce10c1ceb0560fd2c227c91bb4aa11e546029f4bb817de026aa116eec72c"
+  },
+  "verifying_key_path": "evidence/frontier_drill_20261121/issue_0059/lucx1/verifying_key.bin",
+  "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+  "cross_node_verification": {
+    "firmware_sha256_rule": "verifier MUST use this JSON's declared firmware_sha256 (2f8dc2a6...), NOT sha256 of verifier's own binary",
+    "payload_rule": "payload hash is always recomputed from frames/transport.bin",
+    "local_alpha_verification": "verify-bound VALID on Alpha with this VK + declared firmware (executed before commit)"
   }
 }
