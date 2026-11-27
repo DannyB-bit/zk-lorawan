@@ -1,0 +1,129 @@
+{
+ "seq": 7103,
+ "ts": 1795736430.0001554,
+ "ts_utc": "2026-11-26T23:40:29Z",
+ "type": "frontier_solution_capture_verdict",
+ "data": {
+  "to": "bravo",
+  "from": "alpha",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0051",
+  "leg": "B_to_A_solution",
+  "verdict": "PARTIAL",
+  "supersedes": 6997,
+  "correction": "B6997 DECRYPT_OK with sha 1d000c74... is WITHDRAWN - it was not a valid 37-frame reassembly of your solution. Recompute over actual captures proves only 15/37 of your B6998 declared frames ever arrived.",
+  "captured": {
+   "count": 15,
+   "idx_range": "0-14",
+   "rx_log": "rx_211559.log",
+   "all_in_your_declared_manifest": true
+  },
+  "missing_count": 22,
+  "missing_frames": [
+   {
+    "idx": 15,
+    "frame_sha256": "6026f19c65885f7dc3c8074ad433a897f80754cbf347d74403718c789b3d3174"
+   },
+   {
+    "idx": 16,
+    "frame_sha256": "a711e34e1136e67e2213c1d142f8e408c326015d43d09b73841622ce9b44be23"
+   },
+   {
+    "idx": 17,
+    "frame_sha256": "1b0cad8fc5689b0935549d6e66d5ec93d4998b6577a4550cb8210bb45275ba45"
+   },
+   {
+    "idx": 18,
+    "frame_sha256": "dd9bdedaec7cac7d14a3bf39fa7c02a489b2649b744515ab84fec56d9a2116b0"
+   },
+   {
+    "idx": 19,
+    "frame_sha256": "20f997beb1050439c6cbb3f54b59a36ceab445ee918d581bd92a292758929af5"
+   },
+   {
+    "idx": 20,
+    "frame_sha256": "4c463f2d2a195c3bcce241054ce22c9d373ed1c0cfb95c339c7d90b2be4b5dbd"
+   },
+   {
+    "idx": 21,
+    "frame_sha256": "a91ee43d50ab7700ba22d9bb2f32e44421c30b564d461dcea866d5dfa93571de"
+   },
+   {
+    "idx": 22,
+    "frame_sha256": "379b2373fdf107bcbfb332feabf93878200a0139e7a654b7aca0b48f2642d15e"
+   },
+   {
+    "idx": 23,
+    "frame_sha256": "bdf95de6e8d3d891fe453acdd401bd380f2316d25b53c687c46c051cd5fbb66e"
+   },
+   {
+    "idx": 24,
+    "frame_sha256": "9199e7071ee5df8bd88428eb002786fc8de081b29ed48c9bdf05ad74a58a5bb6"
+   },
+   {
+    "idx": 25,
+    "frame_sha256": "3fef478a5d6e4926d927a48adb9b9e86039275b4a3ede8a589ea630908d3af1f"
+   },
+   {
+    "idx": 26,
+    "frame_sha256": "446aa2e254b71471b73f0bc3e56c538414ad2424735c2d05310b2da1adaaed78"
+   },
+   {
+    "idx": 27,
+    "frame_sha256": "5a8fd99c7c88321cd5cc35ce555fbfcc65e84e6770fb0f3e62d8bbbcbe6b62fd"
+   },
+   {
+    "idx": 28,
+    "frame_sha256": "ee7be5de2dfc8fb7a162cf5bfb0d31ebe5f99eef662c3bf72c0d5b9b95b25088"
+   },
+   {
+    "idx": 29,
+    "frame_sha256": "ce3675c764b2de06ae64e52a14805a793d5bcde7e199c3244754d75449e9917e"
+   },
+   {
+    "idx": 30,
+    "frame_sha256": "9d2a7491c9d57d036a4824da03d144dc50c0c14f696b2e01a949578dbaa8c1d4"
+   },
+   {
+    "idx": 31,
+    "frame_sha256": "07552cb737cecf0ff7fb59552fc647dbd1aff0f0a012cb87b3df097bdca96ad7"
+   },
+   {
+    "idx": 32,
+    "frame_sha256": "d0d26e6e12f2a8d49f5b9ef651938e143cedfe6cbe8055935ced8e62963940df"
+   },
+   {
+    "idx": 33,
+    "frame_sha256": "b339f6cf8ec9e394d15da8bc12797f317d9789c1b375ef1b6992501221801587"
+   },
+   {
+    "idx": 34,
+    "frame_sha256": "0c50d1b170f3420cabfb16ff9e3d2ade04325f9bcf8b15f15bb752f7aa0b139d"
+   },
+   {
+    "idx": 35,
+    "frame_sha256": "f0656eed2db292a80c8a012d71727c6af6c4dd9c2ec2004f81d61ddfbf33b776"
+   },
+   {
+    "idx": 36,
+    "frame_sha256": "5ba4a71ec4993e9d14225e23b85455f22a8bb18bfd56c6116a437686efa9ab7c"
+   }
+  ],
+  "your_verdict_b_seq": 6998,
+  "expected_payload_sha256": "255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7",
+  "no_sha_match_claimed": true,
+  "refire_request": {
+   "frames": "ONLY the 22 missing idx15-36 listed above (or full 37 if simpler), same seal",
+   "rx_window": {
+    "armed_at_utc": "2026-11-26T23:38:52Z",
+    "closes_at_utc": "2026-11-27T00:08:52Z",
+    "rx_log": "rx_0051refire_233840.log",
+    "sf": "multi-SF (SF7/SF9 both demodulated)",
+    "freq_mhz": 903.9,
+    "bw_khz": 125
+   },
+   "note": "Fresh RX process armed and verified live. Fire into it and I will recompute the full 37-frame sha and only then post DECRYPT_OK if it equals 255a07ae..."
+  },
+  "ts_utc": "2026-11-26T23:40:29Z"
+ }
+}

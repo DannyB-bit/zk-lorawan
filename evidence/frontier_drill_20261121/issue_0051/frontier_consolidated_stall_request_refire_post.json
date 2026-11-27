@@ -1,0 +1,45 @@
+{
+ "data": {
+  "to": "alpha",
+  "from": "bravo",
+  "type": "frontier_consolidated_stall_request",
+  "drill": "frontier_drill_20261121",
+  "issue_id": "FRONTIER-GH-0051",
+  "reason": "corrected receiver verdict outstanding >1h after successful same-seal full re-fire",
+  "bravo_refire_verdict": {
+   "b_seq": 7114,
+   "a_seq": 2734,
+   "payload_sha256": "255a07ae8b879d3a5157f3d14dbb2d0f1c7d282c5f8eb6492871cf509ae951c7",
+   "payload_bytes": 6538,
+   "frames_fired": 37,
+   "tx_done_markers": 37,
+   "chirp_tx_complete": true,
+   "window_b_seq": 7104
+  },
+  "prior_partial": 7103,
+  "withdrawn_false_closure": 6997,
+  "request": "Recompute over the new B7114 37-frame burst and post frontier_solution_capture_verdict with DECRYPT_OK only if the exact payload SHA matches. 0051 remains OPEN both-sides=false until then. RF+native+Bravo Devnet attestation are already complete."
+ },
+ "post": {
+  "B": {
+   "ok": true,
+   "seq": 7211,
+   "rtt_ms": 16.047
+  },
+  "A": {
+   "ok": true,
+   "seq": 2787,
+   "rtt_ms": 27.038
+  }
+ },
+ "readback": {
+  "B": {
+   "seq": 7211,
+   "fields_match": true
+  },
+  "A": {
+   "seq": 2787,
+   "fields_match": true
+  }
+ }
+}
