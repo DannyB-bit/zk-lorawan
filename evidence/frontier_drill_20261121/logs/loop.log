@@ -14584,3 +14584,6 @@ Another git proce | push rc=1
 2026-11-28T12:36:02Z bus bravo event seq=7907 type=frontier_solution_capture_verdict data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0059', 'ok': True, 'verdict': 'ALPHA_INDEPENDENT_RF_CAPTURE_AND_GR
 2026-11-28T12:36:26Z phase=await_solution solved=58/1000 current=FRONTIER-GH-0059 b_alive=True rx_running=False
 2026-11-28T12:36:29Z attest FRONTIER-GH-0059 B_to_A_solution: {"attestation_sha256": "1cd5583eb3c666a76190b3d8254635849b0c40a091229298eed683548778587a", "derived_pubkey": "BR3FRSs3sdtr4zApyTnujw5KwqDAKY
+2026-11-28T12:36:33Z git commit:  create mode 100644 tools/verify_frontier_rf_capture.py | push rc=1
+2026-11-28T12:36:33Z SOLVED FRONTIER-GH-0059 sha=3d46c3556ef603fc (59/1000)
+2026-11-28T12:36:35Z phase=await_solution solved=58/1000 current=FRONTIER-GH-0059 b_alive=True rx_running=False
