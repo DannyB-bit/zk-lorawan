@@ -1,0 +1,4 @@
+FIRE_START 2026-11-28T13:13:09Z label=issue_FRONTIER-GH-0060_groth16 frames=/home/researcher-alpha/fleet-repos/zk-lorawan/evidence/frontier_drill_20261121/frames/FRONTIER-GH-0060_proof sf=9 pow_dbm=14 bw_khz=125 freq_mhz=903.9
+2026-11-28T13:13:18Z frame_00 sha=c4003f80ddb8bd33 t=1795871589.830372802->1795871598.063628911 A_LORA_TX_FILE_SEND_COMPLETE=YES
+2026-11-28T13:13:29Z frame_01 sha=f7783f23cbda7006 t=1795871601.084429761->1795871609.416766831 A_LORA_TX_FILE_SEND_COMPLETE=YES
+FIRE_DONE 2026-11-28T13:13:32Z label=issue_FRONTIER-GH-0060_groth16 frames_fired=2 tx_done=2 sf=9 pow_dbm=14 burst_airtime_s=2.42 hourly_duty_pct_if_one_burst=0.0672

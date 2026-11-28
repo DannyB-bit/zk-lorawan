@@ -1,0 +1,24 @@
+{
+ "file": "/home/researcher-alpha/fleet-repos/zk-lorawan/evidence/frontier_drill_20261121/frames/FRONTIER-GH-0060_proof_packet.zkdp",
+ "file_bytes": 326,
+ "file_sha256": "56bb881cb8e427080e3990a46352c18d2278286ae3fafec3a4c12c6b79775067",
+ "transport_codec": "raw",
+ "transport_bytes": 326,
+ "transport_sha256": "56bb881cb8e427080e3990a46352c18d2278286ae3fafec3a4c12c6b79775067",
+ "total_chunks": 2,
+ "chunk_max": 180,
+ "frames": [
+  {
+   "idx": 0,
+   "frame_sha256": "e76d5cf02ce8994f1a9e1500a2d82e2adbbb553a346d5613d606aae124e1f816",
+   "chunk_sha256": "84f293328aa331a6a1af4c582a90e6185e953990a5de77a2c1a8fcc805b5b41d",
+   "chunk_bytes": 180
+  },
+  {
+   "idx": 1,
+   "frame_sha256": "f7783f23cbda7006852a2f0d679803f9a02c4ee05a4ee2c57034dad0352c6500",
+   "chunk_sha256": "72515c274973636c7a7aa5aeef9421406a335e893f252eb0940731a1a357a42b",
+   "chunk_bytes": 146
+  }
+ ]
+}

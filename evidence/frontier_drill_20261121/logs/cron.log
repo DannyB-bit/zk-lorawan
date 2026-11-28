@@ -7007,3 +7007,13 @@ json.decoder.JSONDecodeError: Unterminated string starting at: line 474 column 4
 2026-11-28T12:56:02Z bus bravo event seq=7921 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
 2026-11-28T12:56:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=False
 2026-11-28T12:56:30Z RX armed bg 900s -> rx_125630.log
+2026-11-28T13:00:02Z bus bravo event seq=7924 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:00:02Z bus bravo event seq=7925 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:00:02Z bus bravo event seq=7926 type=frontier_issue_window_open data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_issue_window_open', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'issue_number': 60, '
+2026-11-28T13:00:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:04:02Z bus bravo event seq=7929 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:04:02Z bus bravo event seq=7930 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:04:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:08:02Z bus bravo event seq=7931 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:08:02Z bus bravo event seq=7932 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:08:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True

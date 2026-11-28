@@ -534,8 +534,23 @@ def step():
         src = ISSUES / f"{iid}.json"
         src.write_text(json.dumps(payload, indent=1))
         sha = hashlib.sha256(src.read_bytes()).hexdigest()
+        # Bravo's explicit, issue-bound receiver declaration is authoritative for
+        # the A_to_B leg. Alpha's own RX window only covers the return solution.
+        b_window_open = next((e["data"] for e in reversed(br)
+                              if e.get("type") == "frontier_issue_window_open"
+                              and e.get("data", {}).get("issue_id") == iid
+                              and e.get("data", {}).get("from") == "bravo"
+                              and e.get("data", {}).get("leg") == "A_to_B"), None)
+        if b_window_open:
+            try:
+                close_ts = datetime.datetime.fromisoformat(
+                    b_window_open["closes_at_utc"].replace("Z", "+00:00")).timestamp()
+                if time.time() >= close_ts:
+                    b_window_open = None
+            except (KeyError, ValueError):
+                b_window_open = None
         # fire only when B has declared an open RX window (LoRa is not store-and-forward)
-        if window_open:
+        if window_open or b_window_open:
             fdir = FRAMES / iid
             man = seal(src, BRAVO_PUB, fdir, codec="language-u-exact")
             transport_path = fdir / "transport.bin"

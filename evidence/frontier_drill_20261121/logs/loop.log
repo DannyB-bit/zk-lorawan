@@ -14617,3 +14617,26 @@ Another git proce | push rc=1
 2026-11-28T12:56:37Z bus bravo event seq=7922 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
 2026-11-28T12:56:37Z bus bravo event seq=7923 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
 2026-11-28T12:56:40Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:00:02Z bus bravo event seq=7924 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:00:02Z bus bravo event seq=7925 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:00:02Z bus bravo event seq=7926 type=frontier_issue_window_open data={'to': 'alpha', 'from': 'bravo', 'type': 'frontier_issue_window_open', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'issue_number': 60, '
+2026-11-28T13:00:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:02:36Z bus bravo event seq=7927 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:02:36Z bus bravo event seq=7928 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:02:40Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:04:02Z bus bravo event seq=7929 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:04:02Z bus bravo event seq=7930 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:04:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:08:02Z bus bravo event seq=7931 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:08:02Z bus bravo event seq=7932 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:08:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:08:37Z bus bravo event seq=7933 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:08:37Z bus bravo event seq=7934 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:08:41Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:10:49Z bus bravo event seq=7935 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:10:49Z bus bravo event seq=7936 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:11:17Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:12:02Z bus bravo event seq=7935 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:12:02Z bus bravo event seq=7936 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:12:30Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=False
+2026-11-28T13:13:36Z attest FRONTIER-GH-0060 A_to_B_issue: {"attestation_sha256": "a9899fb9441372cecb245fbaef82a3ed5d1ee364bd9ea649f02dbd98b8496f76", "derived_pubkey": "bcYj1G2Ap2B1KaxeXJ7unx6QdM9Gdj

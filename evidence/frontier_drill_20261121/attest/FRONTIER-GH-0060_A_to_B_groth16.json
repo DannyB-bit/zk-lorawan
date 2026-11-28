@@ -1,0 +1,23 @@
+{
+  "issue_number": 60,
+  "packet_bytes": 326,
+  "payload_bytes": 1240,
+  "payload_sha256": "98d2f2b80a1c22b207b8ba093ac3a82c42c2acfd89df88d74abc51ccbb36d412",
+  "transport_sha256": "98d2f2b80a1c22b207b8ba093ac3a82c42c2acfd89df88d74abc51ccbb36d412",
+  "firmware_sha256": "2f8dc2a68d8eba47e1b43d3d94b91ea818f9b2b236fda43e9c73ad5b7073adad",
+  "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+  "zk_proof_sha256": "56bb881cb8e427080e3990a46352c18d2278286ae3fafec3a4c12c6b79775067",
+  "gateway_address": "c51a77e603e376223a3796a7817ead68333754cd677a6a06a5fb54be75bfb118",
+  "deposit_value": 100000,
+  "proof": {
+    "proof_a_compressed": "a683c476e6b1f349159ec4ed1a879952a7d12f7ca33245b97e08f22a29fdd617",
+    "proof_b_compressed": "7522bc3445722f497ec3882a71af19d8e07a69387da491b7f9687976b1a45e170d558e7b019d795d5db675f9981985a9d7e76f59641a152a129deca96a2c9f90",
+    "proof_c_compressed": "c21ae38c1302b2fb424f78e918539415912487e24afd05948620fa1b1357dd8f",
+    "identity_hash": "46c4b7344769a2819e734b3a4bfecd4dfe3ca5b480748a35af94fc26abb59701",
+    "nullifier_hash": "5ac6058bc2740edd86aa31369dd1a18448e32344a945e14b62ffeff5f2aeb42c",
+    "attestation_hash": "b179242b8d0857968c87596f678f109937d1022fd2527703b88636435610b114",
+    "ciphertext_hash": "223dedef3c77e8ec8168144e57304c8347a2e1787024d1f927bb402dfa26502b",
+    "payload_sha256": "98d2f2b80a1c22b207b8ba093ac3a82c42c2acfd89df88d74abc51ccbb36d412",
+    "payload_commitment": "76af7f2828333794eb7db024b9cf7d511a56e5244aec814f836e335c73e67305"
+  }
+}
