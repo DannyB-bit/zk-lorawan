@@ -577,6 +577,15 @@ def step():
             save_state(s)
             git_commit(f"evidence(frontier-drill): issue {iid} (round {idx+1}) sealed+fired to B over real LoRa ({man['total_chunks']} chirps, sha {sha[:16]}...)")
         else:
+            # Pre-notice must precede the wait: Bravo's receiver automation keys
+            # off this event. The explicit note prevents it being mistaken for a
+            # claim that RF transmission has already occurred.
+            bus_post("frontier_issue_window", {
+                "to": "bravo", "from": "alpha", "drill": DRILL,
+                "issue_id": iid, "round": idx + 1, "payload_sha256": sha,
+                "freq_mhz": 903.9, "sf": 9, "bw_khz": 125,
+                "phase": "pre_fire_notice", "fired": False,
+                "note": "A holds fire until the coordinated RX window; B: arm receiver and acknowledge"})
             bus_post("frontier_issue_window_request", {
                 "drill": DRILL, "issue_id": iid, "round": idx + 1,
                 "note": "B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue"})

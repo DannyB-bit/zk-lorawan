@@ -1,0 +1,3 @@
+2026-11-28T12:51:07Z bus bravo event seq=7916 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T12:51:07Z bus bravo event seq=7917 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T12:51:35Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
