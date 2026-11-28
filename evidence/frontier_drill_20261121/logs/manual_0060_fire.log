@@ -1,0 +1,5 @@
+2026-11-28T13:10:49Z bus bravo event seq=7935 type=frontier_issue_window data={'to': 'bravo', 'from': 'alpha', 'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'payload_sha256': '40c0e5c157d2e2f04e666d5e3ee
+2026-11-28T13:10:49Z bus bravo event seq=7936 type=frontier_issue_window_request data={'drill': 'frontier_drill_20261121', 'issue_id': 'FRONTIER-GH-0060', 'round': 60, 'note': 'B: open RX window on 903.9 SF9 BW125 so A can fire the sealed issue'}
+2026-11-28T13:11:17Z phase=send_issue solved=59/1000 current=None b_alive=True rx_running=True
+2026-11-28T13:13:36Z attest FRONTIER-GH-0060 A_to_B_issue: {"attestation_sha256": "a9899fb9441372cecb245fbaef82a3ed5d1ee364bd9ea649f02dbd98b8496f76", "derived_pubkey": "bcYj1G2Ap2B1KaxeXJ7unx6QdM9Gdj
+2026-11-28T13:13:39Z git commit:  create mode 100644 evidence/frontier_drill_20261121/logs/tx_issue_FRONTIER-GH-0060_lucx_131315.log | push rc=0

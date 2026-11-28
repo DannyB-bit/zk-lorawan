@@ -494,11 +494,11 @@
    "zk_valid_required": true,
    "zk_proof_sha256": "56bb881cb8e427080e3990a46352c18d2278286ae3fafec3a4c12c6b79775067",
    "zk_proof_frames": 2,
-   "tx_log": "tx_issue_FRONTIER-GH-0060_lucx_131156.log",
+   "tx_log": "tx_issue_FRONTIER-GH-0060_lucx_131315.log",
    "tx": "fired=7 tx_done=7 sf=9 airtime_s=8.46",
-   "zk_tx_log": "tx_issue_FRONTIER-GH-0060_groth16_131309.log",
+   "zk_tx_log": "tx_issue_FRONTIER-GH-0060_groth16_131428.log",
    "zk_tx": "fired=2 tx_done=2 sf=9 airtime_s=2.42",
-   "utc": "2026-11-28T13:13:32Z"
+   "utc": "2026-11-28T13:14:49Z"
   }
  },
  "refire_count": 0,
