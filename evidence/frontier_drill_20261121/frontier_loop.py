@@ -353,7 +353,10 @@ def step():
                     log(f"REJECT mixed/unbound capture for {iid}: {len(cap_shas)} frames, subset_of_manifest={cap_shas.issubset(declared)}, sha_match={p['sha256'] == verdict_shas.get(iid)}")
                     continue
             if not p.get("zk_valid"):
-                log(f"REJECT {iid}: ZK_PROOF_REQUIRED_OR_INVALID")
+                # already-solved issues are grandfathered; re-rejecting them every
+                # tick is log spam (they are re-scanned from old RX logs each step)
+                if iid not in s["solved"]:
+                    log(f"REJECT {iid}: ZK_PROOF_REQUIRED_OR_INVALID")
                 continue
             entry = {"sha256": p["sha256"], "payload": j, "frames": p.get("frames", []),
                      "zk_valid": True, "zk_proof_sha256": p["zk_proof_sha256"],
