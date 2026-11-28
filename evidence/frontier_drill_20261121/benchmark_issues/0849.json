@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0850",
+ "domain_index": 9,
+ "category": "Asynchronous Event Loop Deadlocks",
+ "repo": "python/cpython",
+ "target_file": "Lib/asyncio/tasks.py",
+ "title": "Python asyncio.gather exception cancellation shielding leak",
+ "problem_statement": "### Issue FRONTIER-GH-0850: Python asyncio.gather exception cancellation shielding leak\nRepository: `python/cpython`\nCategory: `Asynchronous Event Loop Deadlocks`\nTarget File: `Lib/asyncio/tasks.py`\n\n#### Problem Description\nWhen one task in gather raises, cancelled sibling tasks ignore CancelledError and continue executing in background.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Propagate CancelledError recursively to all child tasks and wait for task completion before re-raising.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0850.py -q`\n",
+ "expected_invariant": "Propagate CancelledError recursively to all child tasks and wait for task completion before re-raising.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0850.py::test_reproduce_frontier-gh-0850"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0850"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0364",
+ "domain_index": 4,
+ "category": "Compiler IR Optimization & SSA Lowering",
+ "repo": "python/cpython",
+ "target_file": "Python/bytecodes.c",
+ "title": "CPython tier-2 micro-opcode deoptimization stack spill overwrite",
+ "problem_statement": "### Issue FRONTIER-GH-0364: CPython tier-2 micro-opcode deoptimization stack spill overwrite\nRepository: `python/cpython`\nCategory: `Compiler IR Optimization & SSA Lowering`\nTarget File: `Python/bytecodes.c`\n\n#### Problem Description\nJIT trace deopt handler restores stack pointers using tier-1 frame layout, corrupting local variables.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Align tier-2 deopt stack restore offset with tier-1 frame layout table.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0364.py -q`\n",
+ "expected_invariant": "Align tier-2 deopt stack restore offset with tier-1 frame layout table.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0364.py::test_reproduce_frontier-gh-0364"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0364"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

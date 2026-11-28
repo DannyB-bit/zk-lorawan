@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0274",
+ "domain_index": 3,
+ "category": "Distributed Consensus & Partitioning",
+ "repo": "hashicorp/raft",
+ "target_file": "clients/src/main/java/org/apache/kafka/clients/consumer/internals/AbstractCoordinator.java",
+ "title": "Kafka consumer group rebalance livelock under prolonged heartbeat thread latency",
+ "problem_statement": "### Issue FRONTIER-GH-0274: Kafka consumer group rebalance livelock under prolonged heartbeat thread latency\nRepository: `hashicorp/raft`\nCategory: `Distributed Consensus & Partitioning`\nTarget File: `clients/src/main/java/org/apache/kafka/clients/consumer/internals/AbstractCoordinator.java`\n\n#### Problem Description\nHeartbeat thread blocked by synchronous coordinator poll causes broker to repeatedly trigger partition rebalance.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Decouple heartbeat execution into dedicated daemon thread with separate keep-alive socket.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0274.py -q`\n",
+ "expected_invariant": "Decouple heartbeat execution into dedicated daemon thread with separate keep-alive socket.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0274.py::test_reproduce_frontier-gh-0274"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0274"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

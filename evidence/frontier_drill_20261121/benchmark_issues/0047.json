@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0048",
+ "domain_index": 1,
+ "category": "Concurrency & Lockless Race Conditions",
+ "repo": "crossbeam-rs/crossbeam",
+ "target_file": "net/socket/epoll_server.c",
+ "title": "Epoll thundering herd lock contention on multi-core accept socket wakeups",
+ "problem_statement": "### Issue FRONTIER-GH-0048: Epoll thundering herd lock contention on multi-core accept socket wakeups\nRepository: `crossbeam-rs/crossbeam`\nCategory: `Concurrency & Lockless Race Conditions`\nTarget File: `net/socket/epoll_server.c`\n\n#### Problem Description\nEPOLLEXCLUSIVE flag ignored during socket reuseport reallocation, cascading spurious EWOULDBLOCK wakeups.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce EPOLLEXCLUSIVE registration and implement lock-free socket queue distribution.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0048.py -q`\n",
+ "expected_invariant": "Enforce EPOLLEXCLUSIVE registration and implement lock-free socket queue distribution.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0048.py::test_reproduce_frontier-gh-0048"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0048"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

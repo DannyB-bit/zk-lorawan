@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0710",
+ "domain_index": 8,
+ "category": "Numerical Stability & Tensor Geometry",
+ "repo": "scipy/scipy",
+ "target_file": "scipy/special/_logsumexp.py",
+ "title": "Catastrophic cancellation in log-sum-exp with extreme logits exceeding dynamic FP16 range",
+ "problem_statement": "### Issue FRONTIER-GH-0710: Catastrophic cancellation in log-sum-exp with extreme logits exceeding dynamic FP16 range\nRepository: `scipy/scipy`\nCategory: `Numerical Stability & Tensor Geometry`\nTarget File: `scipy/special/_logsumexp.py`\n\n#### Problem Description\nSubtraction of max_logit causes underflow to zero in softmax denominator when logits differ by > 88.0.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Compute shift scale dynamically and use log1p formulation for high-dynamic-range stability.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0710.py -q`\n",
+ "expected_invariant": "Compute shift scale dynamically and use log1p formulation for high-dynamic-range stability.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0710.py::test_reproduce_frontier-gh-0710"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0710"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

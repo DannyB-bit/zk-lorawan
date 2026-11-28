@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0603",
+ "domain_index": 7,
+ "category": "High-Throughput Network Protocols",
+ "repo": "netty/netty",
+ "target_file": "codec/http2/frame_decoder.c",
+ "title": "WebSocket framing mask bit manipulation off-by-one in HTTP/2 multiplexed streams",
+ "problem_statement": "### Issue FRONTIER-GH-0603: WebSocket framing mask bit manipulation off-by-one in HTTP/2 multiplexed streams\nRepository: `netty/netty`\nCategory: `High-Throughput Network Protocols`\nTarget File: `codec/http2/frame_decoder.c`\n\n#### Problem Description\nPayload length parsing fails to handle extended 64-bit length header when chunk arrives across TCP segment boundary.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Maintain stateful stream buffer and wait for full 8-byte extended length before parsing payload.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0603.py -q`\n",
+ "expected_invariant": "Maintain stateful stream buffer and wait for full 8-byte extended length before parsing payload.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0603.py::test_reproduce_frontier-gh-0603"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0603"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0777",
+ "domain_index": 8,
+ "category": "Numerical Stability & Tensor Geometry",
+ "repo": "Dao-AILab/flash-attention",
+ "target_file": "csrc/flash_attn/src/flash_fwd_kernel.h",
+ "title": "FlashAttention-2 causal mask block triangular boundary tile miscalculation on odd sequence lengths",
+ "problem_statement": "### Issue FRONTIER-GH-0777: FlashAttention-2 causal mask block triangular boundary tile miscalculation on odd sequence lengths\nRepository: `Dao-AILab/flash-attention`\nCategory: `Numerical Stability & Tensor Geometry`\nTarget File: `csrc/flash_attn/src/flash_fwd_kernel.h`\n\n#### Problem Description\nBlock coordinate offset calculation in shared memory tile stores upper-triangular masked tokens into attention score.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Calculate exact causal mask row limit: row_idx + seq_offset and skip tile computation if fully masked.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0777.py -q`\n",
+ "expected_invariant": "Calculate exact causal mask row limit: row_idx + seq_offset and skip tile computation if fully masked.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0777.py::test_reproduce_frontier-gh-0777"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0777"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

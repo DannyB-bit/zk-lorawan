@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0106",
+ "domain_index": 2,
+ "category": "Memory Safety & Undefined Behavior",
+ "repo": "numpy/numpy",
+ "target_file": "numpy/core/src/multiarray/ctors.c",
+ "title": "NumPy C-API PyArrayObject reference counting leak during nested exception unwind in ufunc",
+ "problem_statement": "### Issue FRONTIER-GH-0106: NumPy C-API PyArrayObject reference counting leak during nested exception unwind in ufunc\nRepository: `numpy/numpy`\nCategory: `Memory Safety & Undefined Behavior`\nTarget File: `numpy/core/src/multiarray/ctors.c`\n\n#### Problem Description\nPyArray_Return leaks underlying descriptor PyArray_Descr reference when PyErr_Occurred before return.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Implement Py_XDECREF cleanup on error branch before returning NULL.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0106.py -q`\n",
+ "expected_invariant": "Implement Py_XDECREF cleanup on error branch before returning NULL.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0106.py::test_reproduce_frontier-gh-0106"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0106"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

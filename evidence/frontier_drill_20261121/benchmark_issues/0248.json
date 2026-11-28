@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0249",
+ "domain_index": 3,
+ "category": "Distributed Consensus & Partitioning",
+ "repo": "etcd-io/etcd",
+ "target_file": "raft/consensus.go",
+ "title": "Raft uncommitted log entry overwrite during multi-candidate split-vote term change",
+ "problem_statement": "### Issue FRONTIER-GH-0249: Raft uncommitted log entry overwrite during multi-candidate split-vote term change\nRepository: `etcd-io/etcd`\nCategory: `Distributed Consensus & Partitioning`\nTarget File: `raft/consensus.go`\n\n#### Problem Description\nCandidate receives higher term AppendEntries while processing RequestVote RPC, overwriting uncommitted log index.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Reject AppendEntries if term < currentTerm or if prevLogIndex entry term does not match committed term.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0249.py -q`\n",
+ "expected_invariant": "Reject AppendEntries if term < currentTerm or if prevLogIndex entry term does not match committed term.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0249.py::test_reproduce_frontier-gh-0249"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0249"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

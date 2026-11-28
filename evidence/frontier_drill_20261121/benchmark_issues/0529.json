@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0530",
+ "domain_index": 6,
+ "category": "Storage Engine Crash Consistency & WAL",
+ "repo": "facebook/rocksdb",
+ "target_file": "db/compaction/compaction_picker_level.cc",
+ "title": "RocksDB LSM-tree leveled compaction SSTable key range overlap under concurrent flush",
+ "problem_statement": "### Issue FRONTIER-GH-0530: RocksDB LSM-tree leveled compaction SSTable key range overlap under concurrent flush\nRepository: `facebook/rocksdb`\nCategory: `Storage Engine Crash Consistency & WAL`\nTarget File: `db/compaction/compaction_picker_level.cc`\n\n#### Problem Description\nFlush thread and compaction thread race on level-0 file manifest update, generating duplicate key intervals.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Acquire version_set mutex before editing SSTable level metadata ranges.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0530.py -q`\n",
+ "expected_invariant": "Acquire version_set mutex before editing SSTable level metadata ranges.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0530.py::test_reproduce_frontier-gh-0530"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0530"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

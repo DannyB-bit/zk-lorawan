@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0605",
+ "domain_index": 7,
+ "category": "High-Throughput Network Protocols",
+ "repo": "cloudflare/quiche",
+ "target_file": "quiche/src/connection.rs",
+ "title": "QUIC connection migration CID retirement packet desynchronization under high packet loss",
+ "problem_statement": "### Issue FRONTIER-GH-0605: QUIC connection migration CID retirement packet desynchronization under high packet loss\nRepository: `cloudflare/quiche`\nCategory: `High-Throughput Network Protocols`\nTarget File: `quiche/src/connection.rs`\n\n#### Problem Description\nServer retires connection ID while client flight packets still in transit, triggering spurious CONNECTION_CLOSE.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Retain retired CID in tombstone table for 3 PTO (Probe Timeout) durations before purging.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0605.py -q`\n",
+ "expected_invariant": "Retain retired CID in tombstone table for 3 PTO (Probe Timeout) durations before purging.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0605.py::test_reproduce_frontier-gh-0605"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0605"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

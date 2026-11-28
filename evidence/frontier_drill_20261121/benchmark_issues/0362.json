@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0363",
+ "domain_index": 4,
+ "category": "Compiler IR Optimization & SSA Lowering",
+ "repo": "numba/numba",
+ "target_file": "numba/core/typeinfer.py",
+ "title": "Numba JIT phi-node cycle deadlocking type inference compiler pass",
+ "problem_statement": "### Issue FRONTIER-GH-0363: Numba JIT phi-node cycle deadlocking type inference compiler pass\nRepository: `numba/numba`\nCategory: `Compiler IR Optimization & SSA Lowering`\nTarget File: `numba/core/typeinfer.py`\n\n#### Problem Description\nMutually recursive loop variables cause unconstrained unification cycle in Hindley-Milner type solver.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Introduce unification depth limit and break phi cycles by inserting intermediate union types.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0363.py -q`\n",
+ "expected_invariant": "Introduce unification depth limit and break phi cycles by inserting intermediate union types.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0363.py::test_reproduce_frontier-gh-0363"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0363"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

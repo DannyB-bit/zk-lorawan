@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0612",
+ "domain_index": 7,
+ "category": "High-Throughput Network Protocols",
+ "repo": "cilium/cilium",
+ "target_file": "bpf/xdp_redirect.c",
+ "title": "eBPF XDP socket buffer packet descriptor leak on ring buffer full",
+ "problem_statement": "### Issue FRONTIER-GH-0612: eBPF XDP socket buffer packet descriptor leak on ring buffer full\nRepository: `cilium/cilium`\nCategory: `High-Throughput Network Protocols`\nTarget File: `bpf/xdp_redirect.c`\n\n#### Problem Description\nUMEM frame reference not returned to fill ring when xsk_socket__sendto encounters EBUSY under 40GbE burst.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Requeue unconsumed packet descriptors to completion queue on transmission backpressure.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0612.py -q`\n",
+ "expected_invariant": "Requeue unconsumed packet descriptors to completion queue on transmission backpressure.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0612.py::test_reproduce_frontier-gh-0612"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0612"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

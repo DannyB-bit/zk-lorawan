@@ -1,0 +1,292 @@
+{
+  "verdict": "ALPHA_INDEPENDENT_RF_CAPTURE_AND_GROTH16_VALID",
+  "issue_id": "FRONTIER-GH-0059",
+  "rx_log": "evidence/frontier_drill_20261121/logs/rx_051203.log",
+  "rx_log_sha256": "2f0b59b5e8e36fbae37c6dd93ba8aa787f7dcdd1b3b8bf18548609dcdf244d88",
+  "unique_crc_ok_decrypt_ok_frames": 27,
+  "solution_frames": 25,
+  "proof_frames": 2,
+  "solution_sha256": "3d46c3556ef603fc1cfe5ff69961334abec4f719ce83f24a64c3f065226eb7e6",
+  "transport_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+  "proof_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+  "firmware_sha256": "e331e46346ed08c71ca37297bfde5555432922c4cfffe07af6e26a445c8f7902",
+  "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+  "groth16_valid": true,
+  "payload_tamper_valid": false,
+  "proof_tamper_valid": false,
+  "frame_manifest_exact": true,
+  "solution_capture": [
+    {
+      "frame_sha256": "38c2f1a58aebbdf6407ae6ac3ffed9a5b4946aac7ddaafa791a7d0493ddffb54",
+      "total": 25,
+      "index": 0,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "16834dbe32381ce5e8147d062f23931f79c4c482b4e2bb1617c3c6e0f3d7b3c3",
+      "total": 25,
+      "index": 1,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "d93147f2259d06202cebcad00cfa2b7b223ce81907ab4bccec6f37079cac4c0a",
+      "total": 25,
+      "index": 2,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "5ee4f7278267a982f6388fad42dfe4731dd5da7e5b085e73dcc9343a3a1a7015",
+      "total": 25,
+      "index": 3,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "a41235bac493efb27b70457f7e67caa5792959d8ca38df1d8bf95f75d04ad4a8",
+      "total": 25,
+      "index": 4,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "68c8676139a7d11a496ea9287ea6f5a9d07908df6955eec17ff4f51dddc088c3",
+      "total": 25,
+      "index": 5,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "4a34f568e806f378b517533c81ee2e696fe170006ec7575c7534514f514d2f2f",
+      "total": 25,
+      "index": 6,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "7d4148b784be636f7e8d7539176f73093daa067c6f7048388b071be13c53626c",
+      "total": 25,
+      "index": 7,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "fdc7ecd91abbbf58fabf9c6e760dfe741bb7a72d2c690f02177c84b1da80deea",
+      "total": 25,
+      "index": 8,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "5fecac94cd0f95e66af0d3cc4be34aeb3b6820ea58059de7568ee6f59e0474bc",
+      "total": 25,
+      "index": 9,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "344b6911c694bc4e0fe283a648b4097fdd9b3d1a09f5b37c232d6805e651151d",
+      "total": 25,
+      "index": 10,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "925a56df7fc2a2de6f90a0650a65c589b3084414f34021106e4c195048a61462",
+      "total": 25,
+      "index": 11,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "068486e2fe9a9c3c2af6ead2c9536ff371ac064e3a2bd0555de524f8447607d7",
+      "total": 25,
+      "index": 12,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "9174335428600d364fde250d4e08917e206bcf4c6c65080d94ccd11a12ecd562",
+      "total": 25,
+      "index": 13,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "c747064efa429fd18f7458e653222bf7340b208bc03d1af9805181da199324b0",
+      "total": 25,
+      "index": 14,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "3458e32254e2db385ce3fb6345da122d52a08c0f78de9155345cc5ca813b006e",
+      "total": 25,
+      "index": 15,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "b598e30ea34cac123467ddb5c4f200a488f24c1935e792221e850d2b0479076f",
+      "total": 25,
+      "index": 16,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "021117117823656e8cd246c0de512f1a35cc0a91c5f89399be92249622f7ea25",
+      "total": 25,
+      "index": 17,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "94df1e623a3ad7abb9020a98d273edffdd34bb3c1feff23c806a0b0c213b36b1",
+      "total": 25,
+      "index": 18,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "c4dbfd83b8d6690a2c7dfdbcc4bb5e0d8dac40ee9dee0b6a630118c6eb58cb82",
+      "total": 25,
+      "index": 19,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.5,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "c2a79cbd8f31a20cc15e5c40b803f878d0aabe54704858827b0efba436903437",
+      "total": 25,
+      "index": 20,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "cfbc860a11eb739a330fd0c6b7ada2149f9327b7d36dac5e56732105858edb3d",
+      "total": 25,
+      "index": 21,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "e13ebe3043958dd422c252d793eaab0c9a3cccbf1aae81660c085f7a2e436299",
+      "total": 25,
+      "index": 22,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "c0eb93d68bf16ce6d81706db6548b439cc212f424a8598f7741c3515104f6d8f",
+      "total": 25,
+      "index": 23,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 9.8,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "5384c7178b487b919e1c7eac8253421256b71c5a672d4f9d2f6d629d09fdbe20",
+      "total": 25,
+      "index": 24,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.2,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    }
+  ],
+  "proof_capture": [
+    {
+      "frame_sha256": "40157fd95c3d025a52ca4ffffe3e580caca068610d853e892678b534a1625367",
+      "total": 2,
+      "index": 0,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    },
+    {
+      "frame_sha256": "8c7bdb591150e86d66ab18e884f17ce813f3a65b66a7d52e9853161d980e8874",
+      "total": 2,
+      "index": 1,
+      "crc_ok": true,
+      "decrypt_ok": true,
+      "snr_db": 10.0,
+      "rssi_dbm": 197.0,
+      "spreading_factor": 7
+    }
+  ]
+}

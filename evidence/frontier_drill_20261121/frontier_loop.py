@@ -21,7 +21,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 TOOLS = REPO / "tools"
-BENCH = Path("/home/researcher-alpha/fleet-repos/frontier-1000-complex-github-issues-benchmark/frontier_1000_complex_github_issues_exam.json")
+BENCH_DIR = HERE / "benchmark_issues"  # one small JSON per issue; no monolithic hot-loop read
 LOGS = HERE / "logs"
 FRAMES = HERE / "frames"
 ISSUES = HERE / "issues"
@@ -124,7 +124,14 @@ def load_state():
 
 
 def save_state(s):
-    STATE.write_text(json.dumps(s, indent=1))
+    # Atomic mission cursor: a timeout or power loss may leave a temporary file,
+    # never a truncated state.json. fsync before replacement for crash safety.
+    tmp = STATE.with_suffix(".json.tmp")
+    with tmp.open("w", encoding="utf-8") as handle:
+        json.dump(s, handle, indent=1)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, STATE)
 
 
 def bus_get(since):
@@ -182,9 +189,52 @@ def arm_rx_bg(seconds=600):
     return logf.name
 
 
-def scan_rx_payloads():
-    """Scan all frontier RX logs -> unique 245B frames -> decrypt with alpha_sk ->
-    reassemble RAW (0x02) files. Returns list of {sha256, bytes, source_log}."""
+def validate_peer_proof_metadata(metadata: dict, transport_path: Path,
+                                 issue_number: int,
+                                 expected_verifying_key_sha256: str) -> str:
+    """Fail closed and return the prover's declared firmware SHA-256.
+
+    Both nodes pin the same circuit VK. Never accept a replacement VK from a bus
+    event. Firmware is node-specific public proof metadata and MUST come from the
+    prover, not silently default to the receiver's own binary.
+    """
+    for field in ("firmware_sha256", "verifying_key_sha256",
+                  "transport_sha256", "payload_sha256"):
+        value = metadata.get(field)
+        if not isinstance(value, str) or len(value) != 64:
+            raise ValueError(f"missing/invalid {field}")
+        if any(c not in "0123456789abcdef" for c in value):
+            raise ValueError(f"non-canonical {field}")
+    transport_sha256 = hashlib.sha256(transport_path.read_bytes()).hexdigest()
+    if metadata["transport_sha256"] != transport_sha256:
+        raise ValueError("proof transport_sha256 != recovered transport")
+    if metadata["payload_sha256"] != transport_sha256:
+        raise ValueError("proof payload_sha256 != recovered transport")
+    if metadata["verifying_key_sha256"] != expected_verifying_key_sha256:
+        raise ValueError("prover VK != pinned fleet VK")
+    if metadata.get("issue_number") != issue_number:
+        raise ValueError("proof issue mismatch")
+    return metadata["firmware_sha256"]
+
+
+def verify_declared_proof_packet(proof_path: Path, transport_path: Path,
+                                 metadata: dict, issue_number: int,
+                                 expected_verifying_key_sha256: str) -> bool:
+    firmware_sha256 = validate_peer_proof_metadata(
+        metadata, transport_path, issue_number, expected_verifying_key_sha256)
+    return verify_proof_packet(
+        proof_path, transport_path, gateway_address=ALPHA_PUB,
+        firmware_sha256=firmware_sha256)
+
+
+def scan_rx_payloads(expected_sizes=None):
+    """Scan RF logs and reassemble exact declared transports.
+
+    expected_sizes maps chunk count to declared byte lengths. Zero-valued payload
+    bytes are never stripped when a declaration exists; legacy candidates remain
+    available only for pre-declaration evidence.
+    """
+    expected_sizes = expected_sizes or {}
     out = []
     seen = set()
     for lf in sorted(LOGS.glob("rx_*.log")):
@@ -211,13 +261,20 @@ def scan_rx_payloads():
             if pt[0] != 0x02:
                 continue
             out.append({"frame_sha": sha, "total": pt[1], "idx": pt[2],
-                        "chunk": pt[3:].rstrip(b"\x00"), "log": lf.name})
+                        "chunk": pt[3:], "stripped_chunk": pt[3:].rstrip(b"\x00"),
+                        "log": lf.name})
     # Reassemble per (total, rx_log) burst first, then per-total global fallback.
     # Two different solutions can share a chunk count; global-only grouping would
     # mix their frames and corrupt the payload. Return ALL complete candidates
     # (deduped by sha) so the solver can select by bravo's verdict sha.
-    def reassemble(chunks):
-        transport = b"".join(chunks[i]["chunk"] for i in range(len(chunks)))
+    def reassemble(chunks, expected_size=None):
+        if expected_size is None:
+            transport = b"".join(chunks[i]["stripped_chunk"] for i in range(len(chunks)))
+        else:
+            padded = b"".join(chunks[i]["chunk"] for i in range(len(chunks)))
+            if not 0 <= len(padded) - expected_size < 180 or any(padded[expected_size:]):
+                return None
+            transport = padded[:expected_size]
         transport_sha = hashlib.sha256(transport).hexdigest()
         if transport.startswith(LU_MAGIC):
             try:
@@ -247,25 +304,29 @@ def scan_rx_payloads():
     for (total, _log), chunks in groups.items():
         if len(chunks) != total:
             continue
-        r = reassemble(chunks)
-        if r["sha256"] not in seen_sha:
-            seen_sha.add(r["sha256"])
-            results.append(r)
+        for expected_size in [None] + list(expected_sizes.get(total, [])):
+            r = reassemble(chunks, expected_size)
+            if r is not None and r["sha256"] not in seen_sha:
+                seen_sha.add(r["sha256"])
+                results.append(r)
     return results
 
 
 def git_commit(msg):
-    # refresh the measured calibration dossier so every commit carries fresh metrics
+    # Commit evidence to the current researcher branch only. Never rebase a live
+    # drill onto another branch or push directly to master (fleet PR law).
     subprocess.run([sys.executable, str(HERE / "frontier_metrics.py")], capture_output=True)
     subprocess.run(["git", "-C", str(REPO), "add", "-A", "evidence/frontier_drill_20261121"],
                    capture_output=True)
     r = subprocess.run(["git", "-C", str(REPO), "commit", "-m", msg, "--allow-empty"],
                        capture_output=True, text=True)
-    # self-heal against concurrent fleet commits to master (B/docs/CI), then push
-    subprocess.run(["git", "-C", str(REPO), "pull", "--rebase", "origin", "master"],
-                   capture_output=True, text=True)
+    branch = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--abbrev-ref", "HEAD"],
+                            capture_output=True, text=True, check=True).stdout.strip()
+    if branch in {"HEAD", "master", "main"}:
+        log(f"git push refused on protected/detached branch: {branch}")
+        return False
     p = subprocess.run(["git", "-C", str(REPO), "push", "origin",
-                        "master"], capture_output=True, text=True)
+                        f"HEAD:{branch}"], capture_output=True, text=True)
     log(f"git commit: {r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[:120]} | push rc={p.returncode}")
     return r.returncode == 0
 
@@ -277,7 +338,6 @@ def bravo_events(events):
 
 def step():
     s = load_state()
-    bench = json.loads(BENCH.read_text())
     # Fetch new events since cursor, plus a lookback window for context (b_alive, rx_window)
     since = max(0, s["bus_seq_last"] - 100)
     events = bus_get(since)
@@ -309,9 +369,29 @@ def step():
         if e.get("data", {}).get("node") == "bravo" or e.get("type", "") != "heartbeat_alpha":
             log(f"bus bravo event seq={e['seq']} type={e['type']} data={str(e.get('data', {}))[:160]}")
 
+    # Declared lengths distinguish real trailing zero bytes from chunk padding.
+    expected_sizes = {}
+    for event in br:
+        data = event.get("data", {})
+        if event.get("type") != "frontier_solution_verdict":
+            continue
+        for count_key, size_key in [("solution_chirps", "transport_bytes"),
+                                    ("proof_chirps", "zkdp_bytes")]:
+            if isinstance(data.get(count_key), int) and isinstance(data.get(size_key), int):
+                expected_sizes.setdefault(data[count_key], set()).add(data[size_key])
     # scan RF for B->A sealed payloads (ack, solutions, and ZK proof packets)
-    payloads = scan_rx_payloads()
+    payloads = scan_rx_payloads(expected_sizes)
     proof_payloads = [p for p in payloads if p.get("kind") == "zk_proof"]
+    expected_vk_sha = hashlib.sha256((REPO / "keys" / "verifying_key.bin").read_bytes()).hexdigest()
+    proof_declarations = []
+    for event in br:
+        data = event.get("data", {})
+        proof_sha = data.get("zk_proof_sha256") or data.get("proof_sha256")
+        if (data.get("issue_id") and data.get("transport_sha256") and proof_sha
+                and data.get("firmware_sha256") and data.get("verifying_key_sha256")):
+            declaration = dict(data)
+            declaration["zk_proof_sha256"] = proof_sha
+            proof_declarations.append(declaration)
     for p in payloads:
         if p.get("kind") != "data":
             continue
@@ -320,10 +400,25 @@ def step():
         for proof in proof_payloads:
             proof_path = VERIFY / (proof["sha256"] + ".zkdp")
             proof_path.write_bytes(proof["bytes"])
-            if verify_proof_packet(proof_path, transport_path, gateway_address=ALPHA_PUB):
+            for declaration in proof_declarations:
+                try:
+                    issue_number = int(declaration["issue_id"].rsplit("-", 1)[1])
+                    if (declaration["transport_sha256"] != p["transport_sha256"]
+                            or declaration["zk_proof_sha256"] != proof["sha256"]):
+                        continue
+                    if not verify_declared_proof_packet(
+                            proof_path, transport_path, declaration,
+                            issue_number, expected_vk_sha):
+                        continue
+                except (ValueError, TypeError, KeyError):
+                    continue
                 p["zk_valid"] = True
+                p["zk_issue_id"] = declaration["issue_id"]
                 p["zk_proof_sha256"] = proof["sha256"]
                 p["zk_proof_frames"] = len(proof["frames"])
+                p["zk_prover_firmware_sha256"] = declaration["firmware_sha256"]
+                break
+            if p.get("zk_valid"):
                 break
         if not p.get("zk_valid"):
             p["zk_valid"] = False
@@ -352,7 +447,7 @@ def step():
                 if not cap_shas or not cap_shas.issubset(declared) or p["sha256"] != verdict_shas.get(iid):
                     log(f"REJECT mixed/unbound capture for {iid}: {len(cap_shas)} frames, subset_of_manifest={cap_shas.issubset(declared)}, sha_match={p['sha256'] == verdict_shas.get(iid)}")
                     continue
-            if not p.get("zk_valid"):
+            if not p.get("zk_valid") or p.get("zk_issue_id") != iid:
                 # already-solved issues are grandfathered; re-rejecting them every
                 # tick is log spam (they are re-scanned from old RX logs each step)
                 if iid not in s["solved"]:
@@ -421,7 +516,7 @@ def step():
             save_state(s)
             return
         idx = len(s["solved"])
-        issue = bench[idx]
+        issue = json.loads((BENCH_DIR / f"{idx:04d}.json").read_text())
         iid = issue["issue_id"]
         if iid in s.get("held", []):
             log(f"{iid} is HELD by operator - not firing; waiting")

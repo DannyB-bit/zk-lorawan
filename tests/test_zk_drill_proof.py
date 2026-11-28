@@ -18,6 +18,13 @@ zk_drill_proof = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
 SPEC.loader.exec_module(zk_drill_proof)
 
+LOOP_PATH = REPO / "evidence" / "frontier_drill_20261121" / "frontier_loop.py"
+LOOP_SPEC = importlib.util.spec_from_file_location("frontier_loop", LOOP_PATH)
+assert LOOP_SPEC is not None
+frontier_loop = importlib.util.module_from_spec(LOOP_SPEC)
+assert LOOP_SPEC.loader is not None
+LOOP_SPEC.loader.exec_module(frontier_loop)
+
 
 def test_packet_codec_is_exact_and_fail_closed() -> None:
     fields = {
@@ -65,6 +72,7 @@ def test_real_bound_proof_packet_round_trip_and_tamper_rejection(tmp_path: Path)
         packet_file,
         proof_file,
         private_key_file=identity_file,
+        gateway_address=frontier_loop.ALPHA_PUB,
     )
     generation_seconds = time.perf_counter() - started
     assert packet_file.stat().st_size == 326
@@ -74,8 +82,29 @@ def test_real_bound_proof_packet_round_trip_and_tamper_rejection(tmp_path: Path)
     assert identity_bytes.hex() not in proof_file.read_text(encoding="utf-8")
     assert hashlib.sha256(identity_bytes).hexdigest() not in proof_file.read_text(encoding="utf-8")
 
+    expected_vk_sha = hashlib.sha256((REPO / "keys" / "verifying_key.bin").read_bytes()).hexdigest()
+    firmware_sha256 = frontier_loop.validate_peer_proof_metadata(
+        generated, payload_file, 59, expected_vk_sha,
+    )
+    assert firmware_sha256 == generated["firmware_sha256"]
+    for field, bad_value in [
+        ("verifying_key_sha256", "00" * 32),
+        ("transport_sha256", "00" * 32),
+        ("payload_sha256", "00" * 32),
+        ("firmware_sha256", "not-a-sha"),
+        ("issue_number", 60),
+    ]:
+        invalid = dict(generated)
+        invalid[field] = bad_value
+        with pytest.raises(ValueError):
+            frontier_loop.validate_peer_proof_metadata(
+                invalid, payload_file, 59, expected_vk_sha,
+            )
+
     started = time.perf_counter()
-    assert zk_drill_proof.verify_proof_packet(packet_file, payload_file) is True
+    assert frontier_loop.verify_declared_proof_packet(
+        packet_file, payload_file, generated, 59, expected_vk_sha,
+    ) is True
     verification_seconds = time.perf_counter() - started
     print(
         f"real-proof generation={generation_seconds:.3f}s "

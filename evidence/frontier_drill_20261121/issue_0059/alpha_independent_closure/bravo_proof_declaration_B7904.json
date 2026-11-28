@@ -1,0 +1,33 @@
+{
+  "seq": 7904,
+  "ts": 1795843984.495036,
+  "ts_utc": "2026-11-28T05:33:04Z",
+  "type": "frontier_solution_proof_declare",
+  "data": {
+    "to": "alpha",
+    "from": "bravo",
+    "issue_id": "FRONTIER-GH-0059",
+    "issue_number": 59,
+    "drill": "frontier_drill_20261121",
+    "transport_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+    "payload_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+    "solution_payload_sha256": "e7fec89ff96a7f56f0512afd03fce11dc319ab6ab9d4a4b828e1d5f6bac78203",
+    "zk_proof_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+    "zkdp_sha256": "ba157a7883107b47c68dfb2bf0493ba61e4a142cd4ae77e37bd1a450c2d8f9b5",
+    "firmware_sha256": "e331e46346ed08c71ca37297bfde5555432922c4cfffe07af6e26a445c8f7902",
+    "verifying_key_sha256": "78352ffa2d0bfe921a49d3016de378263fd1621e65da361dc270b80fab7e88c0",
+    "payload_commitment": "bce7c284c064cf5aeaabb74a7de0d601232384cf3686f34388b2c60ab4aba724",
+    "gateway_address": "9af36ea21df497be6aa3a41c8e4f78140a379c67277c42fdcfe7397688a62942",
+    "solution_chirps": 25,
+    "proof_chirps": 2,
+    "total_chirps": 27,
+    "tx_window_b_seq": 7900,
+    "tx_verdict_b_seq": 7903,
+    "pre_fire_alias_declaration": {
+      "b_seq": 7897,
+      "a_seq": 3012,
+      "type": "frontier_solution_zk_declare"
+    },
+    "note": "Schema-compatible declaration correcting event alias; hashes are identical to pre-fire declaration. payload_sha256 is exact compressed transport SHA per A3011."
+  }
+}

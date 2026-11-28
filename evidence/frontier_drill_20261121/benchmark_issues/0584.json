@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0585",
+ "domain_index": 6,
+ "category": "Storage Engine Crash Consistency & WAL",
+ "repo": "sqlite/sqlite",
+ "target_file": "src/wal.c",
+ "title": "SQLite WAL index shared memory header torn write during concurrent power-loss checkpoint",
+ "problem_statement": "### Issue FRONTIER-GH-0585: SQLite WAL index shared memory header torn write during concurrent power-loss checkpoint\nRepository: `sqlite/sqlite`\nCategory: `Storage Engine Crash Consistency & WAL`\nTarget File: `src/wal.c`\n\n#### Problem Description\nwal-index shm header write not protected by atomic double-buffering, causing database corruption on crash recovery.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Implement two-phase header commit with checksum verification before advancing WAL salt.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0585.py -q`\n",
+ "expected_invariant": "Implement two-phase header commit with checksum verification before advancing WAL salt.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0585.py::test_reproduce_frontier-gh-0585"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0585"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

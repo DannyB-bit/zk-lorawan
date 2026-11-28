@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0389",
+ "domain_index": 4,
+ "category": "Compiler IR Optimization & SSA Lowering",
+ "repo": "llvm/llvm-project",
+ "target_file": "lib/Transforms/Scalar/GVN.cpp",
+ "title": "LLVM GVN invalid load elimination across volatile atomic store memory clobber",
+ "problem_statement": "### Issue FRONTIER-GH-0389: LLVM GVN invalid load elimination across volatile atomic store memory clobber\nRepository: `llvm/llvm-project`\nCategory: `Compiler IR Optimization & SSA Lowering`\nTarget File: `lib/Transforms/Scalar/GVN.cpp`\n\n#### Problem Description\nGlobal Value Numbering hoists cached load value across atomic_store without checking memory ordering barrier.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Add MemoryLocation clobber check against atomic ordering semantics before eliminating load.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0389.py -q`\n",
+ "expected_invariant": "Add MemoryLocation clobber check against atomic ordering semantics before eliminating load.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0389.py::test_reproduce_frontier-gh-0389"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0389"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0441",
+ "domain_index": 5,
+ "category": "Zero-Knowledge & Cryptographic Constraints",
+ "repo": "iden3/snarkjs",
+ "target_file": "circuits/scalar_mul.circom",
+ "title": "Groth16 under-constrained signal in multi-gate non-linear Circom constraint",
+ "problem_statement": "### Issue FRONTIER-GH-0441: Groth16 under-constrained signal in multi-gate non-linear Circom constraint\nRepository: `iden3/snarkjs`\nCategory: `Zero-Knowledge & Cryptographic Constraints`\nTarget File: `circuits/scalar_mul.circom`\n\n#### Problem Description\nIntermediate wire not constrained to binary range permitting adversary to forge non-zero witness proof.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Add explicit b * (1 - b) === 0 binary constraint for all decomposed bits.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0441.py -q`\n",
+ "expected_invariant": "Add explicit b * (1 - b) === 0 binary constraint for all decomposed bits.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0441.py::test_reproduce_frontier-gh-0441"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0441"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

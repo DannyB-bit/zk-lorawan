@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0560",
+ "domain_index": 6,
+ "category": "Storage Engine Crash Consistency & WAL",
+ "repo": "tikv/tikv",
+ "target_file": "storage/btree/page.cpp",
+ "title": "B+ tree leaf node split deadlock under multi-threaded concurrent readers",
+ "problem_statement": "### Issue FRONTIER-GH-0560: B+ tree leaf node split deadlock under multi-threaded concurrent readers\nRepository: `tikv/tikv`\nCategory: `Storage Engine Crash Consistency & WAL`\nTarget File: `storage/btree/page.cpp`\n\n#### Problem Description\nRight-sibling pointer update violates latch acquisition hierarchy when concurrent traversal scans backward.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Acquire sibling latches in strict ascending key order and release parent latch immediately upon split.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0560.py -q`\n",
+ "expected_invariant": "Acquire sibling latches in strict ascending key order and release parent latch immediately upon split.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0560.py::test_reproduce_frontier-gh-0560"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0560"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

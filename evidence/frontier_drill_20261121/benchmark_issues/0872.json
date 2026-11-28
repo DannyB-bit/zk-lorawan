@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0873",
+ "domain_index": 9,
+ "category": "Asynchronous Event Loop Deadlocks",
+ "repo": "nodejs/node",
+ "target_file": "src/node_file.cc",
+ "title": "Node.js libuv thread pool starvation under synchronous filesystem calls inside async handlers",
+ "problem_statement": "### Issue FRONTIER-GH-0873: Node.js libuv thread pool starvation under synchronous filesystem calls inside async handlers\nRepository: `nodejs/node`\nCategory: `Asynchronous Event Loop Deadlocks`\nTarget File: `src/node_file.cc`\n\n#### Problem Description\nSync fs.statSync calls in HTTP route exhaustion exhaust UV_THREADPOOL_SIZE, blocking DNS resolution threads.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Delegate filesystem operations to non-blocking uv_fs work queue with dedicated worker pool.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0873.py -q`\n",
+ "expected_invariant": "Delegate filesystem operations to non-blocking uv_fs work queue with dedicated worker pool.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0873.py::test_reproduce_frontier-gh-0873"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0873"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

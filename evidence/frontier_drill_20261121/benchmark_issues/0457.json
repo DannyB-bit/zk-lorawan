@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0458",
+ "domain_index": 5,
+ "category": "Zero-Knowledge & Cryptographic Constraints",
+ "repo": "solana-labs/solana",
+ "target_file": "programs/bpf_loader/src/syscalls/alt_bn128.rs",
+ "title": "Solana alt_bn128 precompile point-at-infinity validation failure",
+ "problem_statement": "### Issue FRONTIER-GH-0458: Solana alt_bn128 precompile point-at-infinity validation failure\nRepository: `solana-labs/solana`\nCategory: `Zero-Knowledge & Cryptographic Constraints`\nTarget File: `programs/bpf_loader/src/syscalls/alt_bn128.rs`\n\n#### Problem Description\nPairing check accepts uncompressed point (0, 0) as valid affine coordinate on BN254 curve, breaking zero-check.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Validate that point lies on curve y^2 = x^3 + 3 and reject (0,0) unless explicit identity flag set.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0458.py -q`\n",
+ "expected_invariant": "Validate that point lies on curve y^2 = x^3 + 3 and reject (0,0) unless explicit identity flag set.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0458.py::test_reproduce_frontier-gh-0458"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0458"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

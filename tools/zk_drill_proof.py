@@ -158,7 +158,12 @@ def generate_proof_packet(
         "packet_bytes": len(packet),
         "payload_bytes": len(payload),
         "payload_sha256": hashlib.sha256(payload).hexdigest(),
+        "transport_sha256": hashlib.sha256(payload).hexdigest(),
         "firmware_sha256": firmware_hash.hex(),
+        "verifying_key_sha256": hashlib.sha256(
+            (REPO / "keys" / "verifying_key.bin").read_bytes()
+        ).hexdigest(),
+        "zk_proof_sha256": hashlib.sha256(packet).hexdigest(),
         "gateway_address": gateway_address,
         "deposit_value": deposit_value,
         "proof": {name: value.hex() for name, value in bundle.items()},
@@ -177,12 +182,21 @@ def verify_proof_packet(
     prover_binary: str | Path = DEFAULT_PROVER_BINARY,
     gateway_address: str = GATEWAY_PUBLIC_KEY,
     deposit_value: int = DEFAULT_DEPOSIT,
+    firmware_sha256: str | None = None,
 ) -> bool:
-    """Return true only for a canonical packet cryptographically bound to payload_file."""
+    """Return true only for a canonical packet cryptographically bound to payload_file.
+
+    Cross-node rule (PR42, issue-0059): the verifier MUST use the
+    prover-declared firmware_sha256 from the public proof JSON, not the hash
+    of the verifier's own binary — each node builds a different binary.
+    The payload hash is still always recomputed from payload_file.
+    Both nodes must pin the identical circuit verifying key at keys/. The public
+    declaration carries its SHA-256; a different or substituted VK is rejected.
+    """
     try:
         fields = unpack_proof_packet(Path(packet_file).read_bytes())
         binary = Path(prover_binary)
-        firmware_hash = hashlib.sha256(binary.read_bytes()).hexdigest()
+        firmware_hash = firmware_sha256 or hashlib.sha256(binary.read_bytes()).hexdigest()
         command = [str(binary), "verify-bound"]
         command.extend(fields[name].hex() for name, _ in FIELD_SIZES[:7])
         command.extend([gateway_address, str(deposit_value), firmware_hash])

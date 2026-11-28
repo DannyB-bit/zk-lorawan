@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0575",
+ "domain_index": 6,
+ "category": "Storage Engine Crash Consistency & WAL",
+ "repo": "postgres/postgres",
+ "target_file": "src/backend/access/transam/varsup.c",
+ "title": "PostgreSQL MVCC tuple invisibility during vacuum freeze transaction ID wraparound",
+ "problem_statement": "### Issue FRONTIER-GH-0575: PostgreSQL MVCC tuple invisibility during vacuum freeze transaction ID wraparound\nRepository: `postgres/postgres`\nCategory: `Storage Engine Crash Consistency & WAL`\nTarget File: `src/backend/access/transam/varsup.c`\n\n#### Problem Description\nTransaction ID comparison macro treats ancient frozen tuple as future transaction after 2^31 epoch wrap.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce vacuum freeze threshold and verify TransactionIdPrecedes handles modular epoch arithmetic.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0575.py -q`\n",
+ "expected_invariant": "Enforce vacuum freeze threshold and verify TransactionIdPrecedes handles modular epoch arithmetic.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0575.py::test_reproduce_frontier-gh-0575"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0575"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

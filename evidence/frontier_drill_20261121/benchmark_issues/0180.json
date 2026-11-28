@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0181",
+ "domain_index": 2,
+ "category": "Memory Safety & Undefined Behavior",
+ "repo": "pytorch/pytorch",
+ "target_file": "aten/src/ATen/native/TensorShape.cpp",
+ "title": "PyTorch C++ ATen strided tensor slice aliasing causing memory corruption in inplace autograd",
+ "problem_statement": "### Issue FRONTIER-GH-0181: PyTorch C++ ATen strided tensor slice aliasing causing memory corruption in inplace autograd\nRepository: `pytorch/pytorch`\nCategory: `Memory Safety & Undefined Behavior`\nTarget File: `aten/src/ATen/native/TensorShape.cpp`\n\n#### Problem Description\nInplace operation on non-contiguous strided tensor bypasses view mutation check when strides overlap.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce is_non_overlapping_and_dense validation before allowing in-place buffer mutation.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0181.py -q`\n",
+ "expected_invariant": "Enforce is_non_overlapping_and_dense validation before allowing in-place buffer mutation.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0181.py::test_reproduce_frontier-gh-0181"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0181"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

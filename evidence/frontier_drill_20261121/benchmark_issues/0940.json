@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0941",
+ "domain_index": 10,
+ "category": "Security Sandbox & Serialization Exploits",
+ "repo": "yaml/pyyaml",
+ "target_file": "lib/yaml/constructor.py",
+ "title": "PyYAML arbitrary object instantiation via unsafe loader constructor inheritance",
+ "problem_statement": "### Issue FRONTIER-GH-0941: PyYAML arbitrary object instantiation via unsafe loader constructor inheritance\nRepository: `yaml/pyyaml`\nCategory: `Security Sandbox & Serialization Exploits`\nTarget File: `lib/yaml/constructor.py`\n\n#### Problem Description\nCustom tag handler allows instantiation of arbitrary Python classes inheriting from object.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Restricted SafeLoader enforcing whitelist of primitive data types: dict, list, str, int, float, bool.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0941.py -q`\n",
+ "expected_invariant": "Restricted SafeLoader enforcing whitelist of primitive data types: dict, list, str, int, float, bool.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0941.py::test_reproduce_frontier-gh-0941"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0941"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

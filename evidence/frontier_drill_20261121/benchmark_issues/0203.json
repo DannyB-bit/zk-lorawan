@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0204",
+ "domain_index": 3,
+ "category": "Distributed Consensus & Partitioning",
+ "repo": "redis/redis",
+ "target_file": "consensus/leader_election.py",
+ "title": "Split-brain partition recovery state machine rollback in distributed leader election",
+ "problem_statement": "### Issue FRONTIER-GH-0204: Split-brain partition recovery state machine rollback in distributed leader election\nRepository: `redis/redis`\nCategory: `Distributed Consensus & Partitioning`\nTarget File: `consensus/leader_election.py`\n\n#### Problem Description\nQuorum intersection failure permits dual leader emergence when partition splits exactly at 50% majority.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce strict odd-node majority check (N/2 + 1) and verify fencing token monotonic increment.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0204.py -q`\n",
+ "expected_invariant": "Enforce strict odd-node majority check (N/2 + 1) and verify fencing token monotonic increment.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0204.py::test_reproduce_frontier-gh-0204"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0204"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0990",
+ "domain_index": 10,
+ "category": "Security Sandbox & Serialization Exploits",
+ "repo": "bytecodealliance/wasmtime",
+ "target_file": "crates/environ/src/memory.rs",
+ "title": "Wasmtime linear memory boundary escape via 32-bit pointer integer overflow",
+ "problem_statement": "### Issue FRONTIER-GH-0990: Wasmtime linear memory boundary escape via 32-bit pointer integer overflow\nRepository: `bytecodealliance/wasmtime`\nCategory: `Security Sandbox & Serialization Exploits`\nTarget File: `crates/environ/src/memory.rs`\n\n#### Problem Description\nOffset addition in memory.grow instruction wraps around 4GB boundary, allowing out-of-bounds heap read.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Validate 64-bit extended pointer bounds check before issuing WebAssembly load/store.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0990.py -q`\n",
+ "expected_invariant": "Validate 64-bit extended pointer bounds check before issuing WebAssembly load/store.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0990.py::test_reproduce_frontier-gh-0990"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0990"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

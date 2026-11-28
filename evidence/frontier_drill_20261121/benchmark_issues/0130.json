@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0131",
+ "domain_index": 2,
+ "category": "Memory Safety & Undefined Behavior",
+ "repo": "rust-lang/rust",
+ "target_file": "src/zerocopy/decoder.rs",
+ "title": "Rust unsafe overlapping mutable reborrowing in zero-copy deserializer",
+ "problem_statement": "### Issue FRONTIER-GH-0131: Rust unsafe overlapping mutable reborrowing in zero-copy deserializer\nRepository: `rust-lang/rust`\nCategory: `Memory Safety & Undefined Behavior`\nTarget File: `src/zerocopy/decoder.rs`\n\n#### Problem Description\nTransmute of raw byte slice into mutable reference aliases with parent container buffer under Stacked Borrows.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Replace raw transmute with MaybeUninit slice reborrow and enforce non-overlapping lifetime bounds.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0131.py -q`\n",
+ "expected_invariant": "Replace raw transmute with MaybeUninit slice reborrow and enforce non-overlapping lifetime bounds.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0131.py::test_reproduce_frontier-gh-0131"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0131"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

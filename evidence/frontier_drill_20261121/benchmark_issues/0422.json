@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0423",
+ "domain_index": 5,
+ "category": "Zero-Knowledge & Cryptographic Constraints",
+ "repo": "arkworks-rs/algebra",
+ "target_file": "src/ed25519/verifier.rs",
+ "title": "Ed25519 scalar multiplication cofactor malleability allowing signature spoofing",
+ "problem_statement": "### Issue FRONTIER-GH-0423: Ed25519 scalar multiplication cofactor malleability allowing signature spoofing\nRepository: `arkworks-rs/algebra`\nCategory: `Zero-Knowledge & Cryptographic Constraints`\nTarget File: `src/ed25519/verifier.rs`\n\n#### Problem Description\nVerification ignores curve cofactor 8, allowing forged signatures differing by small order torsion subgroup point.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Multiply public key by cofactor 8 or verify point is in the prime-order subgroup before verification.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0423.py -q`\n",
+ "expected_invariant": "Multiply public key by cofactor 8 or verify point is in the prime-order subgroup before verification.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0423.py::test_reproduce_frontier-gh-0423"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0423"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0614",
+ "domain_index": 7,
+ "category": "High-Throughput Network Protocols",
+ "repo": "envoyproxy/envoy",
+ "target_file": "source/common/network/connection_impl.cc",
+ "title": "TCP zero-window probe deadlock under ACK storm in high-throughput streaming proxy",
+ "problem_statement": "### Issue FRONTIER-GH-0614: TCP zero-window probe deadlock under ACK storm in high-throughput streaming proxy\nRepository: `envoyproxy/envoy`\nCategory: `High-Throughput Network Protocols`\nTarget File: `source/common/network/connection_impl.cc`\n\n#### Problem Description\nWindow update ACK lost in network buffer, while receiver waits for data and sender waits for window expansion.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Implement persistent zero-window timer with exponential backoff probe retransmission.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0614.py -q`\n",
+ "expected_invariant": "Implement persistent zero-window timer with exponential backoff probe retransmission.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0614.py::test_reproduce_frontier-gh-0614"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0614"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

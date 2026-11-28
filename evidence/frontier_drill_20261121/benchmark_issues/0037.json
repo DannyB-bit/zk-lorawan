@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0038",
+ "domain_index": 1,
+ "category": "Concurrency & Lockless Race Conditions",
+ "repo": "tokio-rs/tokio",
+ "target_file": "scheduler/multi_thread/worker.rs",
+ "title": "Tokio work-stealing scheduler starvation under unyielding cooperative futures",
+ "problem_statement": "### Issue FRONTIER-GH-0038: Tokio work-stealing scheduler starvation under unyielding cooperative futures\nRepository: `tokio-rs/tokio`\nCategory: `Concurrency & Lockless Race Conditions`\nTarget File: `scheduler/multi_thread/worker.rs`\n\n#### Problem Description\nWorker thread local run-queue priority inversion when nested futures yield without poll_budget decrement.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Inject cooperative budget countdown and force global queue fallback check every 64 ticks.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0038.py -q`\n",
+ "expected_invariant": "Inject cooperative budget countdown and force global queue fallback check every 64 ticks.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0038.py::test_reproduce_frontier-gh-0038"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0038"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

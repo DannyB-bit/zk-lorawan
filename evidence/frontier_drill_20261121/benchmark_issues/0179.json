@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0180",
+ "domain_index": 2,
+ "category": "Memory Safety & Undefined Behavior",
+ "repo": "llvm/llvm-project",
+ "target_file": "kernel/simd/gemm_avx512.c",
+ "title": "Unaligned AVX-512 vector store faulting on memory page boundary in GEMM kernel",
+ "problem_statement": "### Issue FRONTIER-GH-0180: Unaligned AVX-512 vector store faulting on memory page boundary in GEMM kernel\nRepository: `llvm/llvm-project`\nCategory: `Memory Safety & Undefined Behavior`\nTarget File: `kernel/simd/gemm_avx512.c`\n\n#### Problem Description\n_mm512_store_ps called on 16-byte aligned pointer instead of required 64-byte boundary, triggering GP fault.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Use _mm512_storeu_ps for arbitrary alignment or enforce posix_memalign 64-byte allocation.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0180.py -q`\n",
+ "expected_invariant": "Use _mm512_storeu_ps for arbitrary alignment or enforce posix_memalign 64-byte allocation.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0180.py::test_reproduce_frontier-gh-0180"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0180"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

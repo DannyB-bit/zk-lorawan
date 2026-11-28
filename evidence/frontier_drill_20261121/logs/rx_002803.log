@@ -1,0 +1,111 @@
+RX_ARM 2026-11-28T00:28:03Z timeout_s=1800
+===== sx1302 HAL RX test =====
+INFO: rxpkt buffer size is set to 255
+INFO: Select channel mode 0
+RESET_SEQUENCE_OK
+Opening SPI communication interface
+Note: chip version is 0x10 (v1.0)
+INFO: Configuring SX1250_0 in single input mode
+INFO: Configuring SX1250_1 in single input mode
+INFO: using legacy timestamp
+ARB: dual demodulation disabled for all SF
+WARNING: no temperature sensor found on port 0x39
+WARNING: no temperature sensor found on port 0x3B
+WARNING: no temperature sensor found on port 0x38
+WARNING: no temperature telemetry ... 25C
+Waiting for packets...
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 703305075
+  size:     23
+  chan:     6
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904500000
+  snr_avg:  -1.8
+  rssi_chan:85.0
+  rssi_sig :82.0
+  crc:      0x2C92
+00 87 6B 02 D0 7E D5 B3 70 9C 2F A4 FF FF 59 B7 F3 BB 55 D3 D6 66 47 
+Received 1 packets (total:1)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 709772332
+  size:     23
+  chan:     5
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904300000
+  snr_avg:  5.8
+  rssi_chan:104.0
+  rssi_sig :101.0
+  crc:      0x72E2
+00 87 6B 02 D0 7E D5 B3 70 9C 2F A4 FF FF 59 B7 F3 7B 49 A8 CA BA 8F 
+Received 1 packets (total:2)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 722682813
+  size:     23
+  chan:     4
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904100000
+  snr_avg:  4.5
+  rssi_chan:89.0
+  rssi_sig :88.0
+  crc:      0xB761
+00 87 6B 02 D0 7E D5 B3 70 9C 2F A4 FF FF 59 B7 F3 EA A5 17 E0 91 6C 
+Received 1 packets (total:3)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 729138009
+  size:     23
+  chan:     3
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   903900000
+  snr_avg:  -0.5
+  rssi_chan:86.0
+  rssi_sig :82.0
+  crc:      0xEA9A
+00 87 6B 02 D0 7E D5 B3 70 9C 2F A4 FF FF 59 B7 F3 94 B6 53 27 5E 28 
+Received 1 packets (total:4)
+ERROR: invalid I2C file descriptor
+WARNING: no temperature telemetry ... 25C
+
+----- LoRa packet -----
+  count_us: 754616472
+  size:     23
+  chan:     7
+  status:   0x10
+  datr:     10
+  codr:     1
+  rf_chain  0
+  freq_hz   904700000
+  snr_avg:  -2.5
+  rssi_chan:84.0
+  rssi_sig :81.0
+  crc:      0x2440
+00 87 6B 02 D0 7E D5 B3 70 9C 2F A4 FF FF 59 B7 F3 2A DA AF 77 21 2A 
+Received 1 packets (total:5)
+
+Nb valid packets received: 5 CRC OK (1)
+Closing SPI communication interface
+=========== Test End ===========
+RX_EXIT=124 2026-11-28T00:58:04Z

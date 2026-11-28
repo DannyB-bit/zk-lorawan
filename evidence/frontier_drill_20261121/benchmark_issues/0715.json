@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0716",
+ "domain_index": 8,
+ "category": "Numerical Stability & Tensor Geometry",
+ "repo": "openxla/xla",
+ "target_file": "xla/service/gpu/gemm_fusion.cc",
+ "title": "LayerNorm reciprocal square root underflow to infinity on zero-variance embedding vectors",
+ "problem_statement": "### Issue FRONTIER-GH-0716: LayerNorm reciprocal square root underflow to infinity on zero-variance embedding vectors\nRepository: `openxla/xla`\nCategory: `Numerical Stability & Tensor Geometry`\nTarget File: `xla/service/gpu/gemm_fusion.cc`\n\n#### Problem Description\nEpsilon added outside sqrt function leads to division by zero when variance is exactly zero in FP16.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Ensure rsqrt argument is max(variance + eps, eps) to guarantee strictly positive denominator.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0716.py -q`\n",
+ "expected_invariant": "Ensure rsqrt argument is max(variance + eps, eps) to guarantee strictly positive denominator.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0716.py::test_reproduce_frontier-gh-0716"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0716"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

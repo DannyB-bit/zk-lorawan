@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0283",
+ "domain_index": 3,
+ "category": "Distributed Consensus & Partitioning",
+ "repo": "apache/kafka",
+ "target_file": "src/cluster.c",
+ "title": "Redis Cluster cross-slot multi-key transaction failover desynchronization",
+ "problem_statement": "### Issue FRONTIER-GH-0283: Redis Cluster cross-slot multi-key transaction failover desynchronization\nRepository: `apache/kafka`\nCategory: `Distributed Consensus & Partitioning`\nTarget File: `src/cluster.c`\n\n#### Problem Description\nCluster failover promotes replica while MSET transaction is half-applied across migrating slot boundary.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Lock slot migration state machine during atomic multi-key operations and return -TRYAGAIN error.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0283.py -q`\n",
+ "expected_invariant": "Lock slot migration state machine during atomic multi-key operations and return -TRYAGAIN error.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0283.py::test_reproduce_frontier-gh-0283"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0283"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0935",
+ "domain_index": 10,
+ "category": "Security Sandbox & Serialization Exploits",
+ "repo": "pallets/werkzeug",
+ "target_file": "src/werkzeug/utils.py",
+ "title": "Werkzeug multipart form-data directory traversal via unsanitized filename",
+ "problem_statement": "### Issue FRONTIER-GH-0935: Werkzeug multipart form-data directory traversal via unsanitized filename\nRepository: `pallets/werkzeug`\nCategory: `Security Sandbox & Serialization Exploits`\nTarget File: `src/werkzeug/utils.py`\n\n#### Problem Description\nSecure_filename allows relative path components when filename contains Unicode directory separators.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Strip all path separators ('/', '\\', and Unicode equivalents) and restrict to ASCII alphanumeric.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0935.py -q`\n",
+ "expected_invariant": "Strip all path separators ('/', '\\', and Unicode equivalents) and restrict to ASCII alphanumeric.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0935.py::test_reproduce_frontier-gh-0935"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0935"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

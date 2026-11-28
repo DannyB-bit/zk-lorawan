@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0972",
+ "domain_index": 10,
+ "category": "Security Sandbox & Serialization Exploits",
+ "repo": "auth0/jwt",
+ "target_file": "jwt/algorithms.py",
+ "title": "JWT algorithm confusion vulnerability permitting signature verification with public key as HMAC secret",
+ "problem_statement": "### Issue FRONTIER-GH-0972: JWT algorithm confusion vulnerability permitting signature verification with public key as HMAC secret\nRepository: `auth0/jwt`\nCategory: `Security Sandbox & Serialization Exploits`\nTarget File: `jwt/algorithms.py`\n\n#### Problem Description\nToken header specifying 'HS256' verified using server's RSA public key string, forging valid admin tokens.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Reject HMAC verification if expected algorithm is asymmetric (RS256/ES256).\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0972.py -q`\n",
+ "expected_invariant": "Reject HMAC verification if expected algorithm is asymmetric (RS256/ES256).",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0972.py::test_reproduce_frontier-gh-0972"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0972"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

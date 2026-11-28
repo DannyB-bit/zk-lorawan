@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0424",
+ "domain_index": 5,
+ "category": "Zero-Knowledge & Cryptographic Constraints",
+ "repo": "dalek-cryptography/curve25519-dalek",
+ "target_file": "bls/signature.go",
+ "title": "BLS12-381 G2 pairing accumulator group order mismatch in multi-signature aggregation",
+ "problem_statement": "### Issue FRONTIER-GH-0424: BLS12-381 G2 pairing accumulator group order mismatch in multi-signature aggregation\nRepository: `dalek-cryptography/curve25519-dalek`\nCategory: `Zero-Knowledge & Cryptographic Constraints`\nTarget File: `bls/signature.go`\n\n#### Problem Description\nAggregated signature verification fails to check subgroup membership for rogue-key attack defense.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Enforce G2 subgroup membership test via Frobenius endomorphism map on all input signatures.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0424.py -q`\n",
+ "expected_invariant": "Enforce G2 subgroup membership test via Frobenius endomorphism map on all input signatures.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0424.py::test_reproduce_frontier-gh-0424"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0424"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

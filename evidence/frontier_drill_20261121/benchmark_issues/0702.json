@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0703",
+ "domain_index": 8,
+ "category": "Numerical Stability & Tensor Geometry",
+ "repo": "google/jax",
+ "target_file": "jax/nn/rotary_embedding.py",
+ "title": "RoPE rotary position embedding complex phase wrap-around at 131,072 context length",
+ "problem_statement": "### Issue FRONTIER-GH-0703: RoPE rotary position embedding complex phase wrap-around at 131,072 context length\nRepository: `google/jax`\nCategory: `Numerical Stability & Tensor Geometry`\nTarget File: `jax/nn/rotary_embedding.py`\n\n#### Problem Description\nFP32 trigonometric phase angle theta * position loses fractional precision causing attention score degradation.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Compute position phases in float64 before casting to target activation precision.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0703.py -q`\n",
+ "expected_invariant": "Compute position phases in float64 before casting to target activation precision.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0703.py::test_reproduce_frontier-gh-0703"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0703"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

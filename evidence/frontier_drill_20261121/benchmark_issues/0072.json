@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0073",
+ "domain_index": 1,
+ "category": "Concurrency & Lockless Race Conditions",
+ "repo": "python/cpython",
+ "target_file": "lockless_queue.c",
+ "title": "ABA memory hazard in lockless lock-free queue head pointer recycling under high thread preemption",
+ "problem_statement": "### Issue FRONTIER-GH-0073: ABA memory hazard in lockless lock-free queue head pointer recycling under high thread preemption\nRepository: `python/cpython`\nCategory: `Concurrency & Lockless Race Conditions`\nTarget File: `lockless_queue.c`\n\n#### Problem Description\natomic_compare_exchange_weak with acquire-release fence fails when recycled node address matches ABA sequence.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: CAS loop must incorporate 64-bit epoch generation counter to ensure tag uniqueness.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0073.py -q`\n",
+ "expected_invariant": "CAS loop must incorporate 64-bit epoch generation counter to ensure tag uniqueness.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0073.py::test_reproduce_frontier-gh-0073"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0073"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}

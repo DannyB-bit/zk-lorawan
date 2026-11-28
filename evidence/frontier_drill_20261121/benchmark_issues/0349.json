@@ -1,0 +1,17 @@
+{
+ "issue_id": "FRONTIER-GH-0350",
+ "domain_index": 4,
+ "category": "Compiler IR Optimization & SSA Lowering",
+ "repo": "cython/cython",
+ "target_file": "Cython/Compiler/ExprNodes.py",
+ "title": "Cython typed memoryview Fortran-contiguous stride cast crash",
+ "problem_statement": "### Issue FRONTIER-GH-0350: Cython typed memoryview Fortran-contiguous stride cast crash\nRepository: `cython/cython`\nCategory: `Compiler IR Optimization & SSA Lowering`\nTarget File: `Cython/Compiler/ExprNodes.py`\n\n#### Problem Description\nDirect cast of 2D Fortran-ordered array to C-contiguous memoryview leads to out-of-bounds pointer calculation.\nUnder high-load production execution, this defect triggers silent data corruption, deadlock, or assertion failure.\n\n#### Concurrency & Invariant Conditions\n- Precondition: Invariant validation must be enforced on physical silicon.\n- Failure Mode: Reproduction fails with exit code != 0 or thread hang.\n- Expected Fix Invariant: Verify memoryview contiguity flags and generate explicit transpose buffer when order differs.\n\n#### Reproduction Target\nRun: `pytest tests/test_frontier-gh-0350.py -q`\n",
+ "expected_invariant": "Verify memoryview contiguity flags and generate explicit transpose buffer when order differs.",
+ "FAIL_TO_PASS": [
+  "tests/test_frontier-gh-0350.py::test_reproduce_frontier-gh-0350"
+ ],
+ "PASS_TO_PASS": [
+  "tests/test_baseline.py::test_no_regression_frontier-gh-0350"
+ ],
+ "complexity_tier": "Tier-1 Frontier (PhD / Principal Engineer Level)"
+}
