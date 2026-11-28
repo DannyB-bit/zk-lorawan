@@ -1,0 +1,14 @@
+{
+  "kind": "host-protocol-fixture",
+  "not_rf_evidence": true,
+  "not_model_evidence": true,
+  "announcement_bytes": 60,
+  "announcement_hex": "5a4b433133333333333333333333333333333333000000016b0a1ec80865d9c19add14667eb6deafc326d2484a2ef93945183b87ef4a14cc472029c1",
+  "decoded": {
+    "session_id": "33333333333333333333333333333333",
+    "epoch": 1,
+    "expires_at": 1795825352,
+    "manifest_sha256": "0865d9c19add14667eb6deafc326d2484a2ef93945183b87ef4a14cc472029c1"
+  },
+  "manifest_valid": true
+}
